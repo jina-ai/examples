@@ -1,0 +1,72 @@
+.page-header {
+    margin: 10px 0 10px;
+}
+
+.center-block {
+    float: none !important
+}
+
+.oneline {
+    white-space: nowrap;
+    overflow: scroll;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+.alert {
+    padding: 5px;
+    padding-left: 15px;
+}
+
+.activeheader {
+    color: #ff6e00 !important;
+}
+
+.form-control[readonly] {
+    background-color: #f2fdee
+}
+
+.scroll-card {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.explain-score {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.card-columns {
+    column-count: 8;
+    column-gap: 0;
+    orphans: 1;
+    widows: 1;
+}
+
+.inactive-query-card {
+    opacity: 0.2;
+}
+
+.card .border-danger {
+    border-width: 5px;
+}
+
+.card .border-success {
+    border-width: 5px;
+}
+
+.modal.fade .modal-dialog {
+    transition: none !important;
+}
+
+.modal-lg, .modal-xl {
+    max-width: 90% !important;
+    width: 90%;
+!important;
+}
+
+.bg-dark {
+    background-color: #000 !important;
+}

@@ -1,2 +1,3 @@
 # jina-demos
-All demos build on JIna
+
+All demos built on JIna
