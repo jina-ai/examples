@@ -38,10 +38,6 @@ if RUN_MODE.endswith('index'):
     os.environ['TEST_WORKDIR'] = WORK_DIR + TIMESTAMP
     os.makedirs(os.environ['TEST_WORKDIR'], exist_ok=True)
 
-f = Flow.load_config('index-flow.yml')
-
-q = Flow.load_config('index-query.yml')
-
 
 def print_result(resp, fp):
     for d in resp.search.docs:
@@ -55,12 +51,16 @@ def print_result(resp, fp):
 
 if do_index:
     # index
+    f = Flow.load_config('flow-index.yml')
+
     bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 
     with f.build(backend='process') as fl:
         fl.index(bytes_gen, batch_size=64)
 else:
     # query
+    q = Flow.load_config('flow-query.yml')
+
     with open(os.environ['TEST_WORKDIR'] + '/topk.json', 'w', encoding='utf8') as fp:
         ppr = lambda x: print_result(x, fp)
 
