@@ -1,0 +1,6 @@
+!GifPreprocessor  # just for testing
+with:
+  every_k_frame: 2
+metas:
+  name: gif2chunk_preprocessor  # a customized name
+  py_modules: gif2chunk.py
