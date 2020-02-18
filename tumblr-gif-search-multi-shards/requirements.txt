@@ -1,0 +1,3 @@
+aiofiles
+aiohttp
+tensorflow >= 2.0
