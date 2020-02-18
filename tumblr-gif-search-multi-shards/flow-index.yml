@@ -1,0 +1,27 @@
+!Flow
+with:
+  driver_yaml_path: my-driver.yml
+  sse_logger: false
+pods:
+  chunk_seg:
+    driver: segment
+    exec_yaml_path: ${YAML_DIR}/preprocess/gif2chunk.yml
+    replicas: $REPLICAS
+  doc_idx:
+    driver: index-meta-doc
+    exec_yaml_path: index/doc.yml
+    replicas: $REPLICAS
+    separated_workspace: true
+  tf_encode:
+    driver: encode
+    exec_yaml_path: ${YAML_DIR}/encode/encode.yml
+    recv_from: chunk_seg
+    replicas: $REPLICAS
+  chunk_idx:
+    driver: index-chunk-and-meta
+    exec_yaml_path: index/npvec.yml
+    replicas: $REPLICAS
+    separated_workspace: true
+  join_all:
+    driver: merge
+    recv_from: [doc_idx, chunk_idx]

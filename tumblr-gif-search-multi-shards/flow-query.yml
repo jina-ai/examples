@@ -1,0 +1,22 @@
+!Flow
+with:
+  driver_yaml_path: my-driver.yml
+  sse_logger: false
+pods:
+  chunk_seg:
+    driver: segment
+    exec_yaml_path: preprocess/gif2chunk.yml
+    replicas: $REPLICAS
+  tf_encode:
+    driver: encode
+    exec_yaml_path: encode/encode.yml
+    replicas: $REPLICAS
+  chunk_idx:
+    driver: index-chunk-and-meta
+    exec_yaml_path: index/npvec.yml
+  ranker:
+    driver: score
+    exec_yaml_path: BiMatchRanker
+  doc_idx:
+    driver: index-meta-doc
+    exec_yaml_path: index/doc.yml
