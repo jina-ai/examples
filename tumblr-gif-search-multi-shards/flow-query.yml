@@ -4,19 +4,19 @@ with:
   sse_logger: false
 pods:
   chunk_seg:
-    driver: segment
+    driver_group: segment
     exec_yaml_path: preprocess/gif2chunk.yml
     replicas: $REPLICAS
   tf_encode:
-    driver: encode
+    driver_group: encode
     exec_yaml_path: encode/encode.yml
     replicas: $REPLICAS
   chunk_idx:
-    driver: index-chunk-and-meta
+    driver_group: index-chunk-and-meta
     exec_yaml_path: index/npvec.yml
   ranker:
-    driver: score
+    driver_group: score
     exec_yaml_path: BiMatchRanker
   doc_idx:
-    driver: index-meta-doc
+    driver_group: index-meta-doc
     exec_yaml_path: index/doc.yml
