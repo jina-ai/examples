@@ -24,7 +24,7 @@ do_index = True
 
 if RUN_MODE == 'debug-index':
     replicas = 1
-    num_docs = 100
+    num_docs = 1000
 elif RUN_MODE == 'index':
     replicas = 4
     num_docs = 200000

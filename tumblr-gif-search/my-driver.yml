@@ -1,11 +1,11 @@
 drivers:
-  encode:
+  encode:  # -> Encoder Pod.yml
     handlers:
       /:
         - handler_encode_doc: encode
     help: encode documents into embeddings
 
-  segment:
+  segment:  # -> segment Pod.yml
     handlers:
       /:
         - handler_segment: transform
