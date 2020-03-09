@@ -1,0 +1,41 @@
+!CompoundExecutor
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: 'chunk_index.gzip'
+      metrix: 'cosine'
+    metas:
+      name: 'NumpyIndexer'
+      workspace: $TMP_WORKSPACE
+  - !MetaProtoIndexer
+    with:
+      index_filename: 'meta_chunk_index.gzip'
+    metas:
+      name: 'MetaProtoIndexer'
+      workspace: $TMP_WORKSPACE
+metas:
+  name: 'CompoundExecutor'
+requests:
+  on:
+    IndexRequest:
+      - !ChunkIndexDriver
+        with:
+          executor: NumpyIndexer
+          method: add
+      - !ChunkPruneDriver {}
+      - !MetaChunkIndexDriver
+        with:
+          executor: MetaProtoIndexer
+          method: add
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          executor: NumpyIndexer
+          method: query
+      - !ChunkPruneDriver {}
+      - !MetaChunkSearchDriver
+        with:
+          executor: MetaProtoIndexer
+          method: query
+    ControlRequest:
+      - !ControlReqDriver {}
