@@ -1,0 +1,11 @@
+!DictEntryExtractor
+metas:
+  py_modules: customized_executors.py
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !SegmentDriver
+        with:
+          method: transform
+    ControlRequest:
+      - !ControlReqDriver {}

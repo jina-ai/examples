@@ -1,0 +1,11 @@
+!RandomEncoder
+metas:
+  py_modules: customized_executors.py
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
+    ControlRequest:
+      - !ControlReqDriver {}
