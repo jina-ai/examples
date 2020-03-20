@@ -3,7 +3,7 @@ import zipfile
 
 data_fn = "urbandict-word-defs.csv"
 workspace_path = '/tmp/jina/urbandict'
-if os.path.exists(workspace_path):
+if not os.path.exists(workspace_path):
     print("data output dir: {}".format(workspace_path))
     os.mkdir(workspace_path)
 
