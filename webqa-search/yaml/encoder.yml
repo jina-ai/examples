@@ -1,0 +1,14 @@
+!TransformerTextEncoder
+metas:
+  on_gpu: true
+  batch_size: 4
+with:
+  pooling_strategy: cls
+  backend: pytorch
+  max_length: 8
+requests:
+  on:
+    IndexRequest:
+      - !EncodeDriver
+        with:
+          method: encode

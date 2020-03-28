@@ -1,0 +1,9 @@
+!WebQAAnswerExtractor
+metas:
+  py_modules: extractor.py
+requests:
+  on:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          method: transform
