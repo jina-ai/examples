@@ -1,0 +1,21 @@
+!NumpyIndexer
+metas:
+  name: 'TitleIndexer'
+  workspace: $TMP_WORKSPACE
+  py_modules: custom_driver.py
+
+with:
+  index_filename: 'title_index.gzip'
+  metric: 'cosine'
+
+requests:
+  on:
+    IndexRequest:
+      - !TitleIndexDriver
+        with:
+          method: add
+      - !ChunkPruneDriver {}
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          method: query

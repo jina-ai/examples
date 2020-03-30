@@ -1,9 +1,10 @@
 !WebQAAnswerExtractor
 metas:
   py_modules: extractor.py
+  workspace: $TMP_WORKSPACE
 requests:
   on:
     IndexRequest:
       - !SegmentDriver
         with:
-          method: transform
+          method: craft
