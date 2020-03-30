@@ -100,7 +100,7 @@ class AnswerIndexer(BaseIndexer):
             dists.append(title_score * self.title_weight + answer_score * self.answer_weight)
 
         dists = np.array(dists)
-        tmp = np.array(dists).argsort()[:topk]
+        tmp = dists.argsort()[:topk]
         topk_answer_ids = np.array(answer_ids)[tmp]
         texts = [self._answers[answer_id] for answer_id in topk_answer_ids]
 
