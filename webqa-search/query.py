@@ -22,21 +22,23 @@ def read_data(fn='/tmp/jina/webqa/web_text_zh_valid.json'):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:1000]:
+    for item in result[:100]:
         yield item
 
 def main():
     workspace_path = '/tmp/jina/webqa'
     os.environ['TMP_WORKSPACE'] = workspace_path
-    data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
+    data_fn = os.path.join(workspace_path, "web_text_zh_train0.json")
     flow = Flow().add(
-        name='title_extractor', yaml_path='yaml/title_extractor.yml', recv_from='gateway'
+        name='extractor', yaml_path='yaml/title_extractor.yml', recv_from='gateway'
     ).add(
-        name='title_encoder', yaml_path='yaml/encoder.yml', recv_from="title_extractor", timeout_ready=60000
+        name='encoder', yaml_path='yaml/encoder.yml', recv_from="extractor", timeout_ready=60000
     ).add(
-        name='title_indexer', yaml_path='yaml/title_indexer.yml', recv_from='title_encoder'
+        name='title_chunk_indexer', yaml_path='yaml/title_chunk_indexer.yml', recv_from='encoder'
     ).add(
-        name='answer_indexer', yaml_path='yaml/answer_indexer.yml', recv_from='title_indexer'
+        name='title_meta_chunk_indexer', yaml_path='yaml/title_meta_chunk_indexer.yml', recv_from='title_chunk_indexer'
+    ).add(
+        name='title_ranker', yaml_path='yaml/title_ranker.yml', recv_from='title_meta_chunk_indexer'
     )
     with flow.build() as f:
         f.search(raw_bytes=read_data(data_fn))

@@ -1,0 +1,16 @@
+!NumpyIndexer
+with:
+  index_filename: 'answer_chunk_index.gzip'
+metas:
+  name: 'AnswerChunkIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !ChunkIndexDriver
+        with:
+          method: add
+      - !ChunkPruneDriver {}
+
+    ControlRequest:
+      - !ControlReqDriver {}

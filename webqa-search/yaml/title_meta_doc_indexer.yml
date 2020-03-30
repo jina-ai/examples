@@ -1,0 +1,17 @@
+!MetaProtoIndexer
+with:
+  index_filename: 'meta_title_doc_index.gzip'
+metas:
+  name: 'TitleMetaDocIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !MetaDocIndexDriver
+        with:
+          method: add
+
+      - !DocPruneDriver {}
+
+    ControlRequest:
+      - !ControlReqDriver {}

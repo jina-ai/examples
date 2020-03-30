@@ -1,0 +1,22 @@
+!NumpyIndexer
+with:
+  index_filename: 'title_chunk_index.gzip'
+metas:
+  name: 'TitleChunkIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !ChunkIndexDriver
+        with:
+          method: add
+
+      - !ChunkPruneDriver {}
+
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          method: query
+
+    ControlRequest:
+      - !ControlReqDriver {}
