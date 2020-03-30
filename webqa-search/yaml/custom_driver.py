@@ -16,9 +16,9 @@ class AnswerSearchDriver(BaseExecutableDriver):
             texts, topk_answer_ids, topk_dists = self.exec_fn(np.array([blob2array(chunk.embedding)]), title_topk,
                                                                self.req.top_k)
 
-            for c, text, answer_id, dist in zip(chunk.topk_results, texts, topk_answer_ids, topk_dists):
+            for c, text, chunk_id, dist in zip(chunk.topk_results, texts, topk_answer_ids, topk_dists):
                 c.match_chunk.text = text
-                c.match_chunk.chunk_id = answer_id
+                c.match_chunk.chunk_id = chunk_id
                 c.score.value = dist
 
 class TitleSearchDriver(BaseExecutableDriver):
