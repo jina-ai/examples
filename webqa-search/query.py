@@ -22,32 +22,24 @@ def read_data(fn='/tmp/jina/webqa/web_text_zh_valid.json'):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100]:
+    for item in result[:1000]:
         yield item
 
 def main():
     workspace_path = '/tmp/jina/webqa'
     os.environ['TMP_WORKSPACE'] = workspace_path
-    data_fn = os.path.join(workspace_path, "web_text_zh_train0.json")
-    flow = (Flow().add(
-        name='answer_extractor', yaml_path='yaml/answer_extractor.yml'
-    ).add(
-        name='answer_encoder', yaml_path='yaml/encoder.yml', recv_from="answer_extractor", timeout_ready=60000
-    ).add(
-        name='answer_indexer', yaml_path='yaml/answer_indexer.yml', recv_from='answer_encoder'
-    ).add(
+    data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
+    flow = Flow().add(
         name='title_extractor', yaml_path='yaml/title_extractor.yml', recv_from='gateway'
     ).add(
         name='title_encoder', yaml_path='yaml/encoder.yml', recv_from="title_extractor", timeout_ready=60000
     ).add(
         name='title_indexer', yaml_path='yaml/title_indexer.yml', recv_from='title_encoder'
     ).add(
-        name='merge', yaml_path='yaml/merger.yml', recv_from=['answer_indexer', 'title_indexer']
-    ))
+        name='answer_indexer', yaml_path='yaml/answer_indexer.yml', recv_from='title_indexer'
+    )
     with flow.build() as f:
-        f.index(raw_bytes=read_data(data_fn))
+        f.search(raw_bytes=read_data(data_fn))
 
 if __name__ == '__main__':
     main()
-
-

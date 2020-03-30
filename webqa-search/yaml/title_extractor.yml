@@ -1,9 +1,10 @@
 !WebQATitleExtractor
 metas:
   py_modules: extractor.py
+  workspace: $TMP_WORKSPACE
 requests:
   on:
-    IndexRequest:
+    [IndexRequest, SearchRequest]:
       - !SegmentDriver
         with:
-          method: transform
+          method: craft

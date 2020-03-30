@@ -1,6 +1,7 @@
 !BaseEncoder
 metas:
   name: merge
+  workspace: $TMP_WORKSPACE
 requests:
   on:
     [SearchRequest, IndexRequest, TrainRequest]:

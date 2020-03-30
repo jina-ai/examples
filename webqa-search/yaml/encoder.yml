@@ -1,14 +1,15 @@
 !TransformerTextEncoder
 metas:
-  on_gpu: true
+  on_gpu: false
   batch_size: 4
+  workspace: $TMP_WORKSPACE
 with:
   pooling_strategy: cls
   backend: pytorch
   max_length: 8
 requests:
   on:
-    IndexRequest:
+    [SearchRequest, IndexRequest]:
       - !EncodeDriver
         with:
           method: encode
