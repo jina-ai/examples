@@ -1,0 +1,17 @@
+!MetaProtoIndexer
+with:
+  index_filename: 'meta_answer_doc_index.gzip'
+metas:
+  name: 'AnswerMetaDocIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !MetaDocIndexDriver
+        with:
+          method: add
+
+      - !DocPruneDriver {}
+
+    ControlRequest:
+      - !ControlReqDriver {}

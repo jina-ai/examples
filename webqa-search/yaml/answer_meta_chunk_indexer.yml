@@ -1,0 +1,15 @@
+!MetaProtoIndexer
+with:
+  index_filename: 'answer_chunk_meta_index.gzip'
+metas:
+  name: 'AnswerMetaChunkIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !MetaChunkIndexDriver
+        with:
+          method: add
+
+    ControlRequest:
+      - !ControlReqDriver {}
