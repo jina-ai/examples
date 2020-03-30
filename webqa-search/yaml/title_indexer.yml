@@ -16,6 +16,6 @@ requests:
           method: add
       - !ChunkPruneDriver {}
     SearchRequest:
-      - !ChunkSearchDriver
+      - !TitleSearchDriver
         with:
           method: query
