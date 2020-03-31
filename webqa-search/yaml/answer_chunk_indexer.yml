@@ -1,6 +1,7 @@
 !NumpyIndexer
 with:
   index_filename: 'answer_chunk_index.gzip'
+  metric: 'cosine'
 metas:
   name: 'AnswerChunkIndexer'
   workspace: $TMP_WORKSPACE
@@ -10,6 +11,13 @@ requests:
       - !ChunkIndexDriver
         with:
           method: add
+      - !ChunkPruneDriver {}
+
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          method: query
+
       - !ChunkPruneDriver {}
 
     ControlRequest:

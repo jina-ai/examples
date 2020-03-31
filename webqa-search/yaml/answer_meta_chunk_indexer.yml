@@ -11,5 +11,10 @@ requests:
         with:
           method: add
 
+    SearchRequest:
+      - !MetaChunkSearchDriver
+        with:
+          method: query
+
     ControlRequest:
       - !ControlReqDriver {}

@@ -13,5 +13,10 @@ requests:
 
       - !DocPruneDriver {}
 
+    SearchRequest:
+      - !MetaDocSearchDriver
+        with:
+          method: query
+
     ControlRequest:
       - !ControlReqDriver {}
