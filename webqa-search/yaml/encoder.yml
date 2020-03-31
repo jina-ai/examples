@@ -1,6 +1,6 @@
 !TransformerTextEncoder
 metas:
-  on_gpu: false
+  on_gpu: true
   batch_size: 4
   workspace: $TMP_WORKSPACE
 with:
@@ -13,3 +13,6 @@ requests:
       - !EncodeDriver
         with:
           method: encode
+
+    ControlRequest:
+      - !ControlReqDriver {}

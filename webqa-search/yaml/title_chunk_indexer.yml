@@ -1,6 +1,7 @@
 !NumpyIndexer
 with:
   index_filename: 'title_chunk_index.gzip'
+  metric: 'cosine'
 metas:
   name: 'TitleChunkIndexer'
   workspace: $TMP_WORKSPACE
@@ -17,6 +18,8 @@ requests:
       - !ChunkSearchDriver
         with:
           method: query
+
+      - !ChunkPruneDriver {}
 
     ControlRequest:
       - !ControlReqDriver {}

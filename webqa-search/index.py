@@ -1,9 +1,10 @@
-
 import json
 import os
+
 from jina.flow import Flow
 
-def read_data(fn='/tmp/jina/webqa/web_text_zh_valid.json'):
+
+def read_data(fn):
     items = {}
     with open(fn, 'r', encoding='utf-8') as f:
         for line in f:
@@ -24,7 +25,6 @@ def read_data(fn='/tmp/jina/webqa/web_text_zh_valid.json'):
 
     for item in result[:100]:
         yield item
-
 def main():
     workspace_path = '/tmp/jina/webqa'
     os.environ['TMP_WORKSPACE'] = workspace_path
@@ -42,8 +42,6 @@ def main():
     ).add(
         name='title_extractor', yaml_path='yaml/title_extractor.yml', recv_from='gateway'
     ).add(
-        name='title_meta_doc_indexer', yaml_path='yaml/title_meta_doc_indexer.yml', recv_from='title_extractor'
-    ).add(
         name='title_encoder', yaml_path='yaml/encoder.yml', recv_from='title_extractor', timeout_ready=60000
     ).add(
         name='title_chunk_indexer', yaml_path='yaml/title_chunk_indexer.yml', recv_from='title_encoder'
@@ -52,7 +50,7 @@ def main():
         recv_from='title_chunk_indexer'
     ).add(
         name='merge', yaml_path='yaml/merger.yml',
-        recv_from=['answer_meta_chunk_indexer', 'answer_meta_doc_indexer', 'title_meta_chunk_indexer', 'title_meta_doc_indexer']
+        recv_from=['answer_meta_chunk_indexer', 'answer_meta_doc_indexer', 'title_meta_chunk_indexer']
     )
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))
