@@ -5,7 +5,7 @@ with:
 pods:
   chunk_seg:
     driver_group: segment
-    exec_yaml_path: preprocess/gif2chunk.yml
+    exec_yaml_path: craft/gif2chunk.yml
     replicas: $REPLICAS
   tf_encode:
     driver_group: encode
@@ -13,7 +13,7 @@ pods:
     replicas: $REPLICAS
   chunk_idx:
     driver_group: index-chunk-and-meta
-    exec_yaml_path: index/npvec.yml
+    exec_yaml_path: index/chunk.yml
   ranker:
     driver_group: score
     exec_yaml_path: BiMatchRanker

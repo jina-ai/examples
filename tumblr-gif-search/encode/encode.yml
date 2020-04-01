@@ -1,6 +1,4 @@
-!TF2ImageEncoder
+!KerasImageEncoder
 with:
   model_name: MobileNetV2
   pool_strategy: avg
-metas:
-  py_modules: encode.py
