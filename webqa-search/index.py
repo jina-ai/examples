@@ -23,7 +23,7 @@ def read_data(fn):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100]:
+    for item in result[:1000]:
         yield item
 def main():
     workspace_path = '/tmp/jina/webqa'
@@ -34,7 +34,7 @@ def main():
     ).add(
         name='answer_meta_doc_indexer', yaml_path='yaml/answer_meta_doc_indexer.yml', recv_from='answer_extractor'
     ).add(
-        name='answer_encoder', yaml_path='yaml/encoder.yml', recv_from="answer_extractor", timeout_ready=60000
+        name='answer_encoder', yaml_path='yaml/encoder.yml', recv_from="answer_extractor", timeout_ready=60000, replicas=1
     ).add(
         name='answer_chunk_indexer', yaml_path='yaml/answer_chunk_indexer.yml', recv_from='answer_encoder'
     ).add(
@@ -42,7 +42,7 @@ def main():
     ).add(
         name='title_extractor', yaml_path='yaml/title_extractor.yml', recv_from='gateway'
     ).add(
-        name='title_encoder', yaml_path='yaml/encoder.yml', recv_from='title_extractor', timeout_ready=60000
+        name='title_encoder', yaml_path='yaml/encoder.yml', recv_from='title_extractor', timeout_ready=60000, replicas=1
     ).add(
         name='title_chunk_indexer', yaml_path='yaml/title_chunk_indexer.yml', recv_from='title_encoder'
     ).add(

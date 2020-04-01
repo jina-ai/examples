@@ -7,11 +7,10 @@ metas:
 requests:
   on:
     IndexRequest:
+      - !DocPruneDriver {}
       - !MetaDocIndexDriver
         with:
           method: add
-
-      - !DocPruneDriver {}
 
     SearchRequest:
       - !MetaDocSearchDriver

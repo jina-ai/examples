@@ -25,7 +25,7 @@ def read_data(fn):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100]:
+    for item in result[:10]:
         yield item
 
 def main():
