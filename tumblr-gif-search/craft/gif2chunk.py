@@ -1,8 +1,8 @@
 import numpy as np
 from PIL import Image
-from jina.executors.transformers import BaseSegmenter
+from jina.executors.crafters import BaseSegmenter
 
-from preprocess.gif_reader import get_frames
+from craft.gif_reader import get_frames
 
 
 class GifPreprocessor(BaseSegmenter):
@@ -11,9 +11,8 @@ class GifPreprocessor(BaseSegmenter):
         self.img_shape = img_shape
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
-        self.chunk_id = 0
 
-    def transform(self, raw_bytes, doc_id):
+    def craft(self, raw_bytes, doc_id):
         result = []
         try:
             im = Image.open(raw_bytes.decode())
@@ -25,9 +24,8 @@ class GifPreprocessor(BaseSegmenter):
                         new_frame = frame.convert('RGB').resize([self.img_shape, ] * 2)
                         img = (np.array(new_frame) / 255).astype(np.float32)
                         # build chunk next, if the previous fail, then no chunk will be add
-                        result.append(dict(doc_id=doc_id, offset=idx, chunk_id=self.chunk_id,
+                        result.append(dict(doc_id=doc_id, offset=idx,
                                            weight=1., blob=img))
-                        self.chunk_id += 1
                 except Exception as ex:
                     self.logger.error(ex)
                 finally:

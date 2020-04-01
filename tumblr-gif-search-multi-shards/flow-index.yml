@@ -5,7 +5,7 @@ with:
 pods:
   chunk_seg:
     driver_group: segment
-    exec_yaml_path: ${YAML_DIR}/preprocess/gif2chunk.yml
+    exec_yaml_path: ${YAML_DIR}/craft/gif2chunk.yml
     replicas: $REPLICAS
   doc_idx:
     driver_group: index-meta-doc
@@ -19,7 +19,7 @@ pods:
     replicas: $REPLICAS
   chunk_idx:
     driver_group: index-chunk-and-meta
-    exec_yaml_path: index/npvec.yml
+    exec_yaml_path: index/chunk.yml
     replicas: $REPLICAS
     separated_workspace: true
   join_all:

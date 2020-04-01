@@ -1,0 +1,40 @@
+!CompoundExecutor
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+    metas:
+      name: vecidx_exec  # a customized name
+      workspace: $TEST_WORKDIR
+  - !BasePbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx_exec
+      workspace: $TEST_WORKDIR
+metas:
+  name: chunk_compound_indexer
+  workspace: $TEST_WORKDIR
+requests:
+  on:
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          executor: vecidx_exec
+          method: query
+      - !ChunkPbSearchDriver
+        with:
+          executor: chunkidx_exec
+          method: query
+    IndexRequest:
+      - !ChunkIndexDriver
+        with:
+          executor: vecidx_exec
+          method: add
+      - !ChunkPruneDriver {}
+      - !ChunkPbIndexDriver
+        with:
+          executor: chunkidx_exec
+          method: add
+    ControlRequest:
+      - !ControlReqDriver {}

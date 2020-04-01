@@ -55,7 +55,7 @@ if do_index:
 
     bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 
-    with f.build(backend='process') as fl:
+    with f.build() as fl:
         fl.index(bytes_gen, batch_size=64)
 else:
     # query
