@@ -1,4 +1,4 @@
-!BaseEncoder
+!BaseExecutor
 metas:
   name: merge
   workspace: $TMP_WORKSPACE
