@@ -1,7 +1,8 @@
 FROM jinaai/jina:master-debian
-FROM huggingface/transformers-cpu:latest
 
 ENV TMP_WORKSPACE /tmp/jina/webqa/
+
+RUN pip install -i  https://pypi.tuna.tsinghua.edu.cn/simple transformers --no-cache-dir --compile
 
 ADD encoder.yml ./
 

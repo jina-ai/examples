@@ -1,0 +1,43 @@
+!CompoundExecutor
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: title_vecidx_index.gzip
+      metrix: cosine
+    metas:
+      name: title_vecidx_exec
+      workspace: $TMP_WORKSPACE
+  - !BasePbIndexer
+    with:
+      index_filename: title_meta_chunk_index.gzip
+    metas:
+      name: title_chunk_meta_exec
+      workspace: $TMP_WORKSPACE
+
+metas:
+  name: title_compound_chunk_indexer
+
+requests:
+  on:
+    IndexRequest:
+      - !ChunkIndexDriver
+        with:
+          executor: title_vecidx_exec
+          method: add
+      - !ChunkPruneDriver {}
+      - !ChunkPbIndexDriver
+        with:
+          executor: title_chunk_meta_exec
+          method: add
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          executor: title_vecidx_exec
+          method: query
+      - !ChunkPruneDriver {}
+      - !ChunkPbSearchDriver
+        with:
+          executor: title_chunk_meta_exec
+          method: query
+    ControlRequest:
+      - !ControlReqDriver {}

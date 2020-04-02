@@ -1,6 +1,6 @@
 !BaseExecutor
 metas:
-  name: merge
+  name: merger
   workspace: $TMP_WORKSPACE
 requests:
   on:
