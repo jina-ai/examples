@@ -1,0 +1,38 @@
+!Flow
+pods:
+  extractor:
+    yaml_path: images/title-extractor/title_extractor.yml
+    recv_from: gateway
+
+  encoder:
+    yaml_path: images/encoder/encoder.yml
+    recv_from: extractor
+    timeout_ready: 60000
+
+  title_chunk_indexer:
+    yaml_path: images/title-chunk-indexer/title_chunk_indexer.yml
+    recv_from: encoder
+
+  title_meta_chunk_indexer:
+    yaml_path: images/title-meta-chunk-indexer/title_meta_chunk_indexer.yml
+    recv_from: title_chunk_indexer
+
+  answer_chunk_indexer:
+    yaml_path: images/answer-chunk-indexer/answer_chunk_indexer.yml
+    recv_from: encoder
+
+  answer_meta_chunk_indexer:
+    yaml_path: images/answer-meta-chunk-indexer/answer_meta_chunk_indexer.yml
+    recv_from: answer_chunk_indexer
+
+  merger:
+    yaml_path: images/merger/merger.yml
+    recv_from: [answer_meta_chunk_indexer, title_meta_chunk_indexer]
+
+  raker:
+    yaml_path: images/raker/ranker.yml
+    recv_from: merge
+
+  answer_meta_doc_indexer:
+    yaml_path: images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml
+    recv_from: score

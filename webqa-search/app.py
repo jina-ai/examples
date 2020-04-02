@@ -6,9 +6,9 @@ from google.protobuf.json_format import MessageToDict
 from jina.flow import Flow
 
 workspace_path = '/tmp/jina/webqa/'
-index_file = 'web_text_zh_train0.json'
-query_file = 'web_text_zh_train0.json'
-do_index = False
+index_file = 'web_text_zh_valid.json'
+query_file = 'web_text_zh_valid.json'
+do_index = True
 
 os.environ['TMP_WORKSPACE'] = workspace_path
 os.environ['REPLICAS'] = '3'
@@ -32,7 +32,7 @@ def read_data(fn):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:10]:
+    for item in result[:100]:
         yield item
 
 def print_topk(resp, fp):
@@ -45,15 +45,15 @@ def print_topk(resp, fp):
 
 if do_index:
     # index
-    f = Flow.load_config('flow-index.yml')
-    data_fn = os.path.join(workspace_path, "web_text_zh_train0.json")
+    f = Flow.load_config('flow_index.yml')
+    data_fn = os.path.join(workspace_path, index_file)
     with f.build() as fl:
         fl.index(raw_bytes=read_data(data_fn))
 
 else:
     # query
-    q = Flow.load_config('flow-query.yml')
-    data_fn = os.path.join(workspace_path, "web_text_zh_train0.json")
+    q = Flow.load_config('flow_query.yml')
+    data_fn = os.path.join(workspace_path, query_file)
     with open("{}/query_result.json".format(os.environ['TMP_WORKSPACE']), "w") as fp:
         with q.build() as fl:
             pr = lambda x: print_topk(x, fp)
