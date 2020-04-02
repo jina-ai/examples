@@ -1,43 +1,43 @@
 !Flow
 pods:
   answer_extractor:
-    yaml_path: yaml/answer_extractor.yml
+    yaml_path: images/answer-extractor/answer_extractor.yml
     recv_from: gateway
 
   answer_encoder:
-    yaml_path: yaml/encoder.yml
+    yaml_path: images/encoder/encoder.yml
     recv_from: answer_extractor
     timeout_ready: 60000
 
   answer_chunk_indexer:
-    yaml_path: yaml/answer_chunk_indexer.yml
+    yaml_path: images/answer-chunk-indexer/answer_chunk_indexer.yml
     recv_from: answer_encoder
 
   answer_meta_chunk_indexer:
-    yaml_path: yaml/answer_meta_chunk_indexer.yml
+    yaml_path: images/answer-meta-chunk-indexer/answer_meta_chunk_indexer.yml
     recv_from: answer_chunk_indexer
 
   answer_meta_doc_indexer:
-    yaml_path: yaml/answer_meta_doc_indexer.yml
+    yaml_path: images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml
     recv_from: answer_extractor
 
   title_extractor:
-    yaml_path: yaml/title_extractor.yml
+    yaml_path: images/title-extractor/title_extractor.yml
     recv_from: gateway
 
   title_encoder:
-    yaml_path: yaml/encoder.yml
+    yaml_path: images/encoder/encoder.yml
     recv_from: title_extractor
     timeout_ready: 60000
 
   title_chunk_indexer:
-    yaml_path: yaml/title_chunk_indexer.yml
+    yaml_path: images/title-chunk-indexer/title_chunk_indexer.yml
     recv_from: title_encoder
 
   title_meta_chunk_indexer:
-    yaml_path: yaml/title_meta_chunk_indexer.yml
+    yaml_path: images/title-meta-chunk-indexer/title_meta_chunk_indexer.yml
     recv_from: title_chunk_indexer
 
-  merge:
-    yaml_path: yaml/merger.yml
+  merger:
+    yaml_path: images/merger/merger.yml
     recv_from: [title_meta_chunk_indexer, answer_meta_doc_indexer, answer_meta_chunk_indexer]
