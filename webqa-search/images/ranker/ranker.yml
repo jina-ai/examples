@@ -1,6 +1,6 @@
 !BiMatchRanker
 metas:
-  name: rank
+  name: ranker
 requests:
   on:
     SearchRequest:

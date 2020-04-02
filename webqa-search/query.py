@@ -37,19 +37,19 @@ def main():
     ).add(
         name='encoder', yaml_path='images/encoder/encoder.yml', recv_from="extractor", timeout_ready=60000, replicas=3
     ).add(
-        name='title_chunk_indexer', yaml_path='images/title-chunk-indexer/title_chunk_indexer.yml', recv_from='encoder'
+        name='title_compound_chunk_indexer',
+        yaml_path='images/title-compound-chunk-indexer/title_compound_chunk_indexer.yml', recv_from='encoder'
     ).add(
-        name='title_meta_chunk_indexer', yaml_path='images/title-meta-chunk-indexer/title_meta_chunk_indexer.yml', recv_from='title_chunk_indexer'
+        name='answer_compound_chunk_indexer',
+        yaml_path='images/answer-compound-chunk-indexer/answer_compound_chunk_indexer.yml', recv_from='encoder'
     ).add(
-        name='answer_chunk_indexer', yaml_path='images/answer-chunk-indexer/answer_chunk_indexer.yml', recv_from='encoder'
-    ).add(
-        name='answer_meta_chunk_indexer', yaml_path='images/answer-meta-chunk-indexer/answer_meta_chunk_indexer.yml', recv_from='answer_chunk_indexer'
-    ).add(
-        name='merge', yaml_path='images/merger/merger.yml', recv_from=['title_meta_chunk_indexer', 'answer_meta_chunk_indexer']
+        name='merge', yaml_path='images/merger/merger.yml', recv_from=['answer_compound_chunk_indexer',
+                                                                       'title_compound_chunk_indexer']
     ).add(
         name='ranker', yaml_path='images/ranker/ranker.yml', recv_from='merge'
     ).add(
-        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml', recv_from='ranker'
+        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml',
+        recv_from='ranker'
     )
 
     def print_topk(resp, fp):

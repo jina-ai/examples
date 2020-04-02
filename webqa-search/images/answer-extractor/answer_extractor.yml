@@ -2,6 +2,7 @@
 metas:
   py_modules: extractor.py
   workspace: $TMP_WORKSPACE
+  name: answer_extractor
 requests:
   on:
     IndexRequest:

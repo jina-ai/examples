@@ -8,10 +8,10 @@ from jina.flow import Flow
 workspace_path = '/tmp/jina/webqa/'
 index_file = 'web_text_zh_valid.json'
 query_file = 'web_text_zh_valid.json'
-do_index = True
+do_index = False
 
 os.environ['TMP_WORKSPACE'] = workspace_path
-os.environ['REPLICAS'] = '3'
+os.environ['REPLICAS'] = '1'
 
 def read_data(fn):
     items = {}

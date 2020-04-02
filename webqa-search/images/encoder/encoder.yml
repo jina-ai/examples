@@ -3,6 +3,7 @@ metas:
   on_gpu: false
   batch_size: 4
   workspace: $TMP_WORKSPACE
+  name: transformer_encoder
 with:
   pooling_strategy: cls
   backend: pytorch

@@ -1,19 +1,19 @@
-!MetaProtoIndexer
+!BasePbIndexer
 with:
-  index_filename: 'meta_answer_doc_index.gzip'
+  index_filename: meta_answer_doc_index.gzip
 metas:
-  name: 'AnswerMetaDocIndexer'
+  name: answer_meta_doc_indexer
   workspace: $TMP_WORKSPACE
 requests:
   on:
     IndexRequest:
       - !DocPruneDriver {}
-      - !MetaDocIndexDriver
+      - !DocPbIndexDriver
         with:
           method: add
 
     SearchRequest:
-      - !MetaDocSearchDriver
+      - !DocPbSearchDriver
         with:
           method: query
 

@@ -23,7 +23,7 @@ def read_data(fn):
         value['qid'] = qid
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:1000]:
+    for item in result[:100]:
         yield item
 def main():
     workspace_path = '/tmp/jina/webqa'
@@ -32,25 +32,25 @@ def main():
     flow = Flow().add(
         name='answer_extractor', yaml_path='images/answer-extractor/answer_extractor.yml'
     ).add(
-        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml', recv_from='answer_extractor'
+        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml',
+        recv_from='answer_extractor'
     ).add(
-        name='answer_encoder', yaml_path='images/encoder/encoder.yml', recv_from="answer_extractor", timeout_ready=60000, replicas=2
+        name='answer_encoder', yaml_path='images/encoder/encoder.yml', recv_from="answer_extractor", timeout_ready=60000,
+        replicas=2
     ).add(
-        name='answer_chunk_indexer', yaml_path='images/answer-chunk-indexer/answer_chunk_indexer.yml', recv_from='answer_encoder'
-    ).add(
-        name='answer_meta_chunk_indexer', yaml_path='images/answer-meta-chunk-indexer/answer_meta_chunk_indexer.yml', recv_from='answer_chunk_indexer'
+        name='answer_compound_chunk_indexer',
+        yaml_path='images/answer-compound-chunk-indexer/answer_compound_chunk_indexer.yml', recv_from='answer_encoder'
     ).add(
         name='title_extractor', yaml_path='images/title-extractor/title_extractor.yml', recv_from='gateway'
     ).add(
-        name='title_encoder', yaml_path='images/encoder/encoder.yml', recv_from='title_extractor', timeout_ready=60000, replicas=1
+        name='title_encoder', yaml_path='images/encoder/encoder.yml', recv_from='title_extractor', timeout_ready=60000,
+        replicas=1
     ).add(
-        name='title_chunk_indexer', yaml_path='images/title-chunk-indexer/title_chunk_indexer.yml', recv_from='title_encoder'
-    ).add(
-        name='title_meta_chunk_indexer', yaml_path='images/title-meta-chunk-indexer/title_meta_chunk_indexer.yml',
-        recv_from='title_chunk_indexer'
+        name='title_compound_chunk_indexer',
+        yaml_path='images/title-compound-chunk-indexer/title_compound_chunk_indexer.yml', recv_from='title_encoder'
     ).add(
         name='merge', yaml_path='images/merger/merger.yml',
-        recv_from=['answer_meta_chunk_indexer', 'answer_meta_doc_indexer', 'title_meta_chunk_indexer']
+        recv_from=['title_compound_chunk_indexer', 'answer_meta_doc_indexer', 'answer_compound_chunk_indexer']
     )
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))
