@@ -8,7 +8,7 @@ from jina.flow import Flow
 workspace_path = '/tmp/jina/webqa/'
 index_file = 'web_text_zh_valid.json'
 query_file = 'web_text_zh_valid.json'
-do_index = False
+do_index = True
 
 os.environ['TMP_WORKSPACE'] = workspace_path
 os.environ['REPLICAS'] = '1'

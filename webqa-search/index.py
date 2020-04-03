@@ -30,27 +30,26 @@ def main():
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
     flow = Flow().add(
-        name='answer_extractor', yaml_path='images/answer-extractor/answer_extractor.yml'
+        name='answer_extractor', yaml_path='images/answer_extractor/answer_extractor.yml'
     ).add(
-        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml',
-        recv_from='answer_extractor'
+        name='answer_encoder', yaml_path='images/encoder/encoder.yml', needs="answer_extractor", timeout_ready=60000
     ).add(
-        name='answer_encoder', yaml_path='images/encoder/encoder.yml', recv_from="answer_extractor", timeout_ready=60000,
-        replicas=2
+        name='answer_meta_doc_indexer', yaml_path='images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml',
+        needs='answer_extractor'
     ).add(
         name='answer_compound_chunk_indexer',
-        yaml_path='images/answer-compound-chunk-indexer/answer_compound_chunk_indexer.yml', recv_from='answer_encoder'
+        yaml_path='images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml', needs='answer_encoder'
     ).add(
-        name='title_extractor', yaml_path='images/title-extractor/title_extractor.yml', recv_from='gateway'
+        name='title_extractor', yaml_path='images/title_extractor/title_extractor.yml', needs='gateway'
     ).add(
-        name='title_encoder', yaml_path='images/encoder/encoder.yml', recv_from='title_extractor', timeout_ready=60000,
+        name='title_encoder', yaml_path='images/encoder/encoder.yml', needs='title_extractor', timeout_ready=60000,
         replicas=1
     ).add(
         name='title_compound_chunk_indexer',
-        yaml_path='images/title-compound-chunk-indexer/title_compound_chunk_indexer.yml', recv_from='title_encoder'
+        yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='title_encoder'
     ).add(
         name='merge', yaml_path='images/merger/merger.yml',
-        recv_from=['title_compound_chunk_indexer', 'answer_meta_doc_indexer', 'answer_compound_chunk_indexer']
+        needs=['title_compound_chunk_indexer', 'answer_meta_doc_indexer', 'answer_compound_chunk_indexer']
     )
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))

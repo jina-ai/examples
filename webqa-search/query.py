@@ -33,23 +33,23 @@ def main():
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
     flow = Flow().add(
-        name='extractor', yaml_path='images/title-extractor/title_extractor.yml', recv_from='gateway'
+        name='extractor', yaml_path='images/title_extractor/title_extractor.yml', needs='gateway'
     ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', recv_from="extractor", timeout_ready=60000, replicas=3
+        name='encoder', yaml_path='images/encoder/encoder.yml', needs="extractor", timeout_ready=60000, replicas=3
     ).add(
         name='title_compound_chunk_indexer',
-        yaml_path='images/title-compound-chunk-indexer/title_compound_chunk_indexer.yml', recv_from='encoder'
+        yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='encoder'
     ).add(
         name='answer_compound_chunk_indexer',
-        yaml_path='images/answer-compound-chunk-indexer/answer_compound_chunk_indexer.yml', recv_from='encoder'
+        yaml_path='images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml', needs='encoder'
     ).add(
-        name='merge', yaml_path='images/merger/merger.yml', recv_from=['answer_compound_chunk_indexer',
+        name='merge', yaml_path='images/merger/merger.yml', needs=['answer_compound_chunk_indexer',
                                                                        'title_compound_chunk_indexer']
     ).add(
-        name='ranker', yaml_path='images/ranker/ranker.yml', recv_from='merge'
+        name='ranker', yaml_path='images/ranker/ranker.yml', needs='merge'
     ).add(
-        name='answer_meta_doc_indexer', yaml_path='images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml',
-        recv_from='ranker'
+        name='answer_meta_doc_indexer', yaml_path='images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml',
+        needs='ranker'
     )
 
     def print_topk(resp, fp):
