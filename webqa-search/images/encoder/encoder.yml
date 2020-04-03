@@ -6,7 +6,6 @@ metas:
   name: transformer_encoder
 with:
   pooling_strategy: cls
-  backend: pytorch
   max_length: 8
   model_name: bert-base-uncased
 requests:

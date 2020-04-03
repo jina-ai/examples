@@ -1,30 +1,30 @@
 !Flow
 pods:
   extractor:
-    yaml_path: images/title-extractor/title_extractor.yml
-    recv_from: gateway
+    yaml_path: images/title_extractor/title_extractor.yml
+    needs: gateway
 
   encoder:
     yaml_path: images/encoder/encoder.yml
-    recv_from: extractor
+    needs: extractor
     timeout_ready: 60000
 
   title_compound_chunk_indexer:
-    yaml_path: images/title-compound-chunk-indexer/title_compound_chunk_indexer.yml
-    recv_from: encoder
+    yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
+    needs: encoder
 
   answer_compound_chunk_indexer:
-    yaml_path: images/answer-compound-chunk-indexer/answer_compound_chunk_indexer.yml
-    recv_from: encoder
+    yaml_path: images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml
+    needs: encoder
 
   merger:
     yaml_path: images/merger/merger.yml
-    recv_from: [answer_compound_chunk_indexer, title_compound_chunk_indexer]
+    needs: [answer_compound_chunk_indexer, title_compound_chunk_indexer]
 
   ranker:
     yaml_path: images/ranker/ranker.yml
-    recv_from: merger
+    needs: merger
 
   answer_meta_doc_indexer:
-    yaml_path: images/answer-meta-doc-indexer/answer_meta_doc_indexer.yml
-    recv_from: ranker
+    yaml_path: images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml
+    needs: ranker
