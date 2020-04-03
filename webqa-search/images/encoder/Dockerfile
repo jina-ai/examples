@@ -2,7 +2,7 @@ FROM jinaai/jina:master-debian
 
 ENV TMP_WORKSPACE /tmp/jina/webqa/
 
-RUN pip install transformers tensorflow torch torchvision -i --no-cache-dir --compile
+RUN pip install transformers tensorflow torch torchvision --no-cache-dir --compile
 
 ADD encoder.yml ./
 
