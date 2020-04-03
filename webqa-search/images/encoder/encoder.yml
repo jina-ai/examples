@@ -1,4 +1,4 @@
-!TransformerTextEncoder
+!TransformerTorchEncoder
 metas:
   on_gpu: false
   batch_size: 4
