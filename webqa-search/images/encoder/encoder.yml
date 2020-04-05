@@ -8,12 +8,3 @@ with:
   pooling_strategy: cls
   max_length: 8
   model_name: bert-base-uncased
-#requests:
-#  on:
-#    [SearchRequest, IndexRequest]:
-#      - !EncodeDriver
-#        with:
-#          method: encode
-#
-#    ControlRequest:
-#      - !ControlReqDriver {}
