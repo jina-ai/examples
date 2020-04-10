@@ -1,21 +1,8 @@
 !Flow
 pods:
-  answer_extractor:
-    yaml_path: images/answer_extractor/answer_extractor.yml
+  title_meta_doc_indexer:
+    yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
     needs: gateway
-
-  answer_encoder:
-    yaml_path: images/encoder/encoder.yml
-    needs: answer_extractor
-    timeout_ready: 60000
-
-  answer_compound_chunk_indexer:
-    yaml_path: images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml
-    needs: answer_encoder
-
-  answer_meta_doc_indexer:
-    yaml_path: images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml
-    needs: answer_extractor
 
   title_extractor:
     yaml_path: images/title_extractor/title_extractor.yml
@@ -32,4 +19,4 @@ pods:
 
   merger:
     yaml_path: images/merger/merger.yml
-    needs: [title_compound_chunk_indexer, answer_meta_doc_indexer, answer_compound_chunk_indexer]
+    needs: [title_compound_chunk_indexer, title_meta_doc_indexer]

@@ -13,18 +13,10 @@ pods:
     yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
     needs: encoder
 
-  answer_compound_chunk_indexer:
-    yaml_path: images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml
-    needs: encoder
-
-  merger:
-    yaml_path: images/merger/merger.yml
-    needs: [answer_compound_chunk_indexer, title_compound_chunk_indexer]
-
   ranker:
     yaml_path: images/ranker/ranker.yml
-    needs: merger
+    needs: title_compound_chunk_indexer
 
-  answer_meta_doc_indexer:
-    yaml_path: images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml
+  title_meta_doc_indexer:
+    yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
     needs: ranker
