@@ -1,8 +1,8 @@
-!BasePbIndexer
+!LeveldbIndexer
 with:
-  index_filename: meta_answer_doc_index.gzip
+  index_filename: meta_title_doc_index.gzip
 metas:
-  name: answer_meta_doc_indexer
+  name: title_meta_doc_indexer
   workspace: $TMP_WORKSPACE
 requests:
   on:

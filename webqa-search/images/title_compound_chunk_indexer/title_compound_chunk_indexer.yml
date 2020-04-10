@@ -7,7 +7,7 @@ components:
     metas:
       name: title_vecidx_exec
       workspace: $TMP_WORKSPACE
-  - !BasePbIndexer
+  - !LeveldbIndexer
     with:
       index_filename: title_meta_chunk_index.gzip
     metas:

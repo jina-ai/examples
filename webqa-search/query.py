@@ -35,20 +35,14 @@ def main():
     flow = Flow().add(
         name='extractor', yaml_path='images/title_extractor/title_extractor.yml', needs='gateway'
     ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', needs="extractor", timeout_ready=60000, replicas=3
+        name='encoder', yaml_path='images/encoder/encoder.yml', needs="extractor", timeout_ready=60000
     ).add(
         name='title_compound_chunk_indexer',
         yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='encoder'
     ).add(
-        name='answer_compound_chunk_indexer',
-        yaml_path='images/answer_compound_chunk_indexer/answer_compound_chunk_indexer.yml', needs='encoder'
+        name='ranker', yaml_path='images/ranker/ranker.yml', needs='title_compound_chunk_indexer'
     ).add(
-        name='merge', yaml_path='images/merger/merger.yml', needs=['answer_compound_chunk_indexer',
-                                                                       'title_compound_chunk_indexer']
-    ).add(
-        name='ranker', yaml_path='images/ranker/ranker.yml', needs='merge'
-    ).add(
-        name='answer_meta_doc_indexer', yaml_path='images/answer_meta_doc_indexer/answer_meta_doc_indexer.yml',
+        name='title_meta_doc_indexer', yaml_path='images/title_meta_doc_indexer/title_meta_doc_indexer.yml',
         needs='ranker'
     )
 
@@ -58,7 +52,7 @@ def main():
             v['metaInfo'] = d.raw_bytes.decode()
             for k, kk in zip(v['topkResults'], d.topk_results):
                 k['matchDoc']['metaInfo'] = kk.match_doc.raw_bytes.decode()
-            fp.write(json.dumps(v, sort_keys=True, indent=4)+"\n")
+            fp.write(json.dumps(v, sort_keys=True, indent=4, ensure_ascii=False)+"\n")
     with open("{}/query_result.json".format(os.environ['TMP_WORKSPACE']), "w") as fp:
         with flow.build() as f:
             pr = lambda x: print_topk(x, fp)
