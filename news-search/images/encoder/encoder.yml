@@ -1,0 +1,10 @@
+!TransformerRobertaEncoder
+metas:
+  on_gpu: false
+  batch_size: 4
+  workspace: $TMP_WORKSPACE
+  name: transformer_roberta_encoder
+  py_modules: transformer_roberta.py
+
+with:
+  model_path: /Users/maxiong/workpace/jina/jina/pre_model/chinese_roberta_wwm_ext_pytorch
