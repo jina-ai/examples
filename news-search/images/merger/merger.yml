@@ -1,0 +1,10 @@
+!BaseExecutor
+metas:
+  name: merger
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !MergeDriver {}
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -1,0 +1,20 @@
+!LeveldbIndexer
+with:
+  index_filename: meta_doc_index.gzip
+metas:
+  name: meta_doc_indexer
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !DocPbIndexDriver
+        with:
+          method: add
+
+    SearchRequest:
+      - !DocPbSearchDriver
+        with:
+          method: query
+
+    ControlRequest:
+      - !ControlReqDriver {}
