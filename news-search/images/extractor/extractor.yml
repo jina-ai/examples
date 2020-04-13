@@ -3,12 +3,15 @@ metas:
   py_modules: extractor.py
   workspace: $TMP_WORKSPACE
   name: extractor
+
 requests:
   on:
     [IndexRequest, SearchRequest]:
       - !SegmentDriver
         with:
+          random_chunk_id: false
           method: craft
+          afd: 11
 
     ControlRequest:
       - !ControlReqDriver {}

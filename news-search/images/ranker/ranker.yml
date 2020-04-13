@@ -1,9 +1,13 @@
 !BiMatchRanker
 metas:
   name: ranker
+  py_modules: weight.py
 requests:
   on:
     SearchRequest:
+      - !ChunkWeightDriver
+        with:
+          reverse: true
       - !Chunk2DocScoreDriver
         with:
           method: score
