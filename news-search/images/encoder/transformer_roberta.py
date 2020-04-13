@@ -39,7 +39,7 @@ class TransformerRobertaEncoder(BaseTextEncoder):
         self.tokenizer = BertTokenizer.from_pretrained(self._tmp_model_path)
         self.tokenizer.padding_side = 'right'
 
-        self.model = BertModel.from_pretrained(self._tmp_model_path)
+        self.model = BertModel.from_pretrained(self._tmp_model_path).cuda()
 
     @batching
     @as_ndarray
@@ -58,13 +58,13 @@ class TransformerRobertaEncoder(BaseTextEncoder):
             token_ids_batch.append(token_ids)
             mask_ids_batch.append(mask_ids)
 
-        token_ids_batch = torch.tensor(token_ids_batch)
-        mask_ids_batch = torch.tensor(mask_ids_batch)
+        token_ids_batch = torch.tensor(token_ids_batch).cuda()
+        mask_ids_batch = torch.tensor(mask_ids_batch).cuda()
 
         with torch.no_grad():
             seq_output, pooler_output, *_ = self.model(token_ids_batch, attention_mask=mask_ids_batch)
             if self.pooling_strategy == 'cls':
-                output = pooler_output.numpy()
+                output = pooler_output.cpu().numpy()
 
             elif self.pooling_strategy == 'mean':
                 output = reduce_mean(seq_output.numpy(), mask_ids_batch.numpy())

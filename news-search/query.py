@@ -22,17 +22,17 @@ def read_data(fn):
     for content in contents:
         result.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100]:
+    for item in result[:10]:
         yield item
 
 def main():
-    workspace_path = '/tmp/jina/webqa'
+    workspace_path = '/home/cally/jina/news'
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
     flow = Flow().add(
         name='extractor', yaml_path='images/extractor/extractor.yml'
     ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor'
+        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=60000
     ).add(
         name='compound_chunk_indexer',
         yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml', needs='encoder'
@@ -53,7 +53,7 @@ def main():
     with open("{}/query_result.json".format(os.environ['TMP_WORKSPACE']), "w") as fp:
         with flow.build() as f:
             pr = lambda x: print_topk(x, fp)
-            f.search(raw_bytes=read_data(data_fn), callback=pr)
+            f.search(raw_bytes=read_data(data_fn), callback=pr, top_k=3)
 
 if __name__ == '__main__':
     main()
