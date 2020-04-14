@@ -1,22 +1,20 @@
 !Flow
 with:
-  driver_yaml_path: my-driver.yml
-  sse_logger: false
+  runtime: thread
+  logserver: true
+  logserver_config: test-server-config.yml
+  read_only: true  # better add this in the query time
 pods:
   chunk_seg:
-    driver_group: segment
-    exec_yaml_path: craft/gif2chunk.yml
+    yaml_path: craft/index-craft.yml
     replicas: $REPLICAS
   tf_encode:
-    driver_group: encode
-    exec_yaml_path: encode/encode.yml
+    yaml_path: encode/encode.yml
     replicas: $REPLICAS
+    read_only: true
   chunk_idx:
-    driver_group: index-chunk-and-meta
-    exec_yaml_path: index/chunk.yml
+    yaml_path: index/chunk.yml
   ranker:
-    driver_group: score
-    exec_yaml_path: BiMatchRanker
+    yaml_path: BiMatchRanker
   doc_idx:
-    driver_group: index-meta-doc
-    exec_yaml_path: index/doc.yml
+    yaml_path: index/doc.yml
