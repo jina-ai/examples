@@ -1,5 +1,5 @@
-name: Encoder
-description: News Search Encoder use TransformerRobertaEncoder, which made of HIT-SCIR
+name: News Content Weight Extractor
+description: News Search Content Weight Extractor
 author: Jina AI Dev-Team (dev-team@jina.ai)
 url: https://jina.ai
 documentation: https://github.com/jina-ai/jina-hub
