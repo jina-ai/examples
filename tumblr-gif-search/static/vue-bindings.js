@@ -2,10 +2,10 @@ var VueMasonryPlugin = window["vue-masonry-plugin"].VueMasonryPlugin;
 Vue.use(VueMasonryPlugin);
 
 const vm = new Vue({
-    el: '#gnes-ui',
+    el: '#jina-ui',
     data: {
         serverUrl: './model/',
-        modelId: '20191211154535',//'20191122144241',
+        modelId: '20200414111706',//'20191122144241',
         databasePath: '/topk.json',
         results: [],
         queryItem: null,
