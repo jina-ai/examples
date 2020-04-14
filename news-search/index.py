@@ -32,7 +32,7 @@ def main():
         name='meta_doc_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml',
         needs='gateway'
     ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=600000
+        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=600000, replicas=1
     ).add(
         name='compound_chunk_indexer',
         yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml', needs='encoder'
