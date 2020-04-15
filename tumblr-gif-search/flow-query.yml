@@ -14,6 +14,10 @@ pods:
     read_only: true
   chunk_idx:
     yaml_path: index/chunk.yml
+    replicas: 2
+    separated_workspace: true
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
   ranker:
     yaml_path: BiMatchRanker
   doc_idx:

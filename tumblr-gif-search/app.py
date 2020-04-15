@@ -8,7 +8,7 @@ from jina.enums import FlowOptimizeLevel
 from jina.flow import Flow
 
 RUN_MODE = 'debug-query'
-MODEL_ID = '20200414111706'
+MODEL_ID = '20200415141856'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
 GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
@@ -24,7 +24,7 @@ do_index = True
 
 if RUN_MODE == 'debug-index':
     replicas = 2
-    num_docs = 100
+    num_docs = 10000
 elif RUN_MODE == 'index':
     replicas = 3
     num_docs = 200000
@@ -85,4 +85,4 @@ else:
         else:
             bytes_gen = bytes_gen()
         with q.build() as fl:
-            fl.search(bytes_gen, callback=ppr, top_k=60, batch_size=8)
+            fl.search(bytes_gen, callback=ppr, top_k=80, batch_size=8)
