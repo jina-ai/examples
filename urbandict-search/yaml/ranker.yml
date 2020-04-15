@@ -1,4 +1,4 @@
-!BiMatchRanker
+!BM25Ranker
 metas:
   name: rank
 requests:
