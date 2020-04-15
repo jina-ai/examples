@@ -7,8 +7,8 @@ from google.protobuf.json_format import MessageToDict
 from jina.enums import FlowOptimizeLevel
 from jina.flow import Flow
 
-RUN_MODE = 'index'
-MODEL_ID = '20200415141856'
+RUN_MODE = 'debug-query'
+MODEL_ID = '20200415174128'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
 GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
