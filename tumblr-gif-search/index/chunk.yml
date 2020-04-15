@@ -4,13 +4,13 @@ components:
     with:
       index_filename: vec.gz
     metas:
-      name: vecidx_exec  # a customized name
+      name: vecidx  # a customized name
       workspace: $TEST_WORKDIR
   - !BasePbIndexer
     with:
       index_filename: chunk.gz
     metas:
-      name: chunkidx_exec
+      name: chunkidx
       workspace: $TEST_WORKDIR
 metas:
   name: chunk_compound_indexer
@@ -20,18 +20,18 @@ requests:
     SearchRequest:
       - !ChunkSearchDriver
         with:
-          executor: vecidx_exec
+          executor: vecidx
       - !ChunkPruneDriver {}
       - !ChunkPbSearchDriver
         with:
-          executor: chunkidx_exec
+          executor: chunkidx
     IndexRequest:
       - !ChunkIndexDriver
         with:
-          executor: vecidx_exec
+          executor: vecidx
       - !ChunkPruneDriver {}
       - !ChunkPbIndexDriver
         with:
-          executor: chunkidx_exec
+          executor: chunkidx
     ControlRequest:
       - !ControlReqDriver {}
