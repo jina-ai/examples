@@ -7,7 +7,7 @@ from google.protobuf.json_format import MessageToDict
 from jina.enums import FlowOptimizeLevel
 from jina.flow import Flow
 
-RUN_MODE = 'debug-query'
+RUN_MODE = 'index'
 MODEL_ID = '20200415141856'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
@@ -15,12 +15,14 @@ GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
 TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 os.environ['TEST_WORKDIR'] = WORK_DIR + MODEL_ID
-os.environ['JINA_LOG_FILE'] = 'JSON'
+# os.environ['JINA_LOG_FILE'] = 'JSON'
 # os.environ['JINA_PROFILING'] = 'true'
 # os.environ['JINA_LOG_VERBOSITY'] = 'DEBUG'
 # os.environ['GRPC_VERBOSITY'] = 'debug'
 # os.environ['GRPC_TRACE']='tcp'
 do_index = True
+
+shards = 8
 
 if RUN_MODE == 'debug-index':
     replicas = 2
@@ -36,6 +38,7 @@ else:
     raise AttributeError(RUN_MODE)
 
 os.environ['REPLICAS'] = str(replicas)
+os.environ['SHARDS'] = str(shards)
 
 if RUN_MODE.endswith('index'):
     os.environ['TEST_WORKDIR'] = WORK_DIR + TIMESTAMP

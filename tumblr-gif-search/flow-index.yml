@@ -1,7 +1,6 @@
 !Flow
 with:
-  runtime: process
-  logserver: true
+  logserver: false
   logserver_config: test-server-config.yml
 pods:
   chunk_seg:
@@ -17,7 +16,7 @@ pods:
     read_only: true
   chunk_idx:
     yaml_path: index/chunk.yml
-    replicas: 2
+    replicas: $SHARDS
     separated_workspace: true
   join_all:
     yaml_path: _merge
