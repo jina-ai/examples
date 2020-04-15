@@ -21,20 +21,17 @@ requests:
       - !ChunkSearchDriver
         with:
           executor: vecidx_exec
-          method: query
+      - !ChunkPruneDriver {}
       - !ChunkPbSearchDriver
         with:
           executor: chunkidx_exec
-          method: query
     IndexRequest:
       - !ChunkIndexDriver
         with:
           executor: vecidx_exec
-          method: add
       - !ChunkPruneDriver {}
       - !ChunkPbIndexDriver
         with:
           executor: chunkidx_exec
-          method: add
     ControlRequest:
       - !ControlReqDriver {}

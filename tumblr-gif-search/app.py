@@ -1,31 +1,32 @@
 import glob
 import json
 import os
-import random
 from datetime import datetime
 
 from google.protobuf.json_format import MessageToDict
+from jina.enums import FlowOptimizeLevel
 from jina.flow import Flow
 
-RUN_MODE = 'debug-index'
-MODEL_ID = '20200202224053'
+RUN_MODE = 'debug-query'
+MODEL_ID = '20200415141856'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
 GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
 TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 os.environ['TEST_WORKDIR'] = WORK_DIR + MODEL_ID
-os.environ['GNES_LOG_FORMAT'] = 'JSON'
-os.environ['REPLICAS'] = '3'
+os.environ['JINA_LOG_FILE'] = 'JSON'
+# os.environ['JINA_PROFILING'] = 'true'
+# os.environ['JINA_LOG_VERBOSITY'] = 'DEBUG'
 # os.environ['GRPC_VERBOSITY'] = 'debug'
 # os.environ['GRPC_TRACE']='tcp'
 do_index = True
 
 if RUN_MODE == 'debug-index':
-    replicas = 1
-    num_docs = 1000
+    replicas = 2
+    num_docs = 10000
 elif RUN_MODE == 'index':
-    replicas = 4
+    replicas = 3
     num_docs = 200000
 elif RUN_MODE == 'debug-query' or RUN_MODE == 'query':
     do_index = False
@@ -33,6 +34,8 @@ elif RUN_MODE == 'debug-query' or RUN_MODE == 'query':
     num_docs = 10
 else:
     raise AttributeError(RUN_MODE)
+
+os.environ['REPLICAS'] = str(replicas)
 
 if RUN_MODE.endswith('index'):
     os.environ['TEST_WORKDIR'] = WORK_DIR + TIMESTAMP
@@ -42,21 +45,34 @@ if RUN_MODE.endswith('index'):
 def print_result(resp, fp):
     for d in resp.search.docs:
         v = MessageToDict(d, including_default_value_fields=True)
-        v['metaInfo'] = d.raw_bytes.decode()
+        v['metaInfo'] = d.meta_info.decode()
         for k, kk in zip(v['topkResults'], d.topk_results):
-            k['matchDoc']['metaInfo'] = kk.match_doc.raw_bytes.decode()
+            k['matchDoc']['metaInfo'] = kk.match_doc.meta_info.decode()
             # k['score']['explained'] = json.loads(kk.score.explained)
         fp.write(json.dumps(v, sort_keys=True) + '\n')
 
 
+def bytes_gen(random=False, with_filename=True):
+    idx = 0
+    for g in glob.glob(GIF_BLOB)[:num_docs]:
+        with open(g, 'rb') as fp:
+            # print(f'im asking to read {idx}')
+            if with_filename:
+                yield g.encode() + b'JINA_DELIM' + fp.read()
+            else:
+                yield fp.read()
+            idx += 1
+
+
 if do_index:
     # index
-    f = Flow.load_config('flow-index.yml')
+    f = Flow().load_config('flow-index.yml')
+    f.optimize_level = FlowOptimizeLevel.IGNORE_GATEWAY
 
-    bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
+    # bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 
     with f.build() as fl:
-        fl.index(bytes_gen, batch_size=64)
+        fl.index(bytes_gen(), batch_size=8)
 else:
     # query
     q = Flow.load_config('flow-query.yml')
@@ -65,8 +81,8 @@ else:
         ppr = lambda x: print_result(x, fp)
 
         if RUN_MODE == 'query':
-            bytes_gen = (g.encode() for g in random.sample(glob.glob(GIF_BLOB), num_docs))
+            bytes_gen = bytes_gen(random=True)
         else:
-            bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
-        with q.build(backend='process') as fl:
-            fl.search(bytes_gen, callback=ppr, top_k=60, batch_size=32)
+            bytes_gen = bytes_gen()
+        with q.build() as fl:
+            fl.search(bytes_gen, callback=ppr, top_k=80, batch_size=8)

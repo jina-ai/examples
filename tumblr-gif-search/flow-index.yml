@@ -1,18 +1,25 @@
 !Flow
 with:
   runtime: process
+  logserver: true
+  logserver_config: test-server-config.yml
 pods:
   chunk_seg:
-    yaml_path: craft/gif2chunk.yml
+    yaml_path: craft/index-craft.yml
     replicas: $REPLICAS
+    read_only: true
   doc_idx:
     yaml_path: index/doc.yml
   tf_encode:
     yaml_path: encode/encode.yml
-    recv_from: chunk_seg
+    needs: chunk_seg
     replicas: $REPLICAS
+    read_only: true
   chunk_idx:
     yaml_path: index/chunk.yml
+    replicas: 2
+    separated_workspace: true
   join_all:
-    yaml_path: merge
-    recv_from: [doc_idx, chunk_idx]
+    yaml_path: _merge
+    needs: [doc_idx, chunk_idx]
+    read_only: true
