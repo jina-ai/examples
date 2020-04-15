@@ -33,7 +33,7 @@ def main():
             fp.write(json.dumps(v, sort_keys=True, indent=4)+"\n")
 
     with open("{}/query_result.json".format(os.environ['TMP_WORKSPACE']), "w") as fp:
-        with flow.build(runtime="thread") as f:
+        with flow.build() as f:
             ppr = lambda x: print_topk(x, fp)
             f.search(read_data(data_fn, 10), callback=ppr)
 

@@ -50,17 +50,17 @@ def main():
         name='meta_doc_indexer', yaml_path='yaml/meta_doc_indexer.yml'
     ).add(
         name='encoder', yaml_path='yaml/encoder.yml',
-        recv_from='extractor'
+        needs='extractor', timeout_ready=600000
     ).add(
-        name='compound_chunk_indexer', yaml_path='yaml/compound_chunk_indexer.yml',
-        recv_from='encoder'
+        name='compound_chunk_indexer', yaml_path='yaml/compound_chunk_indexer.yml', batch_size=10,
+        needs='encoder'
     ).add(
         name='merger', yaml_path='yaml/merger.yml',
-        recv_from=['meta_doc_indexer', 'compound_chunk_indexer']
+        needs=['meta_doc_indexer', 'compound_chunk_indexer']
     ))
 
-    with flow.build(runtime="thread") as f:
-        f.index(raw_bytes=read_data(data_fn))
+    with flow.build() as f:
+        f.index(raw_bytes=read_data(data_fn, max_sample_size=50), prefetch=2)
 
 
 if __name__ == '__main__':
