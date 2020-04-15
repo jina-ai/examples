@@ -1,6 +1,6 @@
-!RandomEncoder
+!TransformerTorchEncoder
 metas:
-  py_modules: customized_executors.py
+  pooling_strategy: cls
 requests:
   on:
     [SearchRequest, IndexRequest, TrainRequest]:

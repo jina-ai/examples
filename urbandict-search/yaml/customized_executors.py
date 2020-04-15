@@ -1,11 +1,11 @@
-from jina.executors.transformers import BaseSegmenter
+from jina.executors.crafters import BaseSegmenter
 from jina.executors.encoders import BaseTextEncoder
 import json
 import numpy as np
 
 
 class DictEntryExtractor(BaseSegmenter):
-    def transform(self, doc_id, raw_bytes, *args, **kwargs):
+    def craft(self, doc_id, raw_bytes, *args, **kwargs):
         json_str = raw_bytes.decode("utf8")
         json_dict = json.loads(json_str)
         word = json_dict["word"]
@@ -16,7 +16,6 @@ class DictEntryExtractor(BaseSegmenter):
             chunk_list.append(
                 {
                     "raw_bytes": chunk_text.encode("utf8"),
-                    "chunk_id": idx,
                     "doc_id": doc_id,
                     "offset": idx,
                     "weight": chunk_weight,
