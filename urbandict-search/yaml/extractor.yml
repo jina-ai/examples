@@ -6,6 +6,6 @@ requests:
     [SearchRequest, IndexRequest, TrainRequest]:
       - !SegmentDriver
         with:
-          method: transform
+          method: craft
     ControlRequest:
       - !ControlReqDriver {}

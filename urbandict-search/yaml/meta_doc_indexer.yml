@@ -1,19 +1,21 @@
-!MetaProtoIndexer
+!LeveldbIndexer
 with:
-  index_filename: 'meta_doc_index.gzip'
+  index_filename: 'meta_doc_index.db'
 metas:
-  name: 'MetaDocIndexer'
+  name: 'LeveldbIndexer'
   workspace: $TMP_WORKSPACE
 requests:
   on:
     SearchRequest:
-      - !MetaDocSearchDriver
+      - !DocPbSearchDriver
         with:
           method: query
 
     IndexRequest:
-      - !DocPruneDriver {}
-      - !MetaDocIndexDriver
+      - !DocPruneDriver
+        with:
+          pruned: ['chunks']
+      - !DocPbIndexDriver
         with:
           method: add
 
