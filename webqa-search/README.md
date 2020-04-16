@@ -281,10 +281,7 @@ flow = Flow().add(
     ).add(
         name='title_compound_chunk_indexer',
         yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='title_encoder'
-    ).join(
-        name='merge', yaml_path='images/merger/merger.yml',
-        needs=['title_compound_chunk_indexer', 'title_meta_doc_indexer']
-    )
+    ).join(['title_compound_chunk_indexer', 'title_meta_doc_indexer'])
 ```
 
     看到这，你脑中有没有觉得很神奇？Wow！Magic！有没有恍然大悟？一个yaml文件就对应一个Pod！
