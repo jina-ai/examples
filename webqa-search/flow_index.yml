@@ -15,7 +15,7 @@ pods:
 
   title_compound_chunk_indexer:
     yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
-    needs: answer_encoder
+    needs: title_encoder
 
   merger:
     yaml_path: images/merger/merger.yml
