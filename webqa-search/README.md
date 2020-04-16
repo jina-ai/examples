@@ -11,8 +11,8 @@
     好，今天我们来介绍如何使用jina**快速**搭建一套中文问答搜索引擎。
 
 ## 效果展示
-![结果展示](pictures/result.png)
 
+![结果展示](pictures/result.png)
 
 ## 组件
 
@@ -262,20 +262,9 @@ requests:
           method: add
 ```
 
-#### Merger
+#### Join
 
-    你可能会问，`Merger`是用来干嘛的？我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。你想象一下，当`doc`级别的索引创建完成之后，`chunk`级别的索引没有创建完成，那么jina需要做什么？需要等待`chunk`级别的索引创建完成。所以`Merger`的作用就是等待，然后结束任务！
-
-```yml
-!BaseExecutor
-metas:
-  name: merger
-  workspace: $TMP_WORKSPACE
-requests:
-  on:
-    IndexRequest:
-      - !MergeDriver {}
-```
+    你可能会问，`Join`是用来干嘛的？我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。你想象一下，当`doc`级别的索引创建完成之后，`chunk`级别的索引没有创建完成，那么jina需要做什么？需要等待`chunk`级别的索引创建完成。所以`Join`的作用就是等待，然后结束任务！
 
 #### Index Flow
 
@@ -292,7 +281,7 @@ flow = Flow().add(
     ).add(
         name='title_compound_chunk_indexer',
         yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='title_encoder'
-    ).add(
+    ).join(
         name='merge', yaml_path='images/merger/merger.yml',
         needs=['title_compound_chunk_indexer', 'title_meta_doc_indexer']
     )
