@@ -1,6 +1,6 @@
 !Flow
 with:
-  logserver: false
+  logserver: true
   logserver_config: test-server-config.yml
 pods:
   chunk_seg:
