@@ -11,7 +11,6 @@ requests:
         with:
           random_chunk_id: false
           method: craft
-          afd: 11
 
     ControlRequest:
       - !ControlReqDriver {}
