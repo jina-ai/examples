@@ -39,10 +39,7 @@ def main():
     ).add(
         name='title_compound_chunk_indexer',
         yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='title_encoder'
-    ).add(
-        name='merge', yaml_path='images/merger/merger.yml',
-        needs=['title_compound_chunk_indexer', 'title_meta_doc_indexer']
-    )
+    ).join(['title_compound_chunk_indexer', 'title_meta_doc_indexer'])
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))
 
