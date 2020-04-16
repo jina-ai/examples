@@ -194,10 +194,7 @@ requests:
     ).add(
         name='compound_chunk_indexer',
         yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml', needs='encoder'
-    ).add(
-        name='merge', yaml_path='images/merger/merger.yml',
-        needs=['compound_chunk_indexer', 'meta_doc_indexer']
-    )
+    ).join(eeds=['compound_chunk_indexer', 'meta_doc_indexer'])
 ```
 
 ### 查询
