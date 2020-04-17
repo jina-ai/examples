@@ -14,13 +14,13 @@ def read_data(fn):
             if content == '':
                 continue
 
-            items.append(item)
+            items.append({'content': content})
 
     results = []
     for content in items:
         results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
 
-    for item in results[:5000]:
+    for item in results[:100]:
         yield item
 
 
@@ -37,7 +37,6 @@ def main():
             .join(['cc_indexer', 'md_indexer']))
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))
-
 
 if __name__ == '__main__':
     main()
