@@ -1,13 +1,12 @@
-!LeveldbIndexer
+!BasePbIndexer
 with:
-  index_filename: meta_title_doc_index.db
+  index_filename: meta_title_doc_index.gzip
 metas:
   name: title_meta_doc_indexer
   workspace: $TMP_WORKSPACE
 requests:
   on:
     IndexRequest:
-      - !DocPruneDriver {}
       - !DocPbIndexDriver
         with:
           method: add
