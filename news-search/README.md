@@ -15,7 +15,7 @@
 ### Index Flow
 
 ```python
-flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
+index_flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
  .add(name='md_indexer', yaml_path='meta_doc_indexer.yml',needs='gateway')
  .add(name='encoder', yaml_path='encoder.yml', needs='extractor', timeout_ready=600000, replicas=1)
  .add(name='cc_indexer',yaml_path='compound_chunk_indexer.yml',
@@ -26,7 +26,7 @@ flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
 ### Query Flow
 
 ```python
-flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
+query_flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
  .add(name='encoder', yaml_path='encoder.yml', needs='extractor', timeout_ready=60000, replicas=2)
  .add(name='compound_chunk_indexer', yaml_path='compound_chunk_indexer.yml',
  needs='encoder', timeout_ready=60000)
