@@ -25,23 +25,21 @@ def read_data(fn):
 
     for item in result[:100]:
         yield item
+
+
 def main():
     workspace_path = '/tmp/jina/webqa'
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
-    flow = Flow().add(
-        name='title_extractor', yaml_path='images/title_extractor/title_extractor.yml'
-    ).add(
-        name='title_meta_doc_indexer', yaml_path='images/title_meta_doc_indexer/title_meta_doc_indexer.yml',
-        needs='gateway'
-    ).add(
-        name='title_encoder', yaml_path='images/encoder/encoder.yml', needs='title_extractor', timeout_ready=60000,
-    ).add(
-        name='title_compound_chunk_indexer',
-        yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml', needs='title_encoder'
-    ).join(['title_compound_chunk_indexer', 'title_meta_doc_indexer'])
+    flow = (Flow().add(name='title_extractor', yaml_path='images/title_extractor/title_extractor.yml')
+        .add(name='tmd_indexer', yaml_path='images/title_meta_doc_indexer/title_meta_doc_indexer.yml', needs='gateway')
+        .add(name='title_encoder', yaml_path='images/encoder/encoder.yml', needs='title_extractor', timeout_ready=60000)
+        .add(name='tcc_indexer', yaml_path='images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml',
+             needs='title_encoder')
+        .join(['tcc_indexer', 'tmd_indexer']))
     with flow.build() as f:
         f.index(raw_bytes=read_data(data_fn))
+
 
 if __name__ == '__main__':
     main()
