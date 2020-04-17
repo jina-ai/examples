@@ -8,7 +8,9 @@ requests:
       - !Chunk2DocScoreDriver
         with:
           method: score
-      - !DocPruneDriver {}
+      - !DocPruneDriver
+        with:
+          pruned: chunks
     ControlRequest:
       - !ControlReqDriver {}
 
