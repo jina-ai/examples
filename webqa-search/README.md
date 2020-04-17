@@ -76,6 +76,8 @@ query_flow = (Flow().add(name='extractor', yaml_path='title_extractor.yml', need
 
     由于web text 2019数据集中存在答案和问题，所以在创建索引时，我们只需要对问题创建索引，为什么呢？因为我们在搜索的时候，我们输入的是问题，只需要将索引中与搜索的问题最相关的问题找出来即可！
 
+
+
 #### Title Extractor
 
     `tilte extractor`的作用是将`doc`中的tilte取出来放入`chunks`中，即将`doc`级别的信息分割成`chunk`级别的信息；这里每一个`doc`中只有一个`chunk`，即`chunks`的长度永远为1。
@@ -123,8 +125,6 @@ requests:
 
 3. `name`：指定`executor`的`name`。
 
-
-
 > requests on
 
     指定不同`Request`的情况下，调用什么类型的`Driver`和`Executor`中的什么方法！jina支持4中不同模态的`Request`！
@@ -137,11 +137,11 @@ requests:
 
 4. `ControlRequest`: 用于远程控制模态
 
-
-
 > Driver
 
     Driver是一个消息类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换为ProtoBuf，各种Driver的作用见[文档](https://github.com/jina-ai/examples/blob/webqa-search/webqa-search)
+
+
 
 #### Encoder
 
@@ -174,8 +174,6 @@ requests:
             seq_output, pooler_output, *_ = self.model(token_ids_batch, attention_mask=mask_ids_batch)
             return pooler_output.numpy()
 ```
-
-   
 
     yaml文件
 
@@ -255,6 +253,8 @@ requests:
 
     当有多个`Driver`时，会依次执行`Driver`中的`__call___`方法，而在`__call__`方法中，如果存在`Executor`的方法，那么会执行`Executor`中的方法，并执行`Driver`中其他的逻辑。
 
+
+
 #### Title Meta Doc Indexer
 
     `title meta doc indexer`的作用就是将`doc`级别的索引进行存储，也就是存储原json内容和该json对应的`doc_id`，以便在查询时利用`doc_id`对原始数据进行召回！
@@ -285,9 +285,11 @@ requests:
       - !ControlReqDriver {}
 ```
 
+
+
 #### Join
 
-    你可能会问，`Join`是用来干嘛的？我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。并且在jina中这两个索引的创建过程是**并行**的。当其中一个流完成了以后，jina需要干嘛？等待另外一条流执行完成，然后执行后面的任务！
+   我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。并且在jina中这两个索引的创建过程是**并行**的。当其中一个流完成了以后，jina需要干嘛？等待另外一条流执行完成，然后执行后面的任务！
 
 
 
@@ -335,6 +337,8 @@ flow.index(raw_bytes=read_data(data_fn))
 
     这里我们使用`index()`方法，发送了`IndexRequest`请求类型，`raw_bytes`就是导入的数据！
 
+
+
 ### 查询
 
     上面我们已经完成了索引的创建，下面我们开始查询`Flow`的创建！
@@ -359,9 +363,13 @@ flow.index(raw_bytes=read_data(data_fn))
 
     在计算与关联度时，我们使用了余弦相似度，因为在bert中，如果存在多个文本，余弦分数最高的文本，那么就与查询文本最相似！
 
+
+
 #### Title Compound Chunk Indexer
 
     在查询的过程中，我们先利用了余弦相似度找出了`top_k`的问题，找出的`top_k`都是`chunk`级别的信息，然后我们再利用`chunk_id`找出`chunk`与`doc`的对应关系。
+
+
 
 #### Ranker
 
@@ -381,6 +389,8 @@ requests:
 ```
 
     我们得到了`doc_id`的信息，但是我们需要相似问题和答案，所以我们就需要`title_meta_doc_indexer`。
+
+
 
 #### Title Meta Doc Indexer
 
@@ -424,6 +434,8 @@ requests:
 flow.search(raw_bytes=read_data(data_fn), top_k=10)
 ```
 
+## 
+
 ## 容器
 
     在前言中，我们提到过jina是**利用容器技术实现了模型容器化**，那么是怎么利用的呢？答案就是可以直接在Pod中直接加载docker image，不用写繁琐的yaml文件！Awesome!
@@ -445,6 +457,8 @@ add(
 ```
 
     你可能在想，这里既然用了容器！那是不是我也可以通过容器来加载其他的预训练模型的镜像呢？答案是可以的！Wow！Magic！我想切什么预训练模型就切什么预训练模型，而且过程太简单了！哇，太爽了！我要去[Jina-hub]([https://github.com/jina-ai/jina-hub)上看看都有什么预训练模型！
+
+## 
 
 ## 分布式
 
