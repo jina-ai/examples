@@ -9,14 +9,14 @@ pods:
     needs: extractor
     timeout_ready: 60000
 
-  title_compound_chunk_indexer:
+  tcc_indexer:
     yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
     needs: encoder
 
   ranker:
     yaml_path: images/ranker/ranker.yml
-    needs: title_compound_chunk_indexer
+    needs: tcc_indexer
 
-  title_meta_doc_indexer:
+  tmd_indexer:
     yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
     needs: ranker

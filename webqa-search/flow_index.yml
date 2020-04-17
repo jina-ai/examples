@@ -1,6 +1,6 @@
 !Flow
 pods:
-  title_meta_doc_indexer:
+  tmd_indexer:
     yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
     needs: gateway
 
@@ -13,10 +13,10 @@ pods:
     needs: title_extractor
     timeout_ready: 60000
 
-  title_compound_chunk_indexer:
+  tcc_indexer:
     yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
     needs: title_encoder
 
   merger:
     yaml_path: images/merger/merger.yml
-    needs: [title_compound_chunk_indexer, title_meta_doc_indexer]
+    needs: [tcc_indexer, tmd_indexer]
