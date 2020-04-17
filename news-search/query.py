@@ -30,11 +30,12 @@ def main():
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
     flow = (Flow().add(name='extractor', yaml_path='images/extractor/extractor.yml')
-        .add(name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=60000, replicas=2)
-        .add(name='compound_chunk_indexer', yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml',
-             needs='encoder', timeout_ready=60000)
-        .add(name='ranker', yaml_path='images/ranker/ranker.yml', needs='compound_chunk_indexer')
-        .add(name='meta_doc_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml', needs='ranker'))
+            .add(name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=60000,
+                 replicas=2)
+            .add(name='compound_chunk_indexer', yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml',
+                 needs='encoder', timeout_ready=60000)
+            .add(name='ranker', yaml_path='images/ranker/ranker.yml', needs='compound_chunk_indexer')
+            .add(name='meta_doc_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml', needs='ranker'))
 
     def print_topk(resp, fp):
         for d in resp.search.docs:
