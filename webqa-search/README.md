@@ -76,8 +76,6 @@ query_flow = (Flow().add(name='extractor', yaml_path='title_extractor.yml', need
 
     由于web text 2019数据集中存在答案和问题，所以在创建索引时，我们只需要对问题创建索引，为什么呢？因为我们在搜索的时候，我们输入的是问题，只需要将索引中与搜索的问题最相关的问题找出来即可！
 
-
-
 #### Title Extractor
 
     `tilte extractor`的作用是将`doc`中的tilte取出来放入`chunks`中，即将`doc`级别的信息分割成`chunk`级别的信息；这里每一个`doc`中只有一个`chunk`，即`chunks`的长度永远为1。
@@ -141,8 +139,6 @@ requests:
 
     Driver是一个消息类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换为ProtoBuf，各种Driver的作用见[文档](https://github.com/jina-ai/examples/blob/webqa-search/webqa-search)
 
-
-
 #### Encoder
 
     我们在`crafter`已经将`doc`级别的信息分割成了`chunk`级别的信息，那么我们下面需要将文本编码成向量。
@@ -192,8 +188,6 @@ metas:
 2. `on_gpu`: 指定是否在`GPU`上运行！
 
 3. 在`encoder`类型的`Executor`不需要指定`request on`，因为jina内部默认指定在`IndexRequest`和`SearchRequest`的时候调用`EncoderDriver`和`Encoder`类型的`Executor`的`encode`方法。
-
-
 
 #### Title Compound Chunk Indexer
 
@@ -253,8 +247,6 @@ requests:
 
     当有多个`Driver`时，会依次执行`Driver`中的`__call___`方法，而在`__call__`方法中，如果存在`Executor`的方法，那么会执行`Executor`中的方法，并执行`Driver`中其他的逻辑。
 
-
-
 #### Title Meta Doc Indexer
 
     `title meta doc indexer`的作用就是将`doc`级别的索引进行存储，也就是存储原json内容和该json对应的`doc_id`，以便在查询时利用`doc_id`对原始数据进行召回！
@@ -285,13 +277,9 @@ requests:
       - !ControlReqDriver {}
 ```
 
-
-
 #### Join
 
    我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。并且在jina中这两个索引的创建过程是**并行**的。当其中一个流完成了以后，jina需要干嘛？等待另外一条流执行完成，然后执行后面的任务！
-
-
 
 #### Build
 
@@ -300,8 +288,6 @@ requests:
 ```python
 flow = flow.build()  
 ```
-
-
 
 #### Index
 
@@ -337,8 +323,6 @@ flow.index(raw_bytes=read_data(data_fn))
 
     这里我们使用`index()`方法，发送了`IndexRequest`请求类型，`raw_bytes`就是导入的数据！
 
-
-
 ### 查询
 
     上面我们已经完成了索引的创建，下面我们开始查询`Flow`的创建！
@@ -363,13 +347,9 @@ flow.index(raw_bytes=read_data(data_fn))
 
     在计算与关联度时，我们使用了余弦相似度，因为在bert中，如果存在多个文本，余弦分数最高的文本，那么就与查询文本最相似！
 
-
-
 #### Title Compound Chunk Indexer
 
     在查询的过程中，我们先利用了余弦相似度找出了`top_k`的问题，找出的`top_k`都是`chunk`级别的信息，然后我们再利用`chunk_id`找出`chunk`与`doc`的对应关系。
-
-
 
 #### Ranker
 
@@ -390,41 +370,13 @@ requests:
 
     我们得到了`doc_id`的信息，但是我们需要相似问题和答案，所以我们就需要`title_meta_doc_indexer`。
 
-
-
 #### Title Meta Doc Indexer
 
     在创建索引的时候我们通过`title_meta_doc_indexer`存储了`doc_id`与文档的对应关系和原文档原始内容，所以我们在这只需要通过`doc_id`就能找出原文档，并返回给用户！
 
-```yml
-!LeveldbIndexer
-with:
- index_filename: meta_title_doc_index.gzip
-metas:
- name: title_meta_doc_indexer
- workspace: $TMP_WORKSPACE
-requests:
- on:
- IndexRequest:
- - !DocPruneDriver {}
- - !DocPbIndexDriver
- with:
- method: add
- SearchRequest:
- - !DocPbSearchDriver
- with:
- method: query
- ControlRequest:
- - !ControlReqDriver {}
-```
-
-
-
 #### Build
 
     类似于创建索引时，我们需要build `Flow`。
-
-
 
 #### Query
 
@@ -434,7 +386,7 @@ requests:
 flow.search(raw_bytes=read_data(data_fn), top_k=10)
 ```
 
-## 
+
 
 ## 容器
 
