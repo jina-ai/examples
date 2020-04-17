@@ -1,13 +1,10 @@
-!BiMatchRanker
+!WeightBiMatchRanker
 metas:
-  name: ranker
-  py_modules: weight.py
+  name: weight_ranker
+  py_modules: weight_ranker.py
 requests:
   on:
     SearchRequest:
-      - !ChunkWeightDriver
-        with:
-          reverse: true
       - !Chunk2DocScoreDriver
         with:
           method: score
