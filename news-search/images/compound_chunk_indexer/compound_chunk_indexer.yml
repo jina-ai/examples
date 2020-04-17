@@ -7,7 +7,7 @@ components:
     metas:
       name: vecidx_exec
       workspace: $TMP_WORKSPACE
-  - !BasePbIndexer
+  - !LeveldbIndexer
     with:
       index_filename: meta_chunk_index.db
     metas:
