@@ -1,6 +1,6 @@
-!BasePbIndexer
+!LeveldbIndexer
 with:
-  index_filename: meta_title_doc_index.gzip
+  index_filename: meta_title_doc_index.db
 metas:
   name: title_meta_doc_indexer
   workspace: $TMP_WORKSPACE
