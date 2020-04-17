@@ -2,19 +2,37 @@
 
 ## 前言
 
-    经过上一篇介绍，我想大家已经对Jina有了一定的认识，如果还没有阅读的同学，可以点击[链接]()！
+    经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，可以点击[链接]()！
 
-    在上一篇中我们利用Jina，实现了WebQA的搜索引擎，效果如大家所见，还是**蛮不错的(*^__^*) 嘻嘻……！**我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即title搜索title，那么你或许会问Jina能不能长文本搜索长文本呢？答案显而易见，Sure!
+    在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，还是**蛮不错的(*^__^*) 嘻嘻……！**我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即title搜索title，每个doc中的chunk只有一个，那么你或许会问jina能不能长文本搜索长文本呢，每个doc中chunk有多个？答案显而易见，Sure!
 
     那么，怎么做呢？请看如下分解！
 
-
-
 ## 效果展示
 
-    话不多说，直接看效果！
 
 
+### Index Flow
+
+```python
+flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
+ .add(name='md_indexer', yaml_path='meta_doc_indexer.yml',needs='gateway')
+ .add(name='encoder', yaml_path='encoder.yml', needs='extractor', timeout_ready=600000, replicas=1)
+ .add(name='cc_indexer',yaml_path='compound_chunk_indexer.yml',
+ needs='encoder')
+ .join(['cc_indexer', 'md_indexer']))
+```
+
+### Query Flow
+
+```python
+flow = (Flow().add(name='extractor', yaml_path='extractor.yml')
+ .add(name='encoder', yaml_path='encoder.yml', needs='extractor', timeout_ready=60000, replicas=2)
+ .add(name='compound_chunk_indexer', yaml_path='compound_chunk_indexer.yml',
+ needs='encoder', timeout_ready=60000)
+ .add(name='ranker', yaml_path='ranker.yml', needs='compound_chunk_indexer')
+ .add(name='meta_doc_indexer', yaml_path='meta_doc_indexer.yml', needs='ranker'))
+```
 
 ## 数据集
 
@@ -38,8 +56,6 @@
 {"news_id": "610130831", "keywords": "导游，门票","title": "故宫淡季门票40元 “黑导游”卖外地客140元", "desc": "近日有网友微博爆料称，故宫午门广场售票处出现“黑导游”，专门向外地游客出售高价门票。昨日，记者实地探访故宫，发现“黑导游”确实存在。窗口出售", "source": "新华网", "time": "03-22 12:00", "content": "近日有网友微博爆料称，故宫午门广场售票处出现“黑导游”，专门向外地游客出售高价门票。昨日，记者实地探访故宫，发现“黑导游”确实存在。窗口出售40元的门票，被“黑导游”加价出售，最高加到140元。故宫方面表示，请游客务必通过正规渠道购买门票，避免上当受骗遭受损失。目前单笔门票购买流程不过几秒钟，耐心排队购票也不会等待太长时间。....再反弹”的态势，打击黑导游需要游客配合，通过正规渠道购买门票。"}
 ```
 
-
-
 ## 搭建过程
 
 ### 创建索引
@@ -49,8 +65,6 @@
     Flow结构图如下
 
 ![](pictures/index.jpg)
-
-
 
 #### Extractor
 
@@ -67,13 +81,11 @@ class WeightSentencizer(Sentencizer):
         return results
 ```
 
-    由于是长文本，每个子句对文本的主旨贡献不同，所以，我们采用了权重的方式进行对chunk进行的权重设置；并且由于数据集是新闻数据集，而且新闻数据集存在一个特点，开头信息在文本中贡献度较大，而越往后，则没那么重要，所以这里我们采取了一个线性递减的权重。
-
-
+    由于是长文本，每个子句对文本的主旨贡献不同，所以，我们采用了权重的方式进行对`chunk`进行的权重设置；并且由于数据集是新闻数据集，而且新闻数据集存在一个特点，开头信息在文本主旨贡献度较大，而越往后，则没那么重要，所以这里我们采取了一个线性递减的权重。
 
 yaml文件
 
-```json
+```yaml
 !WeightSentencizer
 metas:
   py_modules: extractor.py
@@ -82,18 +94,19 @@ metas:
 
 requests:
   on:
-    IndexRequest:
+    [IndexRequest, SearchRequest]:
       - !SegmentDriver
         with:
           random_chunk_id: false
           method: craft
+
+    ControlRequest:
+      - !ControlReqDriver {}
 ```
-
-
 
 #### Encoder
 
-    encoder在这里的作用就是将文本信息编码成向量信息，这里我们采用哈工大-Roberta base作为我们编码器的模型！并且采用`max length`采用128。
+    encoder在这里的作用就是将文本信息编码成向量信息，这里我们采用哈工大-Roberta base作为我们编码器的模型！并且采用`max_length`采用128。
 
 yaml 文件
 
@@ -110,11 +123,9 @@ with:
   max_length: 128
 ```
 
-
-
 #### Compound Chunk Indexer
 
-    在`compund chunk indexer`这里我们存储的是向量信息和`chunk id`和`doc id`的对应关系，方便日后查询的时候进行调用。
+    在`compund_chunk_indexer`这里我们存储的是向量信息和`chunk_id`和`doc_id`的对应关系，方便日后查询的时候进行调用。
 
 yaml 文件
 
@@ -136,7 +147,7 @@ components:
       workspace: $TMP_WORKSPACE
 
 metas:
-  name: title_compound_chunk_indexer
+  name: compound_chunk_indexer
 
 requests:
   on:
@@ -150,13 +161,23 @@ requests:
         with:
           executor: chunk_meta_exec
           method: add
+    SearchRequest:
+      - !ChunkSearchDriver
+        with:
+          executor: vecidx_exec
+          method: query
+      - !ChunkPruneDriver {}
+      - !ChunkPbSearchDriver
+        with:
+          executor: chunk_meta_exec
+          method: query
+    ControlRequest:
+      - !ControlReqDriver {}
 ```
-
-
 
 #### Meta Doc Indexer
 
-    在meta doc indexer这存储的是doc id与原新闻内容的对应关系！
+    在`meta_doc_indexer`这存储的是`doc_id`与原新闻内容的对应关系！
 
 ```yaml
 !LeveldbIndexer
@@ -171,115 +192,80 @@ requests:
       - !DocPbIndexDriver
         with:
           method: add
+
+    SearchRequest:
+      - !DocPbSearchDriver
+        with:
+          method: query
+
+    ControlRequest:
+      - !ControlReqDriver {}
+```
+
+#### Join
+
+    由于创建`chunk`索引和`doc`索引时，是两个并行的流！所以我们这里要加入`join`。
+
+
+
+#### Build
+
+    建立`flow`
+
+```python
+flow.build()        
 ```
 
 
 
-#### Join
+#### Index
 
-    这里我们需要加入一个等待器，用于等待所有的任务完成以后，结束程序！
-
-
-
-#### Index Flow
+    发送`IndexRequest`请求和数据
 
 ```python
-    flow = Flow().add(
-        name='extractor', yaml_path='images/extractor/extractor.yml'
-    ).add(
-        name='meta_doc_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml',
-        needs='gateway'
-    ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=600000, replicas=1
-    ).add(
-        name='compound_chunk_indexer',
-        yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml', needs='encoder'
-    ).join(eeds=['compound_chunk_indexer', 'meta_doc_indexer'])
+def read_data(fn):
+    items = []
+    with open(fn, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.replace('\n', '')
+            item = json.loads(line)
+            content = item['content']
+            if content == '':
+                continue
+
+            items.append(item)
+
+    results = []
+    for content in items:
+        results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
+
+    for item in results:
+        yield item
 ```
 
 ### 查询
 
-    在查询时，我们希望用户输入一个完成的新闻，并且搜索引擎返回给他类似的新闻！
-
-    查询是flow流程图
+    在查询时，我们希望用户输入一个完整的新闻，搜索引擎返回给他相似的新闻！
 
 ![](pictures/query.jpg)
 
-
-
 #### Extractor
 
-    当查询的时候，我们需要将新闻内容还是与建立索引时一样，分割成一个一个的子句，即chunk，并赋予相应的权值。
-
-yaml 文件
-
-```yaml
-WeightSentencizer
-metas:
-  py_modules: extractor.py
-  workspace: $TMP_WORKSPACE
-  name: extractor
-
-requests:
-  on:
-    SearchRequest:
-      - !SegmentDriver
-        with:
-          random_chunk_id: false
-          method: craft
-```
-
-
+    当查询的时候，我们需要将新闻内容还是与建立索引时一样，分割成一个一个的子句，即`chunk`，并赋予相应的权值。
 
 #### Encoder
 
-在分割完成以后，我们还是将`chunk`中的文本进行向量化！使用的`Encodr`与建立索引时一致。
-
-
+    在分割完成以后，我们还是将`chunk`中的文本进行向量化！使用的`Encodr`与建立索引时一致。
 
 #### Compound Chunk Indexer
 
-    我们在向量化以后，我们利用`vec embedding`中存储的索引向量信息将与每个`chunk`关联度`top k`的索引`chunk`找出来，然后再利用`meta chunk`找出对应的`doc id`。
-
-```yaml
-!CompoundExecutor
-components:
-  - !NumpyIndexer
-    with:
-      index_filename: vecidx_index.zip
-      metrix: cosine
-    metas:
-      name: vecidx_exec
-      workspace: $TMP_WORKSPACE
-  - !LeveldbIndexer
-    with:
-      index_filename: meta_chunk_index.gzip
-    metas:
-      name: chunk_meta_exec
-      workspace: $TMP_WORKSPACE
-
-metas:
-  name: title_compound_chunk_indexer
-
-requests:
-  on:
-    SearchRequest:
-      - !ChunkSearchDriver
-        with:
-          executor: vecidx_exec
-          method: query
-      - !ChunkPruneDriver {}
-      - !ChunkPbSearchDriver
-        with:
-          executor: chunk_meta_exec
-          method: query
-```
+    我们在编码以后，我们利用余弦相似度将每个`chunk`的`top_k`的`chunk`索引找出来，然后再利用`meta_chunk`找出`doc_id`与`chunk_id`对应关系。
 
 
 
 #### Ranker
 
-    在每个`chunk`找出对应的`top k`以后，我们需要对每个`doc`下的所有`chunk`的`top k`的`chunk`进行排序，融合成`doc`下的`top k chunk`因为我们刚刚找出的是每个`chunk`下的`top k`，不同的topk没有明显的大小关系，所以这里需要对总的进行一个排序！
+    在每个`chunk`找出对应的`top_k`以后，我们需要对每个`doc`下的所有`chunk`的`top_k``chunk`进行排序，融合成`doc`下的`top_k chunk`，因为我们刚刚找出的是每个`chunk`下的`top_k`，所有的`chunk`下的`top_k`需要进行排序。
 
 ```yaml
 !BiMatchRanker
@@ -298,53 +284,42 @@ requests:
       - !DocPruneDriver {}
 ```
 
-
-
 #### Meta Doc Indexer
 
-    最后将找到的chunk信息映射会原doc信息，至此完成查询！
-
-```yaml
-!LeveldbIndexer
-with:
-  index_filename: meta_doc_index.gzip
-metas:
-  name: meta_doc_indexer
-  workspace: $TMP_WORKSPACE
-requests:
-  on:
-    SearchRequest:
-      - !DocPbSearchDriver
-        with:
-          method: query
-```
+    最后将找到的`doc_id`利用`meta_doc`找出原始新闻内容！
 
 
 
-#### Query Flow
+#### Build
+
+    建立`flow`
 
 ```python
-    flow = Flow().add(
-        name='extractor', yaml_path='images/extractor/extractor.yml'
-    ).add(
-        name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=60000, replicas=2
-    ).add(
-        name='compound_chunk_indexer',
-        yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml', needs='encoder', timeout_ready=6000000
-    ).add(
-        name='ranker', yaml_path='images/ranker/ranker.yml', needs='compound_chunk_indexer'
-    ).add(
-        name='meta_doc_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml',
-        needs='ranker'
-    )    
+flow.build()
 ```
 
 
+
+#### Query
+
+    发送`SearchRequest`请求和数据，并且利用`print_topk`将查询结果进行保存！
+
+```python
+def print_topk(resp, fp):
+    for d in resp.search.docs:
+        v = MessageToDict(d, including_default_value_fields=True)
+        v['metaInfo'] = d.raw_bytes.decode()
+        for k, kk in zip(v['topkResults'], d.topk_results):
+            k['matchDoc']['metaInfo'] = kk.match_doc.raw_bytes.decode()
+        fp.write(json.dumps(v, sort_keys=True, indent=4, ensure_ascii=False) + "\n")
+```
+
+```python
+f.search(raw_bytes=read_data(data_fn), callback=print_topk, top_k=10)
+```
 
 ## 结语
 
     我们利用了Jina完成了2个搜索引擎的搭建，有没有感觉！Wow，好简单！所以，开始利用Jina搭建自己的搜索引擎吧！
 
     详细项目[地址](https://github.com/jina-ai/examples/blob/webqa-search/news-search)，欢迎关注[jina](https://github.com/jina-ai/jina)！
-
-
