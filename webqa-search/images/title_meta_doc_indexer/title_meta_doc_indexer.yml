@@ -7,12 +7,12 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !DocPbIndexDriver
+      - !DocKVIndexDriver
         with:
           method: add
 
     SearchRequest:
-      - !DocPbSearchDriver
+      - !DocKVSearchDriver
         with:
           method: query
 
