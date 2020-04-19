@@ -7,36 +7,36 @@ components:
     metas:
       name: 'NumpyIndexer'
       workspace: $TMP_WORKSPACE
-  - !LeveldbIndexer
+  - !ChunkPbIndexer
     with:
-      index_filename: 'meta_chunk_index.db'
+      index_filename: 'meta_chunk_index.gzip'
     metas:
-      name: 'LevelIndexer'
+      name: 'ChunkPbIndexer'
       workspace: $TMP_WORKSPACE
 metas:
   name: 'CompoundExecutor'
 requests:
   on:
     IndexRequest:
-      - !ChunkIndexDriver
+      - !VectorIndexDriver
         with:
           executor: NumpyIndexer
           method: add
       - !ChunkPruneDriver {}
-      - !ChunkPbIndexDriver
+      - !ChunkKVIndexDriver
         with:
-          executor: LevelIndexer
+          executor: ChunkPbIndexer
           method: add
 
     SearchRequest:
-      - !ChunkSearchDriver
+      - !VectorSearchDriver
         with:
           executor: NumpyIndexer
           method: query
       - !ChunkPruneDriver {}
-      - !ChunkPbSearchDriver
+      - !ChunkKVSearchDriver
         with:
-          executor: LevelIndexer
+          executor: ChunkPbIndexer
           method: query
     ControlRequest:
       - !ControlReqDriver {}
