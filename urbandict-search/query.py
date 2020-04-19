@@ -3,19 +3,28 @@ from google.protobuf.json_format import MessageToDict
 import json
 
 from jina.flow import Flow
-from index import read_data
+
+
+def read_data():
+    result = []
+    json_dict = {"word": 'unknown', "def": [{'text': 'poor quality', 'weight': 0.1}]}
+    result.append(("{}".format(json.dumps(json_dict, ensure_ascii=False))).encode("utf8"))
+
+    json_dict = {"word": 'unknown', "def": [{'text': 'causing suffering and pain', 'weight': 0.1}]}
+    result.append(("{}".format(json.dumps(json_dict, ensure_ascii=False))).encode("utf8"))
+    for r in result:
+        yield r
 
 
 def main():
     workspace_path = '/tmp/jina/urbandict'
     os.environ['TMP_WORKSPACE'] = workspace_path
-    data_fn = os.path.join(workspace_path, "query.csv")
-    read_data(data_fn)
+    read_data()
 
     flow = (Flow().add(
         name='extractor', yaml_path='yaml/extractor.yml'
     ).add(
-        name='encoder', yaml_path='yaml/encoder.yml'
+        name='encoder', yaml_path='yaml/encoder.yml', timeout_ready=600000
     ).add(
         name='compound_chunk_indexer', yaml_path='yaml/compound_chunk_indexer.yml'
     ).add(
@@ -35,7 +44,7 @@ def main():
     with open("{}/query_result.json".format(os.environ['TMP_WORKSPACE']), "w") as fp:
         with flow.build() as f:
             ppr = lambda x: print_topk(x, fp)
-            f.search(read_data(data_fn, 10), callback=ppr)
+            f.search(read_data(), callback=ppr, topk=5)
 
 
 if __name__ == '__main__':
