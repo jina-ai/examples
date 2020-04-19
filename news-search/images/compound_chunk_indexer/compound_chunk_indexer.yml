@@ -20,22 +20,22 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !ChunkIndexDriver
+      - !VectorIndexDriver
         with:
           executor: vecidx_exec
           method: add
       - !ChunkPruneDriver {}
-      - !ChunkPbIndexDriver
+      - !ChunkKVIndexDriver
         with:
           executor: chunk_meta_exec
           method: add
     SearchRequest:
-      - !ChunkSearchDriver
+      - !VectorSearchDriver
         with:
           executor: vecidx_exec
           method: query
       - !ChunkPruneDriver {}
-      - !ChunkPbSearchDriver
+      - !ChunkKVSearchDriver
         with:
           executor: chunk_meta_exec
           method: query
