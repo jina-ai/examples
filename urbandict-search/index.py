@@ -27,6 +27,7 @@ def read_data(fn, max_sample_size=1000):
     print("word2def size: {}/{}".format(len(word2def), idx))
     count = 0
     result = []
+    result_json = []
     for k, v in word2def.items():
         json_dict = {"word": k, "def": v}
         if len(v) == 0:
@@ -35,6 +36,10 @@ def read_data(fn, max_sample_size=1000):
         if count >= max_sample_size:
             break
         result.append(("{}".format(json.dumps(json_dict, ensure_ascii=False))).encode("utf8"))
+        result_json.append(json_dict)
+        print('{}'.format(json_dict))
+    # with open('sample.json', 'w') as f:
+    #     json.dump(f, result_json)
     for r in result:
         yield r
 
@@ -52,7 +57,7 @@ def main():
         name='encoder', yaml_path='yaml/encoder.yml',
         needs='extractor', timeout_ready=600000
     ).add(
-        name='compound_chunk_indexer', yaml_path='yaml/compound_chunk_indexer.yml', batch_size=10,
+        name='compound_chunk_indexer', yaml_path='yaml/compound_chunk_indexer.yml',
         needs='encoder'
     ).add(
         name='merger', yaml_path='yaml/merger.yml',
