@@ -80,7 +80,9 @@ query_flow = (Flow().add(name='extractor', yaml_path='extractor.yml', needs='gat
 
 #### extractor
 
-    `gateway`接收到的是`doc`级别的信息，而`doc`中的信息为一个问题和多个答案，所以`extractor`的作用就是将`doc`中的tilte取出来放入`chunks`中，即将`doc`级别的信息分割成`chunk`级别的信息；因为在每个`doc`中都是一问多答的情况，而我们只对问题创建索引，所以`chunks`的长度永远为1。
+    `gateway`接收到的是一个一问多答的json串，我们在这称为`doc`级别的信息，但是一个`doc`携带的信息太多，jina细化了`doc`中的信息，引入了`chunk`的概念，即将`doc`分割成多个`chunk`。
+
+    由于我们只对问题创建索引，所以这里我们只需要提取出`doc`中的问题，即每个`doc`分割出来的`chunk`只有1个。
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
@@ -298,8 +300,6 @@ requests:
 
    我们在前面提到，我们需要创建`doc`级别的索引和`chunk`级别的索引。并且在jina中这两个索引的创建过程是**并行**的。当其中一个流完成了以后，jina需要干嘛？等待另外一条流执行完成，然后执行后面的任务。
 
-
-
 #### 发送数据
 
     上面我们已经完成了对创建索引时`Flow`中各个`Pod`的定义，但是并没有真正的建立`Flow`，我们要利用`build()`建立这个图，这里类似于`tensorflow2.0`之前中的`Session`；然后向`Flow`中发送请求和数据。
@@ -382,8 +382,6 @@ requests:
 #### md_indexer
 
     在创建索引的时候我们通过`md_indexer`存储了`doc_id`与文档的对应关系和原文档原始内容，并且在`ranker`之后，我们已经找到了`top_k`的`doc`，所以我们在这只需要通过`doc_id`就能找出原文档，并返回给用户。
-
-
 
 #### 发送数据
 
