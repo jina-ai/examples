@@ -12,7 +12,7 @@
 
 ## 效果展示
 
-![](pictures/result.gif)
+![](pictures/result-min.gif)
 
 ## 示例
 
