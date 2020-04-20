@@ -20,6 +20,6 @@ pods:
     replicas: $SHARDS
     seperated_workspace: true
   ranker:
-    yaml_path: BiMatchRanker
+    yaml_path: BM25Ranker
   doc_indexer:
     yaml_path: yaml/index-doc.yml

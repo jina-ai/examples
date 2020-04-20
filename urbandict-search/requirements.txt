@@ -1,2 +1,4 @@
 scipy
-ruamel.yaml
+click
+transformers
+torch
