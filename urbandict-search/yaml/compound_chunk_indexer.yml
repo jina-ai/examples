@@ -22,7 +22,9 @@ requests:
         with:
           executor: NumpyIndexer
           method: add
-      - !ChunkPruneDriver {}
+      - !ChunkPruneDriver
+        with:
+          pruned: ['embedding', 'blob']
       - !ChunkKVIndexDriver
         with:
           executor: ChunkPbIndexer
@@ -33,7 +35,9 @@ requests:
         with:
           executor: NumpyIndexer
           method: query
-      - !ChunkPruneDriver {}
+      - !ChunkPruneDriver
+        with:
+          pruned: ['embedding', 'blob']
       - !ChunkKVSearchDriver
         with:
           executor: ChunkPbIndexer

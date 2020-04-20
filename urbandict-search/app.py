@@ -8,7 +8,7 @@ from google.protobuf.json_format import MessageToDict
 from jina.flow import Flow
 from jina.enums import FlowOptimizeLevel
 
-RANDOM_SEED = 6
+RANDOM_SEED = 2
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 
@@ -28,19 +28,22 @@ def read_data(fn, max_sample_size=1000):
 
 
 def print_topk(resp):
-    print('Ta-Dah🔮, here are what we found')
     for d in resp.search.docs:
         v = MessageToDict(d, including_default_value_fields=True)
-        v['metaInfo'] = d.raw_bytes.decode()
-        for k, kk in zip(v['topkResults'], d.topk_results):
-            k['matchDoc']['metaInfo'] = kk.match_doc.raw_bytes.decode()
-            print(f'{k["matchDoc"]["docId"]}:{k["score"]["value"]}:{k["matchDoc"]["metaInfo"]}')
-            print(k)
+        word = json.loads(d.meta_info.decode('utf8'))['text']
+        print(f'Ta-Dah🔮, here are what we found for: {word}')
+        for idx, (k, kk) in enumerate(zip(v['topkResults'], d.topk_results)):
+            score = k["score"]["value"]
+            if score <= 0.0:
+                continue
+            print('{:>2d}:({:f}):{}'.format(
+                idx, score, kk.match_doc.raw_bytes.decode()
+            ))
 
 
 def read_query_data(text):
     result = []
-    json_dict = {"word": 'unknown', 'text': text, 'weight': 1.0}
+    json_dict = {"word": '', 'text': text, 'weight': 1.0}
     result.append(("{}".format(json.dumps(json_dict, ensure_ascii=False))).encode("utf8"))
     for r in result:
         yield r

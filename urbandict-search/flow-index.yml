@@ -24,7 +24,3 @@ pods:
     yaml_path: _merge
     needs: [doc_indexer, chunk_indexer]
     read_only: true
-
-
-
-
