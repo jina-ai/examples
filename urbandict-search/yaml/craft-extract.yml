@@ -1,9 +1,11 @@
-!BaseEncoder
+!DictEntryExtractor
 metas:
-  name: merge
+  py_modules: customized_executors.py
 requests:
   on:
     [SearchRequest, IndexRequest, TrainRequest]:
-      - !MergeDriver {}
+      - !DocCraftDriver
+        with:
+          method: craft
     ControlRequest:
       - !ControlReqDriver {}
