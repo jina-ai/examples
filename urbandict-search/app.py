@@ -8,7 +8,7 @@ from google.protobuf.json_format import MessageToDict
 from jina.flow import Flow
 from jina.enums import FlowOptimizeLevel
 
-RANDOM_SEED = 2
+RANDOM_SEED = 5  # 3
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 
@@ -62,7 +62,7 @@ def main(task, num_docs, top_k):
         flow = Flow().load_config('flow-index.yml')
         flow.optimize_level = FlowOptimizeLevel.IGNORE_GATEWAY
         with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_fn, num_docs), batch_size=8)
+            fl.index(raw_bytes=read_data(data_fn, num_docs), batch_size=16)
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:

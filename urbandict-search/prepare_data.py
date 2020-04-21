@@ -52,7 +52,7 @@ def main(root_path='/tmp'):
     if not os.path.exists(output_dir):
         print('data output dir: {}'.format(output_dir))
         os.makedirs(output_dir, exist_ok=True)
-    output_fn = 'urbandict-word-defs.v2.json'
+    output_fn = 'urbandict-word-defs.json'
     output_path = os.path.join(output_dir, output_fn)
     with open(output_path, 'w') as f:
         json.dump(word_def_list, f, ensure_ascii=False, indent=4)
