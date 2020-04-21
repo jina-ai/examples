@@ -6,7 +6,7 @@ import random
 
 from jina.flow import Flow
 
-RANDOM_SEED = 7  # 5
+RANDOM_SEED = 10 # 5
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 

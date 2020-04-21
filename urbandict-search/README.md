@@ -7,7 +7,10 @@ As the same as build classic search engines, we first build an index for all the
 
 ## Contents
 
-[TOC]
+- [Overview](#overview)
+- [Prerequirements](#prerequirements)
+- [Prepare the data](#prepare-the-data)
+- [Define the Flows](#define-the-flows)
 
 ## Overview
 
@@ -47,7 +50,7 @@ python prepare_data.py
 ```
 
 
-## Define the Flow
+## Define the Flows
 ### Index
 To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `splitter`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`. 
 
@@ -308,7 +311,7 @@ requests:
 ### `encoder`
 The YAML file of the `encoder` is pretty much similar to the `splitter`. As one can see, we specify to use the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `model_name`.
 
-```
+```yaml
 !TransformerTorchEncoder
 with:
   pooling_strategy: cls
@@ -348,10 +351,10 @@ As for the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` as in for 
 ```yaml
 requests:
   on:
-	SearchRequest:
-	  - !DocKVSearchDriver
-	    with:
-	      method: query
+    SearchRequest:
+      - !DocKVSearchDriver
+      with:
+        method: query
 ```
 
 ### `chunk_indexer`
