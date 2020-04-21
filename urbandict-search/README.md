@@ -11,6 +11,11 @@ As the same as build classic search engines, we first build an index for all the
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
+- [Run the Flows](#run-the-flows)
+- [Dive into the Pods](#dive-into-the-pods)
+- [Wrap up](#wrap-up)
+- [Next steps](#next-steps)
+
 
 ## Overview
 
