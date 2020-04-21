@@ -1,0 +1,9 @@
+!ImageReader
+with:
+  channel_axis: 0
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !SegmentDriver
+        with:
+          method: craft
