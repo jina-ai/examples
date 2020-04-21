@@ -19,5 +19,3 @@ requests:
         with:
           method: add
 
-    ControlRequest:
-      - !ControlReqDriver {}

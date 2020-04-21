@@ -9,5 +9,3 @@ requests:
       - !SegmentDriver
         with:
           method: craft
-    ControlRequest:
-      - !ControlReqDriver {}
