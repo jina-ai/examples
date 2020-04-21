@@ -4,11 +4,12 @@ import os
 from datetime import datetime
 
 from google.protobuf.json_format import MessageToDict
-from jina.enums import FlowOptimizeLevel
+os.environ['JINA_LOG_PROFILING'] = 'true'
+
 from jina.flow import Flow
 
 RUN_MODE = 'debug-index'
-MODEL_ID = '20200415183036'
+MODEL_ID = '20200417113607'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
 GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
@@ -16,7 +17,7 @@ TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 os.environ['TEST_WORKDIR'] = WORK_DIR + MODEL_ID
 # os.environ['JINA_LOG_FILE'] = 'JSON'
-# os.environ['JINA_PROFILING'] = 'true'
+os.environ['JINA_LOG_PROFILING'] = 'true'
 # os.environ['JINA_LOG_VERBOSITY'] = 'DEBUG'
 # os.environ['GRPC_VERBOSITY'] = 'debug'
 # os.environ['GRPC_TRACE']='tcp'
@@ -69,8 +70,7 @@ def bytes_gen(random=False, with_filename=True):
 
 if do_index:
     # index
-    f = Flow().load_config('flow-index.yml')
-    f.optimize_level = FlowOptimizeLevel.IGNORE_GATEWAY
+    f = Flow.load_config('flow-index.yml')
 
     # bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 

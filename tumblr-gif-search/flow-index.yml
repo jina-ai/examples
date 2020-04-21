@@ -1,7 +1,6 @@
 !Flow
 with:
   logserver: true
-  logserver_config: test-server-config.yml
 pods:
   chunk_seg:
     yaml_path: craft/index-craft.yml

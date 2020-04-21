@@ -5,7 +5,7 @@ const vm = new Vue({
     el: '#jina-ui',
     data: {
         serverUrl: './model/',
-        modelId: '20200414111706',//'20191122144241',
+        modelId: '20200416085013',//'20191122144241',
         databasePath: '/topk.json',
         results: [],
         queryItem: null,

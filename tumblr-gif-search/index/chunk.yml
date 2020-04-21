@@ -1,4 +1,4 @@
-!CompoundExecutor
+!ChunkIndexer
 components:
   - !NumpyIndexer
     with:
@@ -15,23 +15,3 @@ components:
 metas:
   name: chunk_compound_indexer
   workspace: $TEST_WORKDIR
-requests:
-  on:
-    SearchRequest:
-      - !ChunkSearchDriver
-        with:
-          executor: vecidx
-      - !ChunkPruneDriver {}
-      - !ChunkPbSearchDriver
-        with:
-          executor: chunkidx
-    IndexRequest:
-      - !ChunkIndexDriver
-        with:
-          executor: vecidx
-      - !ChunkPruneDriver {}
-      - !ChunkPbIndexDriver
-        with:
-          executor: chunkidx
-    ControlRequest:
-      - !ControlReqDriver {}

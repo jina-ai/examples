@@ -1,7 +1,6 @@
 !Flow
 with:
-  logserver: false
-  logserver_config: test-server-config.yml
+  logserver: true
   read_only: true  # better add this in the query time
 pods:
   chunk_seg:
