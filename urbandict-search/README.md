@@ -61,7 +61,7 @@ To index the data we first need to define our **Flow**. Here we use **YAML** fil
 
 However, we have another Pod working in silent. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, the Forgotten Pod. For most time, we can safely ignore the **gateway** because it basically do the dirty orchestration work for the Flow.
 
-<table>
+<table style="margin-left:auto;margin-right:auto;">
 <tr>
 <td> flow-index.yml</td>
 <td> Flow in Dashboard</td>
@@ -131,7 +131,7 @@ The pathway on the other side is for saving the index. From top to bottom, the f
 ### Query
 As in the indexing time, we also need a Flow to process the request message during querying. Here we start with the `splitter` sharing exactly the same YAML with its conterpart in the index Flow. This means it plays the same role as before, which is to split the Document into Chunks. Afterwards, the Chunks are encoded into vectors by `encoder`, and later these vectors are used to retrieve the indexed Chunks by `chunk_indexer`. As the same as the `splitter`, both `encoder` and `chunk_indexer` share the YAML with their counterparts in the index Flow. 
 
-<table>
+<table  style="margin-left:auto;margin-right:auto;">
 <tr>
 <td> flow-query.yml</td>
 <td> Flow in Dashboard</td>
