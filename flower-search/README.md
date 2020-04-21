@@ -38,7 +38,7 @@ bash ./get_data.sh
 ## Run the Flows
 
 
-## Use a Customized Executor
+## Use a Customized Crafter
 
 ## Use a Customized Driver
 
