@@ -1,7 +1,7 @@
 !TransformerTorchEncoder
 with:
   pooling_strategy: cls
-  model_name: roberta-base
+  model_name: distilbert-base-cased
   max_length: 96
 requests:
   on:
