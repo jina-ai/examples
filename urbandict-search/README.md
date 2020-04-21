@@ -88,7 +88,7 @@ pods:
 
 </td>
 <td>
-![](.github/index-flow.png)	
+<img align="right" src=".github/index-flow.png"/>
 </td>
 </tr>
 </table>
@@ -129,7 +129,7 @@ pods:
 
 </td>
 <td>
-![](.github/query-flow.png)
+<img align="right" src=".github/query-flow.png"/>
 </td>
 </tr>
 </table>
