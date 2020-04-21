@@ -50,5 +50,3 @@ requests:
         with:
           level: chunk
           executor: BasePbIndexer
-    ControlRequest:
-      - !ControlReqDriver {}

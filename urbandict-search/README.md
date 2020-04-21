@@ -42,7 +42,7 @@ python prepare_data.py
 
 
 ## Define the index Flow
-To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `splittor`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`. 
+To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `splitter`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`. 
 
 However, we have another Pod working in silent. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, the Forgotten Pod. For most time, we can safely ignore the **gateway** because it basically do the dirty orchestration work for the Flow.
 
@@ -58,7 +58,7 @@ However, we have another Pod working in silent. Actually, the input to the very 
 ```yaml
 !Flow
 pods:
-  splittor:
+  splitter:
     yaml_path: yaml/craft-split.yml
   encoder:
     yaml_path: yaml/encode.yml
@@ -131,7 +131,7 @@ The pathway on the other side is for saving the index. From top to bottom, the f
 with:
   read_only: true
 pods:
-  splittor:
+  splitter:
     yaml_path: yaml/craft-split.yml
   encoder:
     yaml_path: yaml/encode.yml
@@ -153,7 +153,7 @@ pods:
 </tr>
 </table>
 
-As in the indexing time, we also need a Flow to process the request message during querying. Here we start with the `splittor` sharing exactly the same YAML with its conterpart in the index Flow. This means it plays the same role as before, which is to split the Document into Chunks. Afterwards, the Chunks are encoded into vectors by `encoder`, and later these vectors are used to retrieve the indexed Chunks by `chunk_indexer`. As the same as the `splitter`, both `encoder` and `chunk_indexer` share the YAML with their counterparts in the index Flow. 
+As in the indexing time, we also need a Flow to process the request message during querying. Here we start with the `splitter` sharing exactly the same YAML with its conterpart in the index Flow. This means it plays the same role as before, which is to split the Document into Chunks. Afterwards, the Chunks are encoded into vectors by `encoder`, and later these vectors are used to retrieve the indexed Chunks by `chunk_indexer`. As the same as the `splitter`, both `encoder` and `chunk_indexer` share the YAML with their counterparts in the index Flow. 
 
 Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `BM25Ranker` to do the job. It uses the BM25 algorithm to get the weights of query Chunks, and calculates the weights sum of the Chunks' matching scores as the score of the matched Document. For the details, please refer to the jina document page. 
 
@@ -263,7 +263,191 @@ def print_topk(resp, word):
 ```
 
 ## Dive into the Pods
+If you want to know more about Pods, keep reading. As shown above, we defined the Pods by giving the YAML files. Now let's move on to see what is exactly written in these magic YAML files.
 
+### `splitter`
+As a convention in jina, A YAML config is used to describe the properties of an object so that we can easily config the behavior of the Pods without touching the codes. 
+
+Here is the YAML file for the `splitter`. We firstly claim to use the built-in **Sentencizer** as the **executor** in the Pod. The `with` field is used to specify the arguments passing to the `__init__()` function. 
+
+
+```yaml
+!Sentencizer
+with:
+  min_sent_len: 3
+  max_sent_len: 128
+  punct_chars: '.,;!?:'
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !SegmentDriver
+        with:
+          method: craft
+``` 
+
+In the `requests` field, we define the different behaviors of the Pod to different requests. Remember that both the index and the query Flows share the same Pods with the YAML files while they behaving differently to the requests. Here is how the magic works. For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On one hand, the Driver interpretes the request messages (in the format of Protobuf) into the format that the Executor can understand(e.g. Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and translate the processed results back into Protobuf format. For the time being, the `splitter` show the same behavior for both requests.
+
+
+```yaml
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !SegmentDriver
+        with:
+          method: craft
+``` 
+
+### `encoder`
+The YAML file of the `encoder` is pretty much similar to the `splitter`. As one can see, we specify to use the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `model_name`.
+
+```
+!TransformerTorchEncoder
+with:
+  pooling_strategy: cls
+  model_name: distilbert-base-cased
+  max_length: 96
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
+```
+
+### `doc_indexer`
+In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data. 
+
+```yaml
+!LeveldbIndexer
+with:
+  index_filename: 'meta_doc_index.db'
+requests:
+  on:
+    IndexRequest:
+      - !DocPruneDriver
+        with:
+          pruned: ['chunks']
+      - !DocKVIndexDriver
+        with:
+          method: add
+    SearchRequest:
+      - !DocKVSearchDriver
+        with:
+          method: query
+```
+
+As for the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` as in for the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.
+```yaml
+SearchRequest:
+  - !DocKVSearchDriver
+    with:
+      method: query
+```
+
+### `chunk_indexer`
+The YAML file for `chunk_indexer` is a little bit curbersome. Take it easy, it is as straightforward as it should be. The executor in the `chunk_indexer` Pod is called `ChunkIndexer`, which wraps up two other executors. The `components` field specifies the two wrapped-up executors. The `NumpyIndexer` is used to storage the Chunks' vectors, and the `BasePbIndexer` is used as a key-value storage to save the Chunk Id and the Chunk details.
+
+```yaml
+!ChunkIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+      metrix: cosine
+  - !BasePbIndexer
+    with:
+      index_filename: chunk.gz
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - raw_bytes
+            - blob
+            - text
+      - !KVIndexDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - raw_bytes
+            - blob
+            - text
+      - !KVSearchDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
+
+```
+
+As the same as the `doc_indexer`, the `chunk_indexer` also have different behaviors on different requests. For the `IndexRequest`, the `chunk_indexer` uses three Drivers in serial, namely, `VectorIndexDriver`, `PruneDriver`, and `KVIndexDriver`. The idea is to firstly use `VectorIndexDriver` to call the `index()` function from the `NumpyIndexer` so that the vectors for all the Chunks are indexed. Afterwards the `PruneDriver` prune the message, and the `KVIndexDriver` calls the `index()` function from the `BasePbIndexer`. This behavior is defined in the `executor` field.
+
+```yaml
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - raw_bytes
+            - blob
+            - text
+      - !KVIndexDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
+```
+
+For the `SearchRequest`, the same procedure goes on, but underhood the `KVSearchDriver` and the `VectorSearchDriver` will call `query()` function from the `NumpyIndexer` and the `BasePbIndexer` correspondingly.
+
+```yaml
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - raw_bytes
+            - blob
+            - text
+      - !KVSearchDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
+```
+
+## Wrap up
+Congratulation! Now you've your own neural search engine explained!
+
+Let's wrap up what we've covered in this demo.
+
+1. To either index or query, we need firstly define a Flow and build it.
+2. The index and the query Flow shares most Pods. 
+3. The Pods' YAML file defines their behaviors on different types of requests.
 
 ## Next Steps
 - Try other encoders or rankers.

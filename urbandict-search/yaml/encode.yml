@@ -9,5 +9,3 @@ requests:
       - !EncodeDriver
         with:
           method: encode
-    ControlRequest:
-      - !ControlReqDriver {}
