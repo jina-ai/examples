@@ -41,7 +41,7 @@ python prepare_data.py
 ```
 
 
-## Define the index flow
+## Define the index Flow
 To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `splittor`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`. 
 
 However, we have another Pod working in silent. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, the Forgotten Pod. For most time, we can safely ignore the **gateway** because it basically do the dirty orchestration work for the Flow.
@@ -88,13 +88,13 @@ pods:
 
 </td>
 <td>
-<img align="right" src=".github/index-flow.png"/>
+<img align="right" style="max-height:30%;" src=".github/index-flow.png"/>
 </td>
 </tr>
 </table>
 
 
-## Define the query flow
+## Define the query Flow
 
 
 
@@ -129,7 +129,7 @@ pods:
 
 </td>
 <td>
-<img align="right" src=".github/query-flow.png"/>
+<img align="right" style="max-height:30%;" src=".github/query-flow.png"/>
 </td>
 </tr>
 </table>
@@ -140,28 +140,70 @@ Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks
 
 At the last step, the `doc_indexer` comes into play. Sharing the same YAML file, `doc_indexer` will load the storaged key-value index and retrieve the matched Documents back according the Document Id.
 
-Now we've both index and query Flows ready to work. Before proceeding forward, please note differences between the index and the query Flow. Obviously, they have different structure, although they share most Pods. This is a common practice in the jina world for the consideration of speed. Except the `ranker`, both Flow can indeed use the identical structure. The two-pathway design of the index Flow is intended to speed up the message passing, because indexing the Chunks and the Documents can be done in paralle. Another import difference is that the two Flows are used to process different types of request messages. To index a Document, we send an **IndexRequest** to the Flow. While querying, we send a **QueryRequest**. That's why the Pods in both Flows can share the YAML files while playing different roles. In the next section, we will dive deep into into the YAML files, where we define the different ways of processing messages of various types.
+Now we've both index and query Flows ready to work. Before proceeding forward, please note differences between the index and the query Flow. Obviously, they have different structure, although they share most Pods. This is a common practice in the jina world for the consideration of speed. Except the `ranker`, both Flow can indeed use the identical structure. The two-pathway design of the index Flow is intended to speed up the message passing, because indexing the Chunks and the Documents can be done in paralle. Another import difference is that the two Flows are used to process different types of request messages. To index a Document, we send an **IndexRequest** to the Flow. While querying, we send a **SearchRequest**. That's why the Pods in both Flows can share the YAML files while playing different roles. Later, we will dive deep into into the YAML files, where we define the different ways of processing messages of various types.
 
 
+## Run the Flows
 
-## Write the main function
+### Index 
 
-explain the core part in the main function.
-
-
-## Run Index
+With the Flows, we now can write the codes to run the Flow. For indexing, we start with defining the Flow with YAML file. Afterwards, the `build()` function will do the magic to construct Pods and connect them together. Then the `IndexRequest` will be sent to the flow by calling the `index()` function. The content of the `IndexRequest` is fed from the `read_data()`, which loads the processed JSON file and output each word together with its defintion in `bytes` format.
 Encoding the text with bert-family models will take a long time. To save your time, here we limit the number of indexing documents to 10000.
  
 ```bash
 python app.py -t index -n 10000
 ```
 
+```python
+def read_data(fn, max_sample_size=1000):
+    with open(fn, 'r') as f:
+        data_dict = json.load(f)
+        for r in data_dict[:max_sample_size]:
+            word = r['word'].lower()
+            def_text = r['text'].lower()
+            yield '{}: {}'.format(word, def_text).encode('utf8')
 
+         
+def main(num_docs):
+    flow = Flow().load_config('flow-index.yml')
+    with flow.build() as fl:
+    	 data_fn = os.path.join('/tmp/jina/urbandict', "urbandict-word-defs.json")
+        fl.index(raw_bytes=read_data(data_fn, num_docs))
 
-## Run Query
+```
 
+### Query
+As for the query part, we follow the same story to define and build the Flow from the YAML file. The `search()` function is used to send a `SearchRequest` to the Flow. Here we accept the user query inputs from the terminal and wrap it into request message in the `bytes` format. 
+
+The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are storaged under the `.topk_results` as a repeated variable.
 ```bash
 python app.py -t query
 ```
 
+```python
+def read_query_data(text):
+    yield '{}'.format(text).encode('utf8')
+
+def print_topk(resp, word):
+    for d in resp.search.docs:
+        print(f'Ta-Dah🔮, here are what we found for: {word}')
+        for idx, kk in enumerate(d.topk_results):
+            score = kk.score.value
+            if score <= 0.0:
+                continue
+            print('{:>2d}:({:f}):{}'.format(
+                idx, score, kk.match_doc.raw_bytes.decode()))       
+
+def main(top_k):
+    flow = Flow().load_config('flow-query.yml')
+    with flow.build() as fl:
+        while True:
+            text = input('word definition: ')
+            if not text:
+                break
+            ppr = lambda x: print_topk(x, text)
+            fl.search(read_query_data(text), callback=ppr, topk=top_k)
+```
+
+## 
 ## Next Steps

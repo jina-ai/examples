@@ -3,10 +3,8 @@ import json
 import os
 import string
 import random
-from google.protobuf.json_format import MessageToDict
 
 from jina.flow import Flow
-from jina.enums import FlowOptimizeLevel
 
 RANDOM_SEED = 7  # 5
 os.environ['REPLICAS'] = str(1)
@@ -31,15 +29,13 @@ def read_data(fn, max_sample_size=1000):
 
 def print_topk(resp, word):
     for d in resp.search.docs:
-        v = MessageToDict(d, including_default_value_fields=True)
         print(f'Ta-Dah🔮, here are what we found for: {word}')
-        for idx, (k, kk) in enumerate(zip(v['topkResults'], d.topk_results)):
-            score = k["score"]["value"]
+        for idx, kk in enumerate(d.topk_results):
+            score = kk.score.value
             if score <= 0.0:
                 continue
             print('{:>2d}:({:f}):{}'.format(
-                idx, score, kk.match_doc.raw_bytes.decode()
-            ))
+                idx, score, kk.match_doc.raw_bytes.decode()))
 
 
 def read_query_data(text):
@@ -57,7 +53,6 @@ def main(task, num_docs, top_k):
     data_fn = os.path.join('/tmp/jina/urbandict', "urbandict-word-defs.json")
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
-        flow.optimize_level = FlowOptimizeLevel.IGNORE_GATEWAY
         with flow.build() as fl:
             fl.index(raw_bytes=read_data(data_fn, num_docs), batch_size=16)
     elif task == 'query':
@@ -70,7 +65,8 @@ def main(task, num_docs, top_k):
                 ppr = lambda x: print_topk(x, text)
                 fl.search(read_query_data(text), callback=ppr, topk=top_k)
     else:
-        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
+        raise NotImplementedError(
+            f'unknown task: {task}. A valid task is either `index` or `query`.')
 
 
 if __name__ == '__main__':
