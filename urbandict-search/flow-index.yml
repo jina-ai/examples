@@ -1,9 +1,5 @@
 !Flow
 pods:
-  extractor:
-    yaml_path: yaml/craft-extract.yml
-    replicas: $REPLICAS
-    read_only: true
   splittor:
     yaml_path: yaml/craft-split.yml
     replicas: $REPLICAS
@@ -14,12 +10,12 @@ pods:
     timeout_ready: 60000
     read_only: true
   chunk_indexer:
-    yaml_path: yaml/compound_chunk_indexer.yml
+    yaml_path: yaml/index-chunk.yml
     replicas: $SHARDS
     seperated_workspace: true
   doc_indexer:
     yaml_path: yaml/index-doc.yml
-    needs: extractor
+    needs: gateway
   join_all:
     yaml_path: _merge
     needs: [doc_indexer, chunk_indexer]

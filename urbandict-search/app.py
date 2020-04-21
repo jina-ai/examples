@@ -8,7 +8,7 @@ from google.protobuf.json_format import MessageToDict
 from jina.flow import Flow
 from jina.enums import FlowOptimizeLevel
 
-RANDOM_SEED = 5  # 3
+RANDOM_SEED = 7  # 5
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 
@@ -24,13 +24,14 @@ def read_data(fn, max_sample_size=1000):
     with open(fn, 'r') as f:
         data_dict = json.load(f)
         for r in data_dict[:max_sample_size]:
-            yield '{}'.format(json.dumps(r, ensure_ascii=False)).encode('utf8')
+            word = r['word'].lower()
+            def_text = r['text'].lower()
+            yield '{}: {}'.format(word, def_text).encode('utf8')
 
 
-def print_topk(resp):
+def print_topk(resp, word):
     for d in resp.search.docs:
         v = MessageToDict(d, including_default_value_fields=True)
-        word = json.loads(d.meta_info.decode('utf8'))['text']
         print(f'Ta-Dah🔮, here are what we found for: {word}')
         for idx, (k, kk) in enumerate(zip(v['topkResults'], d.topk_results)):
             score = k["score"]["value"]
@@ -42,11 +43,7 @@ def print_topk(resp):
 
 
 def read_query_data(text):
-    result = []
-    json_dict = {"word": '', 'text': text, 'weight': 1.0}
-    result.append(("{}".format(json.dumps(json_dict, ensure_ascii=False))).encode("utf8"))
-    for r in result:
-        yield r
+    yield '{}'.format(text).encode('utf8')
 
 
 @click.command()
@@ -66,11 +63,11 @@ def main(task, num_docs, top_k):
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:
-            ppr = lambda x: print_topk(x)
             while True:
                 text = input('word definition: ')
                 if not text:
                     break
+                ppr = lambda x: print_topk(x, text)
                 fl.search(read_query_data(text), callback=ppr, topk=top_k)
     else:
         raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
