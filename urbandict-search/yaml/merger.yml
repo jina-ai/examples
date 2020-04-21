@@ -1,9 +1,0 @@
-!BaseEncoder
-metas:
-  name: merge
-requests:
-  on:
-    [SearchRequest, IndexRequest, TrainRequest]:
-      - !MergeDriver {}
-    ControlRequest:
-      - !ControlReqDriver {}

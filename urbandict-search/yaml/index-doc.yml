@@ -7,7 +7,7 @@ metas:
 requests:
   on:
     SearchRequest:
-      - !DocPbSearchDriver
+      - !DocKVSearchDriver
         with:
           method: query
 
@@ -15,9 +15,7 @@ requests:
       - !DocPruneDriver
         with:
           pruned: ['chunks']
-      - !DocPbIndexDriver
+      - !DocKVIndexDriver
         with:
           method: add
 
-    ControlRequest:
-      - !ControlReqDriver {}
