@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 
 from google.protobuf.json_format import MessageToDict
+
 os.environ['JINA_LOG_PROFILING'] = 'true'
 
 from jina.flow import Flow
