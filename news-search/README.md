@@ -83,11 +83,9 @@ class WeightSentencizer(Sentencizer):
         return results
 ```
 
-
-
 ### 查询
 
-    在查询时，Flow的结构与WebQA一样，有区别的Pod是extractor、ranker。下面我们对这两个pod进行详细的介绍，其它Pod不做介绍，如果对其它模块有疑问的地方，可以参考第一篇[文章]()。
+    在查询时，Flow的结构与WebQA一样，有区别的Pod是extractor、ranker。下面我们对这两个Pod进行详细的介绍，其它Pod不做介绍，如果对其它Pod有疑问的地方，可以参考第一篇[文章]()。
 
 ![](/Users/maxiong/workpace/jina/examples/news-search/pictures/query.jpg)
 
@@ -97,9 +95,135 @@ class WeightSentencizer(Sentencizer):
 
 #### ranker
 
-    在cc_indexer后，每个chunk已经在索引中查询到了topk的chunk，
+    在cc_indexer后，doc中的每个chunk已经在索引中查询到了topk的match chunk。在WebQA中搜索时，每个doc下只有一个chunk；在这里，每个doc下有多个chunk。相当于WebQA是只对一个chunk下的topk match chunk进行排序，而在这里是对所有chunk下的match chunk进行排序。
 
-    在每个`chunk`找出对应的`top_k`以后，我们需要对每个`doc`下的所有`chunk`的`top_k``chunk`进行排序，融合成`doc`下的`top_k chunk`，因为我们刚刚找出的是每个`chunk`下的`top_k`，所有的`chunk`下的`top_k`需要进行排序。
+    我们利用`Chunk2DocScoreDriver`将doc下所有chunk的id和topk chunk的doc_id，chunk_id，余弦距离组合在一起，提取chunk和topk chunk中ranker需要的值，在这里我们提取weight和length的值。并将这些值赋给ranker进行排序。具体代码如下！
+
+```python
+class Chunk2DocScoreDriver(BaseScoreDriver):
+    """Extract chunk-level score and use the executor to compute the doc-level score
+
+    """
+
+    def __call__(self, *args, **kwargs):
+        exec = self.exec
+
+        for d in self.req.docs:  # d is a query in this context, i.e. for each query, compute separately
+            match_idx = []
+            query_chunk_meta = {}
+            match_chunk_meta = {}
+            for c in d.chunks:
+                for k in c.topk_results:
+                    match_idx.append((k.match_chunk.doc_id, k.match_chunk.chunk_id, c.chunk_id, k.score.value))
+                    query_chunk_meta[c.chunk_id] = pb_obj2dict(c, exec.required_keys)
+                    match_chunk_meta[k.match_chunk.chunk_id] = pb_obj2dict(k.match_chunk, exec.required_keys)
+
+            # np.uint32 uses 32 bits. np.float32 uses 23 bit mantissa, so integer greater than 2^23 will have their
+            # least significant bits truncated.
+            match_idx = np.array(match_idx, dtype=np.float64)
+
+            doc_idx = self.exec_fn(match_idx, query_chunk_meta, match_chunk_meta)
+
+            for _d in doc_idx:
+                r = d.topk_results.add()
+                r.match_doc.doc_id = int(_d[0])
+                r.score.value = _d[1]
+                r.score.op_name = exec.__class__.__name__
+    
+```
+
+    在这里我们自定义一个WeightBiMatchRanker。先将在crafter中定义的权重应用到余弦距离中，这里存在两个权重，match chunk的权重和chunk自身的权重。
+
+> match chunk的权重
+
+    如果一个match chunk的权重很小，说明我们在排序时应该尽可能的不关注它，让它的余弦距离应该足够大，在这里我们采用倒数机制来进行缩放，让match chunk的余弦距离乘以match chunk权重的倒数。
+
+> chunk的权重
+
+    如果一个chunk的权重很小，说明我们在排序时应该尽可能的不关注它的搜索结果，也就是让它的的topk下的match chunk的余弦距离足够大，同样采用倒数机制，让match chunk的余弦距离乘以chunk权重的倒数。
+
+    然后采用bi-match算法进行排序。
+
+1. 先以所有的match chunk的doc id对match idx进行升序排序。
+
+2. 再以match chunk的doc id对match idx进行分组
+
+```python
+class WeightBiMatchRanker(BiMatchRanker):
+    required_keys = {'length', 'weight'}
+
+    def score(self, match_idx: 'np.ndarray', query_chunk_meta: Dict, match_chunk_meta: Dict) -> 'np.ndarray':
+        """ Apply weight into score, the weight contain query chunk weight, match chunk weight
+
+        """
+        for item, meta in zip(match_idx, match_chunk_meta):
+            item[3] = item[3] * (1 / match_chunk_meta[meta]['weight'])
+
+        for item, meta in zip(match_idx, query_chunk_meta):
+            item[3] = item[3] * (1 / query_chunk_meta[meta]['weight'])
+
+        return super().score(match_idx, query_chunk_meta, match_chunk_meta)
+```
+
+```python
+class BiMatchRanker(BaseRanker):
+    """The :class:`BiMatchRanker` counts the best chunk-hit from both query and doc perspective."""
+    required_keys = {'length'}
+    D_MISS = 2000  # cost of a non-match chunk, used for normalization
+
+    def score(self, match_idx: 'np.ndarray', query_chunk_meta: Dict, match_chunk_meta: Dict) -> 'np.ndarray':
+        """
+
+        :param match_idx: an `ndarray` of the size ``N x 4``. ``N`` is the batch size of the matched chunks for the
+            query doc. The columns correspond to the ``doc_id`` of the matched chunk, ``chunk_id`` of the matched chunk,
+             ``chunk_id`` of the query chunk, and ``score`` of the matched chunk.
+        :param query_chunk_meta: a dict of meta info for the query chunks with **ONLY** the ``required_keys`` are kept.
+        :param match_chunk_meta: a dict of meta info for the matched chunks with **ONLY** the ``required_keys`` are
+            kept.
+
+        :return: an `ndarray` of the size ``M x 2``. ``M`` is the number of matched docs. The columns correspond to the
+            ``doc_id`` and ``score``.
+
+        .. note::
+            In both `query_chunk_meta` and `match_chunk_meta`, ONLY the fields from the ``required_keys`` are kept.
+
+        """
+        # sort by doc_id
+        a = match_idx[match_idx[:, 0].argsort()]
+        # group by doc_id
+        gs = np.split(a, np.cumsum(np.unique(a[:, 0], return_counts=True)[1])[:-1])
+        # for each doc group
+        r = []
+        for g in gs:
+            s1 = self._directional_score(g, match_chunk_meta, axis=1)
+            s2 = self._directional_score(g, query_chunk_meta, axis=2)
+            r.append((g[0, 0], (s1 + s2) / 2))
+
+        # sort descendingly and return
+        r = np.array(r, dtype=np.float64)
+        r = r[r[:, -1].argsort()[::-1]]
+        return r
+
+    def _directional_score(self, g, chunk_meta, axis):
+        # axis = 1, from matched_chunk aspect
+        # axis = 2, from search chunk aspect
+        s_m = g[g[:, axis].argsort()]
+        # group by matched_chunk_id
+        gs_m = np.split(s_m, np.cumsum(np.unique(s_m[:, axis], return_counts=True)[1])[:-1])
+        # take the best match from each group
+        gs_mb = np.stack([gg[gg[:, -1].argsort()][0] for gg in gs_m])
+        # doc total length
+        _c = chunk_meta[gs_mb[0, axis]]['length']
+        # hit chunks
+        _h = gs_mb.shape[0]
+        # hit distance
+        sum_d_hit = np.sum(gs_mb[:, -1])
+        # all hit => 0, all_miss => 1
+        return 1 - (sum_d_hit + self.D_MISS * (_c - _h)) / (self.D_MISS * _c)
+
+```
+
+在每个`chunk`找出对应的`top_k`以后，我们需要对每个`doc`下的所有`chunk`的`top_k``chunk`进行排序，融合成`doc`下的`top_k chunk`，因为我们刚刚找出的是每个`chunk`下的`top_k`，所有的`chunk`下的`top_k`需要进行排序。
 
 ```yaml
 !BiMatchRanker
@@ -109,9 +233,6 @@ metas:
 requests:
   on:
     SearchRequest:
-      - !ChunkWeightDriver
-        with:
-          reverse: true
       - !Chunk2DocScoreDriver
         with:
           method: score
