@@ -1,0 +1,9 @@
+!ImageResizer
+with:
+  target_size: 96
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !ChunkCraftDriver
+        with:
+          method: craft
