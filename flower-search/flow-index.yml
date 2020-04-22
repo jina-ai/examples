@@ -6,6 +6,10 @@ pods:
     yaml_path: yaml/craft-load.yml
     replicas: $REPLICAS
     read_only: true
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
   normalizer:
     yaml_path: yaml/craft-normalize.yml
     replicas: $REPLICAS
