@@ -8,13 +8,7 @@
 
     好，今天我们就用少于100行的Python代码搭建一套WebQA搜索系统。在这个系统中，我们采用WebQA作为我们的数据集， 数据集含有410万个预先过滤过的、高质量问题和多个回复，数据集下载[地址](https://drive.google.com/open?id=1u2yW_XohbYL2YAK6Bzc5XrngHstQTf0v)。我们将每个问题和问题下的回复当成一个**文档**，每个问题当成一个**chunk**，如果你不是很熟悉这些概念，在继续阅读之前，强烈建议你阅读[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)和[Jina "Hello, World!"👋](https://github.com/jina-ai/jina#jina-hello-world-)。
 
-
-
 ## 导读
-
-
-
-
 
 ## 效果展示
 
@@ -51,6 +45,7 @@ pods:
 
   extractor:
     yaml_path: extractor.yml
+    needs: gateway
 
   encoder:
     yaml_path: encoder.yml
@@ -132,6 +127,8 @@ join:
 
     同样，在查询时，我们利用yaml文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
 
+    
+
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
 <td> flow-query.yml</td>
@@ -173,9 +170,42 @@ pods:
 
     在索引之后再利用`ranker`对文档下所有chunk的topk进行排序，并返回文档级别的信息，在`ranker`中我们采用`bi-match`算法进行排序，具体实现细节见[github]()。
 
-    在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。
+    在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。 
 
-    
+    在上面你可能发现`extractor`, `encoder`, `chunk_indexer`, `doc_indexer`的yaml文件地址与创建索引时一样，没错，它们共用同一个yaml文件，共同一个Pod，只是在内部定义不同的请求下的处理逻辑。
+
+## 小结
+
+    在开始下面之前，我们回过头来看看，是不是觉得很简单。那你可能会问两条Flow有什么不同呢？
+
+    第一个不同点是，在创建索引时，我们采用了两条并行的流，为什么要这样做呢？并行的流可以提高创建索引的速度，为什么可以并行呢？在建立索引时，文档存储的是文档级别的索引，而chunk索引是存储chunk级别的索引，在`gateway`以后，没有任何共用的东西。 
+
+    第二个不同点，在创建索引时，Flow中的模态为`IndexRequest`；在查询时，Flow中的模态为`SearchRequest`；到目前为止，jina支持4中不同的查询模态。
+
+- `IndexRequest`: 用于索引创建模态
+
+- `SearchRequest`: 用于查询模态
+
+- `TrainRequest`: 用于模型训练模态
+
+- `ControlRequest`: 用于远程控制模态
+
+## 运行Flow
+
+### 创建索引
+
+```python
+python app.py -t index -n 10000
+```
+
+<details>
+<summary>点击查看详细日志输出</summary>
+
+<p align="center">
+  <img src=".github/index-output.png?raw=true" alt="日志输出">
+</p>
+
+</details>
 
 ### Index Flow
 
