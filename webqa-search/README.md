@@ -8,6 +8,14 @@
 
     好，今天我们就用少于100行的Python代码搭建一套WebQA搜索系统。在这个系统中，我们采用WebQA作为我们的数据集， 数据集含有410万个预先过滤过的、高质量问题和多个回复，数据集下载[地址](https://drive.google.com/open?id=1u2yW_XohbYL2YAK6Bzc5XrngHstQTf0v)。我们将每个问题和问题下的回复当成一个**文档**，每个问题当成一个**chunk**，如果你不是很熟悉这些概念，在继续阅读之前，强烈建议你阅读[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)和[Jina "Hello, World!"👋](https://github.com/jina-ai/jina#jina-hello-world-)。
 
+
+
+## 导读
+
+
+
+
+
 ## 效果展示
 
 ![](.github/result.gif)
@@ -158,8 +166,11 @@ pods:
 </td>
 </tr>
 </table>
+    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的。
 
-    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的，在用在索引之后利用ranker对doc下所有chunk的topk进行排序，融合成一个新的topk chunk。再利用topk chunk映射到
+    在索引之后再利用`ranker`对文档下所有chunk的topk进行排序，并返回文档级别的信息，在`ranker`中我们采用`bi-match`算法进行排序，具体实现细节见[github]()。
+
+    在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。
 
     
 
