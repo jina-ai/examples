@@ -10,6 +10,4 @@ requests:
       - !DocPruneDriver
         with:
           pruned: chunks
-    ControlRequest:
-      - !ControlReqDriver {}
 

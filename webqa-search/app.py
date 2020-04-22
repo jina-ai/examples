@@ -27,7 +27,7 @@ def read_data(fn):
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100]:
+    for item in result[:50000]:
         yield item
 
 def print_topk(resp):
@@ -41,14 +41,14 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
 
 @click.command()
-@click.option('--task', '-t', default='query')
+@click.option('--task', '-t', default='index')
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
         data_fn = os.path.join(workspace_path, "web_text_zh_train.json")
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_fn), batch_size=4)
+            fl.index(raw_bytes=read_data(data_fn), batch_size=32)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
