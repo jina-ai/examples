@@ -27,7 +27,7 @@ In this demo, we will show how to run the Pods in the dockers and how to scale u
 </p>
 
 <details>
-<summary>Click here to see the console output</summary>
+<summary>Click here to see the query outputs</summary>
 
 <p align="center">
   <img src=".github/query-demo.png?raw=true" alt="query flow console output">
@@ -425,7 +425,9 @@ Finally, our customized Executor is ready to go. Let's check the results. Intere
 ## Wrap up
 Hooray! Now you've a pretty simple follower image search engine working. Let's wrap up what we've covered in this demo.
 
-1. 
+1. The Pods can use the docker image and run in a docker container. 
+2. The `replicas` argument allow you to quickly scale up the Pods.
+3. The Pods can use user defined Executors.  
 
 ## Next Steps
 
