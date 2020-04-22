@@ -68,7 +68,7 @@ pods:
 
 </td>
 <td>
-<img align="right" height="420px" src=".github/index-flow.png"/>
+<img align="right" height="420px" src=".github/index.png"/>
 </td>
 </tr>
 </table>
