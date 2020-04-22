@@ -12,8 +12,8 @@
 
 - [效果展示](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
 - [总览](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%80%BB%E8%A7%88)
-- 环境依赖
-- 数据预处理
+- [环境依赖](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
+- [数据预处理](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
 - [定义Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%AE%9A%E4%B9%89flow)
 - [小结](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%B0%8F%E7%BB%93)
 - [运行Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E8%BF%90%E8%A1%8Cflow)
