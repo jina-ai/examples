@@ -46,18 +46,21 @@
 ```yaml
 !Flow
 pods:
-  splitter:
-    yaml_path: yaml/craft-split.yml
-  encoder:
-    yaml_path: yaml/encode.yml
-    timeout_ready: 60000
-  chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
-    needs: gateway
-  join_all:
-    yaml_path: _merge
+    yaml_path: doc_indexer.yml
+
+  extractor:
+    yaml_path: extractor.yml
+
+  encoder:
+    yaml_path: encoder.yml
+    timeout_ready: 60000
+
+  chunk_indexer:
+    yaml_path: chunk_indexer.yml
+
+  join:
+    yaml_path: merger
     needs: [doc_indexer, chunk_indexer]
 ```
 
