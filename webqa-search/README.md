@@ -338,6 +338,19 @@ requests:
         with:
           method: craft
 ```
+```python
+class WebQATitleExtractor(BaseSegmenter):
+    def craft(self, doc_id, raw_bytes, *args, **kwargs):
+        json_dict = json.loads(raw_bytes.decode('utf-8'))
+        title = json_dict['title']
+        return [{
+                    'raw_bytes': title.encode('utf-8'),
+                    'doc_id': doc_id,
+                    'offset': 0,
+                    'length': len(title),
+                    'text': title
+                }]
+```
 
     在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑，在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的行为，这就是公用Pod的原理。
 
