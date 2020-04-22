@@ -18,9 +18,9 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 
 ## Overview
 
-The overall design is similar to the semantic search demo. We consider each image as a Document and generate Chunks by moving a slidding window on the image. The pretrained `mobilenet_v2` model from the `torchvision` lib is used to encode the Chunks into vectors. 
+The overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pretrained `mobilenet_v2` model from the `torchvision` lib is used to encode the Chunks into vectors. 
 
-In this demo, we will show how to run the Pods in the dockers and how to scale up the Pods to boost the whole procedure. Plus, you will learn how to define your own Executor in your project. Sounds interesting? Let's start coding!
+In this demo, we will show how to run the Pods in the docker container and how to scale up the Pods to boost the whole procedure. Plus, you will learn how to define your own Executor in your project. Sounds interesting? Let's start coding!
 
 <p align="center">
   <img src=".github/flower.gif?raw=true" alt="Jina banner" width="90%">
