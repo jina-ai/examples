@@ -42,12 +42,13 @@ We start with defining the index and the query Flows  with the YAML files as fol
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
-<td> flow-index.yml</td>
-<td> Flow in Dashboard</td>
-<td> flow-query.yml</td>
-<td> Flow in Dashboard</td>
+<td> </td>
+<td> YAML</td>
+<td> Dashboard </td>
+
 </tr>
 <tr>
+<td> Index Flow </td>
 <td>
   <sub>
 
@@ -81,6 +82,9 @@ pods:
 <td>
 <img align="right" height="420px" src=".github/index-flow.png"/>
 </td>
+</tr>
+<tr>
+<td> Query Flow </td>
 <td>
   <sub>
 
