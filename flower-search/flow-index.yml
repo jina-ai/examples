@@ -1,0 +1,32 @@
+!Flow
+metas:
+  prefetch: 10
+pods:
+  loader:
+    yaml_path: yaml/craft-load.yml
+    replicas: $REPLICAS
+    read_only: true
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
+  normalizer:
+    yaml_path: yaml/craft-normalize.yml
+    replicas: $REPLICAS
+    read_only: true
+  encoder:
+    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
+    replicas: $REPLICAS
+    timeout_ready: 60000
+    read_only: true
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+    replicas: $SHARDS
+    seperated_workspace: true
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
+    needs: loader
+  join_all:
+    yaml_path: _merge
+    needs: [doc_indexer, chunk_indexer]
+    read_only: true

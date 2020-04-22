@@ -1,0 +1,25 @@
+!Flow
+with:
+  read_only: true
+pods:
+  loader:
+    yaml_path: yaml/craft-load.yml
+    read_only: true
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
+  normalizer:
+    yaml_path: yaml/craft-normalize.yml
+    read_only: true
+  encoder:
+    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
+    timeout_ready: 60000
+    read_only: true
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+    seperated_workspace: true
+  ranker:
+    yaml_path: BiMatchRanker
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
