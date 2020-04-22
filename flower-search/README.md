@@ -19,6 +19,15 @@ In this demo, we will show how to run the Pods in the dockers and how to scale u
   <img src=".github/flower.gif?raw=true" alt="Jina banner" width="90%">
 </p>
 
+<details>
+<summary>Click here to see the console output</summary>
+
+<p align="center">
+  <img src=".github/query-demo.png?raw=true" alt="query flow console output">
+</p>
+
+</details> 
+
 ## Prerequirements
 
 This demo requires Python 3.7.
@@ -263,9 +272,9 @@ def save_topk(resp, output_fn=None):
 Congratulations! Now you have an image search engine working at hand. We won't go into details of the Pods' YAML files because they are quite self explained. If you feel a bit lost when reading the YAML files, please check out the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
 
 ## Add a Customized Executor
-Although we have an image search engine at hand, we still have dozens of methods to make it better. One common method is to rotate the images and also index all the rotated versions so that we can retrieve the similar images even when the query image is rotated.
+Although we have an image search engine at hand, we still have dozens of methods to make it better. One common method is to flip the images and index the flipped versions as well as the original image. So that we can retrieve the similar images even when the query image is flipped.
 
-We starts with add a new Pod with the name of `rotator`, to the Flow. 
+We starts with add a new Pod with the name of `flipper`, to the Flow. 
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -347,10 +356,10 @@ pods:
 </tr>
 </table>
 
-As stated in the Flow's YAML file, the `rotator` Pod is configed by the `yaml/craft-rotate.yml`. Now we create this YAML file as following. For the `rotator` Pod, we use the an Executor with the name `ImageRotator`, which we will create in the next step. 
+As stated in the Flow's YAML file, the `flipper` Pod is configed by the `yaml/craft-flip.yml`. Now we create this YAML file as following. For the `flipper` Pod, we use the an Executor with the name `ImageFlipper`, which we will create in the next step. 
 
 ```yaml
-!ImageRotator
+!ImageFlipper
 metas:
   py_modules: customized_executors.py
 with:
@@ -363,14 +372,14 @@ requests:
           method: craft
 ```
 
-In the YAML file, we define the Pod to behave in the same way on both `SearchRequest` and `IndexRequest`. In both cases, the Pod will use the `ChunkCraftDriver` to prepare the request data for the `ImageRotator` and call the `craft()` function of the `ImageRotator` to process the data.
+In the YAML file, we define the Pod to behave in the same way on both `SearchRequest` and `IndexRequest`. In both cases, the Pod will use the `ChunkCraftDriver` to prepare the request data for the `ImageFlipper` and call the `craft()` function of the `ImageFlipper` to process the data.
 
 > `ChunkCraftDriver` craft the chunk-level information on given keys using the executor.
 
-The `py_modules` argument under the `metas` field is used to specify in which file the Executor is implemented. Therefore we can now move on to the `customized_executors.py` and implement `ImageRotator`.
+The `py_modules` argument under the `metas` field is used to specify in which file the Executor is implemented. Therefore we can now move on to the `customized_executors.py` and implement `ImageFlipper`.
 
 ```yaml
-!ImageRotator
+!ImageFlipper
 metas:
   py_modules: customized_executors.py
 ```
@@ -379,29 +388,23 @@ In this case, we need to inherit from the `ImageChunkCrafter` because we've save
 
 > `ImageChunkCrafter` provides the basic functions for processing image data on chunk-level.
 
-Here come codes. The `load_image()` function from the `ImageChunkCrafter` will load the image array and return an `PIL.Image` object. With the `PIL.Image` object, we can simply call the `rotate()` function to rotate the images. Note we need to restore the color channel by calling the `restore_channel_axis()` function. This is because the `PIL.Image` always put the color channel at the last axis. In contrast, the input images might use different axis for the color channel, which is defined in the YAML file by the `channel_axis`.
+Here come codes. The `load_image()` function from the `ImageChunkCrafter` will load the image array and return an `PIL.Image` object. With the `PIL.Image` object, we can simply call the `mirror()` function to flip the images. Note we need to restore the color channel by calling the `restore_channel_axis()` function. This is because the `PIL.Image` always put the color channel at the last axis. In contrast, the input images might use different axis for the color channel, which is defined in the YAML file by the `channel_axis`.
 
 ```python
 import numpy as np
 from jina.executors.crafters.image import ImageChunkCrafter
+from PIL import ImageOps
 
 
-class ImageRotator(ImageChunkCrafter):
+class ImageFlipper(ImageChunkCrafter):
     def craft(self, blob, doc_id, *args, **kwargs):
-        raw_img = self._load_image(blob)
-        chunks = []
-        for idx, angle in enumerate([90, 180, 270]):
-            _img = raw_img.rotate(angle)
-            img = self.restore_channel_axis(np.asarray(_img))
-            chunks.append(
-                {
-                    'doc_id': doc_id,
-                    'blob': img.astype('float32')
-                })
-        return chunks
+        raw_img = self.load_image(blob)
+        _img = ImageOps.mirror(raw_img)
+        img = self.restore_channel_axis(np.asarray(_img))
+        return [{'doc_id': doc_id, 'blob': img.astype('float32')}, ]
 ```
   
-Finally, our customized Executor is ready to go. Let's check the results.
+Finally, our customized Executor is ready to go. Let's check the results. Interestingly, the top1 matched image is no longer always the query image itself. The flipped image in the Chunks somehow disturbs the retrieval process.
 
 <details>
 <summary>Click here to see the console output</summary>
@@ -413,6 +416,9 @@ Finally, our customized Executor is ready to go. Let's check the results.
 </details> 
 
 ## Wrap up
+Hooray! Now you've a pretty simple follower image search engine working. Let's wrap up what we've covered in this demo.
+
+1. 
 
 ## Next Steps
 
