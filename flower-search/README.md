@@ -6,7 +6,14 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 
 ## Contents
 
-[TOC]
+- [Overview](#overview)
+- [Prerequirements](#prerequirements)
+- [Prepare the data](#prepare-the-data)
+- [Define the Flows](#define-the-flows)
+- [Run the Flows](#run-the-flows)
+- [Hello, Docker!](#hello-docker-)
+- [Wrap up](#wrap-up)
+- [Next steps](#next-steps)
 
 
 ## Overview
