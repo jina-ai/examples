@@ -260,7 +260,157 @@ def save_topk(resp, output_fn=None):
         plt.savefig(output_fn)
 ```
 
+Congratulations! Now you have an image search engine working at hand. We won't go into details of the Pods' YAML files because they are quite self explained. If you feel a bit lost when reading the YAML files, please check out the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
+
 ## Add a Customized Executor
+Although we have an image search engine at hand, we still have dozens of methods to make it better. One common method is to rotate the images and also index all the rotated versions so that we can retrieve the similar images even when the query image is rotated.
+
+We starts with add a new Pod with the name of `rotator`, to the Flow. 
+
+<table style="margin-left:auto;margin-right:auto;">
+<tr>
+<td> </td>
+<td> YAML</td>
+<td> Dashboard </td>
+
+</tr>
+<tr>
+<td> Index Flow </td>
+<td>
+  <sub>
+
+```yaml
+!Flow
+pods:
+  loader:
+    yaml_path: yaml/craft-load.yml
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+  normalizer:
+    yaml_path: yaml/craft-normalize.yml
+    read_only: true
+  encoder:
+    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
+    replicas: 4
+    timeout_ready: 60000
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
+    needs: loader
+  join_all:
+    yaml_path: _merge
+    needs: [doc_indexer, chunk_indexer]
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/index-flow_2.png"/>
+</td>
+</tr>
+<tr>
+<td> Query Flow </td>
+<td>
+  <sub>
+
+```yaml
+!Flow
+with:
+  read_only: true
+pods:
+  loader:
+    yaml_path: yaml/craft-load.yml
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+  normalizer:
+    yaml_path: yaml/craft-normalize.yml
+  encoder:
+    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
+    timeout_ready: 60000
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+  ranker:
+    yaml_path: BiMatchRanker
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/query-flow_2.png"/>
+</td>
+
+</tr>
+</table>
+
+As stated in the Flow's YAML file, the `rotator` Pod is configed by the `yaml/craft-rotate.yml`. Now we create this YAML file as following. For the `rotator` Pod, we use the an Executor with the name `ImageRotator`, which we will create in the next step. 
+
+```yaml
+!ImageRotator
+metas:
+  py_modules: customized_executors.py
+with:
+  channel_axis: 0
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !ChunkCraftDriver
+        with:
+          method: craft
+```
+
+In the YAML file, we define the Pod to behave in the same way on both `SearchRequest` and `IndexRequest`. In both cases, the Pod will use the `ChunkCraftDriver` to prepare the request data for the `ImageRotator` and call the `craft()` function of the `ImageRotator` to process the data.
+
+> `ChunkCraftDriver` craft the chunk-level information on given keys using the executor.
+
+The `py_modules` argument under the `metas` field is used to specify in which file the Executor is implemented. Therefore we can now move on to the `customized_executors.py` and implement `ImageRotator`.
+
+```yaml
+!ImageRotator
+metas:
+  py_modules: customized_executors.py
+```
+
+In this case, we need to inherit from the `ImageChunkCrafter` because we've saved the images in the Chunks of the requests.
+
+> `ImageChunkCrafter` provides the basic functions for processing image data on chunk-level.
+
+Here come codes. The `load_image()` function from the `ImageChunkCrafter` will load the image array and return an `PIL.Image` object. With the `PIL.Image` object, we can simply call the `rotate()` function to rotate the images. Note we need to restore the color channel by calling the `restore_channel_axis()` function. This is because the `PIL.Image` always put the color channel at the last axis. In contrast, the input images might use different axis for the color channel, which is defined in the YAML file by the `channel_axis`.
+
+```python
+import numpy as np
+from jina.executors.crafters.image import ImageChunkCrafter
+
+
+class ImageRotator(ImageChunkCrafter):
+    def craft(self, blob, doc_id, *args, **kwargs):
+        raw_img = self._load_image(blob)
+        chunks = []
+        for idx, angle in enumerate([90, 180, 270]):
+            _img = raw_img.rotate(angle)
+            img = self.restore_channel_axis(np.asarray(_img))
+            chunks.append(
+                {
+                    'doc_id': doc_id,
+                    'blob': img.astype('float32')
+                })
+        return chunks
+```
+  
+Finally, our customized Executor is ready to go. Let's check the results.
+
+<details>
+<summary>Click here to see the console output</summary>
+
+<p align="center">
+  <img src=".github/query-demo_2.png?raw=true" alt="query flow console output">
+</p>
+
+</details> 
 
 ## Wrap up
 

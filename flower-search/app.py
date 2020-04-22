@@ -5,10 +5,11 @@ import random
 
 from jina.flow import Flow
 
-RANDOM_SEED = 13 # 5
+RANDOM_SEED = 16 # 5
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
+os.environ['COLOR_CHANNEL_AXIS'] = str(0)
 
 
 def get_random_ws(workspace_path, length=8):
@@ -80,7 +81,7 @@ def main(task, num_docs, top_k):
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_path, num_docs), batch_size=20)
+            fl.index(raw_bytes=read_data(data_path, num_docs), batch_size=2)
         print('done')
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
