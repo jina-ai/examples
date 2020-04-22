@@ -2,21 +2,16 @@
 pods:
   extractor:
     yaml_path: images/title_extractor/title_extractor.yml
-    needs: gateway
 
   encoder:
     yaml_path: images/encoder/encoder.yml
-    needs: extractor
     timeout_ready: 60000
 
-  tcc_indexer:
+  chunk_indexer:
     yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
-    needs: encoder
 
   ranker:
     yaml_path: images/ranker/ranker.yml
-    needs: tcc_indexer
 
-  tmd_indexer:
+  doc_indexer:
     yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
-    needs: ranker

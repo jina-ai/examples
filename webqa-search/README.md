@@ -10,7 +10,7 @@
 
 ## 效果展示
 
-![](pictures/result.gif)
+![](.github/result.gif)
 
 ## 总览
 
@@ -25,6 +25,42 @@
 ### 创建索引
 
     在创建索引之前，我们需要通过yaml文件定义Flow。在Flow中我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
+
+<table style="margin-left:auto;margin-right:auto;">
+<tr>
+<td> flow-index.yml</td>
+<td> Flow in Dashboard</td>
+</tr>
+<tr>
+<td>
+  <sub>
+
+```yaml
+!Flow
+pods:
+  splitter:
+    yaml_path: yaml/craft-split.yml
+  encoder:
+    yaml_path: yaml/encode.yml
+    timeout_ready: 60000
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
+    needs: gateway
+  join_all:
+    yaml_path: _merge
+    needs: [doc_indexer, chunk_indexer]
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/index-flow.png"/>
+</td>
+</tr>
+</table>
 
 > gateway
 
@@ -85,9 +121,45 @@ join:
 
     同样，在查询时，我们利用yaml文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
 
-    
+<table style="margin-left:auto;margin-right:auto;">
+<tr>
+<td> flow-query.yml</td>
+<td> Flow in Dashboard</td>
+</tr>
+<tr>
+<td>
+  <sub>
 
-    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的，在索引之后利用ranker对doc下所有chunk的topk进行排序，融合成一个新的topk chunk。再利用topk chunk映射到
+```yaml
+!Flow
+pods:
+  extractor:
+    yaml_path: extractor.yml
+
+  encoder:
+    yaml_path: encoder.yml
+    timeout_ready: 60000
+
+  chunk_indexer:
+    yaml_path: chunk_indexer.yml
+
+  ranker:
+    yaml_path: ranker.yml
+
+  doc_indexer:
+    yaml_path: doc_indexer.yml
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/query.png"/>
+</td>
+</tr>
+</table>
+
+    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的，在用在索引之后利用ranker对doc下所有chunk的topk进行排序，融合成一个新的topk chunk。再利用topk chunk映射到
 
     
 
