@@ -2,13 +2,10 @@
 metas:
   py_modules: extractor.py
   workspace: $TMP_WORKSPACE
-  name: title_extractor
+  name: extractor
 requests:
   on:
     [IndexRequest, SearchRequest]:
       - !SegmentDriver
         with:
           method: craft
-
-    ControlRequest:
-      - !ControlReqDriver {}

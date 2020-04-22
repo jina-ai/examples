@@ -1,17 +1,17 @@
 !Flow
 pods:
   extractor:
-    yaml_path: images/title_extractor/title_extractor.yml
+    yaml_path: images/extractor/extractor.yml
 
   encoder:
     yaml_path: images/encoder/encoder.yml
     timeout_ready: 60000
 
   chunk_indexer:
-    yaml_path: images/title_compound_chunk_indexer/title_compound_chunk_indexer.yml
+    yaml_path: images/chunk_indexer/chunk_indexer.yml
 
   ranker:
     yaml_path: images/ranker/ranker.yml
 
   doc_indexer:
-    yaml_path: images/title_meta_doc_indexer/title_meta_doc_indexer.yml
+    yaml_path: images/doc_indexer/doc_indexer.yml
