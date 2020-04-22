@@ -10,6 +10,26 @@
 
 ## 导读
 
+- [效果展示](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
+
+- [总览](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%80%BB%E8%A7%88)
+
+- [定义Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%AE%9A%E4%B9%89flow)
+
+- [小结](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%B0%8F%E7%BB%93)
+
+- [运行Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E8%BF%90%E8%A1%8Cflow)
+
+- [深入Pod](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%B7%B1%E5%85%A5pod)
+
+- 容器化
+
+- [分布式](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%88%86%E5%B8%83%E5%BC%8F)
+
+- [回顾](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%9B%9E%E9%A1%BE)
+
+- [结语]()
+
 ## 效果展示
 
 ![](.github/result.gif)
@@ -26,7 +46,7 @@
 
 ### 创建索引
 
-    在创建索引之前，我们需要通过yaml文件定义Flow。在Flow中我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
+    在创建索引之前，我们需要通过YAML文件定义Flow。在Flow中我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -90,7 +110,7 @@ pods:
 
     
 
-    在Flow中定义Pod时，我们需要指定Pod的yaml文件地址和接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的yaml文件地址为`extractor.yml`，接受来自`gateway`的请求。
+    在Flow中定义Pod时，我们需要指定Pod的YAML文件地址和接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的yaml文件地址为`extractor.yml`，接受来自`gateway`的请求。
 
 ```yaml
 extractor:
@@ -98,7 +118,7 @@ extractor:
     needs: gateway
 ```
 
-    两个Pod在yaml文件中的顺序是依次的，则不需要定义needs，例如在`chunk_indexer`这个Pod。
+    两个Pod在YAML文件中的顺序是依次的，则不需要定义needs，例如在`chunk_indexer`这个Pod。
 
 ```yaml
 chunk_indexer:
@@ -125,7 +145,7 @@ join:
 
     当建立完成索引后，下一步我们就是使用建立的索引进行查询。
 
-    同样，在查询时，我们利用yaml文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
+    同样，在查询时，我们利用YAML文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
 
     
 
@@ -172,7 +192,7 @@ pods:
 
     在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。 
 
-    在上面你可能发现`extractor`, `encoder`, `chunk_indexer`, `doc_indexer`的yaml文件地址与创建索引时一样，没错，它们共用同一个yaml文件，共同一个Pod，只是在内部定义不同的请求下的处理逻辑。
+    在上面你可能发现`extractor`, `encoder`, `chunk_indexer`, `doc_indexer`的yaml文件地址与创建索引时一样，没错，它们共用同一个YAML文件，共同一个Pod，只是在内部定义不同的请求下的处理逻辑。
 
 ## 小结
 
@@ -248,7 +268,7 @@ def read_data(fn):
 python app.py -t query
 ```
 
-    在查询时刻，我们同样从yaml文件中建立Flow，通过s`earch()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据形式。
+    在查询时刻，我们同样从YAML文件中建立Flow，通过`search()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据形式。
 
 ```python
 flow = Flow().load_config('flow-query.yml')
@@ -305,7 +325,7 @@ requests:
 
     在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑，在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的行为，这就是公用Pod的原理。
 
-    在jina中Driver是一个数据类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换为ProtoBuf，在这个例子中`SegmentDriver`将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`，在`craft()`处理完数据以后，`SegmentDriver`将Python Object / Numpy Object转换为ProtoBuf。
+    在jina中Driver是一个数据类型转换器，将ProtoBuf转换为`python`数据类型/ `numpy`数据类型，或将`python`数据类型/ `numpy`数据类型转换为ProtoBuf，在这个例子中`SegmentDriver`将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`，在`craft()`处理完数据以后，`SegmentDriver`将Python Object / Numpy Object转换为ProtoBuf。
 
 
 
@@ -443,6 +463,30 @@ requests:
       - !DocPruneDriver {}
 ```
 
+## 容器化
+
+    在开始，我们提到过jina是**利用容器技术实现了模型容器化**，那么是怎么利用的呢？答案就是可以直接在Pod中直接加载docker image，不用写繁琐的YAML文件。Awesome!
+
+    我们对`encoder`这个Pod进行举例说明。详细见[jina-hub](https://github.com/jina-ai/jina-hub)
+
+    加载YAML文件的`encoder`
+
+```yaml
+encoder:
+    yaml_path: encoder.yml
+    timeout_ready: 60000
+```
+
+    加载docker image的encoder
+
+```yaml
+encoder:
+    image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
+    timeout_ready: 60000
+```
+
+    你可能在想，这里既然用了容器。那是不是我也可以通过容器来加载其他的预训练模型的镜像呢？答案是可以的。Wow。Magic。我想切什么预训练模型就切什么预训练模型，而且过程太简单了。哇，太爽了。我要去[Jina-hub]([https://github.com/jina-ai/jina-hub)上看看都有什么预训练模型。
+
 ## 分布式
 
     你在前言中还说了，Jina支持分布式，那怎么个分布式法呢？设想一下，现在有这样一个场景，你的GPU机器在阿里云或者腾讯云上，但是，你又想利用预训练模型对文本进行编码。那怎么办呢？用Jina的分布式功能撒，将编码的Pod放到GPU服务器上，其余的Pod放到CPU的机器上。那怎么用呢？请看如下分解。
@@ -455,24 +499,21 @@ requests:
 jina gateway --allow-spawn --port-grpc 12345
 ```
 
-    上面这条命令有什么用呢？开启Jina gateway，接收外部调用，并指定调用端口为12345。
+    上面这条命令有什么用呢？开启`gateway`，接收外部调用，并指定调用端口为12345。
 
 ### 连接Gateway
 
-    我们还是将Encoder用于举例，假设GPU服务器已经存在了Roberta镜像。
+    我们还是将`encoder`用于举例，假设GPU服务器已经存在了`Roberta`镜像。
 
     我们需要怎么进行连接呢？请看。
 
-```python
-add(
- name='encoder',image='jinaai/examples.hub.encoder.nlp.transformers-hit-scir',needs="extractor", host='123.34.23.56', port=12345)
+```yaml
+encoder:
+    image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
+    timeout_ready: 60000
+    host: 123.34.23.56
+    prot: 12345
 ```
-
-    我们只需要指定远程服务器的host（我们假设GPU服务器的ip地址为123.34.23.56）和端口号就可以了，这样这个Encoder Pod就会连接GPU服务器的gateway，GPU服务器gateway就会开启一个Jina Pod，并加载Roberta这个镜像。Wow。厉害。
-
-    建议：在使用分布式功能时，尽量使用镜像进行Pod加载，尽量不使用yml文件进行加载；因为服务器yml文件可能路径复杂，容易出错；直接使用镜像加载，方便，快捷。
-
-
 
 ## 回顾
 
@@ -496,6 +537,6 @@ add(
 
 
 
-## 下一步
+## 结语
 
     在这里你可能已经发现了文档中只有一个chunk，那么如果有多个chunk时，应该怎么做呢？请看下一篇，[在3分钟内用jina实现复杂的新闻搜索系统]()。
