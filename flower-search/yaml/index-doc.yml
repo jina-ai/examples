@@ -1,0 +1,20 @@
+!LeveldbIndexer
+with:
+  index_filename: 'meta_doc_index.db'
+metas:
+  name: 'LeveldbIndexer'
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    SearchRequest:
+      - !DocKVSearchDriver
+        with:
+          method: query
+
+    IndexRequest:
+      - !DocPruneDriver
+        with:
+          pruned: ['chunks']
+      - !DocKVIndexDriver
+        with:
+          method: add
