@@ -11,24 +11,17 @@
 ## 导读
 
 - [效果展示](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
-
 - [总览](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%80%BB%E8%A7%88)
-
+- 环境依赖
+- 数据预处理
 - [定义Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%AE%9A%E4%B9%89flow)
-
 - [小结](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%B0%8F%E7%BB%93)
-
 - [运行Flow](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E8%BF%90%E8%A1%8Cflow)
-
 - [深入Pod](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E6%B7%B1%E5%85%A5pod)
-
 - [容器化](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%AE%B9%E5%99%A8%E5%8C%96)
-
 - [分布式](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%88%86%E5%B8%83%E5%BC%8F)
-
 - [回顾](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E5%9B%9E%E9%A1%BE)
-
-- [结语]()
+- [结语](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#%E7%BB%93%E8%AF%AD)
 
 ## 效果展示
 
@@ -40,7 +33,27 @@
 
     在创建索引时，我们首先会为所有的文档建立索引，利用`transformes`加载哈工大`Roberta`作为编码器，将chunk中的文本编码成向量，并进行存储；在搜索时，用户输入问题，编码器将问题编码成向量，然后利用这些向量去召回最相似的问题，再利用问题返回问题下的回复。
 
-    
+
+
+## 环境依赖
+
+    这个demo运行在Python3.7以上的环境
+
+```shell
+pip install -r requirements.txt
+```
+
+
+
+## 数据预处理
+
+    在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
+
+```shell
+python pre_data.py
+```
+
+
 
 ## 定义Flow
 
