@@ -7,3 +7,4 @@ requests:
       - !SegmentDriver
         with:
           method: craft
+          save_raw_bytes: True
