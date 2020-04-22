@@ -32,28 +32,28 @@
 
 > extractor
 
-    将文档级别信息分割为chunk级别的信息。
+    将文档级别信息分割为chunk级别的信息，也就是提出文档中的问题。
 
 > doc_indexer
 
-    存储每个文档的原数据。
+    存储问题和回复整个文档。
 
 > encoder
 
-    将chunk中的文本编码成向量。
+    将chunk中的文本编码成向量，等价于将问题编码成向量。
 
 > chunk_indexer
 
-    存储chunk的原信息和chunk中文本的向量
+    存储chunk与文档的关联关系，还存储了编码后的向量。
 
     
 
-    在Flow中定义Pod时，我们需要指定Pod的yaml文件地址和接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的yaml文件地址为extractor.yml，接受来自gateway的请求。
+    在Flow中定义Pod时，我们需要指定Pod的yaml文件地址和接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的yaml文件地址为`extractor.yml`，接受来自`gateway`的请求。
 
 ```yaml
 extractor:
-	yaml_path: extractor.yml
-	needs: gateway
+    yaml_path: extractor.yml
+    needs: gateway
 ```
 
     两个Pod在yaml文件中的顺序是依次的，则不需要定义needs，例如在`chunk_indexer`这个Pod。
@@ -71,7 +71,7 @@ encoder:
   timeout_ready: 60000
 ```
 
-    你可能还注意到在介绍Pod的功能时，没有`join`这个Pod。`join`的作用是合并两条并行流中的所有信息，或者你也可以理解成等待两个流完成工作，并执行下面的任务。当如果存在多个并行流时，只需要在`needs`中增加相应的Pod即可。
+    你可能还注意到在介绍Pod的功能时，没有`join`这个Pod。在创建索引时，我们定义了两条并行的流，所以`join`的作用是合并两条并行流中的所有信息，或者你也可以理解成等待两个流完成工作，并执行下面的任务。当如果存在多个并行流时，只需要在`needs`中增加相应的Pod即可。
 
 ```yaml
 join:
@@ -79,21 +79,17 @@ join:
   needs: [doc_indexer, chunk_indexer]
 ```
 
-
-
 ### 查询
 
     当建立完成索引后，下一步我们就是使用建立的索引进行查询。
 
-    同样，在查询时，我们利用yaml文件定义查询的Flow！在查询的Flow中，我们共用extractor分割文档，共用encoder编码文本, 利用chunk_indexer存储的索引来索引chunk级别的信息, doc_indexer这4个Pod处理来自于上一个Pod的请求，利用ranker这个Pod对查询到的结果进行排序。
-
-
-
-    你可能会发现extractor, encoder, chunk_indexer, doc_indexer这个4个Pod__
+    同样，在查询时，我们利用yaml文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
 
     
 
+    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的，在索引之后利用ranker对doc下所有chunk的topk进行排序，融合成一个新的topk chunk。再利用topk chunk映射到
 
+    
 
 ### Index Flow
 

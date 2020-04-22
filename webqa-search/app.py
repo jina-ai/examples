@@ -6,7 +6,7 @@ from google.protobuf.json_format import MessageToDict
 from jina.flow import Flow
 
 workspace_path = '/tmp/jina/webqa/'
-index_file = 'web_text_zh_train.json'
+index_file = 'web_text_zh_valid.json'
 query_file = 'web_text_zh_valid.json'
 do_index = True
 
