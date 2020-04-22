@@ -11,7 +11,7 @@ pods:
     replicas: $REPLICAS
     read_only: true
   encoder:
-    yaml_path: yaml/encode.yml
+    yaml_path: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2:0.0.1
     replicas: $REPLICAS
     timeout_ready: 60000
     read_only: true

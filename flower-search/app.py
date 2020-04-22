@@ -8,7 +8,7 @@ from jina.flow import Flow
 RANDOM_SEED = 13 # 5
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
-os.environ['TEST_WORKDIR'] = '/tmp/jina/flower'
+os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
 
 
 def get_random_ws(workspace_path, length=8):
@@ -31,7 +31,6 @@ def read_data(img_path, max_sample_size=10):
             if fn.endswith('.jpg'):
                 _counter += 1
                 fn_list.append(fn)
-    print('indexed docs: {}'.format("\n".join(fn_list)))
     for fn in fn_list:
         yield fn.encode('utf8')
 
@@ -53,9 +52,8 @@ def save_topk(resp):
 @click.option('--num_docs', '-n', default=50)
 @click.option('--top_k', '-k', default=5)
 def main(task, num_docs, top_k):
-    workspace_path = '/tmp/jina/urbandict'
-    os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
-    data_path = os.path.join(os.environ['TEST_WORKDIR'], 'jpg')
+    os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
+    data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'jpg')
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
