@@ -219,10 +219,10 @@ python app.py -t index
 ```
 
 <details>
-<summary>点击查看详细日志输出</summary>
+<summary>点击查看日志输出</summary>
 
 <p align="center">
-  <img src=".github/index-log.jpg?raw=true" alt="日志输出">
+  <img src=".github/index-log.gif?raw=true" alt="日志输出">
 </p>
 
 </details>
@@ -260,13 +260,20 @@ def read_data(fn):
         yield item
 ```
 
-
-
 ### 查询
 
 ```python
 python app.py -t query
 ```
+
+<details>
+<summary>点击查看日志输出</summary>
+
+<p align="center">
+  <img src=".github/query-log.gif?raw=true" alt="日志输出">
+</p>
+
+</details>
 
     在查询时刻，我们同样从YAML文件中建立Flow，通过`search()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据形式。
 
@@ -293,15 +300,11 @@ def print_topk(resp):
             print('→%s' % item['title'])
 ```
 
-
-
 ## 深入Pod
 
     在阅读完上面之后，你希望了解关于Pod的更多内容，请继续往下阅读。
 
     在jina中我们通过定义YAML文件定义Pod，那么是如何通过YAML文件定义Pod的呢？我们继续往下走。
-
-
 
 ### extractor
 
@@ -327,8 +330,6 @@ requests:
 
     在jina中Driver是一个数据类型转换器，将ProtoBuf转换为`python`数据类型/ `numpy`数据类型，或将`python`数据类型/ `numpy`数据类型转换为ProtoBuf，在这个例子中`SegmentDriver`将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`，在`craft()`处理完数据以后，`SegmentDriver`将Python Object / Numpy Object转换为ProtoBuf。
 
-
-
 ### encoder
 
     我们在`extractor`已经问题从文档中提取了出来，那么我们下面需要做的是将问题编码成向量。
@@ -352,8 +353,6 @@ requests:
         with:
           method: encode
 ```
-
-
 
 ### doc_indexer
 
@@ -385,8 +384,6 @@ requests:
     在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`BasePbIndexer`的`add()`存储了文档级别的数据。
 
     但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`BasePbIndexer`的`query()`索引文档级别的数据。
-
-
 
 ### chunk_indexer
 
@@ -441,8 +438,6 @@ requests:
     在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`，`ChunkPruneDriver`，`ChunkKVIndexDriver`，3个Driver是依次执行的。在`VectorIndexDriver`时，我们调用了`vecidx_exec`这个Executor中的`add()`存储了问题的向量，在存储完成以后，我们清空了chunk中的数据，只保留chunk id和文档id，因为在`ChunkKVIndexDriver`调用`chunk_exec`中的`add()`存储文档和chunk的关联时，我们不需要这些数据。
 
     在`SearchRequest`时，我们同样定义了3个不同的Driver，`VectorSearchDriver`调用了`vecidx_exec`中的`query()`索引了topk的问题，在这里我们使用了余弦相似度来进行召回，并且使用`ChunkPruneDriver`清空chunk中的数据，只保留chunk id和文档id，因为我们在后面用不到这些数据，也是为了减少在网络传输时数据的大小，最后使用`ChunkKVSearchDriver`调用`chunk_exec`中的`query()`，索引出topk中chunk的文档id。
-
-
 
 ### ranker
 
@@ -534,8 +529,6 @@ encoder:
 6. 在Pod内，Driver转换数据类型，将消息中的Protobuf转换为Python类型/Numpy类型，并调用Executor执行相关的逻辑，并将结果包装回消息中。
 
 7. Flow的返回消息类型是Protobuf
-
-
 
 ## 结语
 
