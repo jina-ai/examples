@@ -1,6 +1,4 @@
 !Flow
-with:
-  logserver: true
 pods:
   extractor:
     yaml_path: images/extractor/extractor.yml
