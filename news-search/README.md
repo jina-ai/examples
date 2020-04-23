@@ -1,4 +1,4 @@
-# JINA 3分钟实现一套新闻搜索引擎
+# JINA 3分钟实现一套新闻搜索系统
 
     经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，在继续阅读之前，我们强烈建议先阅读上一篇[ JINA 100行代码搭建一套中文问答神经网络搜索引擎](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)。
 
@@ -133,7 +133,7 @@ pods:
 
     在定义Flow的过程中，我们使用了jina中2个高级的功能，**容器化**和**弹性扩展**。不要听到高级功能就以为非常复杂，jina提供了非常简单的方式去使用这些高级功能。
 
-### 容器化![whale](https://github.githubassets.com/images/icons/emoji/unicode/1f433.png)
+### 容器化🐳
 
     在上面你会发现，我们在定义`encoder`时，并没有加载YAML文件，而是加载了docker的镜像。
 
@@ -148,7 +148,7 @@ encoder:
 
 
 
-### 弹性扩展![rocket](https://github.githubassets.com/images/icons/emoji/unicode/1f680.png)
+### 弹性扩展!🚀
 
     在定义`encoder`时，我们指定了`replicas`等于2，代表了在Pod中定义了2个Pea，并行编码chunk中的文本，这个参数在我们需要处理大批量数据时非常有用。
 
