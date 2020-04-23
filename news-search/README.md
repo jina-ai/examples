@@ -22,16 +22,85 @@ TODO
 
     在创建索引时，我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
 
-TOC
+<table style="margin-left:auto;margin-right:auto;">
+<tr>
+<td> flow-index.yml</td>
+<td> Flow in Dashboard</td>
+</tr>
+<tr>
+<td>
+  <sub>
+
+```yaml
+!Flow
+pods:
+  doc_indexer:
+    yaml_path: doc_indexer.yml
+
+  extractor:
+    yaml_path: extractor.yml
+    needs: gateway
+
+  encoder:
+    yaml_path: encoder.yml
+    timeout_ready: 60000
+
+  chunk_indexer:
+    yaml_path: chunk_indexer.yml
+
+  join:
+    yaml_path: merger
+    needs: [doc_indexer, chunk_indexer]
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/index.png"/>
+</td>
+</tr>
+</table>
 
     在搜索时，我们定义了`extractor`, `encoder`, `chunk_indexer`,  `ranker`, `doc_indexer`这5个Pod。
 
-TOC
+<table style="margin-left:auto;margin-right:auto;">
+<tr>
+<td> flow-query.yml</td>
+<td> Flow in Dashboard</td>
+</tr>
+<tr>
+<td>
+  <sub>
 
+```yaml
+!Flow
+pods:
+  extractor:
+    yaml_path: extractor.yml
 
+  encoder:
+    yaml_path: encoder.yml
+    timeout_ready: 60000
 
+  chunk_indexer:
+    yaml_path: chunk_indexer.yml
 
+  ranker:
+    yaml_path: ranker.yml
 
+  doc_indexer:
+    yaml_path: doc_indexer.yml
+```
+
+</sub>
+
+</td>
+<td>
+<img align="right" height="420px" src=".github/query.png"/>
+</td>
+</tr>
+</table>
     看了上面后，你会发现，无论是在查询时，还是在搜索时，这跟第一篇文章中Flow的Pod完全一致。确实一致，`doc_indexer`, `encoder`, `chunk_indxer`, `join`这4个Pod的处理逻辑和YAML文件的定义完全和第一篇文章中一模一样，但是`extractor`和`ranker`这两个Pod的处理逻辑跟第一篇文章中的处理逻辑却大大不同。
 
 ## 区别
