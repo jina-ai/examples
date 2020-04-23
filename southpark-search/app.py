@@ -4,7 +4,7 @@ import click
 import string
 from jina.flow import Flow
 
-RANDOM_SEED = 3
+RANDOM_SEED = 10
 random.seed(RANDOM_SEED)
 
 os.environ['REPLICAS'] = str(1)
@@ -42,7 +42,7 @@ def print_topk(resp, word):
                 continue
             doc = kk.match_doc.raw_bytes.decode()
             name, line = doc.split('!', maxsplit=1)
-            print('> {:>2d}({:f}). {} said: {}'.format(idx, score, name.upper(), line))
+            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
 
 
 def read_query_data(text):
