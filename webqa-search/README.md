@@ -33,8 +33,6 @@
 
     在创建索引时，我们首先会为所有的文档建立索引，利用`transformes`加载哈工大`Roberta`作为编码器，将chunk中的文本编码成向量，并进行存储；在搜索时，用户输入问题，编码器将问题编码成向量，然后利用这些向量去召回最相似的问题，再利用问题返回问题下的回复。
 
-
-
 ## 环境依赖
 
     这个demo运行在Python3.7以上的环境
@@ -43,8 +41,6 @@
 pip install -r requirements.txt
 ```
 
-
-
 ## 数据预处理
 
     在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
@@ -52,8 +48,6 @@ pip install -r requirements.txt
 ```shell
 python pre_data.py
 ```
-
-
 
 ## 定义Flow
 
@@ -248,7 +242,7 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn), batch_size=32)
 ```
 
-    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据的形式发送到Flow中。
+    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据的形式发送到Flow中。在这里我们为了节省时间，只采用了100000条文档。
 
 ```python
 def read_data(fn):
@@ -269,7 +263,7 @@ def read_data(fn):
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result:
+    for item in result[:100000]:
         yield item
 ```
 
@@ -338,6 +332,7 @@ requests:
         with:
           method: craft
 ```
+
 ```python
 class WebQATitleExtractor(BaseSegmenter):
     def craft(self, doc_id, raw_bytes, *args, **kwargs):
