@@ -15,7 +15,7 @@ components:
       workspace: $TMP_WORKSPACE
 
 metas:
-  name: compound_chunk_indexer
+  name: chunk_indexer
 
 requests:
   on:

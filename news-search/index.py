@@ -29,10 +29,10 @@ def main():
     os.environ['TMP_WORKSPACE'] = workspace_path
     data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
     flow = (Flow().add(name='extractor', yaml_path='images/extractor/extractor.yml')
-            .add(name='md_indexer', yaml_path='images/meta_doc_indexer/meta_doc_indexer.yml', needs='gateway')
+            .add(name='md_indexer', yaml_path='images/doc_indexer/doc_indexer.yml', needs='gateway')
             .add(name='encoder', yaml_path='images/encoder/encoder.yml', needs='extractor', timeout_ready=600000,
                  replicas=1)
-            .add(name='cc_indexer', yaml_path='images/compound_chunk_indexer/compound_chunk_indexer.yml',
+            .add(name='cc_indexer', yaml_path='images/chunk_indexer/chunk_indexer.yml',
                  needs='encoder')
             .join(['cc_indexer', 'md_indexer']))
     with flow.build() as f:
