@@ -1,14 +1,63 @@
-# JINA 轻松实现一套新闻搜索引擎
+# JINA 3分钟实现一套新闻搜索引擎
 
-## 前言
+    经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，在继续阅读之前，我们强烈建议先阅读上一篇[ JINA 100行代码搭建一套中文问答神经网络搜索引擎](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)。
 
-    经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，可以点击[链接]()。
-
-    在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，还是**蛮不错的(*^__^*) 嘻嘻……。**我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即title搜索title，搜索和索引中的doc中只有一个chunk，那么你或许会问jina能不能长文本搜索长文本呢，每个doc中有多个chunk？当然可以！
+    在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，Awesome✌️✌️。我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即问题搜索问题，创建索引和搜索时文档中的chunk只有一个，那么你或许会问jina能不能长文本搜索长文本呢，每个doc中有多个chunk？当然可以！
 
     那么，怎么做呢？请看如下分解。
 
-## 效果展示
+## 导读
+
+TODO
+
+## 总览
+
+    在这个系统中我们采用数据集news-2016，数据集下载[地址](https://drive.google.com/file/d/1TMKu1FpTr6kcjWXWlQHX7YJsMfhhcVKp/view?usp=sharing)。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+
+    我们将新闻内容作为文档来创建索引；在搜索时，用户输入新闻内容，系统根据创建的索引利用`bi-match`算法召回topk相似的新闻。但是，无论是在创建索引的时候，还是在搜索的时候，系统都会根据分割子句的方式将新闻内容分割成多个子句，也就是分割成多个chunk。
+
+## 搭建Flow
+
+    与上一篇文章一样，我们通过YAML文件定义创建索引和搜索时的Flow。
+
+    在创建索引时，我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
+
+TOC
+
+    在搜索时，我们定义了`extractor`，,`encoder`,`chunk_indexer`,`ranker`, `doc_indexer`这5个Pod。
+
+TOC
+
+    看了上面后，你会发现，无论是在查询时，还是在搜索时，这跟第一篇文章中Flow的Pod完全一致。确实一致，`doc_indexer`, `encoder`, `chunk_indxer`, `join`这4个Pod的处理逻辑和YAML文件的定义完全和第一篇文章中一模一样，但是`extractor`和`ranker`这两个Pod的处理逻辑跟第一篇文章中的处理逻辑却大大不同。
+
+## 区别
+
+### extractor
+
+    在第一篇文章中，我们提到jina细化了文档的信息，引入了chunk的概念，将一个文档分割为多个chunk，每个chunk为基本的信息单元。
+
+    我们根据新闻数据集存在的特点，开头信息对文本主旨贡献度较大，而越往后，则没那么重要。我们先将一篇新闻内容用`Sentencizer`进行子句分割，得到的一个chunk的列表，每个chunk中都是新闻内容的子句，然后采取了线性递减的方式给每个chunk赋予权重，开始的子句具有较高的权重，越往后的子句权重依次递减。这样做的好处是在搜索的过程中，让搜索关注权重较高的chunk。
+
+```python
+class WeightSentencizer(Sentencizer):
+    def craft(self, raw_bytes: bytes, doc_id: int, *args, ** kwargs) -> List[Dict]:
+    results = super().craft(raw_bytes, doc_id)
+    weights = np.linspace(1, 0.1, len(results))
+    for result, weight in zip(results, weights):
+    result['weight'] = weight
+
+    return results
+```
+
+### ranker
+
+    在chunk_indexer后，doc中的每个chunk已经在创建的索引中查询到了topk的chunk。在WebQA中搜索时，每个文档下只有一个chunk；在这里，每个文档下有多个chunk。相当于WebQA是只对一个chunk下的topk chunk进行打分排序，而在这里是对所有chunk下的topk chunk进行打分排序。
+
+    在ranker打分排序的过程中，`Chunk2DocScoreDriver`将文档下所有chunk id和topk chunk的文档，chunk_id，余弦距离组合在一起，提取chunk和topk chunk中ranker需要的值，在这里我们提取weight和length的值。并将这些值赋给`WeightBiMatchRanker`进行打分排序。
+
+```python
+
+```
 
 ### Index Flow
 
@@ -220,7 +269,6 @@ class BiMatchRanker(BaseRanker):
         sum_d_hit = np.sum(gs_mb[:, -1])
         # all hit => 0, all_miss => 1
         return 1 - (sum_d_hit + self.D_MISS * (_c - _h)) / (self.D_MISS * _c)
-
 ```
 
 在每个`chunk`找出对应的`top_k`以后，我们需要对每个`doc`下的所有`chunk`的`top_k``chunk`进行排序，融合成`doc`下的`top_k chunk`，因为我们刚刚找出的是每个`chunk`下的`top_k`，所有的`chunk`下的`top_k`需要进行排序。
