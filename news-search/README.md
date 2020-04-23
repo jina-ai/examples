@@ -9,16 +9,18 @@
     那么，怎么做呢？请看如下分解。
 
 ## 导读
-
-TODO
-
-
+- [效果展示](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
+- [总览](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%80%BB%E8%A7%88)
+- [环境依赖](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
+- [数据预处理](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
+- [搭建Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%90%AD%E5%BB%BAflow)
+- [运行Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E8%BF%90%E8%A1%8Cflow)
+- [区别](https://github.com/jina-ai/examples/tree/news-search/news-search#%E5%8C%BA%E5%88%AB)
+- [结语](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%BB%93%E8%AF%AD)
 
 ## 效果展示
 
 TODO
-
-
 
 ## 总览
 
@@ -33,8 +35,6 @@ TODO
 ```shell
 pip install -r requirements.txt
 ```
-
-
 
 ## 数据预处理
 
@@ -146,8 +146,6 @@ encoder:
     timeout_ready: 60000
 ```
 
-
-
 ### 弹性扩展🚀
 
     在定义`encoder`时，我们指定了`replicas`等于2，代表了在Pod中定义了2个Pea，并行编码chunk中的文本，这个参数在我们需要处理大批量数据时非常有用。
@@ -203,9 +201,8 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn), batch_size=32)
 ```
 
-
-
 ### 查询
+
 ```python
 python app.py -t query
 ```
@@ -291,7 +288,6 @@ class WeightBiMatchRanker(BiMatchRanker):
             item[3] = item[3] * (1 / query_chunk_meta[meta]['weight'])
 
         return super().score(match_idx, query_chunk_meta, match_chunk_meta)
-
 ```
 
     在`WeightBiMatchRanker`中。我们利用刚刚提取的两个权重，进行余弦距离缩放。
@@ -305,8 +301,6 @@ class WeightBiMatchRanker(BiMatchRanker):
     如果一个chunk的权重很小，说明我们在排序时应该尽可能的不关注它的搜索结果，也就是让它的的topk下的chunk的余弦距离足够大，同样采用倒数机制，让topk chunk的余弦距离乘以chunk权重的倒数。
 
 然后采用`bi-match`算法进行排序，得到是一个文档下所有topk chunk的排序打分，我们再利用topk chunk的文档id将topk chunk映射到topk文档，至此文档的topk相似文档就查询到了。
-
-
 
 ## 结语
 
