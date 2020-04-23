@@ -17,6 +17,7 @@
 - [搭建Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%90%AD%E5%BB%BAflow)
 - [运行Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E8%BF%90%E8%A1%8Cflow)
 - [区别](https://github.com/jina-ai/examples/tree/news-search/news-search#%E5%8C%BA%E5%88%AB)
+- [回顾](https://github.com/jina-ai/examples/tree/news-search/news-search#%E5%9B%9E%E9%A1%BE)
 - [结语](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%BB%93%E8%AF%AD)
 
 ## 效果展示
