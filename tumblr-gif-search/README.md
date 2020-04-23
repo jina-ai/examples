@@ -1,4 +1,4 @@
-# tumblr-gif-search
+# Video Semantic Search in Scale with Prefetching and Sharding 
 
 This demo shows how to use Jina to build a video search engine.
 
@@ -30,25 +30,7 @@ python app.py
 ## Run Query
 
 ```bash
-# change the Line 10 of app.py to 
+# change the Line 12 of app.py to 
 # RUN_MODE = 'debug-query'
 python app.py
-```
-
-
-## Troubleshootings
-
-### `OSError: [Errno 24] Too many open files`
-
-This often happens when `replicas`/`num_parallel` is set to a big number. Solution to that is to increase this (session-wise) allowance via:
-
-```bash
-ulimit -n 4096
-```
-
-### `objc[15934]: +[__NSPlaceholderDictionary initialize] may have been in progress in another thread when fork() was called.`
-
-Probably MacOS only. 
-```bash
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 ```
