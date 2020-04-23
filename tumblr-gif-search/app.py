@@ -9,7 +9,7 @@ os.environ['JINA_LOG_PROFILING'] = 'true'
 
 from jina.flow import Flow
 
-RUN_MODE = 'debug-index'
+RUN_MODE = 'index'
 MODEL_ID = '20200417113607'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
