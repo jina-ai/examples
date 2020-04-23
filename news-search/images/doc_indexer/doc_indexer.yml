@@ -2,7 +2,7 @@
 with:
   index_filename: meta_doc_index.gzip
 metas:
-  name: meta_doc_indexer
+  name: doc_indexer
   workspace: $TMP_WORKSPACE
 requests:
   on:

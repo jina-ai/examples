@@ -1,0 +1,19 @@
+!Flow
+pods:
+  doc_indexer:
+    yaml_path: images/doc_indexer/doc_indexer.yml
+
+  extractor:
+    yaml_path: images/extractor/extractor.yml
+    needs: gateway
+
+  encoder:
+    yaml_path: images/encoder/encoder.yml
+    timeout_ready: 60000
+
+  chunk_indexer:
+    yaml_path: images/chunk_indexer/chunk_indexer.yml
+
+  join:
+    yaml_path: images/merger/merger.yml
+    needs: [chunk_indexer, doc_indexer]
