@@ -484,58 +484,6 @@ requests:
       - !DocPruneDriver {}
 ```
 
-## 容器化
-
-    在开始，我们提到过jina是**利用容器技术实现了模型容器化**，那么是怎么利用的呢？答案就是可以直接在Pod中直接加载docker image，不用写繁琐的YAML文件。Awesome!
-
-    我们对`encoder`这个Pod进行举例说明。详细见[jina-hub](https://github.com/jina-ai/jina-hub)
-
-    加载YAML文件的`encoder`
-
-```yaml
-encoder:
-    yaml_path: encoder.yml
-    timeout_ready: 60000
-```
-
-    加载docker image的encoder
-
-```yaml
-encoder:
-    image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
-    timeout_ready: 60000
-```
-
-    你可能在想，这里既然用了容器。那是不是我也可以通过容器来加载其他的预训练模型的镜像呢？答案是可以的。Wow。Magic。我想切什么预训练模型就切什么预训练模型，而且过程太简单了。哇，太爽了。我要去[Jina-hub]([https://github.com/jina-ai/jina-hub)上看看都有什么预训练模型。
-
-## 分布式
-
-    你在前言中还说了，Jina支持分布式，那怎么个分布式法呢？设想一下，现在有这样一个场景，你的GPU机器在阿里云或者腾讯云上，但是，你又想利用预训练模型对文本进行编码。那怎么办呢？用Jina的分布式功能撒，将编码的Pod放到GPU服务器上，其余的Pod放到CPU的机器上。那怎么用呢？请看如下分解。
-
-### 开启Gateway
-
-    在GPU服务器上开启Jina gateway，输入如下命令。
-
-```shell
-jina gateway --allow-spawn --port-grpc 12345
-```
-
-    上面这条命令有什么用呢？开启`gateway`，接收外部调用，并指定调用端口为12345。
-
-### 连接Gateway
-
-    我们还是将`encoder`用于举例，假设GPU服务器已经存在了`Roberta`镜像。
-
-    我们需要怎么进行连接呢？请看。
-
-```yaml
-encoder:
-    image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
-    timeout_ready: 60000
-    host: 123.34.23.56
-    prot: 12345
-```
-
 ## 回顾
 
     恭喜你，你已经了解了如何用jina搭建一套神经网络搜索引擎了👋👋。
