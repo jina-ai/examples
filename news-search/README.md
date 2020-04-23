@@ -9,6 +9,7 @@
     那么，怎么做呢？请看如下分解。
 
 ## 导读
+
 - [效果展示](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
 - [总览](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%80%BB%E8%A7%88)
 - [环境依赖](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
@@ -301,6 +302,16 @@ class WeightBiMatchRanker(BiMatchRanker):
     如果一个chunk的权重很小，说明我们在排序时应该尽可能的不关注它的搜索结果，也就是让它的的topk下的chunk的余弦距离足够大，同样采用倒数机制，让topk chunk的余弦距离乘以chunk权重的倒数。
 
 然后采用`bi-match`算法进行排序，得到是一个文档下所有topk chunk的排序打分，我们再利用topk chunk的文档id将topk chunk映射到topk文档，至此文档的topk相似文档就查询到了。
+
+
+
+## 回顾
+
+1. 可以在jina中实现多个chunk的搜索，并且支持定义每个chunk的权重。
+
+2. jina支持容器化和弹性化扩展，只需要在Flow的YAML文件中定义即可。
+
+3. 在`ranker`时，我们先使用chunk中的权重缩放了余弦距离，然后对一个文档下所有的chunk中的topk chunk进行排序。
 
 ## 结语
 
