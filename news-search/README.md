@@ -131,7 +131,7 @@ pods:
 </tr>
 </table>
 
-    在定义Flow的过程中，我们使用了jina中2个高级的功能，**容器化**和**弹性扩展**。不要听到高级功能就以为非常复杂，jina提供了非常简单的方式去使用这些高级功能。
+    在定义Flow的过程中，我们使用了jina中2个高级的功能，**容器化**和**弹性扩展**。不要听到高级功能就以为非常复杂哦，jina提供了非常简单的方式去使用这些高级功能。
 
 ### 容器化🐳
 
@@ -148,7 +148,7 @@ encoder:
 
 
 
-### 弹性扩展!🚀
+### 弹性扩展🚀
 
     在定义`encoder`时，我们指定了`replicas`等于2，代表了在Pod中定义了2个Pea，并行编码chunk中的文本，这个参数在我们需要处理大批量数据时非常有用。
 
@@ -206,6 +206,18 @@ with flow.build() as fl:
 
 
 ### 查询
+```python
+python app.py -t query
+```
+
+<details>
+<summary>点击查看日志输出</summary>
+
+<p align="center">
+  <img src=".github/query-log.gif?raw=true" alt="日志输出">
+</p>
+
+</details>
 
     在查询时，我们同样利用`build()`建立Flow，然后通过`search()`方法发送输入新闻内容的`bytes`，利用`print_topk()`输出相似新闻。
 
@@ -262,7 +274,6 @@ class WeightSentencizer(Sentencizer):
 ```python
 from typing import Dict
 
-import numpy as np
 from jina.executors.rankers.bi_match import BiMatchRanker
 
 
