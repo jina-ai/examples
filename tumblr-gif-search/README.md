@@ -2,6 +2,8 @@
 
 This tutorial shows how to use prefetching and sharding to improve the performance of your index and query flow. I assume you have already read [our entry-level tutorials](https://github.com/jina-ai/jina#getting-started). If you haven't, please do. I will go very fast on this one and  concentrate only on the prefetching and sharding. 
 
+![Gif Video Search Demo](video-search-demo.gif)
+
 ## Prerequirements
 
 ```bash
@@ -47,9 +49,9 @@ pods:
 ```
 
 This breaks down into the following steps:
-1. segment each video into chunks;
-2. encode each chunk as a fixed-length vector;
-3. store all vector representations in a vector database with *shards*.
+1. Segment each video into chunks;
+2. Encode each chunk as a fixed-length vector;
+3. Store all vector representations in a vector database with *shards*.
 
 To run index:
 
@@ -94,18 +96,38 @@ python app.py
 ```
 
 The query flow breaks down into the following steps:
-1. do steps 1,2 in the index flow for each incoming query;
-2. retrieve relevant chunks from database;
-3. aggregate the chunk-level score back to document-level;
-4. return the top-k results to users.
+1. Do steps 1,2 in the index flow for each incoming query;
+2. Retrieve relevant chunks from database;
+3. Aggregate the chunk-level score back to document-level;
+4. Return the top-k results to users.
 
+## View the result in webpage
+
+1. Copy `static` folder to the root of your workspace
+2. Change the `modelID` in `vue-bindings.js`
+
+    ```js
+    const vm = new Vue({
+        el: '#jina-ui',
+        data: {
+            serverUrl: './model/',
+            modelId: '20200416085013',//'20191122144241',
+            databasePath: '/topk.json',
+        ...
+        }
+    ```
+
+3. You may also need to change some paths. Just play with the javascript.
+4. Host it like a static website, e.g. `python -m SimpleHTTPServer`.
+
+I'm no expert on frontend and Vue. Feel free to contribute if you can improve it.
 
 ## Prefetching
 
 Let's look at the `input_fn` of this demo,
 
 ```python
-def input_fn(random=False, with_filename=True):
+def input_fn(with_filename=True):
     idx = 0
     for g in glob.glob(GIF_BLOB)[:num_docs]:
         with open(g, 'rb') as fp:
@@ -216,5 +238,33 @@ In Jina, such behavior in the query time can be simply specified via `polling` a
 
 `polling` and `reducing_yaml_path` are Pod-specific argument, you can find more details in `jina pod --help`.
 
+
+When running `app.py` for query, you will see from the log that these 8 shards are working together:
+
+```bash
+ chunk_idx-head@17648[I]:received "search" from gateway▸chunk_seg▸tf_encode▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-8▸⚐
+    chunk_idx-8@17657[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+    chunk_idx-7@17656[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-7▸⚐
+      chunk_seg@17642[I]:received "search" from gateway▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-1▸⚐
+    chunk_idx-1@17650[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-6▸⚐
+    chunk_idx-6@17655[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-5▸⚐
+    chunk_idx-5@17654[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+    chunk_idx-3@17652[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-3▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-4▸⚐
+    chunk_idx-4@17653[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-tail@17649[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-2▸⚐
+ chunk_idx-tail@17649[I]:collected 8/8 parts of SearchRequest
+    chunk_idx-2@17651[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸⚐
+ chunk_idx-head@17648[I]:received "search" from gateway▸chunk_seg▸tf_encode▸⚐
+      tf_encode@17643[I]:received "search" from gateway▸chunk_seg▸⚐
+      chunk_seg@17642[I]:received "search" from gateway▸⚐
+         ranker@17659[I]:received "search" from gateway▸chunk_seg▸tf_encode▸chunk_idx-head▸chunk_idx-2▸chunk_idx-1▸chunk_idx-6▸chunk_idx-5▸chunk_idx-8▸chunk_idx-3▸chunk_idx-7▸chunk_idx-4▸chunk_idx-tail▸⚐
+```
 
 

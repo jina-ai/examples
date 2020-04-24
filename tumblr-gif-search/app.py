@@ -9,8 +9,8 @@ os.environ['JINA_LOG_PROFILING'] = 'true'
 
 from jina.flow import Flow
 
-RUN_MODE = 'index'
-MODEL_ID = '20200417113607'
+RUN_MODE = 'debug-query'
+MODEL_ID = '20200424191102'
 
 WORK_DIR = '/Volumes/TOSHIBA-4T/model/'
 GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'  # 'data/*.gif'
