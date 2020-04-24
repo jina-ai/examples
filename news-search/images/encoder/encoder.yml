@@ -6,3 +6,10 @@ metas:
 
 with:
   model_path: /home/cally/jina/jina/pre_model/chinese_roberta_wwm_ext
+
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
