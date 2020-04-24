@@ -1,7 +1,5 @@
 !TransformerRobertaEncoder
 metas:
-  on_gpu: true
-  batch_size: 4
   workspace: $TMP_WORKSPACE
   name: transformer_roberta_encoder
   py_modules: transformer_roberta.py
