@@ -24,7 +24,7 @@ def read_data(fn):
     for content in items:
         results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
 
-    for item in results[:100]:
+    for item in results[:10000]:
         yield item
 
 
@@ -33,13 +33,13 @@ def print_topk(resp):
     for d in resp.search.docs:
         for tk in d.topk_results:
             item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
-            print('→%s' % item['content'])
+            print('👉%s.............' % item['content'][:50])
 
 def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
 
 @click.command()
-@click.option('--task', '-t', default='index')
+@click.option('--task', '-t', default='query')
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
@@ -58,7 +58,7 @@ def main(task, top_k):
                 item = {'content': content}
 
                 ppr = lambda x: print_topk(x)
-                fl.search(read_query_data(item), callback=ppr, topk=top_k)
+                fl.search(read_query_data(item), callback=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
