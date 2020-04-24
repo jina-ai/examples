@@ -121,11 +121,11 @@ What it does is reading all gif video files under `GIF_GLOB` and sending the bin
 
 One natural question is why can't we send file path (i.e. a tiny binary string) to the gateway and parallelize the file reading inside Jina with multiple crafters?
 
-If your data is stored on HDD, then multiple crafters can not improve the performance: the mechanical structure restricts that only one "block" can be read/written at the same time. As your data file probably scatters all over the place, random read/write in parallel won't make any difference in speed comparing to reading them one by one.
+If your data is stored on HDD, then multiple crafters can not improve the performance: the mechanical structure limits that only one "block" can be read/written at the same time. As your data files probably scatter all over the place, random read/write in parallel won't make significant difference in speed comparing to sequential reading.
 
-If you use SSD, then such implementation can indeed improve the performance. However, a further question is how many files can you load into Jina.
+If you use SSD, then such multi-reader implementation can indeed improve the performance. However, a further question is how many files can you load into Jina.
 
-Think about a complete index workflow with crafters and encoders, indexers, where encoders and indexers are often slower than crafters. If we don't add any restriction, `input_fn` will send all file paths to the gateway, which forces crafter to load **everything** into memory. As encoders and indexers can not consume data fast enough, your will soon run out of memory.
+Think about a complete index workflow with crafters, encoders, and indexers, where encoders and indexers are often slower than crafters. If we don't add any restriction, `input_fn` will send all file paths to the gateway, which forces crafter to load **everything** into memory. As encoders and indexers can not consume data fast enough, your will soon run out of memory.
 
 In Jina, we have two arguments `--prefetch` and `--prefetch-on-recv` in `gateway` to control the max number of pending requests in the network. If you see the log close enough, you will find:
 
