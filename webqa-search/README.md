@@ -378,7 +378,7 @@ requests:
     与上面`extractor`和`encoder`处理请求时不一样，`doc_indexer`分开处理了`IndexRequest`和`SearchRequest`。
 
 ```yaml
-!BasePbIndexer
+!LeveldbIndexer
 with:
   index_filename: doc_index.gzip
 metas:
@@ -400,13 +400,13 @@ requests:
       - !ControlReqDriver {}
 ```
 
-    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`BasePbIndexer`的`add()`存储了文档级别的数据。
+    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`LeveldbIndexer`的`add()`存储了文档级别的数据。
 
-    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`BasePbIndexer`的`query()`索引文档级别的数据。
+    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`LeveldbIndexer`的`query()`索引文档级别的数据。
 
 ### chunk_indexer
 
-    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer` Pod中的Executor称为`ChunkIndexer`，它封装了另外两个Executor。`components`字段指定两个包装好的Executor。`NumpyIndexer`用于存储问题的向量，`BasePbIndexer`用作键值存储来保存文档id和chunk id的关联。
+    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer` Pod中的Executor称为`ChunkIndexer`，它封装了另外两个Executor。`components`字段指定两个包装好的Executor。`NumpyIndexer`用于存储问题的向量，`LeveldbIndexer`用作键值存储来保存文档id和chunk id的关联。
 
 ```yaml
 !ChunkIndexer
@@ -418,7 +418,7 @@ components:
     metas:
       name: vecidx_exec
       workspace: $TMP_WORKSPACE
-  - !BasePbIndexer
+  - !LeveldbIndexer
     with:
       index_filename: chunk_index.gzip
     metas:
