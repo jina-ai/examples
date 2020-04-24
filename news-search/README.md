@@ -22,7 +22,7 @@
 
 ## 效果展示
 
-TODO
+![效果展示](.github/result.gif)
 
 ## 总览
 
