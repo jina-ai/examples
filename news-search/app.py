@@ -33,7 +33,7 @@ def print_topk(resp):
     for d in resp.search.docs:
         for tk in d.topk_results:
             item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
-            print('→%s' % item['title'])
+            print('→%s' % item['content'])
 
 def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
