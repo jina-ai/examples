@@ -35,7 +35,7 @@ def print_topk(resp):
     for d in resp.search.docs:
         for tk in d.topk_results:
             item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
-            print('→%s' % item['title'])
+            print('👉%s' % item['title'])
 
 def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
@@ -45,7 +45,7 @@ def read_query_data(item):
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
-        data_fn = os.path.join(workspace_path, "web_text_zh_train.json")
+        data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
             fl.index(raw_bytes=read_data(data_fn), batch_size=32)
