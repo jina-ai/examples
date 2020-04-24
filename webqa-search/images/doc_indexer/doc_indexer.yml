@@ -1,4 +1,4 @@
-!BasePbIndexer
+!LeveldbIndexer
 with:
   index_filename: doc_index.gzip
 metas:
