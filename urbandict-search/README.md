@@ -466,7 +466,7 @@ Let's wrap up what we've covered in this demo.
 4. The Pods in the Flow can run either in serial or in parallel.
 5. The Pods can behave differently to different types of requests. The Pods' YAML file defines their behaviors.
 6. The data in the requests should be in `bytes` format.
-7. Inside the Pods, Drivers are used to interprte the messages for Executors, call the Executors to handle the messages, and wrap up the results back into the message.
+7. Inside the Pods, Drivers are used to interpret the messages for Executors, call the Executors to handle the messages, and wrap up the results back into the message.
 8. The query results in the return response are saved in the Protobuf format.
 
 **Enjoy Coding with Jina!**
