@@ -168,7 +168,7 @@ pods:
 </table>
 
 
-Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `BM25Ranker` to do the job. It uses the BM25 algorithm to get the weights of query Chunks, and calculates the weights sum of the Chunks' matching scores as the score of the matched Document. For the details, please refer to the jina document page. 
+Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the, the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `BM25Ranker` to do the job. It uses the BM25 algorithm to get the weights of query Chunks, and calculates the weights sum of the Chunks' matching scores as the score of the matched Document. For the details, please refer to the jina document page. 
 
 ```yaml
 ranker:
@@ -331,7 +331,7 @@ requests:
 ```
 
 ### `doc_indexer`
-In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data. 
+In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDriver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. 
 
 ```yaml
 !LeveldbIndexer
@@ -340,9 +340,6 @@ with:
 requests:
   on:
     IndexRequest:
-      - !DocPruneDriver
-        with:
-          pruned: ['chunks']
       - !DocKVIndexDriver
         with:
           method: add
@@ -469,7 +466,7 @@ Let's wrap up what we've covered in this demo.
 4. The Pods in the Flow can run either in serial or in parallel.
 5. The Pods can behave differently to different types of requests. The Pods' YAML file defines their behaviors.
 6. The data in the requests should be in `bytes` format.
-7. Inside the Pods, Drivers are used to interprate the messages for Executors, call the Executors to handle the messages, and wrap up the results back into the message.
+7. Inside the Pods, Drivers are used to interprte the messages for Executors, call the Executors to handle the messages, and wrap up the results back into the message.
 8. The query results in the return response are saved in the Protobuf format.
 
 **Enjoy Coding with Jina!**
