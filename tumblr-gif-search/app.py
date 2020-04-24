@@ -57,7 +57,7 @@ def print_result(resp, fp):
         fp.write(json.dumps(v, sort_keys=True) + '\n')
 
 
-def bytes_gen(random=False, with_filename=True):
+def input_fn(random=False, with_filename=True):
     idx = 0
     for g in glob.glob(GIF_BLOB)[:num_docs]:
         with open(g, 'rb') as fp:
@@ -73,10 +73,10 @@ if do_index:
     # index
     f = Flow.load_config('flow-index.yml')
 
-    # bytes_gen = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
+    # input_fn = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 
-    with f.build() as fl:
-        fl.index(bytes_gen(), batch_size=8)
+    with f:
+        f.index(input_fn, batch_size=8)
 else:
     # query
     q = Flow.load_config('flow-query.yml')
@@ -85,8 +85,8 @@ else:
         ppr = lambda x: print_result(x, fp)
 
         if RUN_MODE == 'query':
-            bytes_gen = bytes_gen(random=True)
+            bytes_gen = input_fn(random=True)
         else:
-            bytes_gen = bytes_gen()
-        with q.build() as fl:
-            fl.search(bytes_gen, callback=ppr, top_k=80, batch_size=8)
+            bytes_gen = input_fn
+        with q:
+            q.search(bytes_gen, callback=ppr, top_k=80, batch_size=8)
