@@ -149,5 +149,72 @@ The `gateway` tells the client (`input_fn`) to send 50 requests before feeding t
 4/24/2020, 5:29:49 PM gateway@16335[I]: send: 149 recv: 100 pending: 49
 ```
 
-This is good. Because on the one hand you avoid loading too many data into memory, on the other hand you still have enough data in memory to work with. With `--prefetch` turns on, the time of computation and IO operation are overlapped, make the whole flow highly efficient.
+This is good. Because on the one hand you avoid loading too many data into memory, on the other hand you still have enough data in memory to work with. With `--prefetch` turns on, the time of computation and IO operation are overlapped, make the whole flow non-blocking and highly efficient.
+
+## Sharding
+
+In this example, we set the number of `replicas` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
+
+```bash
+.
+ |-chunk_compound_indexer-8
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-6
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-1
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-7
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-doc.gzip
+ |-chunk_compound_indexer-2
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-5
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-4
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-chunk_compound_indexer-3
+ | |-vec.gz
+ | |-chunk.gz
+ | |-chunkidx.bin
+ | |-vecidx.bin
+ |-doc_indexer.bin
+```
+
+You can see that the data is splitted into 8 different directories under the given `workspace`, in a more or less uniform way. This is good because otherwise we end up with one big file that is slow to load and to query. With sharding enabled, one can query multiple smaller index in parallel, which gives better efficiency. 
+
+If you think about it, a multi-replica indexer behaves no differently than a multi-replica crafter/encoder at least in the index time: replicas compete for every incoming request and each request eventually is polled by one replica. The only difference is that multi-replica crafter/encoder is usually stateless and does not need independent workspace. However, each indexer replica needs a separate workspace to distinguish their own data from others. Hence, for `chunk_idx`, we set `separated_workspace` to `true`. Each replica works in its own sub-workspace. For this reason, we call **Replica** with `separated_workspace=True` as **Shard**.
+
+In the query time, replicas and shards behave differently on how they handle new requests. Replicas still compete on each request as they do in the index time. Shards, however, work more cooperatively: each request is published to *all* replicas, each replica works on the same request, and the final result has to be collected from all replicas.
+
+In Jina, such behavior in the query time can be simply specified via `polling` and `reducing_yaml_path`:
+
+```yaml
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
+```
+
+`polling` and `reducing_yaml_path` are Pod-specific argument, you can find more details in `jina pod --help`.
+
+
 
