@@ -406,7 +406,7 @@ requests:
 
 ### chunk_indexer
 
-    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer` Pod中的Executor称为`ChunkIndexer`，它封装了另外两个执行器。`components`字段指定两个包装好的执行器。`NumpyIndexer`用于存储问题的向量，`BasePbIndexer`用作键值存储来保存文档id和chunk id的关联。
+    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer` Pod中的Executor称为`ChunkIndexer`，它封装了另外两个Executor。`components`字段指定两个包装好的Executor。`NumpyIndexer`用于存储问题的向量，`BasePbIndexer`用作键值存储来保存文档id和chunk id的关联。
 
 ```yaml
 !ChunkIndexer
