@@ -10,15 +10,15 @@
 
 ## 导读
 
-- [效果展示](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
-- [总览](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%80%BB%E8%A7%88)
-- [环境依赖](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
-- [数据预处理](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
-- [搭建Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E6%90%AD%E5%BB%BAflow)
-- [运行Flow](https://github.com/jina-ai/examples/tree/news-search/news-search#%E8%BF%90%E8%A1%8Cflow)
-- [区别](https://github.com/jina-ai/examples/tree/news-search/news-search#%E5%8C%BA%E5%88%AB)
-- [回顾](https://github.com/jina-ai/examples/tree/news-search/news-search#%E5%9B%9E%E9%A1%BE)
-- [结语](https://github.com/jina-ai/examples/tree/news-search/news-search#%E7%BB%93%E8%AF%AD)
+- [效果展示](#效果展示)
+- [总览](#总览)
+- [环境依赖](#环境依赖)
+- [数据预处理](#数据预处理)
+- [搭建Flow](#搭建Flow)
+- [运行Flow](#运行Flow)
+- [区别](#区别)
+- [回顾](#回顾)
+- [结语](#结语)
 
 ## 效果展示
 
