@@ -10,7 +10,7 @@ from jina.executors.encoders.helper import reduce_mean, reduce_max, reduce_min
 class TransformerRobertaEncoder(BaseTextEncoder):
     def __init__(self,
                  pooling_strategy: str = 'cls',
-                 max_length: int = 128,
+                 max_length: int = 64,
                  model_path: str = 'transformer',
                  *args, **kwargs):
         """
