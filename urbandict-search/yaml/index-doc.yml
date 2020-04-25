@@ -12,9 +12,6 @@ requests:
           method: query
 
     IndexRequest:
-      - !DocPruneDriver
-        with:
-          pruned: ['chunks']
       - !DocKVIndexDriver
         with:
           method: add
