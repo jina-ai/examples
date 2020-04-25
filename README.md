@@ -107,6 +107,7 @@ Learn to use Jina Hub and share your extension with engineers around the globe
 
 </table>
 
+
 ## License
 
 Copyright (c) 2020 Jina AI Limited. All rights reserved.

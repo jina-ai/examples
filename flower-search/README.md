@@ -435,3 +435,10 @@ Hooray! Now you've a pretty simple follower image search engine working. Let's w
 - Check out the docker images at the Jina hub.
 
 
+
+
+## License
+
+Copyright (c) 2020 Jina AI Limited. All rights reserved.
+
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
