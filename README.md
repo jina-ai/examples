@@ -15,8 +15,26 @@
 
 </p>
 
+This is the repo for the [Jina](https://github.com/jina-ai/jina/) examples, including:
 
-## Getting Started
+- showcase examples for the [Jina](https://github.com/jina-ai/jina/)
+- examples mentioned on [jina.ai](https://jina.ai)
+- supporting materials for the [Jina Blog](https://jina.ai)
+
+We welcome all kinds of contributions from the open-source community, individuals and partners. Without your active involvement, Jina can't be successful.
+
+See [Contributing guidelines](CONTRIBUTING.md) for the first step!
+
+To file an issue, use [the issue tracker in the jina repo](https://github.com/jina-ai/jina/issues).
+
+
+## Contents
+
+- [Quick links](#quick-links)
+- [Stay tuned](#stay-tuned)
+- [Licences](#licences)
+
+## Quick links
 <table>
   <tr>
       <td width="30%">
@@ -139,6 +157,16 @@ Learn to use Jina Hub and share your extension with engineers around the globe
 [![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
+
+## Stay tuned
+
+- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
+- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
+- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
+
 
 ## License
 
