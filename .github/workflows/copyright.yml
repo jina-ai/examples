@@ -20,7 +20,6 @@ jobs:
         with:
           CopyrightString: '__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."\n__license__ = "Apache-2.0"\n\n'
           FileType: '.py'
-          Path: 'jina/'
       - run: |
           git add -u
           git commit -m "chore: update copyright header"
