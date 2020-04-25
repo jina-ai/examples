@@ -22,7 +22,18 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
 
+- [Overview](#overview)
+- [Prerequirements](#prerequirements)
+- [Prepare the data](#prepare-the-data)
+- [Define the Flows](#define-the-flows)
+- [Run the Flows](#run-the-flows)
+- [Add a Customized Executor](#add-a-customized-executor)
+- [Wrap up](#wrap-up)
+- [Next Steps](#next-steps)
+- [Stay tuned](#stay-tuned)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

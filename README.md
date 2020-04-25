@@ -31,7 +31,11 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
 
+- [Quick links](#quick-links)
+- [Stay tuned](#stay-tuned)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

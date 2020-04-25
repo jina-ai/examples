@@ -24,7 +24,15 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
 
+- [Design the Flow](#design-the-flow)
+- [Implement the Input Function](#implement-the-input-function)
+- [Implement the Callback Function for the Output](#implement-the-callback-function-for-the-output)
+- [Run the Flow](#run-the-flow)
+- [Run the Encoding Work Remotely](#run-the-encoding-work-remotely)
+- [Stay tuned](#stay-tuned)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

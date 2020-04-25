@@ -22,7 +22,18 @@ As the same as build classic search engines, we first build an index for all the
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
 
+- [Overview](#overview)
+- [Prerequirements](#prerequirements)
+- [Prepare the data](#prepare-the-data)
+- [Define the Flows](#define-the-flows)
+- [Run the Flows](#run-the-flows)
+- [Dive into the Pods](#dive-into-the-pods)
+- [Wrap up](#wrap-up)
+- [Next Steps](#next-steps)
+- [Stay tuned](#stay-tuned)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
