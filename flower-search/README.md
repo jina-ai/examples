@@ -1,4 +1,19 @@
 # Build an Image Search System in 3 minutes
+<p align="center">
+ 
+[![Jina](../.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+[![Jina](../.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+[![Jina](../.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](../.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](../.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+<a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
+  <img src="../.github/badges/twitter-badge.svg"
+       alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
+</a>
+[![Python 3.7 3.8](../.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](../.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+
+</p>
 
 In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/data/flowers/17/](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/) to build a flower image search system so that one can find similar images. Make sure you have gone through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and understood the [take-home-message](https://github.com/jina-ai/examples/tree/master/urbandict-search#wrap-up) in [our bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search) before moving on. 
 
@@ -434,6 +449,31 @@ Hooray! Now you've a pretty simple follower image search engine working. Let's w
 - Write your own executors.
 - Check out the docker images at the Jina hub.
 
+
+<p align="center">
+ 
+[![Jina](../.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+[![Jina](../.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+[![Jina](../.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](../.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](../.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+<a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
+  <img src="../.github/badges/twitter-badge.svg"
+       alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
+</a>
+[![Python 3.7 3.8](../.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](../.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+
+</p>
+
+## Stay tuned
+
+- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
+- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
+- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 
 
