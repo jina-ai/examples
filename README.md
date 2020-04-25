@@ -11,7 +11,7 @@
        alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
 </a>
 [![Python 3.7 3.8](.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")]
+[![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
 
