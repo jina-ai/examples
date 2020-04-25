@@ -268,3 +268,10 @@ When running `app.py` for query, you will see from the log that these 8 shards a
 ```
 
 
+
+
+## License
+
+Copyright (c) 2020 Jina AI Limited. All rights reserved.
+
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.

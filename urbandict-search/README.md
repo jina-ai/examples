@@ -477,3 +477,9 @@ Let's wrap up what we've covered in this demo.
 - Scale up the indexing procedure.
 - Speed up the procedure by useing `read_only`
 - Explore the `metas` field in the YAML file.
+
+## License
+
+Copyright (c) 2020 Jina AI Limited. All rights reserved.
+
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
