@@ -1,3 +1,7 @@
+__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__license__ = "Apache-2.0"
+
+
 # https://github.com/python-pillow/Pillow/issues/2893#issuecomment-502712486
 
 from typing import List
