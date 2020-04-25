@@ -20,6 +20,15 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 
 ![Gif Video Search Demo](video-search-demo.gif)
 
+
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
 ## Prerequirements
 
 ```bash

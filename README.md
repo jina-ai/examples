@@ -28,11 +28,13 @@ See [Contributing guidelines](https://github.com/jina-ai/jina/blob/master/CONTRI
 To file an issue, use [the issue tracker in the jina repo](https://github.com/jina-ai/jina/issues).
 
 
-## Contents
 
-- [Quick links](#quick-links)
-- [Stay tuned](#stay-tuned)
-- [Licence](#licence)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## Quick links
 <table>

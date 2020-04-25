@@ -20,6 +20,16 @@
 
 In this short tutorial, we shall see how simple it is to use Jina for extracting feature vectors. The best part is, you can use any representation beyond BERT.
 
+
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+
 ## Design the Flow 
 
 Let's look at the workflow:

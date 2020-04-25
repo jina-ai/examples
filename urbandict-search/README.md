@@ -19,16 +19,13 @@ In this demo, we use Jina to build a vocabulary search engine so that one can fi
 
 As the same as build classic search engines, we first build an index for all the documents (i.e. the words and their definitions from the urban dictionary) and later use the query document (i.e. the user's input definition) to retrieve the indexed documents.
 
-## Contents
 
-- [Overview](#overview)
-- [Prerequirements](#prerequirements)
-- [Prepare the data](#prepare-the-data)
-- [Define the Flows](#define-the-flows)
-- [Run the Flows](#run-the-flows)
-- [Dive into the Pods](#dive-into-the-pods)
-- [Wrap up](#wrap-up)
-- [Next steps](#next-steps)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 
 ## Overview
