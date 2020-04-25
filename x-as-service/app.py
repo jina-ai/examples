@@ -1,3 +1,7 @@
+__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__license__ = "Apache-2.0"
+
+
 from jina.drivers.helper import pb2array
 from jina.flow import Flow
 from jina.helper import colored
