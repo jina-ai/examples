@@ -29,3 +29,16 @@ jobs:
         with:
           github_token: ${{ secrets.JINA_DEV_BOT }}
           force: true
+
+  update-toc:
+    if: "!startsWith(github.event.head_commit.message, 'chore')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: technote-space/toc-generator@v2
+        with:
+          MAX_HEADER_LEVEL: 2
+          FOLDING: false
+          GITHUB_TOKEN: ${{ secrets.JINA_DEV_BOT }}
+          TOC_TITLE: '**Table of Cotents**'
+          TARGET_PATHS: '.'
+          COMMIT_MESSAGE: 'chore(docs): update TOC'
