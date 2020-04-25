@@ -1,17 +1,17 @@
 # Build an Image Search System in 3 minutes
 <p align="center">
  
-[![Jina](.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
-[![Jina](.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
-[![Jina Docs](.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+[![Jina](../.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+[![Jina](../.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+[![Jina](../.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](../.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](../.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
 <a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
-  <img src=".github/badges/twitter-badge.svg"
+  <img src="../.github/badges/twitter-badge.svg"
        alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
 </a>
-[![Python 3.7 3.8](.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+[![Python 3.7 3.8](../.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](../.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
 
@@ -38,14 +38,14 @@ The overall design is similar to the semantic search demo. We consider each imag
 In this demo, we will show how to run the Pods in the docker container and how to scale up the Pods to boost the whole procedure. Plus, you will learn how to define your own Executor in your project. Sounds interesting? Let's start coding!
 
 <p align="center">
-  <img src=".github/flower.gif?raw=true" alt="Jina banner" width="90%">
+  <img src="../.github/flower.gif?raw=true" alt="Jina banner" width="90%">
 </p>
 
 <details>
 <summary>Click here to see the query outputs</summary>
 
 <p align="center">
-  <img src=".github/query-demo.png?raw=true" alt="query flow console output">
+  <img src="../.github/query-demo.png?raw=true" alt="query flow console output">
 </p>
 
 </details> 
@@ -452,17 +452,17 @@ Hooray! Now you've a pretty simple follower image search engine working. Let's w
 
 <p align="center">
  
-[![Jina](.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
-[![Jina](.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
-[![Jina Docs](.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+[![Jina](../.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+[![Jina](../.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+[![Jina](../.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](../.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](../.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
 <a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
-  <img src=".github/badges/twitter-badge.svg"
+  <img src="../.github/badges/twitter-badge.svg"
        alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
 </a>
-[![Python 3.7 3.8](.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+[![Python 3.7 3.8](../.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](../.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
 
