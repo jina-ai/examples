@@ -524,7 +524,7 @@ Let's wrap up what we've covered in this demo.
 ## Documentation 
 
 <a href="https://docs.jina.ai/">
-<img align="right" width="350px" src="./.github/jina-docs.png" />
+<img align="right" width="350px" src="../.github/jina-docs.png" />
 </a>
 
 The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.

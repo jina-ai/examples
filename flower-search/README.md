@@ -467,7 +467,7 @@ Hooray! Now you've a pretty simple follower image search engine working. Let's w
 ## Documentation 
 
 <a href="https://docs.jina.ai/">
-<img align="right" width="350px" src="./.github/jina-docs.png" />
+<img align="right" width="350px" src="../.github/jina-docs.png" />
 </a>
 
 The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
