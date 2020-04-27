@@ -43,3 +43,5 @@ jobs:
           TOC_TITLE: '**Table of Cotents**'
           TARGET_PATHS: '.'
           COMMIT_MESSAGE: 'chore(docs): update TOC'
+          COMMIT_NAME: Jina Dev Bot
+          COMMIT_EMAIL: dev-bot@jina.ai
