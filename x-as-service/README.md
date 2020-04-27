@@ -31,6 +31,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 - [Implement the Callback Function for the Output](#implement-the-callback-function-for-the-output)
 - [Run the Flow](#run-the-flow)
 - [Run the Encoding Work Remotely](#run-the-encoding-work-remotely)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 

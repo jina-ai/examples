@@ -32,6 +32,7 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 - [Add a Customized Executor](#add-a-customized-executor)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 

@@ -32,6 +32,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 - [View the result in webpage](#view-the-result-in-webpage)
 - [Prefetching](#prefetching)
 - [Sharding](#sharding)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 
