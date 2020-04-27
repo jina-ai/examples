@@ -9,7 +9,7 @@ import random
 
 from jina.flow import Flow
 
-RANDOM_SEED = 14 # 5
+RANDOM_SEED = 14
 os.environ['REPLICAS'] = str(1)
 os.environ['SHARDS'] = str(1)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
@@ -25,7 +25,7 @@ def get_random_ws(workspace_path, length=8):
 
 def read_data(img_path, max_sample_size=-1):
     if not os.path.exists(img_path):
-        print('file not found: {}'.format(img_path))
+        raise FileNotFoundError('file not found: {}'.format(img_path))
     fn_list = []
     for dirs, subdirs, files in os.walk(img_path):
         for f in files:
@@ -86,7 +86,6 @@ def main(task, num_docs, top_k):
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
             fl.index(raw_bytes=read_data(data_path, num_docs), batch_size=2)
-        print('done')
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:
