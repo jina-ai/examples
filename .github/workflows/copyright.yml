@@ -25,7 +25,6 @@ jobs:
           git add -u
           git commit -m "chore: update copyright header"
           git status
-        continue-on-error: true
       - uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.JINA_DEV_BOT }}
