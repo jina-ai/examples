@@ -179,7 +179,7 @@ pods:
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
   ranker:
-    yaml_path: MaxRanker
+    yaml_path: MinRanker
   doc_indexer:
     yaml_path: yaml/index-doc.yml
 ```
@@ -194,7 +194,7 @@ pods:
 </table>
 
 
-Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `MaxRanker` to do the job. It simple take the maximal matching score from all the Chunks as the score of the Document to which the Chunks belong. 
+Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `MinRanker` to do the job. It simple take the `1 / (1 + s)` as the score of the Document, where `s` denotes that minimal matching score from all the Chunks that belong to this Document. Why do we take the minimal matching score for chunks? Because here we use the **cosine distance** as the chunks' matching scores. 
 
 > `MaxRanker` calculates the score of the matched Document form the matched Chunks. For each matched Document, the score is the maximal score from all the matched Chunks belonging to this Document.
 
@@ -370,11 +370,19 @@ requests:
 In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data. 
 
 ```yaml
-!LeveldbIndexer
+!DocPbIndexer
 with:
-  index_filename: 'meta_doc_index.db'
+  index_filename: doc.gzip
+metas:
+  name: docIndexer
+  workspace: $TMP_WORKSPACE
 requests:
   on:
+    SearchRequest:
+      - !DocKVSearchDriver
+        with:
+          method: query
+
     IndexRequest:
       - !DocPruneDriver
         with:
@@ -382,10 +390,6 @@ requests:
       - !DocKVIndexDriver
         with:
           method: add
-    SearchRequest:
-      - !DocKVSearchDriver
-        with:
-          method: query
 ```
 
 As for the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` as in for the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.

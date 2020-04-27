@@ -141,7 +141,7 @@ pods:
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
   ranker:
-    yaml_path: BiMatchRanker
+    yaml_path: MinRanker
   doc_indexer:
     yaml_path: yaml/index-doc.yml
 ```
@@ -196,6 +196,12 @@ Now we start indexing with the following command.
  
 ```bash
 python app.py -t index
+```
+
+if you run into the following `TimeoutError`, the problem is probably because the docker image is too large to be downloaded in time. Please try `docker pull jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2` to download the image in before running the Flow.
+
+```bash 
+TimeoutError: <class 'jina.peapods.container.ContainerPea'> with name encoder can not be initialized after 600000 ms
 ```
 
 <details>
