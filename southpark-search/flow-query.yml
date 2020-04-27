@@ -16,6 +16,6 @@ pods:
     replicas: $SHARDS
     seperated_workspace: true
   ranker:
-    yaml_path: MaxRanker
+    yaml_path: MinRanker
   doc_indexer:
     yaml_path: yaml/index-doc.yml
