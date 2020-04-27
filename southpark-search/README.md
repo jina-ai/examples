@@ -32,6 +32,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 - [Dive into the Pods](#dive-into-the-pods)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 

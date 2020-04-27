@@ -32,6 +32,7 @@ As the same as build classic search engines, we first build an index for all the
 - [Dive into the Pods](#dive-into-the-pods)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 
