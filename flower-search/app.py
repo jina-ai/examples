@@ -51,7 +51,7 @@ def save_topk(resp, output_fn=None):
         print("{}".format(d.raw_bytes.decode()))
         for idx, kk in enumerate(d.topk_results):
             score = kk.score.value
-            if score <= 0.0:
+            if score < 0.0:
                 continue
             m_fn = kk.match_doc.raw_bytes.decode()
             print('{:>2d}:({:f}):{}'.format(
