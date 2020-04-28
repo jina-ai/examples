@@ -19,7 +19,7 @@ This repo contains [Jina](https://github.com/jina-ai/jina/) examples, including:
 
 - showcases for [Jina](https://github.com/jina-ai/jina/)
 - examples mentioned on [our website](https://jina.ai)
-- supporting materials for [our tech blog](https://jina.ai/blog)
+- supporting materials for [our tech blog](https://jina.ai/#/blog)
 
 We welcome all kinds of contributions from the open-source community, individuals and partners. Without your active involvement, Jina can't be successful.
 
@@ -45,7 +45,7 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
   <tr>
       <td width="30%">
     <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">
-      <img src="https://github.com/jina-ai/jina/blob/master/.github/ILLUS12.png" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
+      <img src="https://github.com/jina-ai/jina/raw/master/docs/chapters/101/img/ILLUS12.png?raw=true" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
     </a>
     </td>
     <td width="70%">
