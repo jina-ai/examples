@@ -495,4 +495,4 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 Copyright (c) 2020 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

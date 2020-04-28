@@ -42,7 +42,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 
 ## Overview
 
-Let's have an overview of the magic. We want build a search system so that one can find lines from the South Park scripts which are similar to what the user's input text. To make this happen, we split the scripts into sentences and consider each sentence as one **Document**. For simplicity, each Document has only one **Chunk**, which contains the same sentence as the Document. Each sentence, as a Chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `transformer` lib). 
+Let's have an overview of the magic. We want build a search system so that one can find lines from the South Park scripts which are similar to what the user's input text. To make this happen, we split the scripts into sentences and consider each sentence as one **Document**. For simplicity, each Document has only one **Chunk**, which contains the same sentence as the Document. Each sentence, as a Chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `🤗 Transformers` lib). 
 
 As the same as build classic search engines, we first build an index for all the documents (i.e. the characters and their lines). During indexing, Jina, _the_ neural search framework, uses vectors to represent the sentences and save the vectors in the index. During querying, having texts from the user's input, we encode the input into vectors with the same **Encoder**. So that, these query vector can be used to retrieve the indexed lines with the similiar meaning.
 
@@ -551,4 +551,4 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 Copyright (c) 2020 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.
