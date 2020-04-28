@@ -2,10 +2,11 @@
 <p align="center">
  
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
 [![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jobs.jina.ai)
 <a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
   <img src="https://github.com/jina-ai/jina/blob/master/.github/badges/twitter-badge.svg"
        alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
@@ -15,7 +16,7 @@
 
 </p>
 
-In this demo, we use Jina to build a vocabulary search engine so that one can find a word if s/he only knows the definition. We use the [urban-dictionary-words-dataset](https://www.kaggle.com/therohk/urban-dictionary-words-dataset) from kaggle. The data contains 1.7 million entries from Urban Dictionary with definations and votes. In the urbandict data, each word has one or more definitions. Therefore we consider a word and its definition as one **document**, and each sentence in the definition as one **chunk**. If you are not familiar with these concepts, we highly suggest to go through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jina#jina-hello-world-) before moving forward. 
+In this demo, we use Jina to build a vocabulary search engine so that one can find a word if s/he only knows the definition. We use the [urban-dictionary-words-dataset](https://www.kaggle.com/therohk/urban-dictionary-words-dataset) from kaggle. The data contains 1.7 million entries from Urban Dictionary with definations and votes. In the urbandict data, each word has one or more definitions. Therefore we consider a word and its definition as one **document**, and each sentence in the definition as one **chunk**. If you are not familiar with these concepts, we highly suggest to go through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jinahttps://github.com/jina-ai/jina#jina-hello-world-) before moving forward. 
 
 As the same as build classic search engines, we first build an index for all the documents (i.e. the words and their definitions from the urban dictionary) and later use the query document (i.e. the user's input definition) to retrieve the indexed documents.
 
@@ -32,6 +33,7 @@ As the same as build classic search engines, we first build an index for all the
 - [Dive into the Pods](#dive-into-the-pods)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
 
@@ -500,21 +502,22 @@ Let's wrap up what we've covered in this demo.
 - Speed up the procedure by useing `read_only`
 - Explore the `metas` field in the YAML file.
 
-<p align="center">
- 
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
-[![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
-<a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
-  <img src="https://github.com/jina-ai/jina/blob/master/.github/badges/twitter-badge.svg"
-       alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
-</a>
-[![Python 3.7 3.8](https://github.com/jina-ai/jina/blob/master/.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](https://github.com/jina-ai/jina/blob/master/.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
-</p>
+## Documentation 
+
+<a href="https://docs.jina.ai/">
+<img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
+</a>
+
+The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
+
+- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/main.html)
+- [Jina Python API interface](https://docs.jina.ai/api/jina.html)
+- [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
+- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/main.html)
+- [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
+- ... [and more](https://docs.jina.ai/index.html)
+
 
 ## Stay tuned
 
