@@ -25,11 +25,8 @@ jobs:
           git add -u
           git commit -m "chore: update copyright header"
           git status
+          git push
         continue-on-error: true
-      - uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.JINA_DEV_BOT }}
-          force: true
 
   update-toc:
     if: "!startsWith(github.event.head_commit.message, 'chore')"
@@ -43,3 +40,5 @@ jobs:
           TOC_TITLE: '**Table of Cotents**'
           TARGET_PATHS: '.'
           COMMIT_MESSAGE: 'chore(docs): update TOC'
+          COMMIT_NAME: Jina Dev Bot
+          COMMIT_EMAIL: dev-bot@jina.ai
