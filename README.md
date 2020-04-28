@@ -1,17 +1,17 @@
 # Examples for Jina
 <p align="center">
  
-[![Jina](.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
-[![Jina](.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
-[![Jina Docs](.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](#jina-hello-world-)
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jina.ai/jobs)
 <a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
-  <img src=".github/badges/twitter-badge.svg"
+  <img src="https://github.com/jina-ai/jina/blob/master/.github/badges/twitter-badge.svg"
        alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
 </a>
-[![Python 3.7 3.8](.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+[![Python 3.7 3.8](https://github.com/jina-ai/jina/blob/master/.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](https://github.com/jina-ai/jina/blob/master/.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
 
@@ -45,7 +45,7 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
   <tr>
       <td width="30%">
     <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">
-      <img src=".github/ILLUS12.png" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
+      <img src="https://github.com/jina-ai/jina/blob/master/.github/ILLUS12.png" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
     </a>
     </td>
     <td width="70%">
@@ -89,16 +89,16 @@ Learn how to use Jina to extract feature vector using any deep learning represen
 
 <tr>
 <td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a BERT-based NLP Semantic Search System in 3 minutes</a></h4>
-Learn how to use Jina and DistilBert to build a slang search system
+<h4><a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a NLP Semantic Search System</a></h4>
+Learn how to build a script search system for South Park and practice your knowledge on Flows and Pods
 </td>
 <td><h3>🐣</h3></td>
 </tr>
 
 <tr>
 <td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/flower-search">Build a Flower Image Search System in 3 minutes</a></h4>
-Learn how to use Jina and Torchvision to build a flower image search system
+<h4><a href="https://github.com/jina-ai/examples/tree/master/flower-search">Build a Flower Image Search System</a></h4>
+Learn how to build an image search system and define you own executors and run them in docker
 </td>
 <td><h3>🐣</h3></td>
 </tr>
