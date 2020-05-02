@@ -15,7 +15,9 @@ pods:
     yaml_path: yaml/index-chunk.yml
     replicas: $SHARDS
     separated_workspace: true
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
   ranker:
-    yaml_path: BM25Ranker
+    yaml_path: MinRanker
   doc_indexer:
     yaml_path: yaml/index-doc.yml
