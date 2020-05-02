@@ -6,7 +6,7 @@ pods:
     read_only: true
   encoder:
     yaml_path: yaml/encode.yml
-    replicas: 6
+    replicas: $REPLICAS
     timeout_ready: 1200000
     read_only: true
   chunk_indexer:
