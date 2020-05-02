@@ -12,7 +12,7 @@ pods:
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
     replicas: $SHARDS
-    seperated_workspace: true
+    separated_workspace: true
   doc_indexer:
     yaml_path: yaml/index-doc.yml
     needs: gateway
