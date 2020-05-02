@@ -32,7 +32,6 @@ def read_data(f_path, max_sample_size=-1):
     if max_sample_size > 0:
         random.shuffle(doc_list)
         doc_list = doc_list[:max_sample_size]
-    print('\n'.join(doc_list))
     for d in doc_list:
         yield d.encode('utf8')
 
@@ -42,7 +41,7 @@ def print_topk(resp, word):
         print(f'Ta-Dah🔮, here are what we found for: {word}')
         for idx, kk in enumerate(d.topk_results):
             score = kk.score.value
-            if score <= 0.0:
+            if score < 0.0:
                 continue
             doc = kk.match_doc.raw_bytes.decode()
             name, line = doc.split('!', maxsplit=1)
