@@ -18,7 +18,7 @@ pods:
     read_only: true
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
-    seperated_workspace: true
+    separated_workspace: true
   ranker:
     yaml_path: MinRanker
   doc_indexer:
