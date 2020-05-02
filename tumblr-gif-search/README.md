@@ -273,6 +273,16 @@ In Jina, such behavior in the query time can be simply specified via `polling` a
 
 `polling` and `reducing_yaml_path` are Pod-specific argument, you can find more details in `jina pod --help`.
 
+```bash
+--polling {ANY, ALL, ALL_ASYNC}
+    ANY: only one (whoever is idle) replica polls the message; 
+    ALL: all workers poll the message (like a broadcast) 
+    (choose from: {ANY, ALL, ALL_ASYNC}; default: ANY)
+    
+--reducing-yaml-path
+    the executor used for reducing the result from all replicas, accepted type follows "--yaml-path"
+    (type: str; default: _forward)
+```
 
 When running `app.py` for query, you will see from the log that these 8 shards are working together:
 
