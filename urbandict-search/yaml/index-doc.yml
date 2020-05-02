@@ -1,8 +1,8 @@
-!LeveldbIndexer
+!DocPbIndexer
 with:
-  index_filename: 'meta_doc_index.db'
+  index_filename: doc.gzip
 metas:
-  name: 'LeveldbIndexer'
+  name: docIndexer
   workspace: $TMP_WORKSPACE
 requests:
   on:
@@ -12,7 +12,11 @@ requests:
           method: query
 
     IndexRequest:
+      - !DocPruneDriver
+        with:
+          pruned: ['chunks']
       - !DocKVIndexDriver
         with:
           method: add
+
 
