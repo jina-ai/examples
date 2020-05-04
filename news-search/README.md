@@ -266,7 +266,7 @@ class WeightSentencizer(Sentencizer):
 
 ### ranker
 
-    **重点来了，敲黑板**，在`chunk_indexer`后，文档中的每个chunk已经在创建的索引中查询到了topk的chunk。在WebQA中搜索时，每个文档下只有一个chunk；在这里，每个文档下有多个chunk。相当于WebQA是只对一个chunk下的topk chunk进行打分排序，而在这里是对所有chunk下的topk chunk进行打分排序。
+    **重点来了，敲黑板**，在`chunk_indexer`后，文档中的每个chunk已经在创建的索引中查询到了topk的chunk。在WebQA中搜索时，每个文档下只有一个chunk；在这里，每个文档下有多个chunk。相当于WebQA是只对一个chunk下的topk chunk进行打分排序，而在这里是对多个chunk下的topk chunk进行打分排序。
 
     在`ranker`打分排序的过程中，`Chunk2DocScoreDriver`将文档下所有chunk id和topk chunk的文档，chunk_id，余弦距离组合在一起，提取chunk和topk chunk中ranker需要的值，在这里我们提取`weight`和`length`的值。并将这些值赋给`WeightBiMatchRanker`进行打分排序。
 
@@ -302,9 +302,7 @@ class WeightBiMatchRanker(BiMatchRanker):
 
     如果一个chunk的权重很小，说明我们在排序时应该尽可能的不关注它的搜索结果，也就是让它的的topk下的chunk的余弦距离足够大，同样采用倒数机制，让topk chunk的余弦距离乘以chunk权重的倒数。
 
-然后采用`bi-match`算法进行排序，得到是一个文档下所有topk chunk的排序打分，我们再利用topk chunk的文档id将topk chunk映射到topk文档，至此文档的topk相似文档就查询到了。
-
-
+    然后采用`bi-match`算法进行排序，得到是一个文档下所有topk chunk的排序打分，并返回一个新的topk chunk；我们再利用新的topk chunk的文档id将topk chunk映射到topk文档，至此，文档的topk相似文档就查询到了。
 
 ## 回顾
 
