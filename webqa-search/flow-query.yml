@@ -9,6 +9,7 @@ pods:
 
   chunk_indexer:
     yaml_path: images/chunk_indexer/chunk_indexer.yml
+    timeout_ready: 600000
 
   ranker:
     yaml_path: images/ranker/ranker.yml

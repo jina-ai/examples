@@ -1,11 +1,9 @@
 !TransformerRobertaEncoder
 metas:
-  workspace: $TMP_WORKSPACE
-  name: transformer_roberta_encoder
   py_modules: transformer_roberta.py
 
 with:
-  model_path: /home/cally/jina/jina/pre_model/chinese_roberta_wwm_ext
+  model_path: /home/ubuntu/jina/pre_model/chinese_roberta_wwm_ext_pytorch
 
 requests:
   on:

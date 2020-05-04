@@ -1,8 +1,6 @@
 !WebQATitleExtractor
 metas:
   py_modules: extractor.py
-  workspace: $TMP_WORKSPACE
-  name: extractor
 requests:
   on:
     [IndexRequest, SearchRequest]:

@@ -10,10 +10,11 @@ pods:
   encoder:
     yaml_path: images/encoder/encoder.yml
     timeout_ready: 60000
+    replicas: 3
 
   chunk_indexer:
     yaml_path: images/chunk_indexer/chunk_indexer.yml
 
   join:
-    yaml_path: images/merger/merger.yml
+    yaml_path: _merge
     needs: [chunk_indexer, doc_indexer]
