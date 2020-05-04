@@ -14,9 +14,6 @@ components:
       name: chunk_meta_exec
       workspace: $TMP_WORKSPACE
 
-metas:
-  name: chunk_indexer
-
 requests:
   on:
     IndexRequest:

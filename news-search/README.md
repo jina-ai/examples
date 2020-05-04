@@ -43,7 +43,7 @@ pip install -r requirements.txt
      在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
 ```shell
-python pre_data.py
+python prepare_data.py
 ```
 
 ## 搭建Flow
@@ -79,7 +79,7 @@ pods:
     yaml_path: chunk_indexer.yml
 
   join:
-    yaml_path: merger
+    yaml_path: _merger
     needs: [doc_indexer, chunk_indexer]
 ```
 

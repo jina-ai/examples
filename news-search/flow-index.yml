@@ -15,5 +15,5 @@ pods:
     yaml_path: images/chunk_indexer/chunk_indexer.yml
 
   join:
-    yaml_path: images/merger/merger.yml
+    yaml_path: _merge
     needs: [chunk_indexer, doc_indexer]
