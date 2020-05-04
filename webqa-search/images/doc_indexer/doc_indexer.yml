@@ -2,8 +2,8 @@
 with:
   index_filename: doc_index.gzip
 metas:
-  name: doc_indexer
   workspace: $TMP_WORKSPACE
+
 requests:
   on:
     IndexRequest:

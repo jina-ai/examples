@@ -10,24 +10,14 @@ workspace_path = '/tmp/jina/webqa/'
 os.environ['TMP_WORKSPACE'] = workspace_path
 
 def read_data(fn):
-    items = {}
-    with open(fn, 'r', encoding='utf-8') as f:
-        for line in f:
-            item = json.loads(line)
-            if item['content'] == '':
-                continue
-            if item['qid'] not in items.keys():
-                items[item['qid']] = {}
-                items[item['qid']]['title'] = item['title']
-                items[item['qid']]['answers'] = [{'content': item['content']}]
-            else:
-                items[item['qid']]['answers'].append({'content': item['content']})
+    with open(os.path.join(workspace_path, fn), 'r', encoding='utf-8') as f:
+        items = json.load(f)
 
     result = []
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:50000]:
+    for item in result:
         yield item
 
 def print_topk(resp):
@@ -41,11 +31,11 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
 
 @click.command()
-@click.option('--task', '-t', default='index')
+@click.option('--task', '-t', default='query')
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
-        data_fn = os.path.join(workspace_path, "web_text_zh_valid.json")
+        data_fn = os.path.join(workspace_path, "pre_web_text_zh_train.json")
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
             fl.index(raw_bytes=read_data(data_fn), batch_size=32)

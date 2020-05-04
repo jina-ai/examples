@@ -29,7 +29,7 @@
 
     与传统的搜索引擎一样，分为创建索引和搜索两个部分。
 
-    在创建索引时，我们首先会为所有的文档建立索引，利用`transformes`加载哈工大`Roberta`作为编码器，将chunk中的文本编码成向量，并进行存储；在搜索时，用户输入问题，编码器将问题编码成向量，然后利用这些向量去召回最相似的问题，再利用问题返回问题下的回复。
+    在创建索引时，我们首先会为所有的文档建立索引，利用`transformes`加载哈工大`Roberta`作为编码器，将chunk中的文本编码成向量，并进行存储；在搜索时，用户输入问题，编码器将问题编码成向量，然后利用这些向量去召回最相似的问题。
 
 ## 环境依赖
 
@@ -44,10 +44,14 @@ pip install -r requirements.txt
     在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
 ```shell
-python pre_data.py
+python prepare_data.py
 ```
 
+    在数据预处理时，我们先会将数据集解压，然后我们会将数据集中一问一答的数据形式转换为一问多答的数据类型。
+
 ## 定义Flow
+
+    在阅读完[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)后，你应该已经了解，在jina中我们通过定义不同的Flow来定义不同的工作流。
 
 ### 创建索引
 
@@ -80,7 +84,7 @@ pods:
     yaml_path: chunk_indexer.yml
 
   join:
-    yaml_path: merger
+    yaml_path: _merger
     needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -92,10 +96,6 @@ pods:
 </td>
 </tr>
 </table>
-
-> gateway
-
-    在这里你可能会发现还存在`gateway`这个Pod，这个Pod的主要作用是接受外部的请求，并将请求的数据发送到Flow中的Pod中；并且`gateway`这个Pod不需要我们在Flow的yaml文件中定义，在运行时，jina会自动在Flow的开头定义这个Pod。
 
 > extractor
 
@@ -113,9 +113,13 @@ pods:
 
     存储chunk与文档的关联关系，还存储了编码后的向量。
 
+> gateway
+
+    在这里你可能会发现还存在`gateway`这个Pod，这个Pod的主要作用是接受外部的请求，并将请求的数据发送到Flow中的Pod；并且`gateway`这个Pod不需要我们在Flow的YAML文件中定义，在运行时，jina会自动在Flow的开头定义这个Pod。
+
     
 
-    在Flow中定义Pod时，我们需要指定Pod的YAML文件地址和接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的yaml文件地址为`extractor.yml`，接受来自`gateway`的请求。
+    在Flow中定义Pod时，我们通过`yaml_path`指定Pod的YAML文件地址，通过`needs`指定接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的YAML文件地址为`extractor.yml`，接受来自`gateway`的请求。
 
 ```yaml
 extractor:
@@ -123,7 +127,7 @@ extractor:
     needs: gateway
 ```
 
-    两个Pod在YAML文件中的顺序是依次的，则不需要定义needs，例如在`chunk_indexer`这个Pod。
+    两个Pod在YAML文件中的顺序是依次的，则不需要定义`needs`，例如在`chunk_indexer`这个Pod。
 
 ```yaml
 chunk_indexer:
@@ -142,7 +146,7 @@ encoder:
 
 ```yaml
 join:
-  yaml_path: join
+  yaml_path: _merge
   needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -191,9 +195,9 @@ pods:
 </td>
 </tr>
 </table>
-    不要忘记在jina中，**chunk是最基本的信息单元**。所以所有的索引都是在chunk级别进行的。
+    不要忘记在jina中，chunk是最基本的信息单元。所以所有的索引都是在chunk级别进行的。
 
-    在索引之后再利用`ranker`对文档下所有chunk的topk进行排序，并返回文档级别的信息，在`ranker`中我们采用`bi-match`算法进行排序，具体实现细节见[github]()。
+    在索引之后再利用`ranker`对文档下所有chunk的topk的余弦距离进行升序排序，并返回topk的文档级别的信息。
 
     在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。 
 
@@ -205,15 +209,7 @@ pods:
 
     第一个不同点是，在创建索引时，我们采用了两条并行的流，为什么要这样做呢？并行的流可以提高创建索引的速度，为什么可以并行呢？在建立索引时，文档存储的是文档级别的索引，而chunk索引是存储chunk级别的索引，在`gateway`以后，没有任何共用的东西。 
 
-    第二个不同点，在创建索引时，Flow中的模态为`IndexRequest`；在查询时，Flow中的模态为`SearchRequest`；到目前为止，jina支持4中不同的查询模态。
-
-- `IndexRequest`: 用于索引创建模态
-
-- `SearchRequest`: 用于查询模态
-
-- `TrainRequest`: 用于模型训练模态
-
-- `ControlRequest`: 用于远程控制模态
+    第二个不同点，在创建索引时，Flow中的请求类型为`IndexRequest`，对应创建索引模态；在查询时，Flow中的请求类型为`SearchRequest`，对应查询模态。
 
 ## 运行Flow
 
@@ -240,7 +236,7 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn), batch_size=32)
 ```
 
-    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据的形式发送到Flow中。在这里我们为了节省时间，只采用了100000条文档。
+    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据类型发送到Flow中。在这里我们为了节省时间，只采用了100000条文档。
 
 ```python
 def read_data(fn):
@@ -280,7 +276,7 @@ python app.py -t query
 
 </details>
 
-    在查询时刻，我们同样从YAML文件中建立Flow，通过`search()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据形式。
+    在查询时刻，我们同样从YAML文件中定义Flow，通过`search()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据类型。
 
 ```python
 flow = Flow().load_config('flow-query.yml')
@@ -309,20 +305,18 @@ def print_topk(resp):
 
     在阅读完上面之后，你希望了解关于Pod的更多内容，请继续往下阅读。
 
-    在jina中我们通过定义YAML文件定义Pod，那么是如何通过YAML文件定义Pod的呢？我们继续往下走。
+    在jina中我们通过定义YAML文件来定义Flow，在[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)中提到Pod也是通过YAML文件来进行定义的，那么是怎么定义的呢？我们继续往下走。
 
 ### extractor
 
     在jina的原则中，一个YAML文件描述了一个对象的属性，所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
-    在`extractor`中，它的主要作用是将文档中的问题取出来，即将文档级别的信息分割成chunk级别的信息。下面是`extractor`的YAML文件，我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`作为`extractor`的Executor，通过定义`metas`修改了Executor的默认属性。
+    在`extractor`中，它的主要作用是将文档中的问题取出来，即将文档级别的信息分割成chunk级别的信息。下面是`extractor`的YAML文件，我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，并且通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor，并且通过定义`metas`修改了Executor的默认属性。
 
 ```yaml
 !WebQATitleExtractor
 metas:
   py_modules: extractor.py
-  workspace: $TMP_WORKSPACE
-  name: title_extractor
 requests:
   on:
     [IndexRequest, SearchRequest]:
@@ -345,7 +339,9 @@ class WebQATitleExtractor(BaseSegmenter):
                 }]
 ```
 
-    在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑，在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的行为，这就是公用Pod的原理。
+    在`metas`中，我们通过定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
+
+    在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑，在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的行为。
 
     在jina中Driver是一个数据类型转换器，将ProtoBuf转换为`python`数据类型/ `numpy`数据类型，或将`python`数据类型/ `numpy`数据类型转换为ProtoBuf，在这个例子中`SegmentDriver`将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`，在`craft()`处理完数据以后，`SegmentDriver`将Python Object / Numpy Object转换为ProtoBuf。
 
@@ -358,8 +354,6 @@ class WebQATitleExtractor(BaseSegmenter):
 ```yaml
 !TransformerRobertaEncoder
 metas:
-  workspace: $TMP_WORKSPACE
-  name: transformer_roberta_encoder
   py_modules: transformer_roberta.py
 
 with:
@@ -382,7 +376,6 @@ requests:
 with:
   index_filename: doc_index.gzip
 metas:
-  name: doc_indexer
   workspace: $TMP_WORKSPACE
 requests:
   on:
@@ -425,9 +418,6 @@ components:
       name: chunk_exec
       workspace: $TMP_WORKSPACE
 
-metas:
-  name: chunk_indexer
-
 requests:
   on:
     IndexRequest:
@@ -460,21 +450,31 @@ requests:
 
 ### ranker
 
-    `ranker`不同与其它Pod，它只在查询时使用，所以我们只需要在YAML文件中定义SearchRequest的行为。
+    `ranker`不同与其它Pod，它只在查询时使用，所以我们只需要在YAML文件中定义`SearchRequest`的行为。
 
-    在每个文档下的问题的topk相似问题都找到以后，我们利用`Chunk2DocScoreDriver`将所有topk chunk组合到一起，在这里，每个文档下只有一个问题，也就只有一个chunk。然后调用`BimatchRanker`中的`score`方法对topk chunk进行打分，并排序。对于排序后的结果，`Chunk2DocScoreDriver`将topk chunk提升为topk文档。    
+    在每个文档下的问题的topk相似问题都找到以后，我们利用`Chunk2DocScoreDriver`将所有topk chunk组合到一起，在这里，每个文档下只有一个问题，也就只有一个chunk。然后调用`MinRanker`中的`score()`和chunk中的余弦距离对组合在一起的topk chunk进行升序，并返回一个新的topk chunk。对于新的topk chunk，`Chunk2DocScoreDriver`将topk chunk转换为topk文档。    
 
 ```yaml
-!BiMatchRanker
-metas:
-  name: ranker
+!MinRanker
 requests:
   on:
     SearchRequest:
       - !Chunk2DocScoreDriver
         with:
           method: score
-      - !DocPruneDriver {}
+      - !DocPruneDriver
+        with:
+          pruned: chunks
+```
+
+### join
+
+    在定义Flow时，我们提到`join` Pod的作用是等待并合并两条并行流的信息，并执行下面的任务。在指定`join` Pod`yaml_path`时，我们只需指定`yaml_path`为`_merge`，这样jina就会调用内部默认的`join` Pod的YAML文件。
+
+```python
+join:
+    yaml_path: _merge
+    needs: [chunk_indexer, doc_indexer]
 ```
 
 ## 回顾
@@ -491,7 +491,7 @@ requests:
 
 4. Flow中我们可以定义许多并行的流。
 
-5. 向Flow中发送的数据都是`bytes`类型的。
+5. 向Flow中发送的数据都是`bytes`数据类型的。
 
 6. 在Pod内，Driver转换数据类型，将消息中的Protobuf转换为Python类型/Numpy类型，并调用Executor执行相关的逻辑，并将结果包装回消息中。
 

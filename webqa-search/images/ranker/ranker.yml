@@ -1,6 +1,4 @@
-!BiMatchRanker
-metas:
-  name: ranker
+!MinRanker
 requests:
   on:
     SearchRequest:
@@ -10,4 +8,3 @@ requests:
       - !DocPruneDriver
         with:
           pruned: chunks
-
