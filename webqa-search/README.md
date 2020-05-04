@@ -236,28 +236,18 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn), batch_size=32)
 ```
 
-    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据类型发送到Flow中。在这里我们为了节省时间，只采用了100000条文档。
+    在发送数据中我们先将json文件中的所有样本组合成一问多答的形式，然后通过`bytes`数据类型发送到Flow中。
 
 ```python
 def read_data(fn):
-    items = {}
-    with open(fn, 'r', encoding='utf-8') as f:
-        for line in f:
-            item = json.loads(line)
-            if item['content'] == '':
-                continue
-            if item['qid'] not in items.keys():
-                items[item['qid']] = {}
-                items[item['qid']]['title'] = item['title']
-                items[item['qid']]['answers'] = [{'content': item['content']}]
-            else:
-                items[item['qid']]['answers'].append({'content': item['content']})
+    with open(os.path.join(workspace_path, fn), 'r', encoding='utf-8') as f:
+        items = json.load(f)
 
     result = []
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result[:100000]:
+    for item in result:
         yield item
 ```
 
