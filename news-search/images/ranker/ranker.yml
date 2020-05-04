@@ -1,6 +1,5 @@
 !WeightBiMatchRanker
 metas:
-  name: weight_ranker
   py_modules: weight_ranker.py
 requests:
   on:
@@ -11,6 +10,7 @@ requests:
       - !DocPruneDriver
         with:
           pruned: chunks
+
     ControlRequest:
       - !ControlReqDriver {}
 

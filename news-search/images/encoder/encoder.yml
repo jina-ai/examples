@@ -1,7 +1,5 @@
 !TransformerRobertaEncoder
 metas:
-  workspace: $TMP_WORKSPACE
-  name: transformer_roberta_encoder
   py_modules: transformer_roberta.py
 
 with:
