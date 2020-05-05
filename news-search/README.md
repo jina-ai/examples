@@ -4,7 +4,7 @@
 
     在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，Awesome✌️✌️。
 
-    我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即问题搜索问题，创建索引和搜索时文档中的chunk只有一个，那么你或许会问jina能不能长文本搜索长文本呢，每个doc中有多个chunk？当然可以！
+    我想大家在阅读完上一篇已经发现了，上一篇是基于短文本搜索短文本的，即问题搜索问题，创建索引和搜索时Document中的Chunk只有一个，那么你或许会问jina能不能长文本搜索长文本呢，每个Document中有多个Chunk？当然可以！
 
     那么，怎么做呢？请看如下分解。
 
@@ -26,9 +26,13 @@
 
 ## 总览
 
-    在这个系统中我们采用数据集news-2016，数据集下载[地址](https://drive.google.com/file/d/1TMKu1FpTr6kcjWXWlQHX7YJsMfhhcVKp/view?usp=sharing)。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+    在这篇文章中我们主要介绍如何使用jina实现一个长文本的新闻内容搜索系统，主要有以下几点。
 
-    我们将新闻内容作为文档来创建索引；在搜索时，用户输入新闻内容，系统根据创建的索引利用`bi-match`算法召回topk相似的新闻。但是，无论是在创建索引的时候，还是在搜索的时候，系统都会根据分割子句的方式将新闻内容分割成多个子句，也就是分割成多个chunk。
+1. Document存在多个Chunk时，jina如何进行查询？
+
+2. 如何使用jina进行弹性扩展？
+
+3. 如何使用jina加载docker镜像，摆脱复杂环境依赖？
 
 ## 环境依赖
 
@@ -40,6 +44,8 @@ pip install -r requirements.txt
 
 ## 数据预处理
 
+        在这个系统中我们采用数据集news-2016，数据集下载[地址](https://drive.google.com/file/d/1TMKu1FpTr6kcjWXWlQHX7YJsMfhhcVKp/view?usp=sharing)。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+
      在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
 ```shell
@@ -48,9 +54,9 @@ python prepare_data.py
 
 ## 搭建Flow
 
-    与上一篇文章一样，我们通过YAML文件定义创建索引和搜索时的Flow。
+    与上一篇文章一样，我们通过YAML文件定义创建索引和搜索任务的Flow。
 
-    在创建索引时，我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`这5个Pod。
+    在创建索引时，我们定义了`extractor`，`doc_indexer`, `encoder`, `chunk_indexer`, `join`5个Pod。
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -66,17 +72,21 @@ python prepare_data.py
 pods:
   doc_indexer:
     yaml_path: doc_indexer.yml
+    replicas: 2
 
   extractor:
     yaml_path: extractor.yml
     needs: gateway
+    replicas: 2
 
   encoder:
     image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
     timeout_ready: 60000
+    replicas: 2
 
   chunk_indexer:
     yaml_path: chunk_indexer.yml
+    replicas: 2
 
   join:
     yaml_path: _merger
@@ -92,7 +102,7 @@ pods:
 </tr>
 </table>
 
-    在搜索时，我们定义了`extractor`, `encoder`, `chunk_indexer`,  `ranker`, `doc_indexer`这5个Pod。
+    在搜索时，我们定义了`extractor`, `encoder`, `chunk_indexer`,  `ranker`, `doc_indexer`5个Pod。
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -108,20 +118,24 @@ pods:
 pods:
   extractor:
     yaml_path: extractor.yml
+    replicas: 2
 
   encoder:
     image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
-    timeout_ready: 60000
+    timeout_ready: 6000000
     replicas: 2
 
   chunk_indexer:
     yaml_path: chunk_indexer.yml
+    replicas: 2
 
   ranker:
     yaml_path: ranker.yml
+    replicas: 2
 
   doc_indexer:
     yaml_path: doc_indexer.yml
+    replicas: 2
 ```
 
 </sub>
@@ -137,9 +151,15 @@ pods:
 
 ### 容器化🐳
 
-    在上面你会发现，我们在定义`encoder`时，并没有加载YAML文件，而是加载了docker的镜像。
+    jina加载一个Pod时，提供了2种简单的方式
 
-    在jina中Pod的加载可以从YAML文件中加载，可用从docker镜像中加载。同理，Flow的加载可以从YAML文件中加载，也可以从docker镜像中加载。
+1. 从YAML文件中加载。
+
+2. 从docker镜像中加载。
+
+    在上面你会发现，我们在定义`encoder`时，并没有加载YAML文件，而是通过`image`指定了Roberta的docker的镜像。为什么要这样做呢？因为使用docker镜像可以摆脱复杂的环境依赖，达到即插即用的效果。
+
+    在jina中，Pod的加载可以从YAML文件中加载，可用从docker镜像中加载。同理，Flow的加载可以从YAML文件中加载，也可以从docker镜像中加载。
 
 ```yaml
 !Flow
@@ -150,7 +170,9 @@ encoder:
 
 ### 弹性扩展🚀
 
-    在定义`encoder`时，我们指定了`replicas`等于2，代表了在Pod中定义了2个Pea，并行编码chunk中的文本，这个参数在我们需要处理大批量数据时非常有用。
+    在定义Pod时，我们设置了Pod的`replicas`参数，代表了在Pod中定义了多个Pea，并行处理请求。例如在定义`encoder` Pod时，我们设置了`replicas`为2，代表了有2个Pea并行编码Chunk中的文本。
+
+    如果我们需要处理大批量数据时，这个参数将非常有用。
 
 ```yaml
 !Flow
@@ -177,7 +199,7 @@ python app.py -t index
 
 </details>
 
-    与第一篇文章一样，我们首先通过`build()`建立Flow，然后通过`index()`方法发送`bytes`数据和`IndexRequest`请求，在这里我们只发送新闻内容。
+    与第一篇文章创建索引时一样，我们首先通过`build()`建立Flow。然后通过`index()`发送数据和`IndexRequest`请求，在这里我们只发送新闻内容。
 
 ```python
 def read_data(fn):
@@ -200,7 +222,7 @@ def read_data(fn):
 data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
 flow = Flow().load_config('flow-index.yml')
 with flow.build() as fl:
-    fl.index(raw_bytes=read_data(data_fn), batch_size=32)
+    fl.index(raw_bytes=read_data(data_fn))
 ```
 
 ### 查询
@@ -218,7 +240,7 @@ python app.py -t query
 
 </details>
 
-    在查询时，我们同样利用`build()`建立Flow，然后通过`search()`方法发送输入新闻内容的`bytes`，利用`print_topk()`输出相似新闻。
+    在查询时，我们同样利用`build()`建立Flow。然后通过`search()`发送输入新闻内容，利用`print_topk()`输出相似新闻。
 
 ```python
 def print_topk(resp):
@@ -249,9 +271,9 @@ with flow.build() as fl:
 
 ### extractor
 
-    在第一篇文章中，我们提到jina细化了文档的信息，引入了chunk的概念，将一个文档分割为多个chunk，每个chunk为基本的信息单元。
+    在第一篇文章中，我们提到jina细化了Document的信息，引入了Chunk的概念。将一个Document转换为多个Chunk，每个Chunk为基本的信息单元。
 
-    我们根据新闻数据集存在的特点，开头信息对文本主旨贡献度较大，而越往后，则没那么重要。我们先将一篇新闻内容用`Sentencizer`进行子句分割，得到的一个chunk的列表，每个chunk中都是新闻内容的子句，然后采取了线性递减的方式给每个chunk赋予权重，开始的子句具有较高的权重，越往后的子句权重依次递减。这样做的好处是在搜索的过程中，让搜索关注权重较高的chunk。
+    我们根据新闻数据集存在的特点，开头信息对文本主旨贡献度较大；而越往后，则没那么重要。我们先将一篇新闻内容用`Sentencizer`进行子句分割，得到的一个Chunk的列表，每个Chunk中都是新闻内容的子句。然后采取了线性递减的方式给每个Chunk赋予权重，开始的子句具有较高的权重，越往后的子句权重依次递减。这样做的好处是在搜索的过程中，让搜索关注权重较高的Chunk。
 
 ```python
 class WeightSentencizer(Sentencizer):
@@ -266,9 +288,17 @@ class WeightSentencizer(Sentencizer):
 
 ### ranker
 
-    **重点来了，敲黑板**，在`chunk_indexer`后，文档中的每个chunk已经在创建的索引中查询到了topk的chunk。在WebQA中搜索时，每个文档下只有一个chunk；在这里，每个文档下有多个chunk。相当于WebQA是只对一个chunk下的topk chunk进行打分排序，而在这里是对多个chunk下的topk chunk进行打分排序。
+    **重点来了，敲黑板**，在`chunk_indexer`后，Document中的每个Chunk已经在创建的索引中查询到了相似的Chunk。在WebQA中搜索时，每个Document下只有一个Chunk，对应一个搜索Chunk；在这里，每个Document下有多个Chunk，对应多个搜索Chunk。相当于WebQA只对一个搜索Chunk下相似的Chunk进行打分排序，而在这里是对多个搜索Chunk下的相似Chunk进行打分排序。那么是怎么做的呢？我们继续往下走。
 
-    在`ranker`打分排序的过程中，`Chunk2DocScoreDriver`将文档下所有chunk id和topk chunk的文档，chunk_id，余弦距离组合在一起，提取chunk和topk chunk中ranker需要的值，在这里我们提取`weight`和`length`的值。并将这些值赋给`WeightBiMatchRanker`进行打分排序。
+    在`ranker`打分排序的过程中，`ranker`的Driver，`Chunk2DocScoreDriver`首先做了2件事。
+
+1. 将相似Chunk的Document id和chunk_id、搜索Chunk的chunk_id、搜索Chunk和相似Chunk的相似度分数组合在一起。
+
+2. 提取搜索Chunk和相似Chunk中ranker需要的值，在这里我们提取`weight`和`length`的值。
+
+    然后将这些值赋给`ranker`的Executor进行打分排序。    
+
+    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们先使用了`weight`对搜索Chunk和相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算进行了打分排序，并返回打分排序结果。
 
 ```python
 from typing import Dict
@@ -281,6 +311,16 @@ class WeightBiMatchRanker(BiMatchRanker):
 
     def score(self, match_idx: 'np.ndarray', query_chunk_meta: Dict, match_chunk_meta: Dict) -> 'np.ndarray':
         """ Apply weight into score, the weight contain query chunk weight, match chunk weight
+        :param match_idx: a [N x 4] numpy ``ndarray``, column-wise:
+
+                - ``match_idx[:, 0]``: ``doc_id`` of the matched chunks, integer
+                - ``match_idx[:, 1]``: ``chunk_id`` of the matched chunks, integer
+                - ``match_idx[:, 2]``: ``chunk_id`` of the query chunks, integer
+                - ``match_idx[:, 3]``: distance/metric/score between the query and matched chunks, float
+        :param query_chunk_meta: the meta information of the query chunks, where the key is query chunks' ``chunk_id``,
+            the value is extracted by the ``required_keys``.
+        :param match_chunk_meta: the meta information of the matched chunks, where the key is matched chunks'
+            ``chunk_id``, the value is extracted by the ``required_keys``.
 
         """
         for item, meta in zip(match_idx, match_chunk_meta):
@@ -292,25 +332,15 @@ class WeightBiMatchRanker(BiMatchRanker):
         return super().score(match_idx, query_chunk_meta, match_chunk_meta)
 ```
 
-    在`WeightBiMatchRanker`中。我们利用刚刚提取的两个权重，进行余弦距离缩放。
-
-> topk chunk的权重
-
-    如果一个topk chunk的权重很小，说明我们在排序时应该尽可能的不关注它，让它的余弦距离应该足够大，在这里我们采用倒数机制来进行缩放，让topk chunk的余弦距离乘以topk chunk权重的倒数。
-
-> chunk的权重
-
-    如果一个chunk的权重很小，说明我们在排序时应该尽可能的不关注它的搜索结果，也就是让它的的topk下的chunk的余弦距离足够大，同样采用倒数机制，让topk chunk的余弦距离乘以chunk权重的倒数。
-
-    然后采用`bi-match`算法进行排序，得到是一个文档下所有topk chunk的排序打分，并返回一个新的topk chunk；我们再利用新的topk chunk的文档id将topk chunk映射到topk文档，至此，文档的topk相似文档就查询到了。
+    最后`Chunk2DocScoreDriver`将相似Chunk的打分排序结果转换为相似Document。至此，相似Document就查询到了。
 
 ## 回顾
 
-1. 可以在jina中实现多个chunk的搜索，并且支持定义每个chunk的权重。
+1. Document存在多个Chunk时，jina会将所有Chunk下的相似Chunk组合在一起进行打分排序。
 
-2. jina支持容器化和弹性化扩展，只需要在Flow的YAML文件中定义即可。
+2. jina支持容器化，只需要在定义Pod时将`yaml_path`字段更改为`image`，并添加相应镜像的名称。
 
-3. 在`ranker`时，我们先使用chunk中的权重缩放了余弦距离，然后对一个文档下所有的chunk中的topk chunk进行排序。
+3. jina支持弹性扩展，只需要在Pod中增加`replicas`字段。
 
 ## 结语
 
