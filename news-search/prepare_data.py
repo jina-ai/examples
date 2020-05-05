@@ -10,7 +10,7 @@ if not os.path.exists(root_path):
 if not os.path.exists(workspace):
     os.mkdir(workspace)
 
-fz = zipfile.ZipFile(os.path.join('/tmp', 'news2016zh.zip'), 'r')
+fz = zipfile.ZipFile(os.path.join('/tmp', 'new2016zh.zip'), 'r')
 
 for file in fz.namelist():
     fz.extract(file, workspace)
