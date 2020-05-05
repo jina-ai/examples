@@ -154,7 +154,7 @@ join:
 
     当建立完成索引后，下一步我们就是使用建立的索引进行查询。
 
-    同样，在查询时，我们利用YAML文件定义查询的Flow！在查询的Flow中，我们共用`extractor`分割文档，共用`encoder`编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
+    同样，在查询时，我们利用YAML文件定义查询的Flow！在查询的Flow中，我们共用`extractor`将Document级别的信息转换为Chunk级别的信息，共用`encoder`这个Pod来编码用户输入的问题，利用`chunk_indexer`存储的索引召回相似的问题。
 
     
 
@@ -197,19 +197,19 @@ pods:
 </table>
     不要忘记在jina中，chunk是最基本的信息单元。所以所有的索引都是在chunk级别进行的。
 
-    在索引之后再利用`ranker`对文档下所有chunk的topk的余弦距离进行升序排序，并返回topk的文档级别的信息。
+   但是用户希望看到的Document级别的信息。因此， 在索引召回Chunk级别信息之后，我们需要利用`ranker`对Document下所有chunk的查询结果的打分进行排序，并将Chunk级别的信息转换为Document级别的信息。
 
-    在有文档的信息之后，下一步就是利用`doc_indexer`将文档信息映射到文档原数据，并返回给用户。 
+    在有Document的信息之后，下一步就是利用`doc_indexer`将Document信息映射到Document原数据，并返回给用户。 
 
-    在上面你可能发现`extractor`, `encoder`, `chunk_indexer`, `doc_indexer`的yaml文件地址与创建索引时一样，没错，它们共用同一个YAML文件，共同一个Pod，只是在内部定义不同的请求下的处理逻辑。
+    在上面我们提到extractor在索引任务和查询任务中使用同一个YAML文件，共用了同一个Pod，只是不同的请求下的对应不同的处理逻辑。同理，encoder，chunk_indexer，doc_indexer也是一样的。
 
 ## 小结
 
     在开始下面之前，我们回过头来看看，是不是觉得很简单。那你可能会问两条Flow有什么不同呢？
 
-    第一个不同点是，在创建索引时，我们采用了两条并行的流，为什么要这样做呢？并行的流可以提高创建索引的速度，为什么可以并行呢？在建立索引时，文档存储的是文档级别的索引，而chunk索引是存储chunk级别的索引，在`gateway`以后，没有任何共用的东西。 
+    第一个不同点，在创建索引时，我们采用了两条并行的处理流程，为什么要这样做呢？并行的处理流程可以提高创建索引的速度，为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引，而chunk_indexer存储的是Chunk级别的索引，在`gateway`以后，彼此是独立的，没有信息的交互。 
 
-    第二个不同点，在创建索引时，Flow中的请求类型为`IndexRequest`，对应创建索引模态；在查询时，Flow中的请求类型为`SearchRequest`，对应查询模态。
+    第二个不同点，在创建索引时，Flow中的请求类型为`IndexRequest`；在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为一个Pod在不同的请求下会有不同的处理逻辑。
 
 ## 运行Flow
 
@@ -280,7 +280,7 @@ with flow.build() as fl:
         fl.search(read_query_data(item), callback=ppr, topk=top_k)
 ```
 
-    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`数据，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。callback参数的作用是将`Protobuf`转换为`python`的数据形式。`resp.search.docs`包含了所有的搜索文档，在这个例子中，我们只有一个文档，文档中包含了topk的搜索结果文档，`raw_bytes`代表了文档的原数据，在这里我们为了展示效果，只展示了问题，没有展示问题下的回复。
+    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`数据，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数的作用传入一个函数，对jina的返回结果进行后处理。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了文档的原数据，在这里我们为了展示效果，只展示了问题，没有展示问题下的回复。
 
 ```python
 def print_topk(resp):
@@ -301,7 +301,13 @@ def print_topk(resp):
 
     在jina的原则中，一个YAML文件描述了一个对象的属性，所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
-    在`extractor`中，它的主要作用是将文档中的问题取出来，即将文档级别的信息分割成chunk级别的信息。下面是`extractor`的YAML文件，我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，并且通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor，并且通过定义`metas`修改了Executor的默认属性。
+    在`extractor`中，它的主要任务
+
+    1. 将文档级别的信息转换成chunk级别的信息
+
+    2. 将文档中的问题取出来。
+
+    我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，BaseSegmenter的作用是将Document的信息转换为Chunk级别的信息。并且通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor，并且通过定义`metas`修改了Executor的默认属性。
 
 ```yaml
 !WebQATitleExtractor
