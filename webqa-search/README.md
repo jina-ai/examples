@@ -27,7 +27,7 @@
 
     在继续阅读之前，如何你还没有阅读过[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)，在继续阅读之前，我们强烈建议你先阅读[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)。
 
-    在本篇文章中我们将介绍如何使用jina搭建一套中文问答搜索引擎，主要有以下几点：
+    在本篇文章中我们将介绍如何使用jina搭建一套中文问答搜索引擎。通过本文，你将会学到：
 
 1. Chunk是最基本的信息单元，Document是jina的最终输入和输出。
 
@@ -53,11 +53,11 @@ pip install -r requirements.txt
 python prepare_data.py
 ```
 
-    在数据预处理时，我们先将数据集解压，然后我们将数据集中一问一答的数据形式转换为一问多答的数据形式。
+    该数据集中每个条目对应一个问题和一个答案，每个问题包含多个答案。在数据预处理时，我们将同一个问题对应的答案进行聚合，整理为一问多答的形式。
 
 ## 定义Flow
 
-    与传统的搜索引擎一样，jina也将搜索分为创建索引和搜索两个任务，即两个不同的Flow。
+    与传统的搜索引擎一样，jina也将搜索分为创建索引和查询两个任务，对应索引和查询两个不同的Flow。
 
 ### 创建索引
 
@@ -117,13 +117,15 @@ pods:
 
 > join
 
-    合并两条并行流中的所有信息。
+    合并两条并行流程中的所有信息。在我们的例子中，join后面没有其他的Pod，所以join的功能类似于多线程编程中的等待并行线程全部完成。
 
 > doc_indexer
 
     存储Document的原数据。
 
-    在Flow中定义Pod时，我们通过`yaml_path`指定Pod的YAML文件地址，通过`needs`指定接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的YAML文件地址为`extractor.yml`，接受来自`gateway`的请求。
+   介绍完各个Pod的作用，接下来，我们具体看看每个Pod如何定义的。
+
+    我们通过`yaml_path`指定Pod的YAML文件地址。Flow中的信息传递默认是按照YAML文件中定义的顺序自上而下依次执行的。在特殊情况下，我们也通过`needs`指定接受哪个Pod的请求。例如在`extractor`这个Pod中，我们定义Pod的YAML文件地址为`extractor.yml`，接受来自`gateway`的请求，而不是上方的`doc_indexer`。
 
 ```yaml
 extractor:
@@ -146,11 +148,11 @@ encoder:
   timeout_ready: 60000
 ```
 
-    在这里你可能会发现还存在`gateway`这个Pod。这个Pod的主要作用是接受外部的请求，并将请求的数据发送到Flow中的Pod；并且`gateway`这个Pod不需要我们在Flow的YAML文件中定义；在运行时，jina会自动在Flow的开头定义这个Pod。
+    在这里你可能会发现还存在`gateway`这个Pod。这个Pod的主要作用是接受外部的请求，并将请求的数据发送到Flow中的Pod。在运行时，jina会自动在Flow的开头定义这个Pod，所以不需要在Flow的YAML文件中定义`gateway`。
 
 ### 查询
 
-    当索引建立完成以后，下一步我们就是使用建立的索引进行查询。
+    当索引建立完成以后，下一步我们使用建立的索引进行查询。
 
     同样，在查询时，我们也利用YAML文件定义查询任务的Flow。在查询任务的Flow中，我们共用了在创建索引时定义的`extractor`、`encoder`、`chunk_indexer`和`doc_indexer`这几个Pod。它们在查询时的功能如下。
 
@@ -208,9 +210,13 @@ pods:
 </tr>
 </table>
 
-    如何定义共用的Pod呢？**只需要在Pod的YAML文件中定义不同请求下的处理逻辑。**
+    
 
-    你可能会发现还存在`ranker`这个Pod。`ranker`的作用是对Document下所有Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
+
+
+    我们可以看到在查询任务中这些Pod的功能和在索引任务中是共用了相同的YAML文件进行定义的。我们如何控制Pod用同一个YAML定义文件实现不同的任务呢？只需要在Pod的YAML文件中定义不同任务请求下的处理逻辑。我们在后面会细细道来。
+
+    相比索引任务，查询任务的Flow中还多了`ranker`这个Pod。`ranker`的作用是对Document下所有Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
 
 ## 运行Flow
 
@@ -229,7 +235,7 @@ python app.py -t index
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们需要创建Flow对象和`flow-index.yml`的文件地址。在这之后，我们需要通过`build()`让Flow中的Pod彼此连接，然后通过`index()`发送`IndexRequest`和数据。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow。在这之后，我们需要通过`build()`让Flow中的Pod彼此连接，然后通过`index()`函数对数据进行索引。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
@@ -237,7 +243,7 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn))
 ```
 
-    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个**Document**，并以`bytes`的数据类型发送到Flow中。
+    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。
 
 ```python
 def read_data(fn):
@@ -267,7 +273,7 @@ python app.py -t query
 
 </details>
 
-    在查询时刻，我们同样从YAML文件中定义Flow。通过`search()`方法发送`SearchRequest`请求和数据，并且发送的数据同样会被转换为`bytes`的数据类型。
+    在查询时刻，我们同样从YAML文件中定义Flow。通过`search()`方法进行查询，查询的数据同样需要转换为bytes的数据类型。
 
 ```python
 flow = Flow().load_config('flow-query.yml')
@@ -281,7 +287,7 @@ with flow.build() as fl:
         fl.search(read_query_data(item), callback=ppr, topk=top_k)
 ```
 
-    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数的作用传入一个函数，对jina的返回结果进行后处理。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了Document的原数据。
+    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了Document的原数据。
 
 ```python
 def print_topk(resp):
@@ -298,7 +304,7 @@ def print_topk(resp):
 
     第一个不同点，在创建索引时，我们采用了两条并行的处理流程。为什么要这样做呢？因为并行的处理流程可以提高创建索引的速度。为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引；而chunk_indexer存储的是Chunk级别的索引；在`gateway`以后，彼此是独立的，没有信息的交互。
 
-    第二个不同点，在创建索引时，Flow中的请求类型为`IndexRequest`；在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为我们在Pod的YAML文件中定义了不同请求下的处理逻辑。
+    第二个不同点，在创建索引时，Flow接收的请求类型为`IndexRequest`。更准确的说，`index()`方法本质是使用jina的python客户端，向索引Flow发出一个`IndexRequest`类型的请求。在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为我们在Pod的YAML文件中定义了不同请求下的处理逻辑。
 
 ## 深入Pod
 
@@ -310,7 +316,7 @@ def print_topk(resp):
 
     在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
-    在`extractor`中，它的主要任务有：
+   在这个demo中，`extractor`主要任务有：
 
     1. 将Document级别的信息转换成Chunk级别的信息。
 
@@ -413,45 +419,41 @@ components:
     with:
       index_filename: vecidx_index.gzip
       metrix: cosine
-    metas:
-      name: vecidx_exec
-      workspace: $TMP_WORKSPACE
-  - !LeveldbIndexer
+
+  - !BasePbIndexer
     with:
       index_filename: chunk_index.gzip
-    metas:
-      name: chunk_exec
-      workspace: $TMP_WORKSPACE
 
 requests:
   on:
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: vecidx_exec
+          executor: NumpyIndexer
           method: add
       - !ChunkPruneDriver {}
       - !ChunkKVIndexDriver
         with:
-          executor: chunk_exec
+          executor: BasePbIndexer
           method: add
+
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: vecidx_exec
+          executor: NumpyIndexer
           method: query
       - !ChunkPruneDriver {}
       - !ChunkKVSearchDriver
         with:
-          executor: chunk_exec
+          executor: BasePbIndexer
           method: query
 ```
 
     与`doc_indexer`一样，`chunk_indexer`在不同请求时，也有不同的处理逻辑。
 
-    在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，我们调用了`vecidx_exec`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`chunk_exec`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
+    在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，我们调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
 
-    在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`vecidx_exec`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`chunk_exec`中的`query()`，索引出相似Chunk的Document id。
+    在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`NumpyIndexer`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`BasePbIndexer`中的`query()`，索引出相似Chunk的Document id。
 
 ### ranker
 
@@ -474,7 +476,7 @@ requests:
 
 ### join
 
-    在定义Flow时，我们提到`join`的作用是等待并合并两条并行流的信息，并执行下面的任务。在指定`join`的`yaml_path`时，我们只需指定`yaml_path`为`_merge`，这样jina就会调用内部默认的`join` Pod的YAML文件。
+    在定义Flow时，我们提到`join`的作用是等待并合并两条并行流程的信息，并执行下面的任务。在指定`join`的`yaml_path`时，我们只需指定`yaml_path`为`_merge`，这样jina就会调用内部默认的`join` Pod的YAML文件。
 
 ```python
 join:
@@ -490,9 +492,9 @@ join:
 
 1. Chunk是jina的信息单元，Document是jina最终的输入和输出。
 
-2. 在jina中，我们通过YAML文件来定义Pod。通过更改YAML文件来改变Pod的属性；并且可以在YAML文件中定义Pod在不同请求下的处理逻辑。
+2. 在jina中，我们通过在YAML文件定义不同的Pod来定义Flow。
 
-3. 在jina中，我们通过在YAML文件定义不同的Pod来定义Flow。
+3. 在jina中，我们通过YAML文件来定义Pod。通过更改YAML文件来改变Pod的属性；并且可以在YAML文件中定义Pod在不同请求下的处理逻辑。
 
 ## 结语
 
