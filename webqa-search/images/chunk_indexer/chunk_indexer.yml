@@ -4,35 +4,31 @@ components:
     with:
       index_filename: vecidx_index.gzip
       metrix: cosine
-    metas:
-      name: vecidx_exec
-      workspace: $TMP_WORKSPACE
-  - !LeveldbIndexer
+
+  - !BasePbIndexer
     with:
       index_filename: chunk_index.gzip
-    metas:
-      name: chunk_exec
-      workspace: $TMP_WORKSPACE
 
 requests:
   on:
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: vecidx_exec
+          executor: NumpyIndexer
           method: add
       - !ChunkPruneDriver {}
       - !ChunkKVIndexDriver
         with:
-          executor: chunk_exec
+          executor: BasePbIndexer
           method: add
+
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: vecidx_exec
+          executor: NumpyIndexer
           method: query
       - !ChunkPruneDriver {}
       - !ChunkKVSearchDriver
         with:
-          executor: chunk_exec
+          executor: BasePbIndexer
           method: query
