@@ -53,7 +53,7 @@ pip install -r requirements.txt
 python prepare_data.py
 ```
 
-    在数据预处理时，我们先会将数据集解压，然后我们将数据集中一问一答的数据形式转换为一问多答的数据类型。
+    在数据预处理时，我们先将数据集解压，然后我们将数据集中一问一答的数据形式转换为一问多答的数据形式。
 
 ## 定义Flow
 
@@ -123,8 +123,6 @@ pods:
 
     存储Document的原数据。
 
-    
-
     在Flow中定义Pod时，我们通过`yaml_path`指定Pod的YAML文件地址，通过`needs`指定接受哪个Pod的请求，例如在`extractor`这个Pod中，我们定义Pod的YAML文件地址为`extractor.yml`，接受来自`gateway`的请求。
 
 ```yaml
@@ -140,7 +138,7 @@ chunk_indexer:
     yaml_path: chunk_indexer.yml
 ```
 
-    如果一个Pod加载耗时很长，而在jina中Pod的默认加载时间为5s，我们则需要指定`timeout_ready`这个参数，例如在`encoder`这个Pod。
+    如果一个Pod加载耗时很长，而在jina中Pod的默认加载时间为5s，我们则需要指定`timeout_ready`。例如在`encoder`这个Pod，我们指定它的加载时间为60s。
 
 ```yaml
 encoder:
@@ -298,7 +296,7 @@ def print_topk(resp):
 
     在开始下面之前，我们回过头来看看，是不是觉得很简单。那你可能会问两条Flow有什么不同呢？
 
-    第一个不同点，在创建索引时，我们采用了两条并行的处理流程。为什么要这样做呢？并行的处理流程可以提高创建索引的速度。为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引；而chunk_indexer存储的是Chunk级别的索引；在`gateway`以后，彼此是独立的，没有信息的交互。
+    第一个不同点，在创建索引时，我们采用了两条并行的处理流程。为什么要这样做呢？因为并行的处理流程可以提高创建索引的速度。为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引；而chunk_indexer存储的是Chunk级别的索引；在`gateway`以后，彼此是独立的，没有信息的交互。
 
     第二个不同点，在创建索引时，Flow中的请求类型为`IndexRequest`；在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为我们在Pod的YAML文件中定义了不同请求下的处理逻辑。
 
@@ -310,7 +308,7 @@ def print_topk(resp):
 
 ### extractor
 
-    在jina的原则中，一个YAML文件描述了一个对象的属性，所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
+    在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
     在`extractor`中，它的主要任务有：
 
@@ -318,7 +316,7 @@ def print_topk(resp):
 
     2. 提取Document中的问题。
 
-    我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，BaseSegmenter的作用是将Document的信息转换为Chunk级别的信息。并且通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor，并且通过定义`metas`修改了Executor的默认属性。
+    我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，BaseSegmenter的作用是将Document的信息转换为Chunk级别的信息。通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor；并且通过定义`metas`修改了Executor的默认属性。
 
 ```yaml
 !WebQATitleExtractor
@@ -348,15 +346,15 @@ class WebQATitleExtractor(BaseSegmenter):
 
     在`metas`中，我们通过定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
 
-    在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑。在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的行为。
+    在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑。在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的处理逻辑。
 
-    在jina中Driver是一个数据类型转换器，将ProtoBuf转换为`python`数据类型/ `numpy`数据类型，或将`python`数据类型/ `numpy`数据类型转换为ProtoBuf。在这个例子中`SegmentDriver`将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`。在`craft()`处理完数据以后，`SegmentDriver`将Python Object / Numpy Object转换为ProtoBuf。
+    在jina中Driver是一个数据类型转换器。将ProtoBuf转换为Python Object / Numpy Object；或将Python Object / Numpy Object转换为ProtoBuf。在这个例子中`SegmentDriver`先将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`。在`craft()`处理完数据以后，`SegmentDriver`再将Python Object / Numpy Object转换为ProtoBuf。
 
 ### encoder
 
     我们在`extractor`已经将问题从Document中提取了出来，那么我们下面需要做的是将问题编码成向量。
 
-    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。并且我们可以通过定义`with`来修改`__init__`方法中参数的值，在这里我们修改了模型的路径。详细代码见[链接]()。
+    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。在这里我们修改了模型的路径。详细代码见[链接]()。
 
 ```yaml
 !TransformerRobertaEncoder
@@ -400,13 +398,13 @@ requests:
       - !ControlReqDriver {}
 ```
 
-    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`LeveldbIndexer`的`add()`存储了Document级别的数据。
+    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`LeveldbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
 
-    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`LeveldbIndexer`的`query()`索引Document级别的数据。
+    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`LeveldbIndexer`的`query()`，通过Document id索引Document的原数据。
 
 ### chunk_indexer
 
-    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer` Pod中的Executor称为`ChunkIndexer`，它封装了另外两个Executor。`components`字段指定两个包装好的Executor。`NumpyIndexer`用于存储问题的向量，`LeveldbIndexer`用作键值存储来保存Document id和Chunk id的关联。
+    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer`中的Executor称为`ChunkIndexer`。它封装了另外两个Executor，`components`字段指定两个包装好的Executor，`NumpyIndexer`用于存储问题的向量，`LeveldbIndexer`用作键值存储来存储Document id和Chunk id的关联。
 
 ```yaml
 !ChunkIndexer
@@ -453,13 +451,13 @@ requests:
 
     在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，我们调用了`vecidx_exec`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`chunk_exec`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
 
-    在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`vecidx_exec`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id，因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`chunk_exec`中的`query()`，索引出相似Chunk的Document id。
+    在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`vecidx_exec`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`chunk_exec`中的`query()`，索引出相似Chunk的Document id。
 
 ### ranker
 
-    `ranker`不同与其它Pod，它只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的行为。
+    `ranker`不同与其它Pod，它只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
 
-    在每个Document的Chunk都找到相似的Chunk以后，我们利用`Chunk2DocScoreDriver`将每个Document下所有相似Chunk组合到一起。在这里，每个Document下只有一个Chunk，也就只有一个问题。然后调用`MinRanker`中的`score()`和Chunk中的余弦距离对组合在一起的相似Chunk进行升序，并返回排序结果。对于排序结果，`Chunk2DocScoreDriver`将Chunk转换为Document。    
+    在每个Document的Chunk都找到相似的Chunk以后，我们利用`Chunk2DocScoreDriver`将每个Document中所有相似Chunk组合到一起。在这里，每个Document下只有一个Chunk，也就只有一个问题。然后调用`MinRanker`中的`score()`和Chunk中的余弦距离对组合在一起的相似Chunk进行升序，并返回排序结果。对于排序结果，`Chunk2DocScoreDriver`将Chunk转换为Document。    
 
 ```yaml
 !MinRanker
@@ -476,7 +474,7 @@ requests:
 
 ### join
 
-    在定义Flow时，我们提到`join` Pod的作用是等待并合并两条并行流的信息，并执行下面的任务。在指定`join` Pod`yaml_path`时，我们只需指定`yaml_path`为`_merge`，这样jina就会调用内部默认的`join` Pod的YAML文件。
+    在定义Flow时，我们提到`join`的作用是等待并合并两条并行流的信息，并执行下面的任务。在指定`join`的`yaml_path`时，我们只需指定`yaml_path`为`_merge`，这样jina就会调用内部默认的`join` Pod的YAML文件。
 
 ```python
 join:
@@ -488,13 +486,13 @@ join:
 
     恭喜你，你已经了解了如何用jina搭建一套神经网络搜索引擎了👋👋。
 
-    在你离开之前我们来回顾下在jina中比较重要的知识点。
+    在你离开之前我们来回顾下本篇文章中的知识点。
 
 1. Chunk是jina的信息单元，Document是jina最终的输入和输出。
 
-2. 在jina中，我们通过在YAML文件定义不同的Pod来定义Flow。
+2. 在jina中，我们通过YAML文件来定义Pod。通过更改YAML文件来改变Pod的属性；并且可以在YAML文件中定义Pod在不同请求下的处理逻辑。
 
-3. 在jina中，我们通过YAML文件来定义Pod。并且可以在YAML文件中定义不同请求下的处理逻辑。
+3. 在jina中，我们通过在YAML文件定义不同的Pod来定义Flow。
 
 ## 结语
 
