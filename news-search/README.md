@@ -157,9 +157,9 @@ pods:
 
 2. 从docker镜像中加载。
 
-    在上面你会发现，我们在定义`encoder`时，并没有加载YAML文件，而是通过`image`指定了Roberta的docker的镜像。为什么要这样做呢？因为使用docker镜像可以摆脱复杂的环境依赖，达到即插即用的效果。
+    例如，我们在定义`encoder`时，并没有加载YAML文件，而是通过`image`指定了Roberta的docker的镜像。为什么要这样做呢？因为使用docker镜像可以摆脱复杂的环境依赖，达到即插即用的效果。
 
-    在jina中，Pod的加载可以从YAML文件中加载，可用从docker镜像中加载。同理，Flow的加载可以从YAML文件中加载，也可以从docker镜像中加载。
+    
 
 ```yaml
 !Flow
@@ -167,6 +167,8 @@ encoder:
     image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
     timeout_ready: 60000
 ```
+
+    在jina中，Pod的加载可以从YAML文件中加载，可用从docker镜像中加载。同理，Flow的加载可以从YAML文件中加载，也可以从docker镜像中加载。
 
 ### 弹性扩展🚀
 
@@ -298,7 +300,7 @@ class WeightSentencizer(Sentencizer):
 
     然后将这些值赋给`ranker`的Executor进行打分排序。    
 
-    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们先使用了`weight`对搜索Chunk和相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算进行了打分排序，并返回打分排序结果。
+    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们复写了`score()`。在`socre()`中，我们先使用了`weight`对搜索Chunk和相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算进行了打分排序，并返回打分排序结果。
 
 ```python
 from typing import Dict
