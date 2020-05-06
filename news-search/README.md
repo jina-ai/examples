@@ -334,7 +334,7 @@ class WeightBiMatchRanker(BiMatchRanker):
         return super().score(match_idx, query_chunk_meta, match_chunk_meta)
 ```
 
-    最后`Chunk2DocScoreDriver`将相似Chunk的打分排序结果转换为相似Document。至此，相似Document就查询到了。
+    最后`Chunk2DocScoreDriver`将相似Chunk的打分排序结果转换为相似的Document。至此，相似的新闻内容就查询到了。
 
 ## 回顾
 
