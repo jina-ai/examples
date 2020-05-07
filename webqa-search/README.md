@@ -214,7 +214,7 @@ pods:
 
     我们可以看到在查询任务中这些Pod的功能和在索引任务中是共用了相同的YAML文件进行定义的。我们如何控制Pod用同一个YAML定义文件实现不同的任务呢？只需要在Pod的YAML文件中定义不同任务请求下的处理逻辑。我们在后面会细细道来。
 
-    相比索引任务，查询任务的Flow中还多了`ranker`这个Pod。`ranker`的作用是对Document下所有Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
+    相比索引任务，查询任务的Flow中还多了`ranker`这个Pod。`ranker`的作用是对Document下所有查询Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
 
 ## 运行Flow
 
@@ -300,9 +300,9 @@ def print_topk(resp):
 
     在开始下面之前，我们回过头来看看，是不是觉得很简单。那你可能会问两条Flow有什么不同呢？
 
-    第一个不同点，在创建索引时，我们采用了两条并行的处理流程。为什么要这样做呢？因为并行的处理流程可以提高创建索引的速度。为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引；而chunk_indexer存储的是Chunk级别的索引；在`gateway`以后，彼此是独立的，没有信息的交互。
+    第一个不同点，在创建索引时，我们采用了两条并行的处理流程。为什么要这样做呢？因为并行的处理流程可以提高创建索引的速度。为什么我们可以并行呢？因为在建立索引时，`doc_indexer`存储的是Document级别的索引；而`chunk_indexer`存储的是Chunk级别的索引；在`gateway`以后，彼此是独立的，没有信息的交互。
 
-    第二个不同点，在创建索引时，Flow接收的请求类型为`IndexRequest`。更准确的说，`index()`方法本质是使用jina的python客户端，向索引Flow发出一个`IndexRequest`类型的请求。在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为我们在Pod的YAML文件中定义了不同请求下的处理逻辑。
+    第二个不同点，在创建索引时，Flow接收的请求类型为`IndexRequest`。更准确的说，`index()`方法本质是使用jina的Python客户端，向索引Flow发出一个`IndexRequest`类型的请求。在查询时，Flow中的请求类型为`SearchRequest`。这也是为什么我们在创建索引和查询任务中可以共用同一个Pod，因为我们在Pod的YAML文件中定义了不同请求下的处理逻辑。
 
 ## 深入Pod
 
@@ -316,7 +316,7 @@ def print_topk(resp):
 
     在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
-    在`doc_indexer`中，它的作用是存储Document级别的数据和索引Document级别的数据。并且我们通过这样的定义方式`!BasePbIndexer`将jina自带的`BasePbIndexer`作为`doc_indexer`的Executor。
+    在`doc_indexer`中，它的作用是存储Document级别的数据和查询Document级别的数据。并且我们通过这样的定义方式`!BasePbIndexer`将jina自带的`BasePbIndexer`作为`doc_indexer`的Executor。
 
     我们通过定义`with`修改了`BasePbIndexer`中`__init__`方法中参数的值，在这里我们修改了存储索引文件的文件名。
 
@@ -343,11 +343,9 @@ requests:
 
     在`requests on`部分，我们分别定义了`IndexRequest`和`SearchRequest`下的处理逻辑。
 
-    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
+    在`IndexRequest`请求时，`doc_indexer`调用`DocKVIndexDriver`进行索引存储。在一方面，因为Pod之间传递的数据类型为ProtoBuf。所以，Driver是一个数据类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换尾ProtoBuf。在另一方面，`DocKVIndexDriver`调用了`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
 
-    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`BasePbIndexer`的`query()`，通过Document id索引Document的原数据。
-
-    在jina中Driver是一个数据类型转换器。将ProtoBuf转换为Python Object / Numpy Object；或将Python Object / Numpy Object转换为ProtoBuf。在这个例子中`SegmentDriver`先将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`。在`craft()`处理完数据以后，`SegmentDriver`再将Python Object / Numpy Object转换为ProtoBuf。
+    但是在`SearchRequest`时，`doc_indexer`调用`DocKVSearchDriver`查询了Document级别的索引。在DocKVSearchDriver中，DocKVSearchDriver调用了`BasePbIndexer`的`query()`方法，通过Document id索引Document的原数据。
 
 ### extractor
 
@@ -357,7 +355,7 @@ requests:
 
     2. 提取Document中的问题。
 
-    在jina中我们可以在YAML文件中使用Jina内部的Executor，也可以继承相应的基类来实现自己的Executor。在这里我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，`BaseSegmenter`的作用是将Document的信息转换为Chunk级别的信息；并且我们通过在`metas`中定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
+    在jina中我们可以在YAML文件中使用jina内部的Executor，也可以继承相应的基类来实现自己的Executor。在这里我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，`BaseSegmenter`的作用是将Document的信息转换为Chunk级别的信息；并且我们通过在`metas`中定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
 
     与`doc_indexer`不同，`extractor`在`IndexRequest`和`SearchRequest`时都是相同的处理逻辑。
 
@@ -378,14 +376,14 @@ requests:
 ```python
 class WebQATitleExtractor(BaseSegmenter):
     def craft(self, doc_id, raw_bytes, *args, **kwargs):
-        json_dict = json.loads(raw_bytes.decode(&#39;utf-8&#39;))
-        title = json_dict[&#39;title&#39;]
+        json_dict = json.loads(raw_bytes.decode('utf-8'))
+        title = json_dict['title']
         return [{
-                    &#39;raw_bytes&#39;: title.encode(&#39;utf-8&#39;),
-                    &#39;doc_id&#39;: doc_id,
-                    &#39;offset&#39;: 0,
-                    &#39;length&#39;: len(title),
-                    &#39;text&#39;: title
+                    'raw_bytes': title.encode('utf-8'),
+                    'doc_id': doc_id,
+                    'offset': 0,
+                    'length': len(title),
+                    'text': title
                 }]
 ```
 
@@ -462,7 +460,7 @@ requests:
 
     `ranker`不同与其它Pod，它只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
 
-    在每个Document的Chunk都找到相似的Chunk以后，我们利用`Chunk2DocScoreDriver`将每个Document中所有相似Chunk组合到一起。在这里，每个Document下只有一个Chunk，也就只有一个问题。然后调用`MinRanker`中的`score()`和Chunk中的余弦距离对组合在一起的相似Chunk进行升序，并返回排序结果。对于排序结果，`Chunk2DocScoreDriver`将Chunk转换为Document。    
+    在每个Document的每个查询Chunk都找到对应的相似Chunk以后，在这里我们只有一个查询Chunk，也就只有一个问题。下一步`ranker`利用`Chunk2DocScoreDriver`调用`MinRanker`中的`score()`方法对每个Document下所有Chunk的相似Chunk进行整体排序，排序方式以相似Chunk中的余弦距离进行升序排序。在排序完成以后，`score()`方法返回Document级别的信息。
 
 ```yaml
 !MinRanker
