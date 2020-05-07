@@ -233,7 +233,7 @@ python app.py -t index
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow。在这之后，我们需要通过`build()`让Flow中的Pod彼此连接，然后通过`index()`函数对数据进行索引。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow。在这之后，我们需要通过`build()`让Flow中的Pod彼此连接，然后通过`index()`函数对数据进行索引创建。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
@@ -453,25 +453,6 @@ requests:
     在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，我们调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
 
     在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`NumpyIndexer`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`BasePbIndexer`中的`query()`，索引出相似Chunk的Document id。
-
-### ranker
-
-    `ranker`只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
-
-    在每个Document的每个查询Chunk都找到对应的相似Chunk以后，在这里我们每个Document下只有一个问题，也就是只有一个查询Chunk。下一步`ranker`利用`Chunk2DocScoreDriver`调用`MinRanker`中的`score()`方法对每个Document下所有Chunk的相似Chunk进行整体排序，排序方式以相似Chunk中的余弦距离进行升序排序。在排序完成以后，`score()`方法返回Document级别的信息。
-
-```yaml
-!MinRanker
-requests:
-  on:
-    SearchRequest:
-      - !Chunk2DocScoreDriver
-        with:
-          method: score
-      - !DocPruneDriver
-        with:
-          pruned: chunks
-```
 
 ### join
 
