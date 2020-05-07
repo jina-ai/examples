@@ -39,6 +39,13 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
+## Requirements
+
+You to have Docker installed for this example. To enable Docker feature in Jina:
+
+```bash
+pip install "jina[devel]"
+```
 
 ## Design the Flow 
 
