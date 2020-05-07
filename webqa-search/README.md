@@ -233,7 +233,7 @@ python app.py -t index
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义创建索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
@@ -271,7 +271,7 @@ python app.py -t query
 
 </details>
 
-    在查询时刻，我们同样从YAML文件中定义Flow。通过`search()`方法进行查询，查询的数据同样需要转换为bytes的数据类型。
+    在查询时刻，我们同样通过`flow-query.yml`定义查询任务的Flow。通过`search()`方法进行查询，查询的数据同样需要转换为`bytes`的数据类型。
 
 ```python
 flow = Flow().load_config('flow-query.yml')
