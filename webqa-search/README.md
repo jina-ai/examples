@@ -170,7 +170,7 @@ encoder:
 
 > doc_indexer
 
-利用存储的Document索引，召回相似的Document。
+利用存储的Document索引，索引Document级别的原数据。
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -343,7 +343,7 @@ requests:
 
     在`IndexRequest`请求时，`doc_indexer`调用`DocKVIndexDriver`进行索引存储。在一方面，因为Pod之间传递的数据类型为ProtoBuf。所以，Driver是一个数据类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换尾ProtoBuf。在另一方面，`DocKVIndexDriver`调用了`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
 
-    但是在`SearchRequest`时，`doc_indexer`调用`DocKVSearchDriver`查询了Document级别的索引。在DocKVSearchDriver中，DocKVSearchDriver调用了`BasePbIndexer`的`query()`方法，通过Document id索引Document的原数据。
+    但是在`SearchRequest`时，`doc_indexer`调用`DocKVSearchDriver`查询了Document级别的索引。在`DocKVSearchDriver`中，`DocKVSearchDriver`调用了`BasePbIndexer`的`query()`方法，通过Document id索引Document的原数据。
 
 ### extractor
 
@@ -369,7 +369,7 @@ requests:
           method: craft
 ```
 
-     在`WebQATitleExtractor`中我们通过复写`craft()`方法实现了`extractor`的主要任务。
+     在`WebQATitleExtractor`中我们通过复写`craft()`方法实现了`extractor`的相应逻辑。
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
@@ -458,7 +458,7 @@ requests:
 
     `ranker`只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
 
-    在每个Document的每个查询Chunk都找到对应的相似Chunk以后，在这里我们只有一个查询Chunk，也就只有一个问题。下一步`ranker`利用`Chunk2DocScoreDriver`调用`MinRanker`中的`score()`方法对每个Document下所有Chunk的相似Chunk进行整体排序，排序方式以相似Chunk中的余弦距离进行升序排序。在排序完成以后，`score()`方法返回Document级别的信息。
+    在每个Document的每个查询Chunk都找到对应的相似Chunk以后，在这里我们每个Document下只有一个问题，也就是只有一个查询Chunk。下一步`ranker`利用`Chunk2DocScoreDriver`调用`MinRanker`中的`score()`方法对每个Document下所有Chunk的相似Chunk进行整体排序，排序方式以相似Chunk中的余弦距离进行升序排序。在排序完成以后，`score()`方法返回Document级别的信息。
 
 ```yaml
 !MinRanker
