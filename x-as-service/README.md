@@ -27,6 +27,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Cotents**
 
+- [Requirements](#requirements)
 - [Design the Flow](#design-the-flow)
 - [Implement the Input Function](#implement-the-input-function)
 - [Implement the Callback Function for the Output](#implement-the-callback-function-for-the-output)
