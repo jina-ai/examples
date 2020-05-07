@@ -34,7 +34,7 @@
 
 3. 如何使用jina加载docker镜像，摆脱复杂环境依赖？
 
-4. ranker如何根据找到的相似Chunk得到相似Document的分数？
+4. 在查询时，ranker的作用是什么？
 
 ## 环境依赖
 
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 ## 数据预处理
 
-        在这个系统中我们采用数据集news-2016，数据集下载[百度云地址](https://pan.baidu.com/share/init?surl=MLLM-CdM6BhJkj8D0u3atA)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+        在这个系统中我们采用数据集news-2016，数据集下载[百度云](https://pan.baidu.com/share/init?surl=MLLM-CdM6BhJkj8D0u3atA)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
 
      在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
@@ -153,7 +153,7 @@ pods:
 
 ### 容器化🐳
 
-    jina加载一个Pod时，提供了2种简单的方式
+    jina加载一个Pod时，提供了2种简单的方式：
 
 1. 通过YAML文件，我们在上一个例子中已经反复使用。
 
@@ -201,7 +201,7 @@ python app.py -t index
 
 </details>
 
-    与第一篇文章创建索引时一样，我们首先通过`build()`建立Flow。然后通过`index()`函数对数据进行索引，在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
+    与第一篇文章创建索引时一样，我们首先通过`build()`建立Flow。然后通过`index()`函数对数据进行索引创建，在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
 
 ```python
 def read_data(fn):
@@ -275,7 +275,7 @@ with flow.build() as fl:
 
     在第一篇文章中，我们提到jina细化了Document的信息，引入了Chunk的概念。将一个Document转换为多个Chunk，每个Chunk为基本的信息单元。
 
-    我们先将一篇新闻内容用Sentencizer进行子句分割，得到的一个Chunk的列表，每个Chunk中都是新闻内容的子句。在jina中，每个chunk在索引时都可以被赋予一个在该Document中的权重。在这里，我们根据新闻数据集存在的特点，设定线性递减的方式给每个Chunk赋予权重。换句话说，开始的子句具有较高的权重，越往后的子句权重依次递减。
+    我们先将一篇新闻内容用`Sentencizer`进行子句分割，得到的一个Chunk的列表，每个Chunk中都是新闻内容的子句。在jina中，每个Chunk在索引时都可以被赋予一个在该Document中的权重。在这里，我们根据新闻数据集存在的特点，设定线性递减的方式给每个Chunk赋予权重。换句话说，开始的子句具有较高的权重，越往后的子句权重依次递减。
 
 ```python
 class WeightSentencizer(Sentencizer):
@@ -300,7 +300,7 @@ class WeightSentencizer(Sentencizer):
 
 3. `ranker`将相似Document的信息和分数写入Flow的数据流中。  
 
-    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们复写了`score()`。在`socre()`方法中，我们先使用了`weight`对搜索Chunk和相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算法计算相似Document的分数。
+    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们复写了`score()`。在`socre()`方法中，我们先使用了查询Chunk和相似Chunk的`weight`对相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算法计算相似Document的分数。
 
 ```python
 from typing import Dict
@@ -336,7 +336,7 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 ## 回顾
 
-1. jina中Document可以包含多个Chunk。Chunk是Jina建立索引和查询的最基本处理单元。。
+1. jina中Document可以包含多个Chunk。Chunk是jina建立索引和查询的最基本处理单元。。
 
 2. jina支持容器化，只需要在定义Pod时将`yaml_path`字段更改为`image`，并添加相应镜像的名称。
 
