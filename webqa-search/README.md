@@ -212,8 +212,6 @@ pods:
 
     
 
-
-
     我们可以看到在查询任务中这些Pod的功能和在索引任务中是共用了相同的YAML文件进行定义的。我们如何控制Pod用同一个YAML定义文件实现不同的任务呢？只需要在Pod的YAML文件中定义不同任务请求下的处理逻辑。我们在后面会细细道来。
 
     相比索引任务，查询任务的Flow中还多了`ranker`这个Pod。`ranker`的作用是对Document下所有Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
@@ -243,7 +241,7 @@ with flow.build() as fl:
     fl.index(raw_bytes=read_data(data_fn))
 ```
 
-    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。
+    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。在这里我们为了节省时间，只创建50000条索引。
 
 ```python
 def read_data(fn):
@@ -254,7 +252,7 @@ def read_data(fn):
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
 
-    for item in result:
+    for item in result[:50000]:
         yield item
 ```
 
@@ -312,82 +310,21 @@ def print_topk(resp):
 
     在jina中我们通过定义YAML文件来定义Flow，在[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)中提到Pod也是通过YAML文件来进行定义的。那么是怎么定义的呢？我们继续往下走。
 
-### extractor
 
-    在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
-
-   在这个demo中，`extractor`主要任务有：
-
-    1. 将Document级别的信息转换成Chunk级别的信息。
-
-    2. 提取Document中的问题。
-
-    我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，BaseSegmenter的作用是将Document的信息转换为Chunk级别的信息。通过这样的定义方式`!WebQATitleExtractor`将`WebQATitleExtractor`作为`extractor`的Executor；并且通过定义`metas`修改了Executor的默认属性。
-
-```yaml
-!WebQATitleExtractor
-metas:
-  py_modules: extractor.py
-requests:
-  on:
-    [IndexRequest, SearchRequest]:
-      - !SegmentDriver
-        with:
-          method: craft
-```
-
-```python
-class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, doc_id, raw_bytes, *args, **kwargs):
-        json_dict = json.loads(raw_bytes.decode('utf-8'))
-        title = json_dict['title']
-        return [{
-                    'raw_bytes': title.encode('utf-8'),
-                    'doc_id': doc_id,
-                    'offset': 0,
-                    'length': len(title),
-                    'text': title
-                }]
-```
-
-    在`metas`中，我们通过定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
-
-    在`requests on`部分，我们定义了`extractor`在处理不同请求时的逻辑。在这个例子中`extractor`在`IndexRequest`和`SearchRequest`时都是相同的处理逻辑。
-
-    在jina中Driver是一个数据类型转换器。将ProtoBuf转换为Python Object / Numpy Object；或将Python Object / Numpy Object转换为ProtoBuf。在这个例子中`SegmentDriver`先将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`。在`craft()`处理完数据以后，`SegmentDriver`再将Python Object / Numpy Object转换为ProtoBuf。
-
-### encoder
-
-    我们在`extractor`已经将问题从Document中提取了出来，那么我们下面需要做的是将问题编码成向量。
-
-    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。在这里我们修改了模型的路径。详细代码见[链接]()。
-
-```yaml
-!TransformerRobertaEncoder
-metas:
-  py_modules: transformer_roberta.py
-
-with:
-  model_path: /home/cally/jina/jina/pre_model/chinese_roberta_wwm_ext
-
-requests:
-  on:
-    [SearchRequest, IndexRequest]:
-      - !EncodeDriver
-        with:
-          method: encode
-```
 
 ### doc_indexer
 
-    与上面`extractor`和`encoder`处理请求时不一样，`doc_indexer`分开处理了`IndexRequest`和`SearchRequest`。
+    在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
+
+    在`doc_indexer`中，它的作用是存储Document级别的数据和索引Document级别的数据。并且我们通过这样的定义方式`!BasePbIndexer`将jina自带的`BasePbIndexer`作为`doc_indexer`的Executor。
+
+    我们通过定义`with`修改了`BasePbIndexer`中`__init__`方法中参数的值，在这里我们修改了存储索引文件的文件名。
 
 ```yaml
-!LeveldbIndexer
+!BasePbIndexer
 with:
   index_filename: doc_index.gzip
-metas:
-  workspace: $TMP_WORKSPACE
+
 requests:
   on:
     IndexRequest:
@@ -404,13 +341,79 @@ requests:
       - !ControlReqDriver {}
 ```
 
-    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`LeveldbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
+    在`requests on`部分，我们分别定义了`IndexRequest`和`SearchRequest`下的处理逻辑。
 
-    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`LeveldbIndexer`的`query()`，通过Document id索引Document的原数据。
+    在`IndexRequest`请求时，我们使用`DocKVIndexDriver`调用`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
+
+    但是在`SearchRequest`时，我们使用`DocKVSearchDriver`调用`BasePbIndexer`的`query()`，通过Document id索引Document的原数据。
+
+    在jina中Driver是一个数据类型转换器。将ProtoBuf转换为Python Object / Numpy Object；或将Python Object / Numpy Object转换为ProtoBuf。在这个例子中`SegmentDriver`先将ProtoBuf转换为Python Object / Numpy Object，并调用`WebQATitleExtractor`中的`craft()`。在`craft()`处理完数据以后，`SegmentDriver`再将Python Object / Numpy Object转换为ProtoBuf。
+
+### extractor
+
+   在这个demo中，`extractor`主要任务有：
+
+    1. 将Document级别的信息转换成Chunk级别的信息。
+
+    2. 提取Document中的问题。
+
+    在jina中我们可以在YAML文件中使用Jina内部的Executor，也可以继承相应的基类来实现自己的Executor。在这里我们通过继承了`BaseSegmenter`实现了`WebQATitleExtractor`，`BaseSegmenter`的作用是将Document的信息转换为Chunk级别的信息；并且我们通过在`metas`中定义`py_modules`定义了`WebQATitleExtractor` py文件路径。
+
+    与`doc_indexer`不同，`extractor`在`IndexRequest`和`SearchRequest`时都是相同的处理逻辑。
+
+```yaml
+!WebQATitleExtractor
+metas:
+  py_modules: extractor.py
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !SegmentDriver
+        with:
+          method: craft
+```
+
+     在`WebQATitleExtractor`中我们通过复写`craft()`方法实现了`extractor`的主要任务。
+
+```python
+class WebQATitleExtractor(BaseSegmenter):
+    def craft(self, doc_id, raw_bytes, *args, **kwargs):
+        json_dict = json.loads(raw_bytes.decode(&#39;utf-8&#39;))
+        title = json_dict[&#39;title&#39;]
+        return [{
+                    &#39;raw_bytes&#39;: title.encode(&#39;utf-8&#39;),
+                    &#39;doc_id&#39;: doc_id,
+                    &#39;offset&#39;: 0,
+                    &#39;length&#39;: len(title),
+                    &#39;text&#39;: title
+                }]
+```
+
+### encoder
+
+    我们在`extractor`已经将问题从Document中提取了出来，那么我们下面需要做的是将问题编码成向量。
+
+    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。在这里我们修改了模型的路径，并将模型路径指向环境变量`ROBERTA_PATH`。详细代码见[链接]()。
+
+```yaml
+!TransformerRobertaEncoder
+metas:
+  py_modules: transformer_roberta.py
+
+with:
+  model_path: $ROBERTA_PATH
+
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
+```
 
 ### chunk_indexer
 
-    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer`中的Executor称为`ChunkIndexer`。它封装了另外两个Executor，`components`字段指定两个包装好的Executor，`NumpyIndexer`用于存储问题的向量，`LeveldbIndexer`用作键值存储来存储Document id和Chunk id的关联。
+    `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer`中的Executor称为`ChunkIndexer`。它封装了另外两个Executor，`components`字段指定两个包装好的Executor，`NumpyIndexer`用于存储问题的向量，`BasePbIndexer`用作键值存储来存储Document id和Chunk id的关联。
 
 ```yaml
 !ChunkIndexer
