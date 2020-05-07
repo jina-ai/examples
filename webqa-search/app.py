@@ -37,19 +37,19 @@ def main(task, top_k):
     if task == 'index':
         data_fn = os.path.join(workspace_path, "pre_web_text_zh_train.json")
         flow = Flow().load_config('flow-index.yml')
-        with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_fn), batch_size=32)
+        with flow:
+            flow.index(read_data(data_fn), batch_size=32)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
+        with flow:
             while True:
                 title = input('请输入问题: ')
                 item = {'title': title}
                 if not title:
                     break
                 ppr = lambda x: print_topk(x)
-                fl.search(read_query_data(item), callback=ppr, topk=top_k)
+                flow.search(read_query_data(item), callback=ppr, topk=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

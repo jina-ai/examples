@@ -233,12 +233,12 @@ python app.py -t index
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow。在这之后，我们需要通过`build()`让Flow中的Pod彼此连接，然后通过`index()`函数对数据进行索引创建。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
-with flow.build() as fl:
-    fl.index(raw_bytes=read_data(data_fn))
+with flow:
+    flow.index(raw_bytes=read_data(data_fn))
 ```
 
     在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。在这里我们为了节省时间，只创建50000条索引。
@@ -275,14 +275,14 @@ python app.py -t query
 
 ```python
 flow = Flow().load_config('flow-query.yml')
-with flow.build() as fl:
+with flow:
     while True:
         title = input('请输入问题: ')
         item = {'title': title}
         if not title:
             break
         ppr = lambda x: print_topk(x)
-        fl.search(read_query_data(item), callback=ppr, topk=top_k)
+        flow.search(read_query_data(item), callback=ppr, topk=top_k)
 ```
 
     在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了Document的原数据。
@@ -419,32 +419,40 @@ components:
       index_filename: vecidx_index.gzip
       metrix: cosine
 
+    metas:
+      name: vecidx_index
+      workpace: $TMP_WORKSPACE
+
   - !BasePbIndexer
     with:
       index_filename: chunk_index.gzip
+
+    metas:
+      name: chunk_index
+      workpace: $TMP_WORKSPACE
 
 requests:
   on:
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: NumpyIndexer
+          executor: vecidx_index
           method: add
       - !ChunkPruneDriver {}
       - !ChunkKVIndexDriver
         with:
-          executor: BasePbIndexer
+          executor: chunk_index
           method: add
 
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: NumpyIndexer
+          executor: vecidx_index
           method: query
       - !ChunkPruneDriver {}
       - !ChunkKVSearchDriver
         with:
-          executor: BasePbIndexer
+          executor: chunk_index
           method: query
 ```
 
