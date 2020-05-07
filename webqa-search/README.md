@@ -310,13 +310,11 @@ def print_topk(resp):
 
     在jina中我们通过定义YAML文件来定义Flow，在[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)中提到Pod也是通过YAML文件来进行定义的。那么是怎么定义的呢？我们继续往下走。
 
-
-
 ### doc_indexer
 
     在jina的原则中，一个YAML文件描述了一个对象的属性。所以我们可以通过YAML去改变对象的属性，而不必去改动代码。
 
-    在`doc_indexer`中，它的作用是存储Document级别的数据和查询Document级别的数据。并且我们通过这样的定义方式`!BasePbIndexer`将jina自带的`BasePbIndexer`作为`doc_indexer`的Executor。
+    在`doc_indexer`中，它的作用是存储Document级别的原数据和查询Document级别的原数据。并且我们通过这样的定义方式`!BasePbIndexer`将jina自带的`BasePbIndexer`作为`doc_indexer`的Executor。
 
     我们通过定义`with`修改了`BasePbIndexer`中`__init__`方法中参数的值，在这里我们修改了存储索引文件的文件名。
 
@@ -458,7 +456,7 @@ requests:
 
 ### ranker
 
-    `ranker`不同与其它Pod，它只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
+    `ranker`只在查询任务时使用，所以我们只需要在YAML文件中定义`SearchRequest`的处理逻辑。
 
     在每个Document的每个查询Chunk都找到对应的相似Chunk以后，在这里我们只有一个查询Chunk，也就只有一个问题。下一步`ranker`利用`Chunk2DocScoreDriver`调用`MinRanker`中的`score()`方法对每个Document下所有Chunk的相似Chunk进行整体排序，排序方式以相似Chunk中的余弦距离进行升序排序。在排序完成以后，`score()`方法返回Document级别的信息。
 
