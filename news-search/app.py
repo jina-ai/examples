@@ -39,18 +39,18 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
 
 @click.command()
-@click.option('--task', '-t', default='query')
+@click.option('--task', '-t', default='index')
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
         data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
-        with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_fn), batch_size=32)
+        with flow:
+            flow.index(read_data(data_fn), batch_size=64)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
+        with flow:
             while True:
                 content = input('请输入新闻内容: ')
                 if not content:
@@ -58,7 +58,7 @@ def main(task, top_k):
                 item = {'content': content}
 
                 ppr = lambda x: print_topk(x)
-                fl.search(read_query_data(item), callback=ppr, top_k=top_k)
+                flow.search(read_query_data(item), callback=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

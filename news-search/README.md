@@ -201,7 +201,7 @@ python app.py -t index
 
 </details>
 
-    与第一篇文章创建索引时一样，我们首先通过`build()`建立Flow。然后通过`index()`函数对数据进行索引创建，在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
+    与第一篇文章创建索引时一样，我们通过`flow-index.yml`定义创建索引任务的Flow，然后通过`index()`函数对数据进行创建索引。在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
 
 ```python
 def read_data(fn):
@@ -223,8 +223,8 @@ def read_data(fn):
 
 data_fn = os.path.join(workspace_path, "news2016zh_train.json")
 flow = Flow().load_config('flow-index.yml')
-with flow.build() as fl:
-    fl.index(raw_bytes=read_data(data_fn))
+with flow:
+    flow.index(read_data(data_fn))
 ```
 
 ### 查询
@@ -242,7 +242,7 @@ python app.py -t query
 
 </details>
 
-    在查询时，我们同样利用`build()`建立Flow。 然后通过`search()`方法发送希望查询的新闻内容，利用`print_topk()`输出相似新闻。
+    在查询时，我们同样通过`flow-query.yml`定义查询任务的Flow。 然后通过`search()`方法发送希望查询的新闻内容，利用`print_topk()`输出相似新闻。
 
 ```python
 def print_topk(resp):
@@ -256,7 +256,7 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
 
 flow = Flow().load_config('flow-query.yml')
-with flow.build() as fl:
+with flow:
     while True:
         content = input('请输入新闻内容: ')
         if not content:
@@ -264,7 +264,7 @@ with flow.build() as fl:
         item = {'content': content}
 
         ppr = lambda x: print_topk(x)
-        fl.search(read_query_data(item), callback=ppr, topk=top_k)
+        flow.search(read_query_data(item), callback=ppr, topk=top_k)
 ```
 
     看了上面后，你会发现，无论是在创建索引任务中，还是在查询任务中，这跟第一篇文章中Flow的Pod完全一致。确实一致，`doc_indexer`, `encoder`, `chunk_indxer`, `join`这4个Pod的处理逻辑和YAML文件的定义完全和第一篇文章中一模一样，但是`extractor`和`ranker`这两个Pod的处理逻辑跟第一篇文章中的处理逻辑却大大不同，那么有什么不同呢？继续往下走。
@@ -336,7 +336,7 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 ## 回顾
 
-1. jina中Document可以包含多个Chunk。Chunk是jina建立索引和查询的最基本处理单元。。
+1. jina中Document可以包含多个Chunk。Chunk是jina建立索引和查询的最基本处理单元。
 
 2. jina支持容器化，只需要在定义Pod时将`yaml_path`字段更改为`image`，并添加相应镜像的名称。
 
