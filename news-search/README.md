@@ -34,7 +34,7 @@
 
 3. 如何使用jina加载docker镜像，摆脱复杂环境依赖？
 
-4. ranker的作用是根据找到的相似Chunk得到相似Document的分数。
+4. ranker如何根据找到的相似Chunk得到相似Document的分数？
 
 ## 环境依赖
 
