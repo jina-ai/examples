@@ -6,11 +6,13 @@ pods:
   extractor:
     yaml_path: images/extractor/extractor.yml
     needs: gateway
+    read_only: True
 
   encoder:
     yaml_path: images/encoder/encoder.yml
     timeout_ready: 60000
     replicas: 3
+    read_only: True
 
   chunk_indexer:
     yaml_path: images/chunk_indexer/chunk_indexer.yml
@@ -18,3 +20,4 @@ pods:
   join:
     yaml_path: _merge
     needs: [chunk_indexer, doc_indexer]
+    read_only: True
