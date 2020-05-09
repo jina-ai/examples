@@ -49,8 +49,6 @@ import threading
 f = Flow.load_config(args.index_yaml_path)
 # run it!
 with f:
-    default_logger.success(f'hello-world server is started at {f.host}:{f.port_grpc}, '
-                           f'you can now use "python client.py --port-grpc {f.port_grpc} --host {f.host}" to send request!')
     threading.Event().wait()
 ```
 
