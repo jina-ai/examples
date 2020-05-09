@@ -114,7 +114,8 @@ And that's how you use Flow in a C/S manner. Pretty easy right?
 
 - Use `with` context manager and `threading.Event().wait()` to start a Flow
 - Use `py_client` to connect to a Flow with proper `host` and `port_grpc`
-- Successful connection depends on the correct `host` and public accessible `port_grpc`
+- **You can also start a Flow directly from the console, check out `jina flow --help` for more details.**
+
 
 I'm leaving the query part of this example as a homework.
 
