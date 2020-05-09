@@ -42,11 +42,12 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
 
 
 ## Quick links
+
 <table>
   <tr>
       <td width="30%">
     <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">
-      <img src="https://github.com/jina-ai/jina/raw/master/docs/chapters/101/img/ILLUS12.png?raw=true" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
+      <img src="https://github.com/jina-ai/jina/blob/master/docs/chapters/101/img/ILLUS12.png?raw=true" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
     </a>
     </td>
     <td width="70%">
@@ -54,6 +55,7 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
 &nbsp;&nbsp;<a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">English</a> •
   <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.ja.md">日本語</a> •
   <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.fr.md">français</a> •
+  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.de.md">Deutsch</a> •
   <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.ru.md">Русский язык</a> •
   <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.zh.md">中文</a>
     </td>
@@ -68,6 +70,14 @@ To file an issue, use [the issue tracker in the jina repo](https://github.com/ji
 <td>
 <h4><a href="https://docs.jina.ai/chapters/flow/README.html">Use Flow API to Compose Your Search Workflow</a></h4>
 Learn how to orchestrate Pods to work together: sequentially and in parallel; locally and remotely
+</td>
+<td><h3>🐣</h3></td>
+</tr>
+
+<tr>
+<td>
+<h4><a href="https://docs.jina.ai/chapters/io/main.html">Input and Output Functions in Jina</a></h4>
+Learn how the input and output functions work in Jina
 </td>
 <td><h3>🐣</h3></td>
 </tr>
@@ -114,8 +124,8 @@ Learn how to increase the performance by using prefetching and sharding
 
 <tr>
 <td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/helloworld-in-cs">Revisit "Hello, World!" in Client-Server Architecture</a></h4>
-Learn how to run a Flow remotely and use a local client connect to it
+<h4><a href="https://github.com/jina-ai/examples/tree/master/helloworld-in-cs">Revisit "Hello, World!" in a Client-Server Architecture</a></h4>
+Learn how to run a Flow remotely and use a local client to connect to it
 </td>
 <td><h3>🕊</h3></td>
 </tr>
@@ -149,12 +159,13 @@ Learn how Jina solves complex dependencies easily with Docker container
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/jina-hub#publish-your-pod-image-to-jina-hub">Share Your Extension with the World</a></h4>
-Learn to use Jina Hub and share your extension with engineers around the globe
+Learn to use Jina Hub and share your extensions with engineers around the globe
 </td>
 <td><h3>🚀</h3></td>
 </tr>
 
 </table>
+  
 
 
 ## Stay tuned
