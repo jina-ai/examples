@@ -27,13 +27,12 @@ In this example, we will refactor the hello-world example into client-server arc
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Cotents**
 
-- [Jina "Hello, World" in Client-Server Architecture](#jina-hello-world-in-client-server-architecture)
-  - [Flow as a Service](#flow-as-a-service)
-  - [Start the Client](#start-the-client)
-  - [Take home message](#take-home-message)
-  - [Documentation](#documentation)
-  - [Stay tuned](#stay-tuned)
-  - [License](#license)
+- [Flow as a Service](#flow-as-a-service)
+- [Start the Client](#start-the-client)
+- [Take home message](#take-home-message)
+- [Documentation](#documentation)
+- [Stay tuned](#stay-tuned)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
