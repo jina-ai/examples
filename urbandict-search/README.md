@@ -253,6 +253,8 @@ def read_data(fn, max_sample_size=10000):
 
 ### Query
 
+#### Via interactive input
+
 ```bash
 python app.py -t query
 ```
@@ -301,6 +303,16 @@ def print_topk(resp, word):
             print('{:>2d}:({:f}):{}'.format(
                 idx, score, kk.match_doc.raw_bytes.decode()))       
 ```
+
+#### Via jina python client
+
+As part of this tutorial, we also want to show, how you can query a running jina flow via the jina `py_client`. You can also run in a second console:
+
+```bash
+python http_query.py "luxury cars"
+```
+
+Beware, that the input and output processing are identical to searching on the flow locally. This guarantees a seemless switch from testing a flow towards using it in production.
 
 ## Dive into the Pods
 If you want to know more about Pods, keep reading. As shown above, we defined the Pods by giving the YAML files. Now let's move on to see what is exactly written in these magic YAML files.
