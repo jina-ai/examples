@@ -27,8 +27,8 @@ def hello_world(args):
     download_data(targets)
 
     # run it!
-    py_client(port_grpc=args.port_grpc, host=args.host, batch_size=args.index_batch_size).index(
-        input_fn(targets['index']['filename']))
+    py_client(port_grpc=args.port_grpc, host=args.host).index(
+        input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
 
 
 if __name__ == '__main__':

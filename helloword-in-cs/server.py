@@ -2,6 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import threading
 
 from jina.flow import Flow
 from jina.logging import default_logger
@@ -29,8 +30,7 @@ def hello_world(args):
     with f:
         default_logger.success(f'hello-world server is started at {f.host}:{f.port_grpc}, '
                                f'you can now use "python client.py --port-grpc {f.port_grpc} --host {f.host}" to send request!')
-        while True:
-            pass
+        threading.Event().wait()
 
 
 if __name__ == '__main__':
