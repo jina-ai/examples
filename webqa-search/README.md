@@ -1,6 +1,6 @@
 # JINA 100行代码搭建一套中文问答神经网络搜索引擎
 
-    一提到搜索引擎，大家可能会想到实现**困难，系统复杂、臃肿**。但是现在有一个**魔法器**，**它可以让我们专注于业务本身，以最快的时间实现一套**神经网络搜索引擎。
+    一提到搜索引擎，大家可能会想到实现**困难，系统复杂、臃肿**。但是现在有一个**魔法器**，**它可以让我们专注于业务本身，以最短的时间内实现一套**神经网络搜索引擎。
 
     那这个魔法器是什么呢？它就是**jina**，那jina是什么呢？jina是一个**开源神经搜索引擎框架**，它有什么特点呢？**易上手**、**分布式**、**模型容器化**、**弹性扩展**和**云原生**。
 
@@ -25,15 +25,15 @@
 
 ## 总览
 
-    在继续阅读之前，如何你还没有阅读过[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)，在继续阅读之前，我们强烈建议你先阅读[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)。
+    在继续阅读之前，如果你还没有阅读过[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)，在继续阅读之前，我们强烈建议你先阅读[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)。
 
     在本篇文章中我们将介绍如何使用jina搭建一套中文问答搜索引擎。通过本文，你将会学到：
 
 1. Chunk是最基本的信息单元，Document是jina的最终输入和输出。
 
-2. 在jina中如何定义Flow？
+2. 在jina中如何定义Flow。
 
-3. 在jina中如何定义Pod？
+3. 在jina中如何定义Pod。
 
 ## 环境依赖
 
@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 ## 数据预处理
 
-    在这个系统中，我们采用WebQA作为我们的数据集。数据集含有410万个预先过滤过的、高质量问题和多个回复，数据集下载[地址](https://drive.google.com/open?id=1u2yW_XohbYL2YAK6Bzc5XrngHstQTf0v)。
+     在这个例子中，我们采用WebQA作为我们的数据集。数据集含有410万个预先过滤过的、高质量问题和多个回复，数据集下载[地址](https://drive.google.com/open?id=1u2yW_XohbYL2YAK6Bzc5XrngHstQTf0v)。
 
     在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
@@ -212,7 +212,7 @@ pods:
 
     
 
-    我们可以看到在查询任务中这些Pod的功能和在索引任务中是共用了相同的YAML文件进行定义的。我们如何控制Pod用同一个YAML定义文件实现不同的任务呢？只需要在Pod的YAML文件中定义不同任务请求下的处理逻辑。我们在后面会细细道来。
+    我们可以看到在查询任务中这些Pod和在索引任务中是共用了相同的YAML文件进行定义的。我们如何控制Pod用同一个YAML定义文件实现不同的任务呢？只需要在Pod的YAML文件中定义不同任务请求下的处理逻辑。我们在后面会细细道来。
 
     相比索引任务，查询任务的Flow中还多了`ranker`这个Pod。`ranker`的作用是对Document下所有查询Chunk的查询结果进行打分排序，并将Chunk级别的信息转换为Document级别的信息。
 
@@ -221,7 +221,7 @@ pods:
 ### 创建索引
 
 ```python
-python app.py -t index
+python app.py -t index -n 10000
 ```
 
 <details>
@@ -233,7 +233,7 @@ python app.py -t index
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过`flow-index.yml`定义创建索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过上文提到的`flow-index.yml`来定义创建索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
@@ -241,18 +241,20 @@ with flow:
     flow.index(raw_bytes=read_data(data_fn))
 ```
 
-    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。在这里我们为了节省时间，只创建50000条索引。
+    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。
 
 ```python
-def read_data(fn):
+def read_data(fn, num_docs):
     with open(os.path.join(workspace_path, fn), 'r', encoding='utf-8') as f:
         items = json.load(f)
-
     result = []
+    random.seed(0)
     for _, value in items.items():
         result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
-
-    for item in result[:50000]:
+    if num_docs > 0:
+        random.shuffle(result)
+        result = result[:num_docs]
+    for item in result:
         yield item
 ```
 
@@ -285,6 +287,11 @@ with flow:
         flow.search(read_query_data(item), callback=ppr, topk=top_k)
 ```
 
+```python
+def read_query_data(item):
+    yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')    
+```
+
     在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了Document的原数据。
 
 ```python
@@ -308,7 +315,7 @@ def print_topk(resp):
 
     在阅读完上面之后，你意犹未尽，希望了解关于Pod的更多内容。请继续往下阅读。
 
-    在jina中我们通过定义YAML文件来定义Flow，在[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)中提到Pod也是通过YAML文件来进行定义的。那么是怎么定义的呢？我们继续往下走。
+    在jina中我们通过定义YAML文件来定义Flow，在[Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101)中提到Pod也是通过YAML文件来进行定义的。那么是怎么定义的呢？我们继续往下走。依次看看每个Pod的YAML文件。
 
 ### doc_indexer
 
@@ -334,9 +341,6 @@ requests:
       - !DocKVSearchDriver
         with:
           method: query
-
-    ControlRequest:
-      - !ControlReqDriver {}
 ```
 
     在`requests on`部分，我们分别定义了`IndexRequest`和`SearchRequest`下的处理逻辑。
@@ -389,15 +393,12 @@ class WebQATitleExtractor(BaseSegmenter):
 
     我们在`extractor`已经将问题从Document中提取了出来，那么我们下面需要做的是将问题编码成向量。
 
-    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。在这里我们修改了模型的路径，并将模型路径指向环境变量`ROBERTA_PATH`。详细代码见[链接]()。
+    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。详细代码见[链接]()。
 
 ```yaml
 !TransformerRobertaEncoder
 metas:
   py_modules: transformer_roberta.py
-
-with:
-  model_path: $ROBERTA_PATH
 
 requests:
   on:
@@ -458,9 +459,9 @@ requests:
 
     与`doc_indexer`一样，`chunk_indexer`在不同请求时，也有不同的处理逻辑。
 
-    在`IndexRequest`时，我们定义了3个不同的Driver，`VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，我们调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
+    在处理`IndexRequest`时，我们定义了3个不同的Driver，分别是: `VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，`VectorIndexDriver`调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
 
-    在`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`NumpyIndexer`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`BasePbIndexer`中的`query()`，索引出相似Chunk的Document id。
+    在处理`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`NumpyIndexer`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`BasePbIndexer`中的`query()`，索引出相似Chunk的Document id。
 
 ### join
 
