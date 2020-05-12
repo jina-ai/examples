@@ -238,7 +238,7 @@ With the Flows, we can now write the code to run the Flow. For indexing, we star
 def main(num_docs):
     flow = Flow().load_config('flow-index.yml')
     with flow.build() as fl:
-       data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
+        data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
         fl.index(raw_bytes=read_data(data_fn, num_docs))
 
 ```
