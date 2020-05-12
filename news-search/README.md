@@ -28,13 +28,13 @@
 
     在这篇文章中我们主要介绍如何使用jina实现一个长文本的新闻内容搜索系统，阅读完本篇以后，你将会学到：
 
-1. Document存在多个Chunk时，jina如何进行查询？
+1. Document存在多个Chunk时，jina如何进行查询。
 
-2. 如何使用jina进行弹性扩展？
+2. 如何使用jina进行弹性扩展。
 
-3. 如何使用jina加载docker镜像，摆脱复杂环境依赖？
+3. 如何使用jina加载docker镜像，摆脱复杂环境依赖。
 
-4. 在查询时，ranker的作用是什么？
+4. 在查询时，ranker的作用是什么。
 
 ## 环境依赖
 
@@ -341,8 +341,11 @@ class WeightBiMatchRanker(BiMatchRanker):
 4. 在查询任务中，`ranker`的作用是根据找到的召回的Chunk得到与查询Document相似的Document。
 
 ## 文档
+<a href="https://docs.jina.ai/">
+<img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png?raw=true " />
+</a>
 
-    要深入学习Jina，最好的方法就是阅读我们的文档。文档建立在主分支的每个推送、合并和发布事件上。你可以在我们的文档中找到关于以下主题的更多细节。
+要深入学习Jina，最好的方法就是阅读我们的文档。文档建立在主分支的每个推送、合并和发布事件上。你可以在我们的文档中找到关于以下主题的更多细节。
 
 - [Jina命令行接口参数解释](https://docs.jina.ai/chapters/cli/main.html)
 - [Jina Python API接口](https://docs.jina.ai/api/jina.html)
