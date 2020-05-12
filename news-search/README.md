@@ -16,7 +16,7 @@
 - [数据预处理](#数据预处理)
 - [搭建Flow](#搭建Flow)
 - [运行Flow](#运行Flow)
-- [区别](#区别)
+- [使用多个Chunk和深入ranker](#使用多个Chunk和深入ranker)
 - [回顾](#回顾)
 - [结语](#结语)
 
@@ -161,15 +161,11 @@ pods:
 
     例如，我们在定义`encoder`时，并没有加载YAML文件，而是通过`image`指定了Roberta的docker的镜像。为什么要这样做呢？因为使用docker镜像可以摆脱复杂的环境依赖，达到即插即用的效果。
 
-    
-
 ```yaml
 !Flow
 encoder:
     image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
 ```
-
-    在jina中，Pod的加载可以从YAML文件中加载，可用从docker镜像中加载。同理，Flow的加载可以从YAML文件中加载，也可以从docker镜像中加载。
 
 ### 弹性扩展🚀
 
@@ -269,7 +265,7 @@ with flow:
 
     看了上面后，你会发现，无论是在创建索引任务中，还是在查询任务中，这跟第一篇文章中Flow的Pod完全一致。确实一致，`doc_indexer`, `encoder`, `chunk_indxer`, `join`这4个Pod的处理逻辑和YAML文件的定义完全和第一篇文章中一模一样，但是`extractor`和`ranker`这两个Pod的处理逻辑跟第一篇文章中的处理逻辑却大大不同，那么有什么不同呢？继续往下走。
 
-## 区别
+## 使用多个Chunk和深入ranker
 
 ### extractor
 
@@ -280,17 +276,17 @@ with flow:
 ```python
 class WeightSentencizer(Sentencizer):
     def craft(self, raw_bytes: bytes, doc_id: int, *args, ** kwargs) -> List[Dict]:
-    results = super().craft(raw_bytes, doc_id)
-    weights = np.linspace(1, 0.1, len(results))
-    for result, weight in zip(results, weights):
-    result['weight'] = weight
-
-    return results
+        results = super().craft(raw_bytes, doc_id)
+        weights = np.linspace(1, 0.1, len(results))
+        for result, weight in zip(results, weights):
+            result['weight'] = weight
+    
+        return results
 ```
 
 ### ranker
 
-    **重点来了，敲黑板**， 在`chunk_indexer`后，对于我们需要查询的Document，其中的每个查询Chunk都已经从索引中找到了相似的Chunk。 现在轮到`ranker`登场了，`ranker`的作用是根据这些找到的相似Chunk来找到与查询Document相似的Document。
+    **重点来了，敲黑板**， 在查询时刻，`extractor`将需要查询的Document拆分为多个查询Chunk。在`chunk_indexer`后，其中的每个查询Chunk都已经从索引中找到了相似的Chunk，也就是召回Chunk。 现在轮到`ranker`登场了，`ranker`的作用是根据这些找到的相似Chunk来找到与查询Document相似的Document。
 
     `ranker`的处理过程是:
 
@@ -300,7 +296,7 @@ class WeightSentencizer(Sentencizer):
 
 3. `ranker`将相似Document的信息和分数写入Flow的数据流中。  
 
-    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们复写了`score()`。在`socre()`方法中，我们先使用了查询Chunk和相似Chunk的`weight`对相似Chunk的相似度分数进行了缩放；然后使用了`bi-match`算法计算相似Document的分数。
+    在这里我们继承`BiMatchRanker`实现了`WeightBiMatchRanker`作为`ranker`的Executor。在`WeightBiMatchRanker`中，我们复写了`score()`。在`socre()`方法中，我们先使用了查询Chunk和召回Chunk的`weight`对召回Chunk的分数进行了调整；然后使用了`bi-match`算法计算相似Document的分数。这里我们的分数计算只是一个简单的例子，抛砖引玉，大家不必纠结与这里分数计算的细节。更重要的是希望大家能掌握如何定义自己的`ranker`。
 
 ```python
 from typing import Dict
@@ -342,10 +338,28 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 3. jina支持弹性扩展，只需要在Pod中增加`replicas`字段。
 
-4. 在查询任务中，`ranker`的作用是根据找到的相似Chunk得到相似Document的分数。
+4. 在查询任务中，`ranker`的作用是根据找到的召回的Chunk得到与查询Document相似的Document。
 
-## 结语
+## 文档
 
-    我们利用了Jina完成了2个搜索引擎的搭建，有没有感觉。Wow，好简单。所以，开始利用jina搭建自己的搜索引擎吧。
+    要深入学习Jina，最好的方法就是阅读我们的文档。文档建立在主分支的每个推送、合并和发布事件上。你可以在我们的文档中找到关于以下主题的更多细节。
 
-    详细项目[地址](https://github.com/jina-ai/examples/blob/webqa-search/news-search)，欢迎关注[jina](https://github.com/jina-ai/jina)。
+- [Jina命令行接口参数解释](https://docs.jina.ai/chapters/cli/main.html)
+- [Jina Python API接口](https://docs.jina.ai/api/jina.html)
+- [用于执行器、驱动和流程的Jina YAML语法](https://docs.jina.ai/chapters/yaml/yaml.html)
+- [Jina Protobuf方案](https://docs.jina.ai/chapters/proto/main.html)
+- [Jina中使用的环境变量](https://docs.jina.ai/chapters/envs.html)
+- ..[以及更多](https://docs.jina.ai/index.html)
+
+## 社区
+- [Slack频道](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - 为开发者提供交流平台，探讨Jina
+- [社区通讯](mailto:newsletter+subscribe@jina.ai) - 订阅Jina的最新更新、发布和活动消息，订阅Jina的最新动态、发布和活动消息。
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - 了解Jina AI公司并寻找工作机会
+- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - 关注我们，并使用tag标签与我们互动`#JinaSearch`  
+- [公司](https://jina.ai/) - 了解更多关于我们公司的信息，我们完全致力于开源!
+
+## 许可证
+
+Copyright (c) 2020 Jina AI Limited.保留所有权利。
+
+Jina是在Apache License 2.0版本下授权的。[许可证全文见LICENSE。](https://github.com/jina-ai/jina/blob/master/LICENSE)
