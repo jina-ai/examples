@@ -2,9 +2,6 @@
 metas:
   py_modules: transformer_roberta.py
 
-with:
-  model_path: /home/ubuntu/jina/pre_model/chinese_roberta_wwm_ext_pytorch
-
 requests:
   on:
     [SearchRequest, IndexRequest]:
