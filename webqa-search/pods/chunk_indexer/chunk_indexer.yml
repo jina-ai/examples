@@ -7,7 +7,7 @@ components:
 
     metas:
       name: vecidx_index
-      workpace: $TMP_WORKSPACE
+      workspace: $TMP_WORKSPACE
 
   - !BasePbIndexer
     with:
@@ -15,7 +15,7 @@ components:
 
     metas:
       name: chunk_index
-      workpace: $TMP_WORKSPACE
+      workspace: $TMP_WORKSPACE
 
 requests:
   on:
