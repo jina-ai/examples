@@ -6,6 +6,7 @@ import click
 import os
 import string
 import random
+import sys
 
 from jina.flow import Flow
 
@@ -22,6 +23,29 @@ def get_random_ws(workspace_path, length=8):
     dn = ''.join(random.choice(letters) for i in range(length))
     return os.path.join(workspace_path, dn)
 
+def read_custom_data(img_path, max_sample_size=-1):
+    if not os.path.exists(img_path):
+        raise FileNotFoundError('file not found: {}'.format(img_path))
+
+    fn_list = []
+    if os.path.isdir(img_path):
+        path_join_fn = lambda d, f: os.path.join(d, f)
+        fn_list = [ path_join_fn(img_path, f) for f in os.listdir(img_path) if os.path.isfile(path_join_fn(img_path, f)) and f.endswith('.jpg') ]
+    elif os.path.isfile(img_path):
+        if img_path.endswith('.jpg'):
+            fn_list.append(img_path)
+    else:
+        raise FileNotFoundError('{} must be a file or directory.'.format(img_path));
+
+    if not fn_list:
+        raise FileNotFoundError('No .jpg file or files to query, path: {}'.format(img_path));
+
+    if max_sample_size > 0:
+        random.shuffle(fn_list)
+        fn_list = fn_list[:max_sample_size]
+
+    for fn in fn_list:
+        yield fn.encode('utf8')
 
 def read_data(img_path, max_sample_size=-1):
     if not os.path.exists(img_path):
@@ -63,7 +87,7 @@ def save_topk(resp, output_fn=None):
         import matplotlib.image as mpimg
         top_k = max([len(r) for r in results])
         num_q = len(resp.search.docs)
-        f, ax = plt.subplots(num_q, top_k, figsize=(8, 20))
+        f, ax = plt.subplots(num_q, top_k, figsize=(8, 20), squeeze=False)
         for q_idx, r in enumerate(results):
             for m_idx, img in enumerate(r):
                 fname = os.path.split(img)[-1]
@@ -79,7 +103,8 @@ def save_topk(resp, output_fn=None):
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
 @click.option('--top_k', '-k', default=5)
-def main(task, num_docs, top_k):
+@click.option('--path', '-p', help='Specify a JPG file or directory to query', default='')
+def main(task, num_docs, top_k, path):
     os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'jpg')
     if task == 'index':
@@ -87,10 +112,20 @@ def main(task, num_docs, top_k):
         with flow.build() as fl:
             fl.index(raw_bytes=read_data(data_path, num_docs), batch_size=2)
     elif task == 'query':
+        if not path:
+            cmd_prompt = '\033[{}mpython {} -t query -p <JPG file or directory>\033[0m'.format(32, sys.argv[0])
+            prompt = input(f'You can specify a JPG file or directory you own to query: {cmd_prompt}\nDo you want? Please input y or n: ')
+            if prompt and prompt == 'y':
+               sys.exit(0)
+
+        read_data_fn = read_custom_data if path else read_data
+        if path:
+            data_path = path
+
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:
             ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.png'))
-            fl.search(read_data(data_path, 5), callback=ppr, top_k=top_k)
+            fl.search(read_data_fn(data_path, 5), callback=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
@@ -98,3 +133,4 @@ def main(task, num_docs, top_k):
 
 if __name__ == '__main__':
     main()
+
