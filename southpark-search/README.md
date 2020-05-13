@@ -1,7 +1,7 @@
 # Build Bert-based NLP Semantic Search System
 
 <p align="center">
- 
+
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
@@ -16,17 +16,17 @@
 
 </p>
 
-In this demo, we use Jina to build a semantic search system on the [SouthParkData](https://github.com/BobAdamsEE/SouthParkData/). The goal is to find out who has said that in the South Park episodes when the user query a sentence. The SouthPark data contains the characters and lines information from season 1 to 19. Many thanks to [BobAdamsEE](https://github.com/BobAdamsEE) for sharing this awesome dataset!👏. This demo will show you how to quickly build a search system from scratch with Jina. Before moving forward, We highly suggest to go through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jinahttps://github.com/jina-ai/jina#jina-hello-world-) . 
+In this demo, we use Jina to build a semantic search system on the [SouthParkData](https://github.com/BobAdamsEE/SouthParkData/). The goal is to find out who said what in the South Park episodes when the user query a sentence. The SouthPark data contains the characters and lines from seasons 1 to 19. Many thanks to [BobAdamsEE](https://github.com/BobAdamsEE) for sharing this awesome dataset!👏. This demo will show you how to quickly build a search system from scratch with Jina. Before moving forward, We highly suggest to going through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jina#jina-hello-world-).
 
 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Overview](#overview)
 - [Prerequirements](#prerequirements)
-- [Prepare the data](#prepare-the-data)
+- [Prepare the Data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
 - [Run the Flows](#run-the-flows)
 - [Dive into the Pods](#dive-into-the-pods)
@@ -42,9 +42,9 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 
 ## Overview
 
-Let's have an overview of the magic. We want build a search system so that one can find lines from the South Park scripts which are similar to what the user's input text. To make this happen, we split the scripts into sentences and consider each sentence as one **Document**. For simplicity, each Document has only one **Chunk**, which contains the same sentence as the Document. Each sentence, as a Chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `🤗 Transformers` lib). 
+Let's have an overview of the magic. We want build a search system to find lines from South Park scripts which are similar to a user's input text. To make this happen, we split the scripts into sentences and consider each sentence as one **Document**. For simplicity, each Document has only one **Chunk**, which contains the same sentence as the Document. Each sentence, as a Chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `🤗 Transformers` lib).
 
-As the same as build classic search engines, we first build an index for all the documents (i.e. the characters and their lines). During indexing, Jina, _the_ neural search framework, uses vectors to represent the sentences and save the vectors in the index. During querying, having texts from the user's input, we encode the input into vectors with the same **Encoder**. So that, these query vector can be used to retrieve the indexed lines with the similiar meaning.
+Similar to classic search engines, we first build an index for all the documents (i.e. the characters and their lines). During indexing, jina, _the_ neural search framework, uses vectors to represent the sentences and save the vectors in the index. During querying, taking the text from the user's input, we encode the input into vectors with the same **Encoder**. As a result, these query vectors can be used to retrieve the indexed lines with similiar meanings.
 
 <p align="center">
   <img src=".github/southpark.gif?raw=true" alt="Jina banner" width="90%">
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 ## Prepare the data
 
-The raw data contains season, episode, character, and line information in the `.csv` format as following.
+The raw data contains season, episode, character, and line information in the `.csv` format as follows:
 
 ```
 Season,Episode,Character,Line
@@ -74,7 +74,7 @@ Season,Episode,Character,Line
 10,1,Chef,"I'm sorry boys.
 ```
 
-Please run the following script to clone the data and do some data wrangling. Overall, there are 106820 lines kept in `/tmp/jina/southpark/character-lines.csv` 
+Run the following script to clone the data and do some data wrangling. Overall, there are 106,820 lines in `/tmp/jina/southpark/character-lines.csv`
 
 ```bash
 cd southpark-search
@@ -84,9 +84,9 @@ bash ./get_data.sh
 
 ## Define the Flows
 ### Index
-To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `splitter`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`. 
+To index the data we first need to define our **Flow** with a **YAML** file. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the names `splitter`, `encoder`, `chunk_indexer`, `doc_indexer`, and `join_all`.
 
-However, we have another Pod working in silent. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, the Forgotten Pod. For most time, we can safely ignore the **gateway** because it basically do the dirty orchestration work for the Flow.
+However, we have another Pod working in silence. In fact, the input to the very first Pod is always the Pod with the name **gateway**, the "Forgotten" Pod. For most of the time, we can safely ignore the **gateway** because it basically does the dirty orchestration work for the Flow.
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -124,7 +124,7 @@ pods:
 </tr>
 </table>
 
-By default, the input of each Pod is the Pod defined right above it, and the request message flows from one Pod to another. That how Flow lives up to its name. Of course, you might want to have a Pod skipping or jump over the above Pods. In this case, you will use the `needs` argument to specify the source of the input messages. In our case, the `doc_indexer` actually get inputs directly from the `gateway`. By doing this, we have two pathways in parallel as shown in the index Flow diagram.
+By default, the input of each Pod is the Pod defined right above it, and the request message flows from one Pod to another. That's how Flow lives up to its name. Of course, you might want to have a Pod skipping over the Pods above it. In this case, you would use the `needs` argument to specify the source of the input messages. In our example, the `doc_indexer` actually get inputs directly from the `gateway`. By doing this, we have two parallel pathways as shown in the index Flow diagram.
 
 ```yaml
 doc_indexer:
@@ -132,7 +132,7 @@ doc_indexer:
   needs: gateway
 ```
 
-As we can see, for most Pods, we only need to define the YAML file path. Given the YAML files, jina will automatically build the Pods. Plus, `timeout_ready` is a useful argument when adding a Pod, which defines the waiting time before the Flow considers the Pod fails to initialize. 
+As we can see, for most Pods, we only need to define the YAML file path. Given the YAML files, jina will automatically build the Pods. Plus, `timeout_ready` is a useful argument when adding a Pod, which defines the waiting time before the Flow gives up on the Pod initializing.
 
 ```yaml
 encoder:
@@ -148,15 +148,15 @@ join_all:
   needs: [doc_indexer, chunk_indexer]
 ```
 
-Overall, the index Flow has two pathways, as shown in the Flow diagram. The idea is to save the index and the contents seperately so that one can quickly retrieve the Document Ids from the index and afterwards combine the Document Id with its content. 
+Overall, the index Flow has two pathways, as shown in the Flow diagram. The idea is to save the index and the contents seperately so that we can quickly retrieve the Document IDs from the index and afterwards combine the Document ID with its content.
 
-The pathway on the right side with single `doc_indexer` is used to storage the Document content. Underhood it is basically a key-value storage. The key is the Document Id and the value is the Document itself.
+The pathway on the right side with a single `doc_indexer` stores the Document content. Under the hood it is basically a key-value storage. The key is the Document ID and the value is the Document itself.
 
-The pathway on the other side is for saving the index. From top to bottom, the first Pod, `splitter`, is used to split the Document into Chunks, which are the basic units to process in jina. Chunks are later encoded into vectors by the `encoder`. These vectors together with other informations in the Chunks are saved in a vector storage by `chunk_indexer`. Finally, the two pathway are merged by `join_all` and the processing of one message is concluded.
+The pathway on the other side is for saving the index. From top to bottom, the first Pod, `splitter`, splits the Document into Chunks, which are the basic units to process in jina. Chunks are later encoded into vectors by the `encoder`. These vectors (together with other information in the Chunks) are saved in a vector storage by `chunk_indexer`. Finally, the two pathways are merged by `join_all` and the processing of that message is concluded.
 
 
 ### Query
-As in the indexing time, we also need a Flow to process the request message during querying. Here we start with the `splitter` sharing exactly the same YAML with its conterpart in the index Flow. This means it plays the same role as before, which is to split the Document into Chunks. Afterwards, the Chunks are encoded into vectors by `encoder`, and later these vectors are used to retrieve the indexed Chunks by `chunk_indexer`. As the same as the `splitter`, both `encoder` and `chunk_indexer` share the YAML with their counterparts in the index Flow. 
+As in the indexing time, we also need a Flow to process the request message during querying. Here we start with the `splitter` sharing exactly the same YAML with its conterpart in the index Flow. This means it plays the same role as before, which is to split the Document into Chunks. Afterwards, the Chunks are encoded into vectors by `encoder`, and later these vectors are used to retrieve the indexed Chunks by `chunk_indexer`. At the same as the `splitter`, both `encoder` and `chunk_indexer` share the YAML with their counterparts in the index Flow.
 
 <table  style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -195,30 +195,30 @@ pods:
 </table>
 
 
-Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of Document, which are actually meaningful for the users. This is exactly the job of `ranker`. `ranker` combines the querying results from the Chunk level into the Document level. In this demo, we use the built-in `MinRanker` to do the job. It simple take the `1 / (1 + s)` as the score of the Document, where `s` denotes that minimal matching score from all the Chunks that belong to this Document. Why do we take the minimal matching score for chunks? Because here we use the **cosine distance** as the chunks' matching scores. 
+Eventually, there comes a new Pod named `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of a Document which is actually meaningful to users. This is precisely the job of `ranker`. `ranker` combines the query results from the Chunk level into the Document level. In this demo, we use the built-in `MinRanker` to do the job. It simple takes the `1 / (1 + s)` as the score of the Document, where `s` denotes the minimal matching score from all the Chunks that belong to this Document. Why do we take the minimal matching score for Chunks? Because here we use the **cosine distance** as the chunks' matching scores.
 
-> `MaxRanker` calculates the score of the matched Document form the matched Chunks. For each matched Document, the score is the maximal score from all the matched Chunks belonging to this Document.
+> `MaxRanker` calculates the score of the matched Document from the matched Chunks. For each matched Document, the score is the maximal score from all the matched Chunks belonging to that Document.
 
 ```yaml
 ranker:
   yaml_path: MaxRanker
 ```
 
-At the last step, the `doc_indexer` comes into play. Sharing the same YAML file, `doc_indexer` will load the storaged key-value index and retrieve the matched Documents back according the Document Id.
+In the last step, the `doc_indexer` comes into play. Sharing the same YAML file, `doc_indexer` will load the stored key-value index and retrieve the matched Documents according to the Document ID.
 
 ### Let's take a closer look
-Now we've both index and query Flows ready to work. Before proceeding forward, let's take a closer look at the two Flows and check out the differences between them. 
+Now the index and query Flows are both ready to work. Before proceeding, let's take a closer look at the two Flows and see the differences between them.
 
-Obviously, they have different structure, although they share most Pods. This is a common practice in the jina world for the consideration of speed. Except the `ranker`, both Flow can indeed use the identical structure. The two-pathway design of the index Flow is intended to speed up the message passing, because indexing the Chunks and the Documents can be done in paralle. 
+Obviously, they have different structures, although they share most Pods. This is a common practice in the jina world for the sake of speed. Except for the `ranker`, both Flows can indeed use identical structures. The two-pathway design of the index Flow is intended to speed up message passing, because indexing Chunks and Documents can be done in parallel.
 
-Another important difference is that the two Flows are used to process different types of request messages. To index a Document, we send an **IndexRequest** to the Flow. While querying, we send a **SearchRequest**. That's why the Pods in both Flows can share the YAML files while playing different roles. Later, we will dive deep into into the YAML files, where we define the different ways of processing messages of various types.
+Another important difference is that the two Flows are used to process different types of request messages. To index a Document, we send an **IndexRequest** to the Flow. While querying, we send a **SearchRequest**. That's why Pods in both Flows can play different roles while sharing the same YAML files. Later, we will dive deep into into the YAML files, where we define the different ways of processing messages of various types.
 
 
 ## Run the Flows
 
-### Index 
+### Index
 
- 
+
 ```bash
 python app.py -t index -n 10000
 ```
@@ -230,21 +230,21 @@ python app.py -t index -n 10000
   <img src=".github/index-demo.png?raw=true" alt="index flow console output">
 </p>
 
-</details> 
+</details>
 
-With the Flows, we now can write the codes to run the Flow. For indexing, we start with defining the Flow with YAML file. Afterwards, the `build()` function will do the magic to construct Pods and connect them together. Then the `IndexRequest` will be sent to the flow by calling the `index()` function. 
+With the Flows, we can now write the code to run the Flow. For indexing, we start by defining the Flow with a YAML file. Afterwards, the `build()` function will do the magic to construct Pods and connect them together. After that, the `IndexRequest` will be sent to the flow by calling the `index()` function.
 
-```python        
+```python
 def main(num_docs):
     flow = Flow().load_config('flow-index.yml')
     with flow.build() as fl:
-    	 data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
+        data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
         fl.index(raw_bytes=read_data(data_fn, num_docs))
 
 ```
 
-The content of the `IndexRequest` is fed from the `read_data()`, which loads the processed JSON file and output each word together with its defintion in `bytes` format.
-Encoding the text with bert-family models will take a long time. To save your time, here we limit the number of indexing documents to 10000.
+The content of the `IndexRequest` is fed from `read_data()`, which loads the processed JSON file and outputs each word together with its definition formatted into `bytes`.
+Encoding the text with bert-family models takes a long time. To save your time, here we limit the number of indexed documents to 10,000.
 
 ```python
 def read_data(f_path, max_sample_size=-1):
@@ -275,13 +275,13 @@ python app.py -t query
   <img src=".github/query-demo.png?raw=true" alt="query flow console output">
 </p>
 
-</details> 
+</details>
 
-As for the query part, we follow the same story to define and build the Flow from the YAML file. The `search()` function is used to send a `SearchRequest` to the Flow. Here we accept the user query inputs from the terminal and wrap it into request message in the `bytes` format. 
+For querying, we follow the same process to define and build the Flow from the YAML file. The `search()` function is used to send a `SearchRequest` to the Flow. Here we accept the user's query input from the terminal and wrap it into request message formatted into `bytes`.
 
 ```python
 def read_query_data(text):
-    yield '{}'.format(text).encode('utf8')     
+    yield '{}'.format(text).encode('utf8')
 
 def main(top_k):
     flow = Flow().load_config('flow-query.yml')
@@ -294,7 +294,7 @@ def main(top_k):
             fl.search(read_query_data(text), callback=ppr, topk=top_k)
 ```
 
-The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are storaged under the `.topk_results` as a repeated variable.
+The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
@@ -312,16 +312,16 @@ def print_topk(resp, word):
             doc = kk.match_doc.raw_bytes.decode()
             name, line = doc.split('!', maxsplit=1)
             print('> {:>2d}({:f}). {} said: {}'.format(
-                idx, score, name.upper(), line))     
+                idx, score, name.upper(), line))
 ```
 
 ## Dive into the Pods
 If you want to know more about Pods, keep reading. As shown above, we defined the Pods by giving the YAML files. Now let's move on to see what is exactly written in these magic YAML files.
 
 ### `splitter`
-As a convention in jina, A YAML config is used to describe the properties of an object so that we can easily config the behavior of the Pods without touching the codes. 
+As a convention in jina, A YAML config is used to describe the properties of an object so that we can easily configure the behavior of the Pods without touching the code.
 
-Here is the YAML file for the `splitter`. We firstly claim to use the built-in **Sentencizer** as the **executor** in the Pod. The `with` field is used to specify the arguments passing to the `__init__()` function. 
+Here is the YAML file for the `splitter`. We first use the built-in **Sentencizer** as the **executor** in the Pod. The `with` field is used to specify the arguments passing to the `__init__()` function.
 
 
 ```yaml
@@ -336,9 +336,9 @@ requests:
       - !SegmentDriver
         with:
           method: craft
-``` 
+```
 
-In the `requests` field, we define the different behaviors of the Pod to different requests. Remember that both the index and the query Flows share the same Pods with the YAML files while they behaving differently to the requests. Here is how the magic works. For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On one hand, the Driver interpretes the request messages (in the format of Protobuf) into the format that the Executor can understand(e.g. Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and translate the processed results back into Protobuf format. For the time being, the `splitter` show the same behavior for both requests.
+In the `requests` field, we define the different behaviors of the Pod for different requests. Remember that both the index and query Flows share the same Pods with the YAML files while they behave differently to the requests. This is how the magic works: For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On the one hand, the Driver encodes the request messages (in Protobuf format) into a format that the Executor can understand (e.g. a Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and encode the processed results back into Protobuf format. For the time being, the `splitter` shows the same behavior for both requests.
 
 
 ```yaml
@@ -348,10 +348,10 @@ requests:
       - !SegmentDriver
         with:
           method: craft
-``` 
+```
 
 ### `encoder`
-The YAML file of the `encoder` is pretty much similar to the `splitter`. As one can see, we specify to use the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `model_name`.
+The YAML file of the `encoder` is pretty similar to the `splitter`. As one can see, we specify the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `model_name`.
 
 ```yaml
 !TransformerTorchEncoder
@@ -368,7 +368,7 @@ requests:
 ```
 
 ### `doc_indexer`
-In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data. 
+In contrast to the Pods above, the `doc_indexer` behave differently depending on different requests. For the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` prunes the redundant data in the message that is not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data.
 
 ```yaml
 !DocPbIndexer
@@ -393,7 +393,7 @@ requests:
           method: add
 ```
 
-As for the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` as in for the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.
+For the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` just like the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.
 ```yaml
 requests:
   on:
@@ -404,7 +404,7 @@ requests:
 ```
 
 ### `chunk_indexer`
-The YAML file for `chunk_indexer` is a little bit curbersome. Take it easy, it is as straightforward as it should be. The executor in the `chunk_indexer` Pod is called `ChunkIndexer`, which wraps up two other executors. The `components` field specifies the two wrapped-up executors. The `NumpyIndexer` is used to storage the Chunks' vectors, and the `BasePbIndexer` is used as a key-value storage to save the Chunk Id and the Chunk details.
+The YAML file for `chunk_indexer` is a little bit cumbersome. But take it easy: It is as straightforward as it should be. The executor in the `chunk_indexer` Pod is called `ChunkIndexer`, which wraps two other executors. The `components` field specifies the two wrapped executors: The `NumpyIndexer` stores the Chunks' vectors, and the `BasePbIndexer` is used as a key-value storage to save the Chunk ID and Chunk details.
 
 ```yaml
 !ChunkIndexer
@@ -453,7 +453,7 @@ requests:
 
 ```
 
-As the same as the `doc_indexer`, the `chunk_indexer` also have different behaviors on different requests. For the `IndexRequest`, the `chunk_indexer` uses three Drivers in serial, namely, `VectorIndexDriver`, `PruneDriver`, and `KVIndexDriver`. The idea is to firstly use `VectorIndexDriver` to call the `index()` function from the `NumpyIndexer` so that the vectors for all the Chunks are indexed. Afterwards the `PruneDriver` prune the message, and the `KVIndexDriver` calls the `index()` function from the `BasePbIndexer`. This behavior is defined in the `executor` field.
+Just like the `doc_indexer`, the `chunk_indexer` has different behaviors for different requests. For the `IndexRequest`, the `chunk_indexer` uses three Drivers in serial, namely, `VectorIndexDriver`, `PruneDriver`, and `KVIndexDriver`. The idea is to first use `VectorIndexDriver` to call the `index()` function from the `NumpyIndexer` so that the vectors for all the Chunks are indexed. Then the `PruneDriver` prunes the message, and the `KVIndexDriver` calls the `index()` function from the `BasePbIndexer`. This behavior is defined in the `executor` field.
 
 ```yaml
 requests:
@@ -476,7 +476,7 @@ requests:
           executor: BasePbIndexer
 ```
 
-For the `SearchRequest`, the same procedure goes on, but underhood the `KVSearchDriver` and the `VectorSearchDriver` will call `query()` function from the `NumpyIndexer` and the `BasePbIndexer` correspondingly.
+For the `SearchRequest`, the same procedure continues, but under the hood the `KVSearchDriver` and the `VectorSearchDriver` call the `query()` function from the `NumpyIndexer` and `BasePbIndexer` correspondingly.
 
 ```yaml
 requests:
@@ -500,17 +500,17 @@ requests:
 ```
 
 ## Wrap up
-Congratulation! Now you've your own neural search engine explained!
+Congratulations! Now you've got your very own neural search engine explained!
 
 Let's wrap up what we've covered in this demo.
 
-1. Chunks are basic elements in jina. Documents are the final inputs and outputs from jina. 
-2. Flows are our good friends to build the search engine. To either index or query, we need define a Flow and build it.
+1. Chunks are basic elements in jina. Documents are the final inputs and outputs from jina.
+2. Flows are our good friends to build the search engine. To either index or query, we need to define and build a Flow.
 3. The index and the query Flow shares most Pods.
 4. The Pods in the Flow can run either in serial or in parallel.
 5. The Pods can behave differently to different types of requests. The Pods' YAML file defines their behaviors.
 6. The data in the requests should be in `bytes` format.
-7. Inside the Pods, Drivers are used to interprate the messages for Executors, call the Executors to handle the messages, and wrap up the results back into the message.
+7. Inside the Pods, Drivers are used to interpret the messages for Executors, call the Executors to handle the messages, and wrap the results back into the message.
 8. The query results in the return response are saved in the Protobuf format.
 
 **Enjoy Coding with Jina!**
@@ -519,10 +519,10 @@ Let's wrap up what we've covered in this demo.
 - Try other encoders or rankers.
 - Run the Pods in docker containers.
 - Scale up the indexing procedure.
-- Speed up the procedure by useing `read_only`
+- Speed up the procedure by using `read_only`
 - Explore the `metas` field in the YAML file.
 
-## Documentation 
+## Documentation
 
 <a href="https://docs.jina.ai/">
 <img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
@@ -542,7 +542,7 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
+- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`
 - [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
