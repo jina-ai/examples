@@ -24,7 +24,7 @@ def read_data(fn):
     for content in items:
         results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
 
-    for item in results[:10000]:
+    for item in results[:100]:
         yield item
 
 

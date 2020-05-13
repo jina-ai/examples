@@ -280,7 +280,7 @@ class WeightSentencizer(Sentencizer):
         weights = np.linspace(1, 0.1, len(results))
         for result, weight in zip(results, weights):
             result['weight'] = weight
-    
+
         return results
 ```
 
@@ -292,7 +292,7 @@ class WeightSentencizer(Sentencizer):
 
 1. `ranker`中的`Chunk2DocScoreDriver`将`WeightBiMatchRanker`所需要的数据准备好。
 
-2. `ranker`调用`WeightBiMatchRanker`的`score()`方法根据相似Chunk中的信息计算相似Document的分数。
+2. `ranker`调用`WeightBiMatchRanker`的`score()`方法根据召回Chunk中的信息计算相似Document的分数。
 
 3. `ranker`将相似Document的信息和分数写入Flow的数据流中。  
 
@@ -338,9 +338,10 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 3. jina支持弹性扩展，只需要在Pod中增加`replicas`字段。
 
-4. 在查询任务中，`ranker`的作用是根据找到的召回的Chunk得到与查询Document相似的Document。
+4. 在查询任务中，`ranker`的作用是根据召回的Chunk得到与查询Document相似的Document。
 
 ## 文档
+
 <a href="https://docs.jina.ai/">
 <img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png?raw=true " />
 </a>
@@ -349,14 +350,15 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 - [Jina命令行接口参数解释](https://docs.jina.ai/chapters/cli/main.html)
 - [Jina Python API接口](https://docs.jina.ai/api/jina.html)
-- [用于执行器、驱动和流程的Jina YAML语法](https://docs.jina.ai/chapters/yaml/yaml.html)
+- [用于Executor、Driver和Flow的Jina YAML语法](https://docs.jina.ai/chapters/yaml/yaml.html)
 - [Jina Protobuf方案](https://docs.jina.ai/chapters/proto/main.html)
 - [Jina中使用的环境变量](https://docs.jina.ai/chapters/envs.html)
-- ..[以及更多](https://docs.jina.ai/index.html)
+- ...[更多](https://docs.jina.ai/index.html)
 
 ## 社区
+
 - [Slack频道](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - 为开发者提供交流平台，探讨Jina。
-- [社区通讯](mailto:newsletter+subscribe@jina.ai) - 订阅Jina的最新更新、发布和活动消息，订阅Jina的最新动态、发布和活动消息。
+- [社区新闻订阅](mailto:newsletter+subscribe@jina.ai) - 订阅Jina的最新更新、发布和活动消息，订阅Jina的最新动态、发布和活动消息。
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - 了解Jina AI公司并寻找工作机会。
 - ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - 关注我们，并使用tag标签与我们互动`#JinaSearch`。
 - [公司](https://jina.ai/) - 了解更多关于我们公司的信息，我们完全致力于开源。
