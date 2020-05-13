@@ -355,11 +355,11 @@ class WeightBiMatchRanker(BiMatchRanker):
 - ..[以及更多](https://docs.jina.ai/index.html)
 
 ## 社区
-- [Slack频道](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - 为开发者提供交流平台，探讨Jina
+- [Slack频道](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - 为开发者提供交流平台，探讨Jina。
 - [社区通讯](mailto:newsletter+subscribe@jina.ai) - 订阅Jina的最新更新、发布和活动消息，订阅Jina的最新动态、发布和活动消息。
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - 了解Jina AI公司并寻找工作机会
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - 关注我们，并使用tag标签与我们互动`#JinaSearch`  
-- [公司](https://jina.ai/) - 了解更多关于我们公司的信息，我们完全致力于开源!
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - 了解Jina AI公司并寻找工作机会。
+- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - 关注我们，并使用tag标签与我们互动`#JinaSearch`。
+- [公司](https://jina.ai/) - 了解更多关于我们公司的信息，我们完全致力于开源。
 
 ## 许可证
 
