@@ -5,7 +5,7 @@ pods:
     replicas: 2
 
   encoder:
-    image: jinaai/examples.hub.encoder.nlp.transformers-hit-scir
+    image: jinaai/hub.executors.encoders.nlp.transformers-hitscir
     timeout_ready: 6000000
     replicas: 2
 
