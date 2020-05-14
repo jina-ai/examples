@@ -1,0 +1,24 @@
+!Flow
+pods:
+  extractor:
+    yaml_path: pods/extractor/extractor.yml
+    replicas: 2
+
+  encoder:
+    image: jinaai/hub.executors.encoders.nlp.transformers-hitscir
+    timeout_ready: 6000000
+    replicas: 2
+
+  chunk_indexer:
+    yaml_path: pods/chunk_indexer/chunk_indexer.yml
+    timeout_ready: 60000
+    replicas: 2
+
+  ranker:
+    yaml_path: pods/ranker/ranker.yml
+    replicas: 2
+
+  doc_indexer:
+    yaml_path: pods/doc_indexer/doc_indexer.yml
+    timeout_ready: 60000
+    replicas: 2

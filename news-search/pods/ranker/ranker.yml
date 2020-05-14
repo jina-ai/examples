@@ -1,0 +1,16 @@
+!WeightBiMatchRanker
+metas:
+  py_modules: weight_ranker.py
+requests:
+  on:
+    SearchRequest:
+      - !Chunk2DocScoreDriver
+        with:
+          method: score
+      - !DocPruneDriver
+        with:
+          pruned: chunks
+
+    ControlRequest:
+      - !ControlReqDriver {}
+
