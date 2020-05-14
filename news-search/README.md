@@ -1,3 +1,13 @@
+# JINA 3分钟实现一套新闻搜索系统
+
+    经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，在继续阅读之前，我们强烈建议先阅读上一篇[ JINA 100行代码搭建一套中文问答神经网络搜索引擎](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)。
+
+    在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，Awesome✌️✌️。
+
+    我想大家在阅读完上一篇已经发现了，上一篇是我们是使用问题搜索问题，基于短文本搜索短文本，所以在创建索引和查询时Document中的Chunk都只有一个。那么你或许会问jina能不能长文本搜索长文本呢？当然可以！在这个教程中我们将通过让每个Document中包含多个Chunk来实现长文本搜索。
+
+    那么，怎么做呢？请看如下分解。
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Cotents**
@@ -17,28 +27,6 @@
   - [许可证](#%E8%AE%B8%E5%8F%AF%E8%AF%81)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# JINA 3分钟实现一套新闻搜索系统
-
-    经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，在继续阅读之前，我们强烈建议先阅读上一篇[ JINA 100行代码搭建一套中文问答神经网络搜索引擎](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)。
-
-    在上一篇中我们利用jina，实现了WebQA的搜索引擎的搭建，效果如大家所见，Awesome✌️✌️。
-
-    我想大家在阅读完上一篇已经发现了，上一篇是我们是使用问题搜索问题，基于短文本搜索短文本，所以在创建索引和查询时Document中的Chunk都只有一个。那么你或许会问jina能不能长文本搜索长文本呢？当然可以！在这个教程中我们将通过让每个Document中包含多个Chunk来实现长文本搜索。
-
-    那么，怎么做呢？请看如下分解。
-
-## 导读
-
-- [效果展示](#效果展示)
-- [总览](#总览)
-- [环境依赖](#环境依赖)
-- [数据预处理](#数据预处理)
-- [搭建Flow](#搭建Flow)
-- [运行Flow](#运行Flow)
-- [使用多个Chunk和深入ranker](#使用多个Chunk和深入ranker)
-- [回顾](#回顾)
-- [结语](#结语)
 
 ## 效果展示
 
