@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
+
+- [JINA 3分钟实现一套新闻搜索系统](#jina-3%E5%88%86%E9%92%9F%E5%AE%9E%E7%8E%B0%E4%B8%80%E5%A5%97%E6%96%B0%E9%97%BB%E6%90%9C%E7%B4%A2%E7%B3%BB%E7%BB%9F)
+  - [导读](#%E5%AF%BC%E8%AF%BB)
+  - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
+  - [总览](#%E6%80%BB%E8%A7%88)
+  - [环境依赖](#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
+  - [数据预处理](#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
+  - [搭建Flow](#%E6%90%AD%E5%BB%BAflow)
+  - [运行Flow](#%E8%BF%90%E8%A1%8Cflow)
+  - [使用多个Chunk和深入ranker](#%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AAchunk%E5%92%8C%E6%B7%B1%E5%85%A5ranker)
+  - [回顾](#%E5%9B%9E%E9%A1%BE)
+  - [文档](#%E6%96%87%E6%A1%A3)
+  - [社区](#%E7%A4%BE%E5%8C%BA)
+  - [许可证](#%E8%AE%B8%E5%8F%AF%E8%AF%81)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # JINA 3分钟实现一套新闻搜索系统
 
     经过上一篇介绍，我想大家已经jina有了一定的认识，如果还没有阅读的同学，在继续阅读之前，我们强烈建议先阅读上一篇[ JINA 100行代码搭建一套中文问答神经网络搜索引擎](https://github.com/jina-ai/examples/tree/webqa-search/webqa-search#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)。
