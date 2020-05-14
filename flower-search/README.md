@@ -240,6 +240,19 @@ def main():
 python app.py -t query
 ```
 
+If you want to use your own image files to query, using the following shell command:
+
+```bash
+python app.py -t query -p <JPG file or directory>
+```
+The command accepts a JPG file path or a directory that includes some JPG files. These JPG files' suffix is `.jpg`.
+
+If only having a single JPG file in current directory, simply to call
+
+```bash
+python app.py -t query -p .
+```
+
 <details>
 <summary>Click here to see the console output</summary>
 
