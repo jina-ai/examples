@@ -207,7 +207,7 @@ def read_data(fn):
             line = line.replace('\n', '')
             item = json.loads(line)
             content = item['content']
-            if content == '':
+            if content == '' or len(content) < 5:
                 continue
             items.append({'content': content})
     results = []

@@ -15,7 +15,7 @@ def read_data(fn):
             line = line.replace('\n', '')
             item = json.loads(line)
             content = item['content']
-            if content == '':
+            if content == '' or len(content) < 5:
                 continue
 
             items.append({'content': content})
@@ -46,7 +46,7 @@ def main(task, top_k):
         data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow:
-            flow.index(read_data(data_fn), batch_size=64)
+            flow.index(read_data(data_fn), batch_size=32)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
