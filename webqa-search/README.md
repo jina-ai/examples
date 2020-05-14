@@ -10,20 +10,18 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of otents**
+**Table of Cotents**
 
-- [JINA 100行代码搭建一套中文问答神经网络搜索引擎](#jina-100%E8%A1%8C%E4%BB%A3%E7%A0%81%E6%90%AD%E5%BB%BA%E4%B8%80%E5%A5%97%E4%B8%AD%E6%96%87%E9%97%AE%E7%AD%94%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E)
-  - [导读](#%E5%AF%BC%E8%AF%BB)
-  - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
-  - [总览](#%E6%80%BB%E8%A7%88)
-  - [环境依赖](#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
-  - [数据预处理](#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
-  - [定义Flow](#%E5%AE%9A%E4%B9%89flow)
-  - [运行Flow](#%E8%BF%90%E8%A1%8Cflow)
-  - [小结](#%E5%B0%8F%E7%BB%93)
-  - [深入Pod](#%E6%B7%B1%E5%85%A5pod)
-  - [回顾](#%E5%9B%9E%E9%A1%BE)
-  - [结语](#%E7%BB%93%E8%AF%AD)
+- [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
+- [总览](#%E6%80%BB%E8%A7%88)
+- [环境依赖](#%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96)
+- [数据预处理](#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86)
+- [定义Flow](#%E5%AE%9A%E4%B9%89flow)
+- [运行Flow](#%E8%BF%90%E8%A1%8Cflow)
+- [小结](#%E5%B0%8F%E7%BB%93)
+- [深入Pod](#%E6%B7%B1%E5%85%A5pod)
+- [回顾](#%E5%9B%9E%E9%A1%BE)
+- [结语](#%E7%BB%93%E8%AF%AD)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
