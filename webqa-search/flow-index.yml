@@ -1,11 +1,15 @@
 !Flow
 pods:
+  dispatcher:
+    yaml_path: _forward
+    read_only: True
+
   doc_indexer:
     yaml_path: pods/doc_indexer/doc_indexer.yml
 
   extractor:
     yaml_path: pods/extractor/extractor.yml
-    needs: gateway
+    needs: dispatcher
     read_only: True
 
   encoder:
