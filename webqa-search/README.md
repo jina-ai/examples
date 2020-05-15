@@ -1,5 +1,3 @@
-
-
 # JINA 100行代码搭建一套中文问答神经网络搜索引擎
 
     一提到搜索引擎，大家可能会想到实现**困难，系统复杂、臃肿**。但是现在有一个**魔法器**，**它可以让我们专注于业务本身，以最短的时间内实现一套**神经网络搜索引擎。
@@ -9,7 +7,9 @@
     那么如何使用jina搭建一套搜索引擎呢？请看如下分解。
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Cotents**
 
 - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
@@ -399,7 +399,7 @@ class WebQATitleExtractor(BaseSegmenter):
 
     我们在`extractor`已经将问题从Document中提取了出来，那么我们下面需要做的是将问题编码成向量。
 
-    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。详细代码见[链接]()。
+    在这里我们使用哈工大-科大讯飞的`Roberta base wwm ext`模型作为编码器模型。通过继承`BaseTextEncoder`实现了`TransformerRobertaEncoder`作为我们的编码器；并且使用`transformers`加载模型，使用`CLS`作为文本向量。我们通过定义`with`修改了`__init__`方法中参数的值。详细代码见[链接](https://github.com/jina-ai/examples/blob/master/webqa-search/pods/encoder/transformer_roberta.py)。
 
 ```yaml
 !TransformerRobertaEncoder
@@ -493,4 +493,4 @@ join:
 
 ## 结语
 
-    在这里你可能已经发现了Document中只有一个Chunk，那么如果有多个Chunk时，应该怎么做呢？请看下一篇，[JINA 3分钟实现一套新闻搜索系统]()。
+    在这里你可能已经发现了Document中只有一个Chunk，那么如果有多个Chunk时，应该怎么做呢？请看下一篇，[JINA 3分钟实现一套新闻搜索系统](https://github.com/jina-ai/examples/tree/master/news-search)。
