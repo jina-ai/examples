@@ -1,12 +1,7 @@
 # openapi example
 
 []
-> better api design with openapi.
-
-(preview)[local_openapi_final.png]
-
-
-.
+> try better api design with openapi.
 
 ![https://swagger.io/blog/api-strategy/benefits-of-openapi-api-development/](openapidrivendevelopment.png)
 
@@ -16,12 +11,12 @@
 
 http://editor.swagger.io/
 
-###local
-
+### local
+```sh
 docker run -d -p 80:8080 swaggerapi/swagger-editor
+```
 
-## code-generator
-
+## code-generate
 ### none additional-properties
 OS X & Linux:
 
