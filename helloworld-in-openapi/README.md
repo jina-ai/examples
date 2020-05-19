@@ -1,7 +1,7 @@
 # openapi example
 
 []
-> better api design with openapi.
+> try better api design with openapi.
 
 ![https://swagger.io/blog/api-strategy/benefits-of-openapi-api-development/](openapidrivendevelopment.png)
 
