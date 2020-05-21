@@ -2,3 +2,4 @@ click
 pillow
 matplotlib
 docker
+jina
