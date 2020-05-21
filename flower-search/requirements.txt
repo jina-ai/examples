@@ -1,5 +1,4 @@
 click
 pillow
 matplotlib
-docker
-jina
+jina[devel]
