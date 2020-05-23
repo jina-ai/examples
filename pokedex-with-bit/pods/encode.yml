@@ -1,0 +1,4 @@
+!BiTImageEncoder
+with:
+  model_path: pretrained
+  pool_strategy: avg

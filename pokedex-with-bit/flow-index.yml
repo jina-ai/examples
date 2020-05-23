@@ -1,0 +1,22 @@
+!Flow
+with:
+  logserver: true
+pods:
+  crafter:
+    yaml_path: pods/craft.yml
+    read_only: true
+  encoder:
+    yaml_path: pods/encode.yml  # pods/encode-baseline.yml
+    replicas: $REPLICAS
+    timeout_ready: 600000
+    read_only: true
+  chunk_idx:
+    yaml_path: pods/chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
+  doc_idx:
+    yaml_path: pods/doc.yml
+    needs: crafter
+  join_all:
+    yaml_path: _merge
+    needs: [doc_idx, chunk_idx]
