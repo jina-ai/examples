@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
+
+- [Google's Big Transfer Model in (Poké-)Production using Jina](#googles-big-transfer-model-in-pok%C3%A9-production-using-jina)
+  - [TLDR;](#tldr)
+  - [Index Image Data](#index-image-data)
+  - [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
+  - [Build Docker Image](#build-docker-image)
+  - [Troubleshooting](#troubleshooting)
+  - [Documentation](#documentation)
+  - [Stay tuned](#stay-tuned)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Google's Big Transfer Model in (Poké-)Production using Jina
 
 <p align="center">
