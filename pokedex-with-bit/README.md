@@ -1,18 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
-
-- [Google's Big Transfer Model in (Poké-)Production using Jina](#googles-big-transfer-model-in-pok%C3%A9-production-using-jina)
-  - [TLDR;](#tldr)
-  - [Index Image Data](#index-image-data)
-  - [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
-  - [Build Docker Image](#build-docker-image)
-  - [Troubleshooting](#troubleshooting)
-  - [Documentation](#documentation)
-  - [Stay tuned](#stay-tuned)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Google's Big Transfer Model in (Poké-)Production using Jina
 
@@ -48,6 +33,23 @@ Features that come out of the box:
 To save you from the dependency hell, I will use the containerized version in the following instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No install, no uninstall, no Python virtual env. 
 
 The code can of course run natively on your local machine, please [read Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Cotents**
+
+- [Google's Big Transfer Model in (Poké-)Production using Jina](#googles-big-transfer-model-in-pok%C3%A9-production-using-jina)
+  - [TLDR;](#tldr)
+  - [Index Image Data](#index-image-data)
+  - [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
+  - [Build Docker Image](#build-docker-image)
+  - [Troubleshooting](#troubleshooting)
+  - [Documentation](#documentation)
+  - [Stay tuned](#stay-tuned)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## TLDR;
 
