@@ -1,0 +1,24 @@
+!Flow
+with:
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_grpc: $JINA_PORT
+pods:
+  chunk_seg:
+    yaml_path: pods/craft.yml
+    replicas: $REPLICAS
+  tf_encode:
+    yaml_path: pods/encode.yml #pods/encode-baseline.yml
+    replicas: $REPLICAS
+    timeout_ready: 600000
+  chunk_idx:
+    yaml_path: pods/chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+  ranker:
+    yaml_path: BiMatchRanker
+  doc_idx:
+    yaml_path: pods/doc.yml
