@@ -19,7 +19,7 @@
 
 In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released few days ago into the production (spoiler alert, this project takes me *2 hours* only). You can use this demo system to indexes image dataset and query the most similar image from it. In the example output below, first column in every row is the query, the rest is the top-k results. 
 
-![](.github/.README_images/7262e2aa.png)
+[![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
 Features that come out of the box:
 
