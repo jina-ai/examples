@@ -57,7 +57,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 We have a pre-built Docker image ready to use:
 
 ```bash
-docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch search
+docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex search
 ```
 
 Then you can `curl`/query/js it via HTTP POST request. [Details can be found here](#query-via-rest-api).
