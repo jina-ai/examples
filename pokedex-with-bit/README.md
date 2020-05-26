@@ -36,7 +36,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [TLDR;](#tldr)
 - [Index Image Data](#index-image-data)
@@ -44,7 +44,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 - [Build Docker Image](#build-docker-image)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
