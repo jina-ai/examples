@@ -25,6 +25,6 @@ requests:
           executor: gif2chunk_preprocessor
       - !DocPruneDriver
         with:
-          pruned: raw_bytes  # we will never use raw_bytes in the remaining pipeline
+          pruned: buffer  # we will never use buffer in the remaining pipeline
     ControlRequest:
       - !ControlReqDriver {}

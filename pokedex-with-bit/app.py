@@ -35,7 +35,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index(input_fn, batch_size=64)
+        f.index(input_fn, batch_size=64, mime_type='png')
 
 
 # for search
