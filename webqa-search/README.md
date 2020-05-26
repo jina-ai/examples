@@ -242,7 +242,7 @@ python app.py -t index -n 10000
 ```python
 flow = Flow().load_config('flow-index.yml')
 with flow:
-    flow.index(raw_bytes=read_data(data_fn))
+    flow.index(buffer=read_data(data_fn))
 ```
 
     在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。
@@ -296,14 +296,14 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')    
 ```
 
-    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`raw_bytes`代表了Document的原数据。
+    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`buffer`代表了Document的原数据。
 
 ```python
 def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
+            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
             print('→%s' % item['title'])
 ```
 
@@ -381,11 +381,11 @@ requests:
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, doc_id, raw_bytes, *args, **kwargs):
-        json_dict = json.loads(raw_bytes.decode('utf-8'))
+    def craft(self, doc_id, buffer, *args, **kwargs):
+        json_dict = json.loads(buffer.decode('utf-8'))
         title = json_dict['title']
         return [{
-                    'raw_bytes': title.encode('utf-8'),
+                    'buffer': title.encode('utf-8'),
                     'doc_id': doc_id,
                     'offset': 0,
                     'length': len(title),

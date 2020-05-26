@@ -35,7 +35,7 @@ def print_topk(resp):
     print(f'以下是相似的新闻内容:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
+            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
             print('👉%s.............' % item['content'][:50])
 
 def read_query_data(item):

@@ -7,7 +7,7 @@ import random
 import webbrowser
 
 from jina.enums import ClientInputType
-from jina.executors.crafters.mime import Bytes2DataURICrafter
+from jina.executors.crafters.convert import Buffer2DataURI
 from jina.flow import Flow
 from pkg_resources import resource_filename
 
@@ -27,7 +27,7 @@ f.use_grpc_gateway()  # use gRPC gateway for better batch efficiency
 
 
 def input_fn():
-    b2d = Bytes2DataURICrafter('png')
+    b2d = Buffer2DataURI('png')
     for g in glob.glob(image_src, recursive=True):
         if random.random() > sampling_rate:
             with open(g, 'rb') as fp:

@@ -14,9 +14,9 @@ from jina.executors.crafters import BaseSegmenter
 
 class GifNameRawSplit(BaseDocCrafter):
 
-    def craft(self, raw_bytes, *args, **kwargs) -> Dict:
-        file_name, raw_bytes = raw_bytes.split(b'JINA_DELIM')
-        return dict(raw_bytes=raw_bytes, meta_info=file_name)
+    def craft(self, buffer, *args, **kwargs) -> Dict:
+        file_name, buffer = buffer.split(b'JINA_DELIM')
+        return dict(buffer=buffer, meta_info=file_name)
 
 
 class GifPreprocessor(BaseSegmenter):
@@ -28,13 +28,13 @@ class GifPreprocessor(BaseSegmenter):
         self.max_frame = max_frame
         self.from_bytes = from_bytes
 
-    def craft(self, raw_bytes, doc_id):
+    def craft(self, buffer, doc_id):
         result = []
         try:
             if self.from_bytes:
-                im = Image.open(io.BytesIO(raw_bytes))
+                im = Image.open(io.BytesIO(buffer))
             else:
-                im = Image.open(raw_bytes.decode())
+                im = Image.open(buffer.decode())
             idx = 0
             for frame in get_frames(im):
                 try:

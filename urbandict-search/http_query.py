@@ -18,7 +18,7 @@ def print_topk(resp, word):
             if score <= 0.0:
                 continue
             print(
-                "{:>2d}:({:f}):{}".format(idx, score, kk.match_doc.raw_bytes.decode())
+                "{:>2d}:({:f}):{}".format(idx, score, kk.match_doc.buffer.decode())
             )
 
 

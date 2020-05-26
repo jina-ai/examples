@@ -1,6 +1,6 @@
 !CompoundExecutor
 components:
-  - !DataURI2BytesCrafter
+  - !DataURI2Buffer
     metas:
       name: uri2byte
   - !ImageReader
@@ -15,9 +15,8 @@ components:
       img_std: [0.229, 0.224, 0.225]
     metas:
       name: img_norm
-  - !Bytes2DataURICrafter
+  - !Buffer2DataURI
     with:
-      mimetype: png
       base64: true
     metas:
       name: byte2uri

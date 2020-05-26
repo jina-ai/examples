@@ -231,7 +231,7 @@ def main():
     data_path = os.path.join('/tmp/jina/flower/jpg')
     flow = Flow().load_config('flow-index.yml')
     with flow.build() as fl:
-        fl.index(raw_bytes=read_data('/tmp/jina/flower/jpg'))
+        fl.index(buffer=read_data('/tmp/jina/flower/jpg'))
 ```
 
 ### Query
@@ -300,7 +300,7 @@ def save_topk(resp, output_fn=None):
             score = kk.score.value
             if score <= 0.0:
                 continue
-            m_fn = kk.match_doc.raw_bytes.decode()
+            m_fn = kk.match_doc.buffer.decode()
             cur_result.append(m_fn)
         results.append(cur_result)
     if output_fn is not None:
@@ -493,13 +493,12 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
 - ... [and more](https://docs.jina.ai/index.html)
 
-## Stay tuned
+## Community
 
-- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
-- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 
