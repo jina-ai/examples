@@ -24,7 +24,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Prerequirements](#prerequirements)
 - [Run Index Flow](#run-index-flow)
@@ -33,7 +33,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 - [Prefetching](#prefetching)
 - [Sharding](#sharding)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

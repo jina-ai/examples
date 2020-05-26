@@ -22,7 +22,7 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Overview](#overview)
 - [Prerequirements](#prerequirements)
@@ -33,7 +33,7 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

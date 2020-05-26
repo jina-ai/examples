@@ -25,13 +25,13 @@ In this example, we will refactor the hello-world example into client-server arc
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Flow as a Service](#flow-as-a-service)
 - [Start the Client](#start-the-client)
 - [Take home message](#take-home-message)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->

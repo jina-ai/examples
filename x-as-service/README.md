@@ -25,7 +25,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Requirements](#requirements)
 - [Design the Flow](#design-the-flow)
@@ -34,7 +34,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 - [Run the Flow](#run-the-flow)
 - [Run the Encoding Work Remotely](#run-the-encoding-work-remotely)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
