@@ -30,7 +30,7 @@ Features that come out of the box:
 - REST and gRPC gateway
 - dashboard monitor
 
-To save you from the dependency hell, I will use the containerized version in the following instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No install, no uninstall, no Python virtual env. 
+To save you from the dependency hell, I will use the containerized version in the following instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtual env, no python package (un)install. 
 
 The code can of course run natively on your local machine, please [read Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
@@ -57,7 +57,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 We have a pre-built Docker image ready to use:
 
 ```bash
-docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch search
+docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex search
 ```
 
 Then you can `curl`/query/js it via HTTP POST request. [Details can be found here](#query-via-rest-api).
