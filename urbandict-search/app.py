@@ -39,7 +39,7 @@ def print_topk(resp, word):
             if score <= 0.0:
                 continue
             print('{:>2d}:({:f}):{}'.format(
-                idx, score, kk.match_doc.raw_bytes.decode()))
+                idx, score, kk.match_doc.buffer.decode()))
 
 
 def read_query_data(text):
@@ -58,7 +58,7 @@ def main(task, num_docs, top_k):
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_fn, num_docs), batch_size=16)
+            fl.index(buffer=read_data(data_fn, num_docs), batch_size=16)
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:

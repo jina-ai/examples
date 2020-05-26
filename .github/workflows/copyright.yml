@@ -37,7 +37,7 @@ jobs:
           MAX_HEADER_LEVEL: 2
           FOLDING: false
           GITHUB_TOKEN: ${{ secrets.JINA_DEV_BOT }}
-          TOC_TITLE: '**Table of Cotents**'
+          TOC_TITLE: '**Table of Contents**'
           TARGET_PATHS: '.'
           COMMIT_MESSAGE: 'chore(docs): update TOC'
           COMMIT_NAME: Jina Dev Bot
