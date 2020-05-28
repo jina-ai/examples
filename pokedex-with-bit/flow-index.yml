@@ -6,7 +6,8 @@ pods:
     yaml_path: pods/craft.yml
     read_only: true
   encoder:
-    yaml_path: pods/encode.yml  # pods/encode-baseline.yml
+    yaml_path: pods/encode.yml
+    #    yaml_path: pods/encode-baseline.yml
     replicas: $REPLICAS
     timeout_ready: 600000
     read_only: true

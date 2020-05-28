@@ -72,7 +72,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 ```
 
 #### Command args explained
-- `$(pwd)/data` is where all your images located (jpg/png are supported, but not support mix yet). You can change it to whatever path, just make sure it is absolute path
+- `$(pwd)/data` is where all your images located (jpg/png are supported). You can change it to whatever path, just make sure it is absolute path
 - `$(pwd)/workspace` is where Jina stores all indexes and other artifacts. 
 - `"JINA_LOG_PROFILING=1" -p 5000:5000` are just for dashboard monitoring. They are optional. 
 
