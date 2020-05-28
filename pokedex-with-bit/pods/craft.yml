@@ -1,8 +1,8 @@
 !CompoundExecutor
 components:
-  - !DataURI2Buffer
+  - !Any2Buffer
     metas:
-      name: uri2byte
+      name: any2byte
   - !ImageReader
     with:
       from_bytes: true
@@ -24,7 +24,11 @@ metas:
   name: compound_crafter
 requests:
   on:
-    IndexRequest:
+    [IndexRequest, SearchRequest]:
+      - !MIMEDriver {}
+      - !DocCraftDriver
+        with:
+          executor: any2byte
       - !SegmentDriver
         with:
           executor: img_read
@@ -34,18 +38,5 @@ requests:
       - !DocCraftDriver
         with:
           executor: byte2uri
-    SearchRequest:
-      - !DocCraftDriver
-        with:
-          executor: uri2byte
-      - !SegmentDriver
-        with:
-          executor: img_read
-      - !ChunkCraftDriver
-        with:
-          executor: img_norm
-      - !DocCraftDriver
-        with:
-          executor: byte2uri  # (optional) convert back to data uri for visualization
-    ControlRequest:
+      ControlRequest:
       - !ControlReqDriver {}
