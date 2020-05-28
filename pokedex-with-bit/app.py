@@ -26,16 +26,15 @@ def config():
 def index():
     def input_fn():
         for g in glob.glob(image_src, recursive=True)[:num_docs]:
-            with open(g, 'rb') as fp:
-                yield fp.read()
+            yield g
 
     # from jina.clients.python import PyClient
-    # PyClient.check_input(input_fn)
+    # PyClient.check_input(input_fn())
 
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index(input_fn, batch_size=64, mime_type='png')
+        f.index(input_fn, batch_size=64)
 
 
 # for search
