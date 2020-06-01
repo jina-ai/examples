@@ -1,22 +1,12 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import io
-from typing import Dict
 
 import numpy as np
 from PIL import Image
 from craft.gif_reader import get_frames
-from jina.executors.crafters import BaseDocCrafter
 from jina.executors.crafters import BaseSegmenter
-
-
-class GifNameRawSplit(BaseDocCrafter):
-
-    def craft(self, buffer, *args, **kwargs) -> Dict:
-        file_name, buffer = buffer.split(b'JINA_DELIM')
-        return dict(buffer=buffer, meta_info=file_name)
 
 
 class GifPreprocessor(BaseSegmenter):
@@ -26,15 +16,11 @@ class GifPreprocessor(BaseSegmenter):
         self.img_shape = img_shape
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
-        self.from_bytes = from_bytes
 
     def craft(self, buffer, doc_id):
         result = []
         try:
-            if self.from_bytes:
-                im = Image.open(io.BytesIO(buffer))
-            else:
-                im = Image.open(buffer.decode())
+            im = Image.open(io.BytesIO(buffer))
             idx = 0
             for frame in get_frames(im):
                 try:
