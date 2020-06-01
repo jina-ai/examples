@@ -1,8 +1,8 @@
 !CompoundExecutor
 components:
-  - !Any2Buffer
+  - !URI2Buffer
     metas:
-      name: any2byte
+      name: uri2byte
   - !ImageReader
     with:
       from_bytes: true
@@ -25,10 +25,9 @@ metas:
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !MIMEDriver {}
       - !DocCraftDriver
         with:
-          executor: any2byte
+          executor: uri2byte
       - !SegmentDriver
         with:
           executor: img_read
@@ -38,5 +37,5 @@ requests:
       - !DocCraftDriver
         with:
           executor: byte2uri
-      ControlRequest:
+    ControlRequest:
       - !ControlReqDriver {}
