@@ -1,28 +1,16 @@
-!CompoundExecutor
-components:
-  - !GifNameRawSplit
-    metas:
-      name: name_split  # a customized name
-      workspace: $TEST_WORKDIR
-  - !GifPreprocessor
-    with:
-      every_k_frame: 2
-      from_bytes: true
-    metas:
-      name: gif2chunk_preprocessor  # a customized name
+!GifPreprocessor
+with:
+  every_k_frame: 2
 metas:
-  name: compound_crafter
-  workspace: $TEST_WORKDIR
+  name: gif2chunk_preprocessor  # a customized name
   py_modules: gif2chunk.py
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !DocCraftDriver
-        with:
-          executor: name_split
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
+      - !Buffer2URI {}
       - !DocPruneDriver
         with:
           pruned: buffer  # we will never use buffer in the remaining pipeline

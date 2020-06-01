@@ -1,8 +1,5 @@
 !CompoundExecutor
 components:
-  - !URI2Buffer
-    metas:
-      name: uri2byte
   - !ImageReader
     with:
       from_bytes: true
@@ -15,27 +12,18 @@ components:
       img_std: [0.229, 0.224, 0.225]
     metas:
       name: img_norm
-  - !Buffer2DataURI
-    with:
-      base64: true
-    metas:
-      name: byte2uri
 metas:
   name: compound_crafter
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !DocCraftDriver
-        with:
-          executor: uri2byte
+      - !URI2Buffer {}
       - !SegmentDriver
         with:
           executor: img_read
       - !ChunkCraftDriver
         with:
           executor: img_norm
-      - !DocCraftDriver
-        with:
-          executor: byte2uri
+      - !Buffer2URI {}
     ControlRequest:
       - !ControlReqDriver {}

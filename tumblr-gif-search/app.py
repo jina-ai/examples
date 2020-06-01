@@ -1,8 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
-import glob
 import json
 import os
 from datetime import datetime
@@ -61,18 +59,6 @@ def print_result(resp, fp):
         fp.write(json.dumps(v, sort_keys=True) + '\n')
 
 
-def input_fn(random=False, with_filename=True):
-    idx = 0
-    for g in glob.glob(GIF_BLOB)[:num_docs]:
-        with open(g, 'rb') as fp:
-            # print(f'im asking to read {idx}')
-            if with_filename:
-                yield g.encode() + b'JINA_DELIM' + fp.read()
-            else:
-                yield fp.read()
-            idx += 1
-
-
 if do_index:
     # index
     f = Flow.load_config('flow-index.yml')
@@ -80,17 +66,12 @@ if do_index:
     # input_fn = (g.encode() for g in glob.glob(GIF_BLOB)[:num_docs])
 
     with f:
-        f.index(input_fn, batch_size=8)
+        f.index_files(GIF_BLOB, batch_size=8, size=num_docs, read_mode='rb', mime_type='gif')
 else:
     # query
     q = Flow.load_config('flow-query.yml')
 
     with open(os.environ['TEST_WORKDIR'] + '/topk.json', 'w', encoding='utf8') as fp:
         ppr = lambda x: print_result(x, fp)
-
-        if RUN_MODE == 'query':
-            bytes_gen = input_fn(random=True)
-        else:
-            bytes_gen = input_fn
         with q:
-            q.search(bytes_gen, callback=ppr, top_k=80, batch_size=8)
+            q.search_files(GIF_BLOB, size=num_docs, shuffle=True, callback=ppr, top_k=80, batch_size=8)
