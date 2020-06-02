@@ -9,7 +9,7 @@ pods:
     replicas: $REPLICAS
   tf_encode:
     yaml_path: pods/encode.yml
-    #    yaml_path: pods/encode-baseline.yml
+#    yaml_path: pods/encode-baseline.yml
     replicas: $REPLICAS
     timeout_ready: 600000
   chunk_idx:

@@ -6,7 +6,7 @@ import sys
 
 from jina.flow import Flow
 
-num_docs = 1000000
+num_docs = os.environ.get('MAX_DOCS', 50000)
 image_src = 'data/**/*.png'
 
 
@@ -29,7 +29,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(image_src, batch_size=64)
+        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs)
 
 
 # for search
