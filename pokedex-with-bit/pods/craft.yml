@@ -16,7 +16,14 @@ metas:
   name: compound_crafter
 requests:
   on:
-    [IndexRequest, SearchRequest]:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          executor: img_read
+      - !ChunkCraftDriver
+        with:
+          executor: img_norm
+    SearchRequest:
       - !URI2Buffer {}
       - !SegmentDriver
         with:
@@ -24,6 +31,5 @@ requests:
       - !ChunkCraftDriver
         with:
           executor: img_norm
-      - !Buffer2URI {}
     ControlRequest:
       - !ControlReqDriver {}
