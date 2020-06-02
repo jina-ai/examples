@@ -1,4 +1,4 @@
-!DocPbIndexer
+!DataURIPbIndexer
 with:
   index_filename: doc.gzip
 metas:
