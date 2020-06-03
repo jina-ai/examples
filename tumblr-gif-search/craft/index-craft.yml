@@ -7,10 +7,10 @@ metas:
 requests:
   on:
     [IndexRequest, SearchRequest]:
+      - !URI2Buffer {}
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
-      - !Buffer2URI {}
       - !DocPruneDriver
         with:
           pruned: buffer  # we will never use buffer in the remaining pipeline
