@@ -93,7 +93,7 @@ def save_topk(resp, output_fn=None):
                 fname = os.path.split(img)[-1]
                 names=fname.split('_')[:-1]
                 fname=''.join(names)
-                fname = f'Query: {fname}' if m_idx == 0 else f'top_{m_idx}: {fname}'
+                fname = f'' if m_idx == 0 else f'top_{m_idx}: {fname}'
                 ax[q_idx][m_idx].imshow(mpimg.imread(img))
                 ax[q_idx][m_idx].set_title(fname, fontsize=7)
         [aa.axis('off') for a in ax for aa in a]
