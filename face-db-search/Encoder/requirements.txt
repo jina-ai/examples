@@ -1,0 +1,2 @@
+jina[devel]
+opencv-python
