@@ -40,13 +40,14 @@ In this demo, we use the  Labeled Faces in the Wild (LFW) Dataset data from [htt
 
 ## <a name="custom-encoder">Overview</a>
 
-The overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pretrained `facenet` model to encode the Chunks into vectors. 
+The overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pretrained `facenet` model is used to encode the Chunks into vectors. 
 
 In this demo, we will show how to define a custom Encoder to support a variety of models and use the pretrained model for indexing and searching.
 
 <p align="center">
   <img src=".github/dataset.png" alt="Dataset Example" width="90%">
 </p>
+
 
 <details>
 <summary>Click here to see the query outputs</summary>
