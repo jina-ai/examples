@@ -1,0 +1,10 @@
+!MinRanker
+requests:
+  on:
+    SearchRequest:
+      - !Chunk2DocScoreDriver
+        with:
+          method: score
+      - !DocPruneDriver
+        with:
+          pruned: chunks

@@ -1,0 +1,19 @@
+!BasePbIndexer
+with:
+  index_filename: meta_doc_index.gzip
+metas:
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !DocKVIndexDriver
+        with:
+          method: add
+
+    SearchRequest:
+      - !DocKVSearchDriver
+        with:
+          method: query
+
+    ControlRequest:
+      - !ControlReqDriver {}

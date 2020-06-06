@@ -8,6 +8,7 @@ pods:
     read_only: true
   doc_idx:
     yaml_path: index/doc.yml
+    needs: gateway
   tf_encode:
     yaml_path: encode/encode.yml
     needs: chunk_seg

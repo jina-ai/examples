@@ -1,0 +1,42 @@
+!ChunkIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vecidx_index.gzip
+      metrix: cosine
+
+    metas:
+      name: vecidx_index
+      workspace: $TMP_WORKSPACE
+
+  - !BasePbIndexer
+    with:
+      index_filename: chunk_index.gzip
+
+    metas:
+      name: chunk_index
+      workspace: $TMP_WORKSPACE
+
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: vecidx_index
+          method: add
+      - !ChunkPruneDriver {}
+      - !ChunkKVIndexDriver
+        with:
+          executor: chunk_index
+          method: add
+
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx_index
+          method: query
+      - !ChunkPruneDriver {}
+      - !ChunkKVSearchDriver
+        with:
+          executor: chunk_index
+          method: query

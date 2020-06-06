@@ -1,0 +1,10 @@
+!TransformerRobertaEncoder
+metas:
+  py_modules: transformer_roberta.py
+
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode

@@ -22,7 +22,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Overview](#overview)
 - [Prerequirements](#prerequirements)
@@ -239,7 +239,7 @@ def main(num_docs):
     flow = Flow().load_config('flow-index.yml')
     with flow.build() as fl:
         data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
-        fl.index(raw_bytes=read_data(data_fn, num_docs))
+        fl.index(buffer=read_data(data_fn, num_docs))
 
 ```
 
@@ -309,7 +309,7 @@ def print_topk(resp, word):
             score = kk.score.value
             if score <= 0.0:
                 continue
-            doc = kk.match_doc.raw_bytes.decode()
+            doc = kk.match_doc.buffer.decode()
             name, line = doc.split('!', maxsplit=1)
             print('> {:>2d}({:f}). {} said: {}'.format(
                 idx, score, name.upper(), line))
@@ -427,7 +427,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVIndexDriver
@@ -443,7 +443,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVSearchDriver
@@ -467,7 +467,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVIndexDriver
@@ -490,7 +490,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVSearchDriver

@@ -72,12 +72,12 @@ def save_topk(resp, output_fn=None):
         print("-" * 20)
         print(f'query image: {d_fn}')
         print('matched images' + "*" * 10)
-        print("{}".format(d.raw_bytes.decode()))
+        print("{}".format(d.buffer.decode()))
         for idx, kk in enumerate(d.topk_results):
             score = kk.score.value
             if score < 0.0:
                 continue
-            m_fn = kk.match_doc.raw_bytes.decode()
+            m_fn = kk.match_doc.buffer.decode()
             print('{:>2d}:({:f}):{}'.format(
                 idx, score, m_fn))
             cur_result.append(m_fn)
@@ -110,7 +110,7 @@ def main(task, num_docs, top_k, path):
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
-            fl.index(raw_bytes=read_data(data_path, num_docs), batch_size=2)
+            fl.index(buffer=read_data(data_path, num_docs), batch_size=2)
     elif task == 'query':
         if not path:
             cmd_prompt = '\033[{}mpython {} -t query -p <JPG file or directory>\033[0m'.format(32, sys.argv[0])

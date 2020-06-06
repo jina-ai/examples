@@ -1,0 +1,24 @@
+!Flow
+pods:
+  doc_indexer:
+    yaml_path: pods/doc_indexer/doc_indexer.yml
+    replicas: 2
+
+  extractor:
+    yaml_path: pods/extractor/extractor.yml
+    needs: gateway
+    replicas: 2
+
+  encoder:
+    image: jinaai/hub.executors.encoders.nlp.transformers-hitscir
+    timeout_ready: 6000000
+    replicas: 2
+
+  chunk_indexer:
+    yaml_path: pods/chunk_indexer/chunk_indexer.yml
+    replicas: 2
+
+  join:
+    yaml_path: _merge
+    needs: [chunk_indexer, doc_indexer]
+    replicas: 2
