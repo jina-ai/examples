@@ -1,0 +1,27 @@
+!Flow
+with:
+  read_only: true
+pods:
+  loader:
+    yaml_path: yaml/craft-load.yml
+    read_only: true
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
+  normalizer:
+    yaml_path: yaml/craft-normalize.yml
+    read_only: true
+  encoder:
+    image: jinaai/hub.executors.encoders.image.facenet
+    timeout_ready: 600000
+    read_only: true
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+    separated_workspace: true
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
+  ranker:
+    yaml_path: MinRanker
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml

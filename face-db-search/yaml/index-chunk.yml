@@ -1,0 +1,52 @@
+!ChunkIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+      metrix: cosine
+    metas:
+      name: vecidx  # a customized name
+      workspace: $TMP_WORKSPACE
+  - !BasePbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx  # a customized name
+      workspace: $TMP_WORKSPACE
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - buffer
+            - blob
+            - text
+      - !KVIndexDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: NumpyIndexer
+      - !PruneDriver
+        with:
+          level: chunk
+          pruned:
+            - embedding
+            - buffer
+            - blob
+            - text
+      - !KVSearchDriver
+        with:
+          level: chunk
+          executor: BasePbIndexer
