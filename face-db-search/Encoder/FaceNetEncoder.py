@@ -11,7 +11,7 @@ class FaceNetTorchEncoder(BaseCVTorchEncoder):
 
     """
 
-    def __init__(self,pretrained: str='vggface2',pool_strategy: str = 'mean', *args, **kwargs):
+    def __init__(self,pretrained: str='vggface2', *args, **kwargs):
         """
         :pretrained : The weights to load
         """
