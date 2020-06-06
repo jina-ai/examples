@@ -2,7 +2,6 @@
 with:
   pretrained: 'vggface2'
   img_shape: 160
-  pool_strategy: mean
 
 metas:
   name: face-encoder
