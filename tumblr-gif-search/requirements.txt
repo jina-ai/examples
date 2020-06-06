@@ -1,3 +1,4 @@
 aiofiles
 aiohttp
 tensorflow >= 2.0
+jina[devel]

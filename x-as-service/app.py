@@ -10,7 +10,7 @@ from jina.helper import colored
 def input_fn():
     with open('README.md') as fp:
         for v in fp:
-            yield v.encode()
+            yield v
 
 
 def print_embed(req):
