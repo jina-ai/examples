@@ -26,6 +26,7 @@ In this demo, we use the  Labeled Faces in the Wild (LFW) Dataset data from [htt
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
+- [Custom Encoder](#custom-encoder)
 - [Run the Flows](#run-the-flows)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -37,7 +38,7 @@ In this demo, we use the  Labeled Faces in the Wild (LFW) Dataset data from [htt
 
 
 
-## <a name="overview">Overview</a>
+## <a name="custom-encoder">Overview</a>
 
 The overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pretrained `facenet` model to encode the Chunks into vectors. 
 
@@ -176,7 +177,7 @@ pods:
 
 This way we can pass the image  tag of docker container containing the Encoder
 
-## Custom Encoder
+## <a name="custom-encoder">Custom Encoder</a>
 
 Jina has a documentation on using the available Executors and overiding them with Custom Executor according to your needs. Here we build a custom encoder using [FaceNet](https://arxiv.org/abs/1503.03832).
 
