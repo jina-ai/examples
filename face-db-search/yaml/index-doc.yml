@@ -1,0 +1,20 @@
+!DocPbIndexer
+with:
+  index_filename: doc.gzip
+metas:
+  name: docIndexer
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    SearchRequest:
+      - !DocKVSearchDriver
+        with:
+          method: query
+
+    IndexRequest:
+      - !DocPruneDriver
+        with:
+          pruned: ['chunks']
+      - !DocKVIndexDriver
+        with:
+          method: add
