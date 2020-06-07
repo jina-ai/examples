@@ -23,7 +23,7 @@ def read_data(fn, num_docs):
     if num_docs > 0:
         random.shuffle(result)
         result = result[:num_docs]
-    for item in result[:100]:
+    for item in result:
         yield item
 
 
