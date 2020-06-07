@@ -1,0 +1,11 @@
+!TextReader
+with: {}
+metas:
+  name: loader
+  py_modules: text_loader.py
+requests:
+  on:
+    [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:
+      - !DocCraftDriver
+        with:
+          method: craft
