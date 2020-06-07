@@ -33,7 +33,7 @@ def read_data(data_fn, output_fn):
             character_set.add(name)
             name = _replace_pat.sub(r'', name)
             for s in sents:
-                doc_list.append('{}! {}'.format(name, s))
+                doc_list.append('{}[SEP]{}'.format(name, s))
     doc_list = list(frozenset(doc_list))
     print('some statistics about the data:')
     print('\tnum characters: {}'.format(len(character_set)))

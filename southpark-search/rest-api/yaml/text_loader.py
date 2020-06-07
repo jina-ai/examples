@@ -28,3 +28,9 @@ class TextReader(BaseDocCrafter):
             raise ValueError('no value found in "buffer", "uri" and "text"')
         return dict(weight=1., text=_text)
 
+
+class TextExtractor(BaseDocCrafter):
+    def craft(self, text: str, *args, **kwargs) -> Dict:
+        name, s = text.split('[SEP]')
+        self.logger.info('{}, {}'.format(name, s))
+        return dict(weight=1., text=s, meta_info=text.encode('utf8'))

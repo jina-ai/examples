@@ -1,7 +1,7 @@
-!TextReader
+!TextExtractor
 with: {}
 metas:
-  name: loader
+  name: extractor
   py_modules: text_loader.py
 requests:
   on:
