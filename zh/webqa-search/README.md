@@ -7,7 +7,9 @@
     那么如何使用jina搭建一套搜索引擎呢？请看如下分解。
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
@@ -288,7 +290,7 @@ with flow:
         if not title:
             break
         ppr = lambda x: print_topk(x)
-        flow.search(read_query_data(item), callback=ppr, topk=top_k)
+        flow.search(read_query_data(item), output_fn=ppr, topk=top_k)
 ```
 
 ```python
@@ -296,7 +298,7 @@ def read_query_data(item):
     yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')    
 ```
 
-    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`callback`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`buffer`代表了Document的原数据。
+    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`output_fn`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`buffer`代表了Document的原数据。
 
 ```python
 def print_topk(resp):
