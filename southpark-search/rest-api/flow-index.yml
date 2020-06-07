@@ -1,0 +1,22 @@
+!Flow
+pods:
+  splittor:
+    yaml_path: yaml/craft-split.yml
+    replicas: $REPLICAS
+    read_only: true
+  encoder:
+    yaml_path: yaml/encode.yml
+    replicas: $REPLICAS
+    timeout_ready: 1200000
+    read_only: true
+  chunk_indexer:
+    yaml_path: yaml/index-chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
+  doc_indexer:
+    yaml_path: yaml/index-doc.yml
+    needs: gateway
+  join_all:
+    yaml_path: _merge
+    needs: [doc_indexer, chunk_indexer]
+    read_only: true
