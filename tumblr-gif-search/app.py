@@ -7,7 +7,8 @@ import sys
 from jina.flow import Flow
 
 num_docs = os.environ.get('MAX_DOCS', 50000)
-image_src = 'data/**/*.png'
+
+GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'
 
 
 def config():
@@ -23,13 +24,10 @@ def config():
 
 # for index
 def index():
-    # from jina.clients.python import PyClient
-    # PyClient.check_input(input_fn())
-
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs)
+        f.index_files(GIF_BLOB, batch_size=8, read_mode='rb', size=num_docs)
 
 
 # for search
