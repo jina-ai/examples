@@ -7,7 +7,6 @@ metas:
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !URI2Buffer {}
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
