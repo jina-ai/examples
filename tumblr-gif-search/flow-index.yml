@@ -3,7 +3,7 @@ with:
   logserver: true
 pods:
   chunk_seg:
-    yaml_path: craft/index-craft.yml
+    yaml_path: craft/craft.yml
     replicas: $REPLICAS
     read_only: true
   doc_idx:
