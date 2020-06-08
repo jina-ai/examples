@@ -32,5 +32,4 @@ class TextReader(BaseDocCrafter):
 class TextExtractor(BaseDocCrafter):
     def craft(self, text: str, *args, **kwargs) -> Dict:
         name, s = text.split('[SEP]')
-        self.logger.info('{}, {}'.format(name, s))
         return dict(weight=1., text=s, meta_info=text.encode('utf8'))
