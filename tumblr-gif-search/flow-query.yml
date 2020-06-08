@@ -6,7 +6,7 @@ with:
   to_datauri: true
 pods:
   chunk_seg:
-    yaml_path: craft/index-craft.yml
+    yaml_path: craft/craft.yml
     replicas: $REPLICAS
   tf_encode:
     yaml_path: encode/encode.yml
