@@ -28,6 +28,7 @@ def config(mode='index'):
     os.environ['SHARDS'] = str(8)
     os.environ['TMP_WORKSPACE'] = './workspace'
     os.environ['TMP_DATA_DIR'] = './data'
+    os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(10000))
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
@@ -39,7 +40,7 @@ def index():
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'character-lines.csv')
     f = Flow().load_config('flow-index.yml')
     with f:
-        f.index_lines(filepath=data_path, batch_size=8)
+        f.index_lines(filepath=data_path, batch_size=8, size=int(os.environ['MAX_NUM_DOCS']))
 
 
 def search():
