@@ -8,9 +8,10 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !DocKVIndexDriver
+      - !KVIndexDriver
         with:
           method: add
+          level: doc
 
     SearchRequest:
       - !DocKVSearchDriver
