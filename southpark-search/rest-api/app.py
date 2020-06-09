@@ -10,9 +10,10 @@ from jina.flow import Flow
 def config(mode='index'):
     os.environ['REPLICAS'] = str(2) if mode == 'index' else str(1)
     os.environ['SHARDS'] = str(8)
-    os.environ['TMP_WORKSPACE'] = './workspace'
-    os.environ['TMP_DATA_DIR'] = './data'
-    os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(10000))
+    os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', './workspace')
+    os.environ['DATA_DIR'] = os.environ.get('DATA_DIR', './data')
+    os.environ['DATA_FILE'] = os.environ.get('DATA_FILE', 'character-lines.csv')
+    os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(106819))
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
@@ -21,7 +22,7 @@ def print_error():
 
 
 def index():
-    data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'character-lines.csv')
+    data_path = os.path.join(os.environ['DATA_DIR'], os.environ['DATA_FILE'])
     f = Flow().load_config('flow-index.yml')
     with f:
         f.index_lines(filepath=data_path, batch_size=8, size=int(os.environ['MAX_NUM_DOCS']))
