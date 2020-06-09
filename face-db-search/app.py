@@ -112,7 +112,8 @@ def main(task, num_docs, top_k, path):
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'lfw')
     if task == 'index':
         flow = Flow().load_config('flow-index.yml')
-        with flow.build() as fl:
+        with flow:
+            flow.index_file(...)
             print('Checking Input...')
             PyClient.check_input(read_data(data_path, num_docs))
             print('Start Indexing...')
