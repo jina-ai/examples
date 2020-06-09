@@ -25,10 +25,11 @@ requests:
           executor: vecidx_index
           method: add
       - !ChunkPruneDriver {}
-      - !ChunkKVIndexDriver
+      - !KVIndexDriver
         with:
           executor: chunk_index
           method: add
+          level: chunk
 
     SearchRequest:
       - !VectorSearchDriver
