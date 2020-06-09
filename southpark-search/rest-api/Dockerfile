@@ -1,18 +1,20 @@
-FROM jinaai/jina:devel
+FROM pytorch/pytorch:latest
 
-ADD requirements.txt .
+WORKDIR /
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y git \
                                                curl
 
 RUN python -m pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir transformers \
+                               jina[http]
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
 
 COPY . /
 
-RUN bash get_data.sh && python app.py dryrun
+RUN bash get_data.sh && \
+    python app.py dryrun
 
 ENTRYPOINT ["python", "app.py"]
