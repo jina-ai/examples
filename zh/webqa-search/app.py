@@ -19,11 +19,12 @@ def read_data(fn, num_docs):
     result = []
     random.seed(0)
     for _, value in items.items():
-        result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
+        result.append("{}".format(json.dumps(value, ensure_ascii=False)))
     if num_docs > 0:
         random.shuffle(result)
         result = result[:num_docs]
     for item in result:
+        print(item)
         yield item
 
 
@@ -31,12 +32,12 @@ def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
+            item = json.loads(tk.match_doc.text)
             print('👉%s' % item['title'])
 
 
 def read_query_data(item):
-    yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
+    yield "{}".format(json.dumps(item, ensure_ascii=False))
 
 
 @click.command()

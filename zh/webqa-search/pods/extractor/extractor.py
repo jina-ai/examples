@@ -6,12 +6,12 @@ import json
 
 from jina.executors.crafters import BaseSegmenter
 
+
 class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, doc_id, buffer, *args, **kwargs):
-        json_dict = json.loads(buffer.decode('utf-8'))
+    def craft(self, doc_id, text, *args, **kwargs):
+        json_dict = json.loads(text)
         title = json_dict['title']
         return [{
-                    'buffer': title.encode('utf-8'),
                     'doc_id': doc_id,
                     'offset': 0,
                     'length': len(title),
