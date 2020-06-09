@@ -129,9 +129,9 @@ def main(task, num_docs, top_k, path):
             data_path = path
 
         flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
+        with flow:
             ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.png'))
-            fl.search(read_data_fn(data_path, 5), callback=ppr, top_k=top_k)
+            fl.search_files(...)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
@@ -139,4 +139,3 @@ def main(task, num_docs, top_k, path):
 
 if __name__ == '__main__':
     main()
-
