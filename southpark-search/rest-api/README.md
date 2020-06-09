@@ -171,22 +171,16 @@ The response is organized in the format of `json` and the matched results is sto
 You can give it a try and index the data by yourself as well. We've built another docker image for playing around. 
 
 ```bash
-docker run -v "$(pwd)/workspace:/workspace" -v "$(pwd)/data:/data" -e "JINA_LOG_PROFILING=1" -e "MAX_NUM_DOCS=100" -p 5000:5000 jinaai/hub.app.distilbert index
+docker run -v "$(pwd)/workspace:/workspace" -v "$(pwd)/data:/data" -e "JINA_LOG_PROFILING=1" -p 5000:5000 -e "MAX_NUM_DOCS=100" jinaai/hub.app.distilbert index
 ```
 
-Command args explained
+**Command args explained**
 
 - `$(pwd)/data` is the path of the data, running `bash get_data.sh` will store the data at `$(pwd)/data` by default
 - `$(pwd)/workspace` is where the Jina index will be stored.
 - `-e "JINA_LOG_PROFILING=1" -p 5000:5000` are just for dashboard monitoring. They are optional. By setting these args, you can monitor the logs at [Jina dashboard](https://dashboard.jina.ai/#/logs). 
 - `-e "MAX_NUM_DOCS=100"` is to set up the maximal number of documents to stored. For illustation purpose, we set it to `100`.
 
-Of course, you can use this docker image to index your own data as well. Simply save your text data at `/your/favourite/path` with the name `my_awesome_data.csv` and keep each Document you want to index at one line in that file. Run the following command,
-
-```
-docker run -v "$(pwd)/workspace:/workspace" -v "/your/favourite/path:/data" -e "DATA_FILE= my_awesome_data.csv" jinaai/hub.app.distilbert index
-
-```
 
 ### Search
 
@@ -196,16 +190,24 @@ After building the index, you can use the following command to search,
 docker run -v "$(pwd)/workspace:/workspace" -p 45678:45678 jinaai/hub.app.distilbert search
 ```
 
-Command args explained
+**Command args explained**
 
 - `$(pwd)/workspace` is where the Jina index will be stored.
 - `-p 45678:45678` is for mapping the RESTful APIs to the local machine.
 
-Now you can search with the RESTful APIs as above.
+Now you can search with the RESTful APIs as before.
 
+
+### Index your own data
+Of course, you can use this docker image to index your own data as well. Simply save your text data at `/your/favourite/path` with the name `my_awesome_data.csv` and keep each Document you want to index at one line in that file. Run the following command,
+
+```bash
+docker run -v "$(pwd)/workspace:/workspace" -v "/your/favourite/path:/data" -e "DATA_FILE= my_awesome_data.csv" jinaai/hub.app.distilbert index
+
+```
 
 ## Next Steps
-- Check out the technique details of this demo at [README.md](../README.md)
+- Check out the details of this demo at [README.md](../README.md)
 
 ## Documentation
 
