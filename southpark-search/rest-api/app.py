@@ -7,22 +7,6 @@ import os
 from jina.flow import Flow
 
 
-# def print_topk(resp, word):
-#     for d in resp.search.docs:
-#         print(f'Ta-Dah🔮, here are what we found for: {word}')
-#         for idx, kk in enumerate(d.topk_results):
-#             score = kk.score.value
-#             if score < 0.0:
-#                 continue
-#             doc = kk.match_doc.text
-#             name, line = doc.split('!', maxsplit=1)
-#             print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
-
-
-# def read_query_data(text):
-#     yield '{}'.format(text).lower()
-
-
 def config(mode='index'):
     os.environ['REPLICAS'] = str(2) if mode == 'index' else str(1)
     os.environ['SHARDS'] = str(8)
@@ -69,26 +53,6 @@ def main():
     else:
         print_error()
         raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
-
-    # os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
-    # data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'character-lines.csv')
-    # if task == 'index':
-    #     f = Flow().load_config('flow-index.yml')
-    #     with f:
-    #         f.index_lines(filepath=data_path, size=num_docs, batch_size=8)
-    #     print('done')
-    # elif task == 'query':
-    #     f = Flow().load_config('flow-query.yml')
-    #     with f:
-    #         while True:
-    #             text = input('please type a sentence: ')
-    #             if not text:
-    #                 break
-    #             ppr = lambda x: print_topk(x, text)
-    #             f.search(read_query_data(text), callback=ppr, topk=top_k)
-    # else:
-    #     raise NotImplementedError(
-    #         f'unknown task: {task}. A valid task is either `index` or `query`.')
 
 
 if __name__ == '__main__':
