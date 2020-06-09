@@ -8,12 +8,12 @@ from jina.flow import Flow
 
 
 def config(mode='index'):
-    os.environ['REPLICAS'] = str(2) if mode == 'index' else str(1)
-    os.environ['SHARDS'] = str(8)
+    os.environ['REPLICAS'] = os.environ.get('REPLICAS', str(2) if mode == 'index' else str(1))
+    os.environ['SHARDS'] = os.environ.get('SHARDS', str(8))
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', './workspace')
     os.environ['DATA_DIR'] = os.environ.get('DATA_DIR', './data')
     os.environ['DATA_FILE'] = os.environ.get('DATA_FILE', 'character-lines.csv')
-    os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(106819))
+    os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(10000))
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
