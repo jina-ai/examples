@@ -41,15 +41,15 @@ def read_query_data(item):
 
 
 @click.command()
-@click.option('--task', '-t', default='index')
+@click.option('--task', '-t', default='query')
 @click.option('--top_k', '-k', default=5)
-@click.option('--num_docs', '-n', default=10)
+@click.option('--num_docs', '-n', default=100)
 def main(task, top_k, num_docs):
     if task == 'index':
         data_fn = os.path.join(workspace_path, "pre_web_text_zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow:
-            flow.index_lines(lines=read_data(data_fn, num_docs), batch_size=32)
+            flow.index_lines(filepath=data_fn, size=num_docs, batch_size=32)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')

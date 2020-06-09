@@ -239,30 +239,15 @@ python app.py -t index -n 10000
 
 </details>
 
-    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过上文提到的`flow-index.yml`来定义创建索引任务的Flow，然后通过`index()`函数对数据进行索引创建。
+    现在我们可以通过代码让这个Flow跑起来了。在创建索引的过程中，我们通过上文提到的`flow-index.yml`来定义创建索引任务的Flow，然后通过`index_lines()`函数对数据进行索引创建。
 
 ```python
 flow = Flow().load_config('flow-index.yml')
 with flow:
-    flow.index(buffer=read_data(data_fn))
+    flow.index_lines(filepath=data_fn, size=num_docs, batch_size=32)
 ```
 
-    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，并以`bytes`的数据类型发送到Flow中。因为jina是一个支持各种不同模态内容的搜索引擎，所以各种数据都必须以`bytes`的形式发送。
-
-```python
-def read_data(fn, num_docs):
-    with open(os.path.join(workspace_path, fn), 'r', encoding='utf-8') as f:
-        items = json.load(f)
-    result = []
-    random.seed(0)
-    for _, value in items.items():
-        result.append(("{}".format(json.dumps(value, ensure_ascii=False))).encode("utf-8"))
-    if num_docs > 0:
-        random.shuffle(result)
-        result = result[:num_docs]
-    for item in result:
-        yield item
-```
+    在创建索引的过程中，我们将每个问题和问题下的所有回复当成一个Document，使用`index_lines()`将文件地址传入Flow中。
 
 ### 查询
 
@@ -279,7 +264,7 @@ python app.py -t query
 
 </details>
 
-    在查询时刻，我们同样通过`flow-query.yml`定义查询任务的Flow。通过`search()`方法进行查询，查询的数据同样需要转换为`bytes`的数据类型。
+    在查询时刻，我们同样通过`flow-query.yml`定义查询任务的Flow。通过`search()`方法进行查询。
 
 ```python
 flow = Flow().load_config('flow-query.yml')
@@ -295,18 +280,18 @@ with flow:
 
 ```python
 def read_query_data(item):
-    yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')    
+    yield ("{}".format(json.dumps(item, ensure_ascii=False)))   
 ```
 
-    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`output_fn`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`buffer`代表了Document的原数据。
+    在查询完成以后，FLow返回的数据形式为`Protobuf`，如果你希望了解详细的`Protobuf`内容，可以参考[链接](https://github.com/jina-ai/jina/blob/master/jina/proto/jina.proto)。`output_fn`参数接收一个函数，在接收到jina的返回结果后，会调用该函数对返回结果进行后处理。在这里，我们从返回结果中把得分最高的结果打印出来。`resp.search.docs`包含了所有的查询结果，对于每个查询结果得分最高的k个结果会保存在`topk_results`这个字段下。`text`代表了Document的原数据。
 
 ```python
 def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
-            print('→%s' % item['title'])
+            item = json.loads(tk.match_doc.text)
+            print('👉%s' % item['title'])
 ```
 
 ## 小结
@@ -336,12 +321,16 @@ def print_topk(resp):
 with:
   index_filename: doc_index.gzip
 
+metas:
+  workspace: $TMP_WORKSPACE
+
 requests:
   on:
     IndexRequest:
-      - !DocKVIndexDriver
+      - !KVIndexDriver
         with:
           method: add
+          level: doc
 
     SearchRequest:
       - !DocKVSearchDriver
@@ -351,7 +340,7 @@ requests:
 
     在`requests on`部分，我们分别定义了`IndexRequest`和`SearchRequest`下的处理逻辑。
 
-    在`IndexRequest`请求时，`doc_indexer`调用`DocKVIndexDriver`进行索引存储。在一方面，因为Pod之间传递的数据类型为ProtoBuf。所以，Driver是一个数据类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换尾ProtoBuf。在另一方面，`DocKVIndexDriver`调用了`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
+    在`IndexRequest`请求时，`doc_indexer`调用`KVIndexDriver`进行索引存储，因为这里存储的是Document级别的数据，所以我们指定存储`level`为doc。在一方面，因为Pod之间传递的数据类型为ProtoBuf。所以，Driver是一个数据类型转换器，将ProtoBuf转换为Python Object / Numpy Object，或将Python Object / Numpy Object转换尾ProtoBuf。在另一方面，`KVIndexDriver`调用了`BasePbIndexer`的`add()`存储了Document级别的数据，也就是存储了Document id和Document原数据。
 
     但是在`SearchRequest`时，`doc_indexer`调用`DocKVSearchDriver`查询了Document级别的索引。在`DocKVSearchDriver`中，`DocKVSearchDriver`调用了`BasePbIndexer`的`query()`方法，通过Document id索引Document的原数据。
 
@@ -383,16 +372,16 @@ requests:
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, doc_id, buffer, *args, **kwargs):
-        json_dict = json.loads(buffer.decode('utf-8'))
+    def craft(self, doc_id, text, *args, **kwargs):
+        json_dict = json.loads(text)
         title = json_dict['title']
         return [{
-                    'buffer': title.encode('utf-8'),
-                    'doc_id': doc_id,
-                    'offset': 0,
-                    'length': len(title),
-                    'text': title
-                }]
+            'buffer': title.encode('utf-8'),
+            'doc_id': doc_id,
+            'offset': 0,
+            'length': len(title),
+            'text': title
+        }]
 ```
 
 ### encoder
@@ -428,7 +417,7 @@ components:
 
     metas:
       name: vecidx_index
-      workpace: $TMP_WORKSPACE
+      workspace: $TMP_WORKSPACE
 
   - !BasePbIndexer
     with:
@@ -436,7 +425,7 @@ components:
 
     metas:
       name: chunk_index
-      workpace: $TMP_WORKSPACE
+      workspace: $TMP_WORKSPACE
 
 requests:
   on:
@@ -446,10 +435,11 @@ requests:
           executor: vecidx_index
           method: add
       - !ChunkPruneDriver {}
-      - !ChunkKVIndexDriver
+      - !KVIndexDriver
         with:
           executor: chunk_index
           method: add
+          level: chunk
 
     SearchRequest:
       - !VectorSearchDriver
@@ -465,7 +455,7 @@ requests:
 
     与`doc_indexer`一样，`chunk_indexer`在不同请求时，也有不同的处理逻辑。
 
-    在处理`IndexRequest`时，我们定义了3个不同的Driver，分别是: `VectorIndexDriver`、`ChunkPruneDriver`和`ChunkKVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，`VectorIndexDriver`调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`ChunkKVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
+    在处理`IndexRequest`时，我们定义了3个不同的Driver，分别是: `VectorIndexDriver`、`ChunkPruneDriver`和`KVIndexDriver`，3个Driver依次执行。在`VectorIndexDriver`时，`VectorIndexDriver`调用了`NumpyIndexer`这个Executor中的`add()`存储了问题的向量。在存储完成以后，我们清除了Chunk中的某些数据，只保留Chunk id和Document id。因为在`KVIndexDriver`调用`BasePbIndexer`中的`add()`存储Document和Chunk的关联时，我们不需要这些数据，同时也是为了减少在网络传输时的数据大小。
 
     在处理`SearchRequest`时，我们同样定义了3个不同的Driver。`VectorSearchDriver`调用了`NumpyIndexer`中的`query()`索引了相似的Chunk，在这里我们使用了余弦相似度来进行召回。并且使用`ChunkPruneDriver`清除了Chunk中的某些数据，只保留Chunk id和Document id。因为我们在后面用不到这些数据，也是为了减少在网络传输时的数据大小。最后使用`ChunkKVSearchDriver`调用`BasePbIndexer`中的`query()`，索引出相似Chunk的Document id。
 

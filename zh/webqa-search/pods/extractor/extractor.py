@@ -1,7 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import json
 
 from jina.executors.crafters import BaseSegmenter
@@ -17,4 +16,3 @@ class WebQATitleExtractor(BaseSegmenter):
                     'length': len(title),
                     'text': title
                 }]
-
