@@ -1,6 +1,8 @@
 !Flow
 with:
-  read_only: true
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_grpc: $JINA_PORT
 pods:
   loader:
     yaml_path: yaml/craft-load.yml
@@ -15,11 +17,13 @@ pods:
   encoder:
     image: jinaai/hub.executors.encoders.image.facenet
     timeout_ready: 600000
+    replicas: $REPLICAS
     read_only: true
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
     separated_workspace: true
     polling: all
+    replicas: $SHARDS
     reducing_yaml_path: _merge_topk_chunks
   ranker:
     yaml_path: MinRanker
