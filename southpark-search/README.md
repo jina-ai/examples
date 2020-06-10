@@ -25,6 +25,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 **Table of Contents**
 
 - [Overview](#overview)
+- [Try out this demo by yourself](#try-out-this-demo-by-yourself)
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
@@ -49,6 +50,24 @@ Similar to classic search engines, we first build an index for all the documents
 <p align="center">
   <img src=".github/southpark.gif?raw=true" alt="Jina banner" width="90%">
 </p>
+
+
+## Try out this demo by yourself
+
+We've prepared a docker image with indexed data and you can run it by the following command,
+
+```bash
+docker run -p 45678:45678 jinaai/hub.app.distilbert-southpark:latest
+```
+
+Now you can open your shell and check out the results via the RESTful API. The matched results are stored in `topkResults`.
+
+```bash
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
+```
+
+Check out more details about the docker image [here](rest-api/README.md).
+
 
 ## Prerequirements
 
