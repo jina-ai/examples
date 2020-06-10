@@ -6,9 +6,6 @@ pods:
     yaml_path: craft/craft.yml
     replicas: $REPLICAS
     read_only: true
-  doc_idx:
-    yaml_path: index/doc.yml
-    needs: gateway
   tf_encode:
     yaml_path: encode/encode.yml
     needs: chunk_seg
@@ -18,6 +15,9 @@ pods:
     yaml_path: index/chunk.yml
     replicas: $SHARDS
     separated_workspace: true
+  doc_idx:
+    yaml_path: index/doc.yml
+    needs: gateway
   join_all:
     yaml_path: _merge
     needs: [doc_idx, chunk_idx]
