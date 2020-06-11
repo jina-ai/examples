@@ -21,7 +21,7 @@ def config():
     os.environ['SHARDS'] = str(shards)
     os.environ['WORKDIR'] = '/tmp/jina/workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
-    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45692))
 
 
 # for index

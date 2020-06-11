@@ -16,7 +16,7 @@ pods:
     read_only: true
   encoder:
     image: jinaai/hub.executors.encoders.image.facenet
-    replicas: 4
+    replicas: $REPLICAS
     timeout_ready: 600000
     read_only: true
   chunk_indexer:
