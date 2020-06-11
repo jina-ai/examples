@@ -7,6 +7,7 @@ pods:
   loader:
     yaml_path: yaml/craft-load.yml
     read_only: true
+    replicas: $REPLICAS
   flipper:
     yaml_path: yaml/craft-flip.yml
     replicas: $REPLICAS
@@ -14,6 +15,7 @@ pods:
   normalizer:
     yaml_path: yaml/craft-normalize.yml
     read_only: true
+    replicas: $REPLICAS
   encoder:
     image: jinaai/hub.executors.encoders.image.facenet
     timeout_ready: 600000
