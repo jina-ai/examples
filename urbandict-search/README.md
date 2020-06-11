@@ -43,7 +43,7 @@ As the same as build classic search engines, we first build an index for all the
 
 ## Overview
 
-Before dashing into the codes, let's have an overview of the magic. The goal is to enable to find the word if you only know the defintion. To make this happen, we consider each sentence in the words' definition as a chunk, which is the minimal semantical unit in Jina. Specially, each word can be explained with a few sentences. And each sentence, as a chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `transformer` lib). 
+Before dashing into the codes, let's have an overview of the magic. The goal is to enable to find the word if you only know the definition. To make this happen, we consider each sentence in the words' definition as a chunk, which is the minimal semantical unit in Jina. Specially, each word can be explained with a few sentences. And each sentence, as a chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `transformer` lib). 
 
 During indexing, Jina, _the_ neural search framework, uses vectors to represent the words and save the vectors in the index. During querying, having only the definition from the user's input, we encode the input into vectors with the same **Encoder**. So that, these query vectors can be used to retrieve the indexed words with similiar definitions back.
 
