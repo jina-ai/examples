@@ -36,7 +36,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [TLDR;](#tldr)
 - [Index Image Data](#index-image-data)
@@ -44,7 +44,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 - [Build Docker Image](#build-docker-image)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -72,7 +72,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 ```
 
 #### Command args explained
-- `$(pwd)/data` is where all your images located (jpg/png are supported, but not support mix yet). You can change it to whatever path, just make sure it is absolute path
+- `$(pwd)/data` is where all your images located (jpg/png are supported). You can change it to whatever path, just make sure it is absolute path
 - `$(pwd)/workspace` is where Jina stores all indexes and other artifacts. 
 - `"JINA_LOG_PROFILING=1" -p 5000:5000` are just for dashboard monitoring. They are optional. 
 
@@ -166,9 +166,9 @@ When REST gateway is enabled, Jina use [data URI scheme](https://en.wikipedia.or
 curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:34567/api/search'
 ```
 
-[JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/main.html).
+[JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
 
-This example shows how to feed data into Jina via REST gateway. By default, Jina use gRPC gateway, which has much higher performance and rich feature. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/main.html).
+This example shows how to feed data into Jina via REST gateway. By default, Jina use gRPC gateway, which has much higher performance and rich feature. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
 ### Query Results in Batch
 
@@ -225,13 +225,12 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
 - ... [and more](https://docs.jina.ai/index.html)
 
-## Stay tuned
+## Community
 
-- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
-- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 

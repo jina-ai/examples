@@ -1,8 +1,18 @@
 # Examples for Jina
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Community](#community)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
 <p align="center">
  
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
 [![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
@@ -16,32 +26,6 @@
 
 </p>
 
-This repo contains [Jina](https://github.com/jina-ai/jina/) examples, including:
-
-- showcases for [Jina](https://github.com/jina-ai/jina/)
-- examples mentioned on [our website](https://jina.ai)
-- supporting materials for [our tech blog](https://jina.ai/#/blog)
-
-We welcome all kinds of contributions from the open-source community, individuals and partners. Without your active involvement, Jina can't be successful.
-
-See [Contributing guidelines](https://github.com/jina-ai/jina/blob/master/CONTRIBUTING.md) for the first step!
-
-To file an issue, use [the issue tracker in the jina repo](https://github.com/jina-ai/jina/issues).
-
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
-
-- [Quick links](#quick-links)
-- [Stay tuned](#stay-tuned)
-- [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
-## Quick links
 
 <table>
   <tr>
@@ -177,13 +161,12 @@ Learn to how to use SOTA visual representation for searching Pokémon!
   
 
 
-## Stay tuned
+## Community
 
-- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
-- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 

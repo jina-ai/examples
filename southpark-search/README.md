@@ -22,9 +22,10 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Overview](#overview)
+- [Try out this demo by yourself](#try-out-this-demo-by-yourself)
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
@@ -49,6 +50,24 @@ Similar to classic search engines, we first build an index for all the documents
 <p align="center">
   <img src=".github/southpark.gif?raw=true" alt="Jina banner" width="90%">
 </p>
+
+
+## Try out this demo by yourself
+
+We've prepared a docker image with indexed data and you can run it by the following command,
+
+```bash
+docker run -p 45678:45678 jinaai/hub.app.distilbert-southpark:latest
+```
+
+Now you can open your shell and check out the results via the RESTful API. The matched results are stored in `topkResults`.
+
+```bash
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
+```
+
+Check out more details about the docker image [here](rest-api/README.md).
+
 
 ## Prerequirements
 
@@ -239,7 +258,7 @@ def main(num_docs):
     flow = Flow().load_config('flow-index.yml')
     with flow.build() as fl:
         data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
-        fl.index(raw_bytes=read_data(data_fn, num_docs))
+        fl.index(buffer=read_data(data_fn, num_docs))
 
 ```
 
@@ -309,7 +328,7 @@ def print_topk(resp, word):
             score = kk.score.value
             if score <= 0.0:
                 continue
-            doc = kk.match_doc.raw_bytes.decode()
+            doc = kk.match_doc.buffer.decode()
             name, line = doc.split('!', maxsplit=1)
             print('> {:>2d}({:f}). {} said: {}'.format(
                 idx, score, name.upper(), line))
@@ -427,7 +446,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVIndexDriver
@@ -443,7 +462,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVSearchDriver
@@ -467,7 +486,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVIndexDriver
@@ -490,7 +509,7 @@ requests:
           level: chunk
           pruned:
             - embedding
-            - raw_bytes
+            - buffer
             - blob
             - text
       - !KVSearchDriver

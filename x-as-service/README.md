@@ -25,7 +25,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [Requirements](#requirements)
 - [Design the Flow](#design-the-flow)
@@ -34,7 +34,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 - [Run the Flow](#run-the-flow)
 - [Run the Encoding Work Remotely](#run-the-encoding-work-remotely)
 - [Documentation](#documentation)
-- [Stay tuned](#stay-tuned)
+- [Community](#community)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -166,13 +166,12 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - ... [and more](https://docs.jina.ai/index.html)
 
 
-## Stay tuned
+## Community
 
-- [Slack chanel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company
-- ![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social) - follow us and interact with us using hashtag `#JinaSearch`  
-- [Join Us](mailto:hr@jina.ai) - want to work full-time with us at Jina? We are hiring!
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 

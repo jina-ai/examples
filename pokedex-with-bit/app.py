@@ -1,13 +1,12 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import glob
 import os
 import sys
 
 from jina.flow import Flow
 
-num_docs = 1000000
+num_docs = os.environ.get('MAX_DOCS', 50000)
 image_src = 'data/**/*.png'
 
 
@@ -24,18 +23,13 @@ def config():
 
 # for index
 def index():
-    def input_fn():
-        for g in glob.glob(image_src, recursive=True)[:num_docs]:
-            with open(g, 'rb') as fp:
-                yield fp.read()
-
     # from jina.clients.python import PyClient
-    # PyClient.check_input(input_fn)
+    # PyClient.check_input(input_fn())
 
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index(input_fn, batch_size=64)
+        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs)
 
 
 # for search

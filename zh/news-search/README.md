@@ -10,7 +10,7 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Cotents**
+**Table of Contents**
 
 - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
 - [总览](#%E6%80%BB%E8%A7%88)
@@ -251,7 +251,7 @@ def print_topk(resp):
     print(f'以下是相似的新闻内容:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.raw_bytes.decode('utf-8'))
+            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
             print('→%s' % item['title'])
 
 def read_query_data(item):
@@ -281,8 +281,8 @@ with flow:
 
 ```python
 class WeightSentencizer(Sentencizer):
-    def craft(self, raw_bytes: bytes, doc_id: int, *args, ** kwargs) -> List[Dict]:
-        results = super().craft(raw_bytes, doc_id)
+    def craft(self, buffer: bytes, doc_id: int, *args, ** kwargs) -> List[Dict]:
+        results = super().craft(buffer, doc_id)
         weights = np.linspace(1, 0.1, len(results))
         for result, weight in zip(results, weights):
             result['weight'] = weight

@@ -1,13 +1,9 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import glob
 import os
-import random
 import webbrowser
 
-from jina.enums import ClientInputType
-from jina.executors.crafters.mime import Bytes2DataURICrafter
 from jina.flow import Flow
 from pkg_resources import resource_filename
 
@@ -15,7 +11,6 @@ from pkg_resources import resource_filename
 image_src = 'data/**/*.png'
 replicas = 1
 shards = 8
-sampling_rate = .99
 
 os.environ['REPLICAS'] = str(replicas)
 os.environ['SHARDS'] = str(shards)
@@ -24,15 +19,6 @@ os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 f = Flow.load_config('flow-query.yml')
 f.use_grpc_gateway()  # use gRPC gateway for better batch efficiency
-
-
-def input_fn():
-    b2d = Bytes2DataURICrafter('png')
-    for g in glob.glob(image_src, recursive=True):
-        if random.random() > sampling_rate:
-            with open(g, 'rb') as fp:
-                yield b2d.make_datauri(b2d.mimetype, fp.read())
-
 
 result_html = []
 
@@ -64,7 +50,6 @@ def write_html(html_path):
 
 
 with f:
-    f.search(input_fn, batch_size=8, output_fn=print_result,
-             top_k=20, input_type=ClientInputType.DATA_URI)
+    f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=20)
 
 write_html('result.html')
