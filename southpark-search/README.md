@@ -45,7 +45,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 
 Let's have an overview of the magic. We want build a search system to find lines from South Park scripts which are similar to a user's input text. To make this happen, we split the scripts into sentences and consider each sentence as one **Document**. For simplicity, each Document has only one **Chunk**, which contains the same sentence as the Document. Each sentence, as a Chunk, is encoded into a vector with the help of the **Encoder** (i.e. we use the `DistilBert` from the `🤗 Transformers` lib).
 
-Similar to classic search engines, we first build an index for all the documents (i.e. the characters and their lines). During indexing, jina, _the_ neural search framework, uses vectors to represent the sentences and save the vectors in the index. During querying, taking the text from the user's input, we encode the input into vectors with the same **Encoder**. As a result, these query vectors can be used to retrieve the indexed lines with similiar meanings.
+Similar to classic search engines, we first build an index for all the documents (i.e. the characters and their lines). During indexing, Jina, _the_ neural search framework, uses vectors to represent the sentences and save the vectors in the index. During querying, taking the text from the user's input, we encode the input into vectors with the same **Encoder**. As a result, these query vectors can be used to retrieve the indexed lines with similiar meanings.
 
 <p align="center">
   <img src=".github/southpark.gif?raw=true" alt="Jina banner" width="90%">
@@ -151,7 +151,7 @@ doc_indexer:
   needs: gateway
 ```
 
-As we can see, for most Pods, we only need to define the YAML file path. Given the YAML files, jina will automatically build the Pods. Plus, `timeout_ready` is a useful argument when adding a Pod, which defines the waiting time before the Flow gives up on the Pod initializing.
+As we can see, for most Pods, we only need to define the YAML file path. Given the YAML files, Jina will automatically build the Pods. Plus, `timeout_ready` is a useful argument when adding a Pod, which defines the waiting time before the Flow gives up on the Pod initializing.
 
 ```yaml
 encoder:
@@ -171,7 +171,7 @@ Overall, the index Flow has two pathways, as shown in the Flow diagram. The idea
 
 The pathway on the right side with a single `doc_indexer` stores the Document content. Under the hood it is basically a key-value storage. The key is the Document ID and the value is the Document itself.
 
-The pathway on the other side is for saving the index. From top to bottom, the first Pod, `splitter`, splits the Document into Chunks, which are the basic units to process in jina. Chunks are later encoded into vectors by the `encoder`. These vectors (together with other information in the Chunks) are saved in a vector storage by `chunk_indexer`. Finally, the two pathways are merged by `join_all` and the processing of that message is concluded.
+The pathway on the other side is for saving the index. From top to bottom, the first Pod, `splitter`, splits the Document into Chunks, which are the basic units to process in Jina. Chunks are later encoded into vectors by the `encoder`. These vectors (together with other information in the Chunks) are saved in a vector storage by `chunk_indexer`. Finally, the two pathways are merged by `join_all` and the processing of that message is concluded.
 
 
 ### Query
@@ -214,7 +214,7 @@ pods:
 </table>
 
 
-Eventually, there comes a new Pod named `ranker`. Remember that Chunks are the basic units in jina. In the deep core of jina, both indexing and quering take place at the Chunk level. Chunks are the elements the the jina core can understand and process. However, we need to ship the final query results in the form of a Document which is actually meaningful to users. This is precisely the job of `ranker`. `ranker` combines the query results from the Chunk level into the Document level. In this demo, we use the built-in `MinRanker` to do the job. It simple takes the `1 / (1 + s)` as the score of the Document, where `s` denotes the minimal matching score from all the Chunks that belong to this Document. Why do we take the minimal matching score for Chunks? Because here we use the **cosine distance** as the chunks' matching scores.
+Eventually, there comes a new Pod named `ranker`. Remember that Chunks are the basic units in Jina. In the deep core of Jina, both indexing and quering take place at the Chunk level. Chunks are the elements that the Jina core can understand and process. However, we need to ship the final query results in the form of a Document which is actually meaningful to users. This is precisely the job of `ranker`. `ranker` combines the query results from the Chunk level into the Document level. In this demo, we use the built-in `MinRanker` to do the job. It simple takes the `1 / (1 + s)` as the score of the Document, where `s` denotes the minimal matching score from all the Chunks that belong to this Document. Why do we take the minimal matching score for Chunks? Because here we use the **cosine distance** as the chunks' matching scores.
 
 > `MaxRanker` calculates the score of the matched Document from the matched Chunks. For each matched Document, the score is the maximal score from all the matched Chunks belonging to that Document.
 
@@ -228,7 +228,7 @@ In the last step, the `doc_indexer` comes into play. Sharing the same YAML file,
 ### Let's take a closer look
 Now the index and query Flows are both ready to work. Before proceeding, let's take a closer look at the two Flows and see the differences between them.
 
-Obviously, they have different structures, although they share most Pods. This is a common practice in the jina world for the sake of speed. Except for the `ranker`, both Flows can indeed use identical structures. The two-pathway design of the index Flow is intended to speed up message passing, because indexing Chunks and Documents can be done in parallel.
+Obviously, they have different structures, although they share most Pods. This is a common practice in the Jina world for the sake of speed. Except for the `ranker`, both Flows can indeed use identical structures. The two-pathway design of the index Flow is intended to speed up message passing, because indexing Chunks and Documents can be done in parallel.
 
 Another important difference is that the two Flows are used to process different types of request messages. To index a Document, we send an **IndexRequest** to the Flow. While querying, we send a **SearchRequest**. That's why Pods in both Flows can play different roles while sharing the same YAML files. Later, we will dive deep into into the YAML files, where we define the different ways of processing messages of various types.
 
@@ -313,7 +313,7 @@ def main(top_k):
             fl.search(read_query_data(text), callback=ppr, topk=top_k)
 ```
 
-The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
+The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a Protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
@@ -338,7 +338,7 @@ def print_topk(resp, word):
 If you want to know more about Pods, keep reading. As shown above, we defined the Pods by giving the YAML files. Now let's move on to see what is exactly written in these magic YAML files.
 
 ### `splitter`
-As a convention in jina, A YAML config is used to describe the properties of an object so that we can easily configure the behavior of the Pods without touching the code.
+As a convention in Jina, A YAML config is used to describe the properties of an object so that we can easily configure the behavior of the Pods without touching the code.
 
 Here is the YAML file for the `splitter`. We first use the built-in **Sentencizer** as the **executor** in the Pod. The `with` field is used to specify the arguments passing to the `__init__()` function.
 
@@ -357,7 +357,7 @@ requests:
           method: craft
 ```
 
-In the `requests` field, we define the different behaviors of the Pod for different requests. Remember that both the index and query Flows share the same Pods with the YAML files while they behave differently to the requests. This is how the magic works: For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On the one hand, the Driver encodes the request messages (in Protobuf format) into a format that the Executor can understand (e.g. a Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and encode the processed results back into Protobuf format. For the time being, the `splitter` shows the same behavior for both requests.
+In the `requests` field, we define the different behaviors of the Pod for different requests. Remember that both the index and query Flows share the same Pods with the YAML files while they behave differently to the requests. This is how the magic works: For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On the one hand, the Driver encodes the request messages in [Protobuf format](https://en.wikipedia.org/wiki/Protocol_Buffers) into a format that the Executor can understand (e.g. a Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and encode the processed results back into Protobuf format. For the time being, the `splitter` shows the same behavior for both requests.
 
 
 ```yaml
@@ -523,7 +523,7 @@ Congratulations! Now you've got your very own neural search engine explained!
 
 Let's wrap up what we've covered in this demo.
 
-1. Chunks are basic elements in jina. Documents are the final inputs and outputs from jina.
+1. Chunks are basic elements in Jina. Documents are the final inputs and outputs from Jina.
 2. Flows are our good friends to build the search engine. To either index or query, we need to define and build a Flow.
 3. The index and the query Flow shares most Pods.
 4. The Pods in the Flow can run either in serial or in parallel.
