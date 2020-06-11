@@ -49,7 +49,9 @@ def main(task, top_k, num_docs):
         data_fn = os.path.join(workspace_path, "pre_web_text_zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow:
-            flow.index_lines(lines=read_data(data_fn, num_docs), batch_size=32)
+            # flow.index_lines(lines=read_data(data_fn, num_docs), batch_size=32)
+            flow.index_lines(filepath=data_fn, size=num_docs, batch_size=32)
+
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
