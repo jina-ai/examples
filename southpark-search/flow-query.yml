@@ -2,7 +2,7 @@
 with:
   read_only: true
 pods:
-  splittor:
+  splitter:
     yaml_path: yaml/craft-split.yml
     replicas: $REPLICAS
     read_only: true
