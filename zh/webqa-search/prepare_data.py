@@ -35,5 +35,6 @@ for filename in os.listdir(workspace):
             else:
                 items[item['qid']]['answers'].append({'content': item['content']})
 
+    items = [json.dumps(v, ensure_ascii=False) for k, v in items.items() if isinstance(v, dict)]
     with open(os.path.join(workspace, 'pre_%s' % filename), 'w', encoding='utf-8') as writer:
-        json.dump(items, writer, ensure_ascii=False, indent=4)
+        writer.write('\n'.join(items))
