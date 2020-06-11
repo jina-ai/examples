@@ -2,7 +2,7 @@
 requests:
   on:
     SearchRequest:
-      - !Chunk2DocScoreDriver
+      - !Chunk2DocRankDriver
         with:
           method: score
       - !DocPruneDriver
