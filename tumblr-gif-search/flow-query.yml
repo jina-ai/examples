@@ -3,7 +3,6 @@ with:
   logserver: true
   read_only: true  # better add this in the query time
   rest_api: true
-  to_datauri: true
 pods:
   chunk_seg:
     yaml_path: craft/craft.yml

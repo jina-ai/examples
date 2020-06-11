@@ -432,7 +432,7 @@ components:
     with:
       index_filename: vec.gz
       metrix: cosine
-  - !BasePbIndexer
+  - !ChunkPbIndexer
     with:
       index_filename: chunk.gz
 requests:
