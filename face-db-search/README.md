@@ -93,24 +93,37 @@ We start with defining the index and the query Flows  with the YAML files as fol
 
 ```yaml
 !Flow
+metas:
+  prefetch: 10
 pods:
   loader:
     yaml_path: yaml/craft-load.yml
+    replicas: $REPLICAS
+    read_only: true
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
   normalizer:
     yaml_path: yaml/craft-normalize.yml
+    replicas: $REPLICAS
     read_only: true
   encoder:
-    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
-    replicas: 4
-    timeout_ready: 60000
+    image: jinaai/hub.executors.encoders.image.facenet
+    replicas: $REPLICAS
+    timeout_ready: 600000
+    read_only: true
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
   doc_indexer:
     yaml_path: yaml/index-doc.yml
     needs: loader
   join_all:
     yaml_path: _merge
     needs: [doc_indexer, chunk_indexer]
+    read_only: true
 ```
 
 </sub>
@@ -128,17 +141,33 @@ pods:
 ```yaml
 !Flow
 with:
-  read_only: true
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_grpc: $JINA_PORT
 pods:
   loader:
     yaml_path: yaml/craft-load.yml
+    read_only: true
+    replicas: $REPLICAS
+  flipper:
+    yaml_path: yaml/craft-flip.yml
+    replicas: $REPLICAS
+    read_only: true
   normalizer:
     yaml_path: yaml/craft-normalize.yml
+    read_only: true
+    replicas: $REPLICAS
   encoder:
-    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
-    timeout_ready: 60000
+    image: jinaai/hub.executors.encoders.image.facenet
+    timeout_ready: 600000
+    replicas: $REPLICAS
+    read_only: true
   chunk_indexer:
     yaml_path: yaml/index-chunk.yml
+    separated_workspace: true
+    polling: all
+    replicas: $SHARDS
+    reducing_yaml_path: _merge_topk_chunks
   ranker:
     yaml_path: MinRanker
   doc_indexer:
@@ -242,7 +271,7 @@ Once built , we can pass this image tag to the Flow API.
 Now we start indexing with the following command.
  
 ```bash
-python app.py -t index
+python app.py index
 ```
 
 <details>
@@ -254,58 +283,30 @@ python app.py -t index
 
 </details> 
 
-Here we use the YAML file to define a Flow and use it to index the data. The `read_data()` function load the image file names in the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
+Here we use the YAML file to define a Flow and use it to index the data. The `index_files()` function load the image file names in the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
 
 ```python
-
-from jina.clients.python import PyClient
-import os
-import string
-import random
-import sys
 from jina.flow import Flow
-
-def read_data(img_path, max_sample_size=-1):
-    if not os.path.exists(img_path):
-        raise FileNotFoundError('file not found: {}'.format(img_path))
-    fn_list = []
-    for dirs, subdirs, files in os.walk(img_path):
-        for f in files:
-            fn = os.path.join(dirs, f)
-            if fn.endswith('.jpg'):
-                fn_list.append(fn)
-    if max_sample_size > 0:
-        random.shuffle(fn_list)
-        fn_list = fn_list[:max_sample_size]
-    for fn in fn_list:
-        yield fn.encode('utf8')
-        
-def main():
-    data_path = '/tmp/jina/celeb/lfw'       # Location of downloaded data  
-    PyClient.check_input(read_data(data_path, 100))
-    flow = Flow().load_config('flow-index.yml')
-    with flow.build() as fl:
-        
-        fl.index(buffer=read_data(data_path,100), batch_size=4)
+f = Flow.load_config('flow-index.yml')
+with f:
+    f.index_files(image_src, batch_size=8, read_mode='rb', size=num_docs)
 ```
 
 ### Query
 
-```bash
-python app.py -t query
+In Jina , Querying images located in 'image_src' folder is as simple as the following command.
+'print_result' is the callback function used. Here the top k (here k=5) is returned. In this example, we use the meta_info tag in response to create the image. 
+
+```python
+from jina.flow import Flow
+f = Flow.load_config('flow-index.yml')
+with f:
+    f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=5)
 ```
 
-If you want to use your own image files to query, using the following shell command:
 
 ```bash
-python app.py -t query -p <JPG file or directory>
-```
-The command accepts a JPG file path or a directory that includes some JPG files. These JPG files' suffix is `.jpg`.
-
-If only having a single JPG file in current directory, simply to call
-
-```bash
-python app.py -t query -p .
+python make_html.py
 ```
 
 <details>
@@ -317,69 +318,12 @@ python app.py -t query -p .
 
 </details> 
 
-For querying, we randomly sample 5 images from the dataset and feed them into the Flow using the following codes. 
+<img src=".github/face-demo.jpg" alt="query flow console output">
+</p>
+Note : We have only used 500 images with only one or two images of each person. Hence the results are only as good as the database you have. It returns the closest matching face in the dataset.
 
-```python
-def read_data(img_path, max_sample_size=-1):
-    if not os.path.exists(img_path):
-        raise FileNotFoundError('file not found: {}'.format(img_path))
-    fn_list = []
-    for dirs, subdirs, files in os.walk(img_path):
-        for f in files:
-            fn = os.path.join(dirs, f)
-            if fn.endswith('.jpg'):
-                fn_list.append(fn)
-    if max_sample_size > 0:
-        random.shuffle(fn_list)
-        fn_list = fn_list[:max_sample_size]
-    for fn in fn_list:
-        yield fn.encode('utf8')
-
-def main(task, num_docs, top_k):
-    data_path = os.path.join('/tmp/jina/celeb/lfw')
-        flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
-            ppr = lambda x: save_topk(x, '/tmp/jina/flower/query_results.png')
-            fl.search(read_data(data_path, 5), callback=ppr, top_k=top_k)
-```
-
-We use the callback function `save_topk` to save the query results into the `/tmp/jina/celeb/query_results.png`. As expected, the Top-1 results are always the query images themself.
-
-```python
-def save_topk(resp, output_fn=None):
-    results = []
-    for d in resp.search.docs:
-        d_fn = d.meta_info.decode()
-        cur_result.append(d_fn)
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
-            if score <= 0.0:
-                continue
-            m_fn = kk.match_doc.buffer.decode()
-            cur_result.append(m_fn)
-        results.append(cur_result)
-    if output_fn is not None:
-        import matplotlib.pyplot as plt
-        import matplotlib.image as mpimg
-        top_k = max([len(r) for r in results])
-        num_q = len(resp.search.docs)
-        f, ax = plt.subplots(num_q, top_k, figsize=(8, 20))
-        for q_idx, r in enumerate(results):
-            for m_idx, img in enumerate(r):
-                fname = os.path.split(img)[-1]
-                names=fname.split('_')[:-1]
-                fname=''.join(names)
-                fname = f'' if m_idx == 0 else f'top_{m_idx}: {fname}'
-                ax[q_idx][m_idx].imshow(mpimg.imread(img))
-                ax[q_idx][m_idx].set_title(fname, fontsize=7)
-        [aa.axis('off') for a in ax for aa in a]
-        plt.tight_layout()
-        plt.savefig(output_fn)
-```
 
 Congratulations! Now you have an image search engine working at hand. We won't go into details of the Pods' YAML files because they are quite self explained. If you feel a bit lost when reading the YAML files, please check out the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
-
-
 
 ## Next Steps
 
