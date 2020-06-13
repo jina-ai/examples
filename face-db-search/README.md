@@ -304,13 +304,14 @@ with f:
     f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=5)
 ```
 
+Run the following command to search images and display in a webpage.
 
 ```bash
 python make_html.py
 ```
 
 <details>
-<summary>Click here to see the console output</summary>
+<summary>Click here to see result of old API</summary>
 
 <p align="center">
   <img src=".github/query-demo.png?raw=true" alt="query flow console output">
@@ -322,6 +323,7 @@ python make_html.py
 </p>
 Note : We have only used 500 images with only one or two images of each person. Hence the results are only as good as the database you have. It returns the closest matching face in the dataset.
 
+<br /><br />
 
 Congratulations! Now you have an image search engine working at hand. We won't go into details of the Pods' YAML files because they are quite self explained. If you feel a bit lost when reading the YAML files, please check out the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
 
