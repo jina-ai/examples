@@ -129,3 +129,5 @@ shell/jina-wizard.sh
 /junit/
 /tests/junit/
 jina-profile*.json
+
+.vscode/
