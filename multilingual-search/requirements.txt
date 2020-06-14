@@ -1,0 +1,4 @@
+click
+laserembeddings
+torch
+jina[scipy]
