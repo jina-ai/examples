@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Mocking IO and Use REST Gateway](#mocking-io-and-use-rest-gateway)
+  - [WIP](#wip)
+  - [Build the app](#build-the-app)
+  - [Index local files of any type](#index-local-files-of-any-type)
+  - [Search](#search)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Mocking IO and Use REST Gateway
 
 <p align="center">
