@@ -9,7 +9,9 @@
     那么，怎么做呢？请看如下分解。
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [效果展示](#%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA)
@@ -203,30 +205,13 @@ python app.py -t index
 
 </details>
 
-    与第一篇文章创建索引时一样，我们通过`flow-index.yml`定义创建索引任务的Flow，然后通过`index()`函数对数据进行创建索引。在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
+    与第一篇文章创建索引时一样，我们通过`flow-index.yml`定义创建索引任务的Flow，然后通过`index_lines()`函数对数据进行创建索引。在这里我们只发送新闻内容。为了节省运行时间，我们只创建10000条索引。
 
 ```python
-def read_data(fn):
-    items = []
-    with open(fn, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.replace('\n', '')
-            item = json.loads(line)
-            content = item['content']
-            if content == '' or len(content) < 5:
-                continue
-            items.append({'content': content})
-    results = []
-    for content in items:
-        results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
-
-    for item in results[:10000]:
-        yield item
-
-data_fn = os.path.join(workspace_path, "news2016zh_train.json")
-flow = Flow().load_config('flow-index.yml')
-with flow:
-    flow.index(read_data(data_fn))
+data_fn = os.path.join(workspace_path, "pre_news2016zh_valid.json")
+        flow = Flow().load_config('flow-index.yml')
+        with flow:
+            flow.index_lines(filepath=data_fn, size=10000, batch_size=32)
 ```
 
 ### 查询
@@ -251,11 +236,11 @@ def print_topk(resp):
     print(f'以下是相似的新闻内容:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
-            print('→%s' % item['title'])
+            item = json.loads(tk.match_doc.text)
+            print('👉%s.............' % item['content'])
 
 def read_query_data(item):
-    yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
+    yield '{}'.format(json.dumps(item, ensure_ascii=False))
 
 flow = Flow().load_config('flow-query.yml')
 with flow:
@@ -281,8 +266,9 @@ with flow:
 
 ```python
 class WeightSentencizer(Sentencizer):
-    def craft(self, buffer: bytes, doc_id: int, *args, ** kwargs) -> List[Dict]:
-        results = super().craft(buffer, doc_id)
+    def craft(self, text: str, doc_id: int, *args, **kwargs) -> List[Dict]:
+        content = json.loads(text)['content']
+        results = super().craft(content, doc_id)
         weights = np.linspace(1, 0.1, len(results))
         for result, weight in zip(results, weights):
             result['weight'] = weight

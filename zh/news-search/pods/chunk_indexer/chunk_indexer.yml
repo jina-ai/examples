@@ -5,36 +5,15 @@ components:
       index_filename: vecidx_index.gzip
       metrix: cosine
     metas:
-      name: vecidx_exec
+      name: vecidx_index
       workspace: $TMP_WORKSPACE
-  - !BasePbIndexer
+
+  - !ChunkPbIndexer
     with:
       index_filename: chunk_index.gzip
     metas:
-      name: chunk_meta_exec
+      name: chunk_index
       workspace: $TMP_WORKSPACE
-
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: vecidx_exec
-          method: add
-      - !ChunkPruneDriver {}
-      - !ChunkKVIndexDriver
-        with:
-          executor: chunk_meta_exec
-          method: add
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: vecidx_exec
-          method: query
-      - !ChunkPruneDriver {}
-      - !ChunkKVSearchDriver
-        with:
-          executor: chunk_meta_exec
-          method: query
-    ControlRequest:
-      - !ControlReqDriver {}
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE
