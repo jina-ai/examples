@@ -20,6 +20,14 @@
 
 ## Build the app
 
+With Python:
+
+```bash
+pip install -r requirements.txt
+```
+
+In Docker:
+
 ```bash
 docker build -t jinaai/hub.app.iomock .
 ```
