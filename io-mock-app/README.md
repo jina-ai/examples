@@ -1,15 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
-
-- [Mocking IO and Use REST Gateway](#mocking-io-and-use-rest-gateway)
-  - [WIP](#wip)
-  - [Build the app](#build-the-app)
-  - [Index local files of any type](#index-local-files-of-any-type)
-  - [Search](#search)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Mocking IO and Use REST Gateway
 
@@ -28,6 +16,20 @@
 [![Docker](https://github.com/jina-ai/jina/blob/master/.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
 
 </p>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Mocking IO and Use REST Gateway](#mocking-io-and-use-rest-gateway)
+  - [WIP](#wip)
+  - [Build the app](#build-the-app)
+  - [Index local files of any type](#index-local-files-of-any-type)
+  - [Search](#search)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 
 ## WIP
 
@@ -58,16 +60,14 @@ python app.py index '/Users/hanxiao/Documents/**/*.mp4'
 python app.py index '/Users/hanxiao/Documents/*.pdf'
 ```
 
-`../**/*.py` is the glob matching pattern. The index will be stored in `./workspace`.
+`'../**/*.py'` is the glob matching pattern. The index will be stored in `./workspace`.
 
 ## Search
 
-```bash
-python app.py search
-```
+After index, you can now switch to the search mode:
 
 ```bash
-curl -H "Origin: http://example.com" --verbose --request POST -d '{"top_k": 3, "mode": "search",  "data": ["data:image/png;base64,..."]}' -H 'Content-Type: application/json' 'http://0.0.0.0:59991/api/search'
+python app.py search
 ```
 
 or with Docker:
@@ -77,6 +77,14 @@ docker run -p 65481:65481 -e "JINA_PORT=65481" -v "$(pwd)/workspace:/workspace" 
 ```
 
 where `"$(pwd)/workspace` is previously where your index stored.
+
+Finally, you can query it via REST API:
+
+```bash
+curl -H "Origin: http://example.com" --verbose --request POST -d '{"top_k": 3, "data": ["data:image/png;base64,..."]}' -H 'Content-Type: application/json' 'http://0.0.0.0:59991/api/search'
+```
+
+It will return random results based on the number of queries and value of `top_k`
 
 ## License
 
