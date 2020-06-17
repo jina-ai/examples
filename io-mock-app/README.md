@@ -33,6 +33,12 @@
 
 ## WIP
 
+## Available containers
+
+- mocking `video/mp4`: `docker run -p 65481:65481 -e "JINA_PORT=65481" jinaai/hub.app.iomock.mp4 search`
+- mocking `audio/wav`: `docker run -p 65481:65481 -e "JINA_PORT=65481" jinaai/hub.app.iomock.sound search`
+
+
 ## Build the app
 
 With Python:
@@ -62,6 +68,15 @@ python app.py index '/Users/hanxiao/Documents/*.pdf'
 
 `'../**/*.py'` is the glob matching pattern. The index will be stored in `./workspace`.
 
+
+or with Docker:
+
+```bash
+docker run -v "/Users/hanxiao/Documents/_jina/:/target:ro" -v "$(pwd)/workspace:/workspace" jinaai/hub.app.iomock index "target/**/*.py"
+```
+
+Not how we mount local files in read-only mode.
+
 ## Search
 
 After index, you can now switch to the search mode:
@@ -73,7 +88,7 @@ python app.py search
 or with Docker:
 
 ```bash
-docker run -p 65481:65481 -e "JINA_PORT=65481" -v "$(pwd)/workspace:/workspace" jinaai/hub.app.iomock search
+docker run -p 65481:65481 -e "JINA_PORT=65481" -v "$(pwd)/workspace:/workspace:ro" jinaai/hub.app.iomock search
 ```
 
 where `"$(pwd)/workspace` is previously where your index stored.
