@@ -8,9 +8,6 @@ import sys
 from jina.drivers import BaseDriver
 from jina.flow import Flow
 
-os.environ['WORKDIR'] = './workspace'
-
-
 class RandomPopRanker(BaseDriver):
     max_num_docs = 100
 
@@ -35,7 +32,7 @@ def index():
 
 
 def search():
-    f = (Flow(rest_api=True)
+    f = (Flow(rest_api=True, port_grpc=int(os.environ['JINA_PORT']))
          .add(yaml_path='- !RandomPopRanker {}')
          .add(yaml_path='indexer.yml'))
     with f:
