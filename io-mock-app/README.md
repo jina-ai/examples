@@ -22,6 +22,7 @@
 **Table of Contents**
 
 - [WIP](#wip)
+- [Available containers](#available-containers)
 - [Build the app](#build-the-app)
 - [Index local files of any type](#index-local-files-of-any-type)
 - [Search](#search)
