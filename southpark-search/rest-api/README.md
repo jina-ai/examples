@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Jina ❤️ Docker and RESTful APIs](#jina--docker-and-restful-apis)
+  - [Run the Docker](#run-the-docker)
+  - [Index and Search By Yourself](#index-and-search-by-yourself)
+  - [Next Steps](#next-steps)
+  - [Documentation](#documentation)
+  - [Stay tuned](#stay-tuned)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Jina ❤️ Docker and RESTful APIs
 
 ## Run the Docker

@@ -25,6 +25,7 @@ In this demo, we use Jina to build a semantic search system on the [SouthParkDat
 **Table of Contents**
 
 - [Overview](#overview)
+- [Try out this demo by yourself](#try-out-this-demo-by-yourself)
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
