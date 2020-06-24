@@ -1,5 +1,7 @@
 !Flow
 pods:
+  reader:
+    yaml_path: pods/extract.yml
   splittor:
     yaml_path: pods/craft-split.yml
     replicas: $REPLICAS
