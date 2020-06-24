@@ -1,0 +1,25 @@
+!Flow
+with:
+  read_only: true
+  rest_api: true
+  port_grpc: $JINA_PORT
+pods:
+  splittor:
+    yaml_path: pods/craft-split.yml
+    replicas: $REPLICAS
+    read_only: true
+  encoder:
+    yaml_path: pods/encode.yml
+    replicas: $REPLICAS
+    timeout_ready: 60000
+    read_only: true
+  chunk_indexer:
+    yaml_path: pods/index-chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
+    polling: all
+    reducing_yaml_path: _merge_topk_chunks
+  ranker:
+    yaml_path: MinRanker
+  doc_indexer:
+    yaml_path: pods/index-doc.yml

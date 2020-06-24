@@ -1,0 +1,13 @@
+# ignore everything
+data
+workspace
+*.html
+
+# Ignore unnecessary files inside allowed directories
+# This should go after the allowed directories
+
+**/*.log
+**/Thumbs.db
+**/.pyre/
+**/.eggs/
+__pycache__
