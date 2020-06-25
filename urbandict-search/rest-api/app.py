@@ -12,7 +12,7 @@ from jina.flow import Flow
 def config(mode='index'):
     os.environ['REPLICAS'] = os.environ.get('REPLICAS', str(2) if mode == 'index' else str(1))
     # os.environ['REPLICAS'] = os.environ.get('REPLICAS', str(1))
-    os.environ['SHARDS'] = os.environ.get('SHARDS', str(1)) # shards=8 causes error
+    os.environ['SHARDS'] = os.environ.get('SHARDS', str(1)) 
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', '/workspace')
     os.environ['DATA_DIR'] = os.environ.get('DATA_DIR', '/data')
     os.environ['DATA_FILE'] = os.environ.get('DATA_FILE', 'urbandict-word-defs.json')
