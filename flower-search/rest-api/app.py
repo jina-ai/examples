@@ -15,7 +15,7 @@ def config():
     os.environ['SHARDS'] = os.environ.get('SHARDS', str(8))
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', '/workspace')
     os.makedirs(os.environ['TMP_WORKSPACE'], exist_ok=True)
-    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(23456))
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['TMP_DATA_DIR'] = '/data'
 
