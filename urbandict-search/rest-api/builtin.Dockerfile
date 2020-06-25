@@ -12,6 +12,8 @@ COPY . /
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
 
-RUN python prepare_data.py && python app.py dryrun
+RUN python prepare_data.py
 
-ENTRYPOINT ["python", "app.py"]
+RUN python app.py index && rm -rf /data
+
+ENTRYPOINT ["python", "app.py", "search"]
