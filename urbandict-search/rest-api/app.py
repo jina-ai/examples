@@ -17,7 +17,7 @@ def config(mode='index'):
     os.environ['DATA_DIR'] = os.environ.get('DATA_DIR', '/data')
     os.environ['DATA_FILE'] = os.environ.get('DATA_FILE', 'urbandict-word-defs.json')
     os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(10000))
-    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(56789))
 
 
 def print_error():
