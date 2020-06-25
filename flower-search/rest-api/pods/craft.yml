@@ -1,0 +1,42 @@
+!CompoundExecutor
+components:
+  - !ImageReader
+    with:
+      channel_axis: $COLOR_CHANNEL_AXIS
+      from_bytes: true
+    metas:
+      name: img_read
+  - !ImageNormalizer
+    with:
+      target_size: 224
+      img_mean: [0.485, 0.456, 0.406]
+      img_std: [0.229, 0.224, 0.225]
+      channel_axis: $COLOR_CHANNEL_AXIS
+    metas:
+      name: img_norm
+  - !ImageFlipper
+    with:
+      channel_axis: $COLOR_CHANNEL_AXIS
+    metas:
+      py_modules: customized_executors.py
+metas:
+  name: compound_crafter
+requests:
+  on:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          executor: img_read
+      - !ChunkCraftDriver
+        with:
+          executor: img_norm
+    SearchRequest:
+      - !URI2Buffer {}
+      - !SegmentDriver
+        with:
+          executor: img_read
+      - !ChunkCraftDriver
+        with:
+          executor: img_norm
+    ControlRequest:
+      - !ControlReqDriver {}

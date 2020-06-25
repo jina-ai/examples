@@ -1,0 +1,23 @@
+!Flow
+metas:
+  prefetch: 10
+pods:
+  crafter:
+    yaml_path: pods/craft.yml
+    read_only: true
+  encoder:
+    yaml_path: pods/encode.yml
+    replicas: $REPLICAS
+    timeout_ready: 600000
+    read_only: true
+  chunk_indexer:
+    yaml_path: pods/index-chunk.yml
+    replicas: $SHARDS
+    separated_workspace: true
+  doc_indexer:
+    yaml_path: pods/index-doc.yml
+    needs: gateway
+  join_all:
+    yaml_path: _merge
+    needs: [doc_indexer, chunk_indexer]
+    read_only: true

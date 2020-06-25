@@ -1,0 +1,3 @@
+transformers
+jina
+jina[http]
