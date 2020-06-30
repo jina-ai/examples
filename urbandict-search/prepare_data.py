@@ -5,7 +5,6 @@ __license__ = "Apache-2.0"
 import os
 import zipfile
 import csv
-import json
 from io import TextIOWrapper
 
 MIN_UP_VOTES = 3
@@ -15,12 +14,10 @@ MIN_WORD_LENGTH = 2
 MAX_WORD_LENGTH = 16
 
 
-def main(root_path='/tmp'):
+def main(input_fn,output_fn):
     # load the zip file and clean the data
-    input_fn = 'urban-dictionary-words-dataset.zip'
     word_def_list = []
-    input_path = os.path.join(root_path, input_fn)
-    with zipfile.ZipFile(input_path) as z:
+    with zipfile.ZipFile(input_fn) as z:
         with z.open('urbandict-word-defs.csv', 'r') as f:
             r = csv.reader(TextIOWrapper(f, 'utf-8'))
             for idx, l in enumerate(r):
@@ -47,21 +44,19 @@ def main(root_path='/tmp'):
                     continue
                 word = word.lower().strip()  # convert the words into the lower case
                 word_def = word_def.lower().strip()
-                word_def_list.append({'word': word, 'text': word_def, 'weight': weight})
-    print('word_def size: {}/{}'.format(len(frozenset([w['word'] for w in word_def_list])), idx))
-    print('definition size: {}/{}'.format(len(word_def_list), idx))
-
-    # save the processed results
-    output_dir = os.path.join(root_path, 'jina', 'urbandict')
-    if not os.path.exists(output_dir):
-        print('data output dir: {}'.format(output_dir))
-        os.makedirs(output_dir, exist_ok=True)
-    output_fn = 'urbandict-word-defs.json'
-    output_path = os.path.join(output_dir, output_fn)
-    with open(output_path, 'w') as f:
-        json.dump(word_def_list, f, ensure_ascii=False, indent=4)
-    print('processed data: {}'.format(output_path))
+                word_def_list.append('{}+-={}'.format(word,word_def)) # '+-=' for unique seperation
+    print('{} definitions are saved out of {}'.format(len(word_def_list), idx))
+    with open(output_fn, 'w') as f:
+        f.write('\n'.join(word_def_list))
+    print('processed data: {}'.format(output_fn))
 
 
 if __name__ == '__main__':
-    main()
+    data_dir = os.environ.get('DATA_DIR', '/tmp/')
+    work_dir = os.path.join(data_dir,'jina','urbandict')
+    if not os.path.exists(work_dir):
+        print('working directory: {}'.format(work_dir))
+        os.makedirs(work_dir, exist_ok=True)
+    input_fn=os.path.join(data_dir,'urban-dictionary-words-dataset.zip')
+    output_fn = os.path.join(work_dir,'urbandict-word-defs.csv')
+    main(input_fn,output_fn)
