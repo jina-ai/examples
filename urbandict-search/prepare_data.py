@@ -45,7 +45,7 @@ def main(input_fn,output_fn):
                 word = word.lower().strip()  # convert the words into the lower case
                 word_def = word_def.lower().strip()
                 word_def_list.append('{}+-={}'.format(word,word_def)) # '+-=' for unique seperation
-    print('{} definitions are saved out of {}'.format(len(word_def_list), idx))
+    print('{} definitions are kept out of {} after washing'.format(len(word_def_list), idx))
     with open(output_fn, 'w') as f:
         f.write('\n'.join(word_def_list))
     print('processed data: {}'.format(output_fn))
