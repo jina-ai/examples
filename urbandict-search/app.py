@@ -47,7 +47,8 @@ def main(task, num_docs, top_k):
     workspace_path = '/tmp/jina/urbandict'
     os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
     print(f'{os.environ["TMP_WORKSPACE"]}')
-    data_fn = os.path.join('/tmp/jina/urbandict', "urbandict-word-defs.csv")
+    data_dir = os.path.join(os.environ.get('DATA_DIR', '/tmp'),'jina','urbandict')
+    data_fn = os.path.join(data_dir, "urbandict-word-defs.csv")
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
