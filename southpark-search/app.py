@@ -34,10 +34,6 @@ def print_topk(resp, word):
             print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
 
 
-def read_query_data(text):
-    yield '{}'.format(text).lower()
-
-
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
@@ -58,7 +54,7 @@ def main(task, num_docs, top_k):
                 if not text:
                     break
                 ppr = lambda x: print_topk(x, text)
-                f.search(read_query_data(text), callback=ppr, topk=top_k)
+                f.search_lines(lines=[text, ], callback=ppr, topk=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

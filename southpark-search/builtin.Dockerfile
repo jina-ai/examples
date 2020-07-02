@@ -14,7 +14,8 @@ RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x=
 
 COPY . /
 
-RUN bash get_data.sh && \
-    python app.py dryrun
+RUN bash get_data.sh ./data && \
+    python app.restful.py index && \
+    rm -rf data
 
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python", "app.restful.py", "search"]

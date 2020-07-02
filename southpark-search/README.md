@@ -97,7 +97,7 @@ Run the following script to clone the data and do some data wrangling. Overall, 
 
 ```bash
 cd southpark-search
-bash ./get_data.sh
+bash ./get_data.sh /tmp/jina/southpark
 ```
 
 
