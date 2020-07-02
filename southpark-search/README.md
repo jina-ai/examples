@@ -262,7 +262,7 @@ def main(num_docs):
 
 ```
 
-The content of the `IndexRequest` is fed from `read_data()`, which loads the processed JSON file and outputs each word together with its definition formatted into `bytes`.
+The content of the `IndexRequest` is fed from `read_data()`, which loads the processed `.csv` file and outputs each word together with its definition formatted into `bytes`.
 Encoding the text with bert-family models takes a long time. To save your time, here we limit the number of indexed documents to 10,000.
 
 ```python
