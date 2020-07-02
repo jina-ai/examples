@@ -17,22 +17,22 @@
 
 </p>
 
-In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released few days ago into the production (spoiler alert, this project takes me *2 hours* only). You can use this demo system to indexes image dataset and query the most similar image from it. In the example output below, first column in every row is the query, the rest is the top-k results. 
+In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results. 
 
 [![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
 Features that come out of the box:
 
-- interactive query
-- parallel replicas
-- index with shards
-- containerization
+- Interactive query
+- Parallel replicas
+- Index with shards
+- Containerization
 - REST and gRPC gateway
-- dashboard monitor
+- Dashboard monitor
 
-To save you from the dependency hell, I will use the containerized version in the following instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtual env, no python package (un)install. 
+To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install. 
 
-The code can of course run natively on your local machine, please [read Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
+The code can of course run natively on your local machine, please [read the Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -52,7 +52,7 @@ The code can of course run natively on your local machine, please [read Jina ins
 
 ## TLDR;
 
-> *I want Pokémon! I don't care what Jina cloud-native neural search or whatever big names you put there, just show me the Pokémon!*
+> *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
 We have a pre-built Docker image ready to use:
 
@@ -60,23 +60,23 @@ We have a pre-built Docker image ready to use:
 docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex search
 ```
 
-Then you can `curl`/query/js it via HTTP POST request. [Details can be found here](#query-via-rest-api).
+Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api).
 
 
 ## Index Image Data
 
-We use BiT `R50x1` model in this example, you can change it in [`download.sh`]()
+We use BiT `R50x1` model in this example. You can change it in [`download.sh`](./download.sh) if you want
 
 ```bash
 docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_PROFILING=1" -p 5000:5000 jinaai/hub.app.bitsearch index
 ```
 
-#### Command args explained
-- `$(pwd)/data` is where all your images located (jpg/png are supported). You can change it to whatever path, just make sure it is absolute path
-- `$(pwd)/workspace` is where Jina stores all indexes and other artifacts. 
-- `"JINA_LOG_PROFILING=1" -p 5000:5000` are just for dashboard monitoring. They are optional. 
+#### Command Line Arguments Explained
+- `$(pwd)/data`: the directory where all your images are stored (jpg/png are supported). You can change it to any path you like, just make sure it's an absolute path
+- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts. 
+- `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
 
-### Behind the scene
+### Behind the Scenes
 
 <table>
 <tr>
@@ -138,14 +138,14 @@ pods:
 
 ### Index Result
 
-With a successful running, you should be able to see logs rolling in the console and in the dashboard:
+If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
 
 <p align="center">
   <img src=".github/.README_images/0a8863abb3fcee182e1fe8fe46c47b7a.gif?raw=true" alt="Jina banner" width="45%">
   <img src=".github/.README_images/ed2907cd11ac26a2a3a2555f16071d13.gif?raw=true" alt="Jina banner" width="45%">
 </p>
 
-Under `$(pwd)/workspace`, You will see a list of directories `chunk_compound_indexer-*` after indexing. This is because I set shards to 8.
+Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_indexer-*` after indexing. This is because we set shards to 8.
 
 ## Query Top-K Visually Similar Images
 
@@ -155,12 +155,12 @@ docker run -v "$(pwd)/workspace:/workspace" -p 34567:34567 -e "JINA_PORT=34567" 
 ```
 
 #### Command args explained
-- `$(pwd)/workspace` is where Jina previosly stored all indexes and other artifacts. Now we need to load them.
-- `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port 
+- `$(pwd)/workspace` is where Jina previously stored our indexes and other artifacts. Now we need to load them.
+- `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port.
 
 ### Query via REST API
 
-When REST gateway is enabled, Jina use [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multi-media data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:34567/api/search`, e.g.:
+When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:34567/api/search`, e.g.:
 
 ```bash
 curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:34567/api/search'
@@ -168,11 +168,11 @@ curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["dat
 
 [JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
 
-This example shows how to feed data into Jina via REST gateway. By default, Jina use gRPC gateway, which has much higher performance and rich feature. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
+This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
 ### Query Results in Batch
 
-Let's test the results on Pokémon! This time we use gRPC gateway (for better efficiency in batch query), simply run `python make_html.py`
+Let's test the results on Pokémon! This time we use our gRPC gateway (for better efficiency in batch querying): Simply run `python make_html.py`
 
 <p align="center">
   <img src=".github/.README_images/f2dcf24c452f73b085c0108867f4ff33.gif?raw=true" alt="Jina banner" width="80%">
@@ -180,12 +180,12 @@ Let's test the results on Pokémon! This time we use gRPC gateway (for better ef
 
 ## Build Docker Image
 
-After play it for a while, you may want to change the code and rebuild the image. Simply do
+After playing with it for a while, you may want to change the code and rebuild the image. Simply run:
 ```bash
 docker build -t jinaai/hub.app.bitsearch .
 ```
 
-If you want to keep up with Jina's master branch, then pull before build:
+If you want to keep up with Jina's master branch, then pull before building:
 ```bash
 docker pull jinaai/jina:devel
 docker build -t jinaai/hub.app.bitsearch .
@@ -193,21 +193,20 @@ docker build -t jinaai/hub.app.bitsearch .
 
 ## Troubleshooting
 
-### Memory issue
+### Memory Issues
 
-BiT model seems pretty resource-hungry. If you are using Docker Desktop, make sure you assign enough memory for your Docker container, especially when you have multiple replicas. Below is my MacOS settings with two replicas:
+BiT model seems pretty resource-hungry. If you are using Docker Desktop, make sure to assign enough memory for your Docker container, especially when you have multiple replicas. Below are my MacOS settings with two replicas:
 
 
 <p align="center">
   <img src=".github/.README_images/d4165abd.png?raw=true" alt="Jina banner" width="80%">
 </p>
 
-### Incremental indexing
+### Incremental Indexing
 
-Incremental indexing and entry-level deleting are not supported yet in this demo. Duplicate indexing may not throw exceptions, but may produce strange results. So make sure to clean `$(pwd)/workspace` before each run.
+Incremental indexing and entry-level deleting are yet not supported in this demo. Duplicate indexing may not throw exceptions, but may produce strange results. So make sure to clean `$(pwd)/workspace` before each run.
 
-Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html). Or submit a Github issue.
-
+Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
 
 
 ## Documentation 

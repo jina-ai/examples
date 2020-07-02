@@ -15,7 +15,7 @@
 
 </p>
 
-In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/data/flowers/17/](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/) to build a flower image search system so that one can find similar images. Make sure you have gone through our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and understood the [take-home-message](https://github.com/jina-ai/examples/tree/master/urbandict-search#wrap-up) in [our bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search) before moving on. 
+In this demo, we'll use the [17flowers dataset](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/) to build a flower image search system to find similar images. Make sure you've gone through [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and understood the [take-home-message](https://github.com/jina-ai/examples/tree/master/urbandict-search#wrap-up) in [our bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search) before moving on. 
 
   
 
@@ -43,9 +43,9 @@ In this demo, we use the 17flowers data from [http://www.robots.ox.ac.uk/~vgg/da
 
 ## Overview
 
-The overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pretrained `mobilenet_v2` model from the `torchvision` lib is used to encode the Chunks into vectors. 
+Our overall design is similar to the semantic search demo. We consider each image as a Document and put the RGB array in the Chunk. Therefore, each Document has a single Chunk. The pre-trained `mobilenet_v2` model from the `torchvision` lib is used to encode the Chunks into vectors. 
 
-In this demo, we will show how to run the Pods in the docker container and how to scale up the Pods to boost the whole procedure. Plus, you will learn how to define your own Executor in your project. Sounds interesting? Let's start coding!
+In this demo, we'll show how to run the Pods in a Docker container and how to scale up the Pods to speed up the whole procedure. Plus, you'll learn to define your own Executor in your project. Sounds interesting? Let's get coding!
 
 <p align="center">
   <img src=".github/flower.gif?raw=true" alt="Jina banner" width="90%">
@@ -70,7 +70,7 @@ pip install -r requirements.txt
 
 
 ## Prepare the data
-In total, there are 1360 images in 17 categories in the [17flowers](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/) dataset. The following script will download the data and uncompress it into `/tmp/jina/flower/jpg`.
+In total, there are 1,360 images in 17 categories in the [17flowers](http://www.robots.ox.ac.uk/~vgg/data/flowers/17/) dataset. The following script downloads the data and decompresses it into `/tmp/jina/flower/jpg`.
 
 ```bash
 cd flower-search
@@ -79,7 +79,7 @@ bash ./get_data.sh
 
 ## Define the Flows
 
-We start with defining the index and the query Flows  with the YAML files as following. If you found a bit confusing with the YAML files, we highly suggest to go through our [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search) before moving forward.
+We start by defining the index and query Flows with the YAML files as follows. If you find the YAML files a bit confusing, we suggest you go through our [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search) before moving forwards.
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -157,18 +157,18 @@ pods:
 </tr>
 </table>
 
-Let's have a look at the index Flow. As the same as in the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search), we define a two pathway Flow for indexing. For each image, we put the image file name in the request message and thus each image is considered as a Document. The `loader` Pod reads the image file and save the image's RGB values into the Chunk. Note that in this case, we have only one Chunk for each Document. 
+Let's look at the index Flow: Just like the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search), we define a two pathway Flow for indexing. For each image, we put the image filename in the request message and thus each image is considered as a Document. The `loader` Pod reads the file and saves the image's RGB values into the Chunk. Note that in this case, we have only one Chunk per Document. 
 
-Afterwards, the Flow splits into two parallel pathways. In the pathway on the left side, the `normalizer` Pod resizes and normalizes the image in the Chunks so that in the downstreaming Pods they can be properly handled. Followed by the `chunk_indexer`, the `encoder` Pod encodes the Chunks into vectors, which will be further saved into the index by the `chunk_indexer` Pod. 
+Next, the Flow splits into two parallel pathways. In the pathway on the left side, the `normalizer` Pod resizes and normalizes the image in the Chunk so that it can be properly handled in the downstream Pods. This is followed by the `chunk_indexer`, in which the `encoder` Pod encodes the Chunks into vectors, which will be further saved into the index by the `chunk_indexer` Pod. 
 
-In the other pathway, the `doc_indexer` Pod uses the key-value storage to save the Document IDs and the Document contents, i.e. the image file names. At the end, the `join_all` Pod merges the results from the `chunk_indexer` and the `doc_indexer`. In this case, the `join_all` Pods simply wait for the both incoming messages arrived because neither of the upstreaming Pods write into the request message.
+In the other pathway, the `doc_indexer` Pod uses key-value storage to save the Document IDs and Document contents, i.e. the image filenames. At the end, the `join_all` Pod merges the results from `chunk_indexer` and `doc_indexer`. In this case, the `join_all` Pod simply waits for both incoming messages to arrive because neither of the upstream Pods writes into the request message.
 
-The two-pathway Flow, as a common practice in jina, is designed to storage the vectors and the Documents independently and in parallel. Of course, one can squeeze the two pathways into one pathway by concating the `doc_indexer` after the `chunk_indexer` and removing `join_all` Pod. However, this will slow down the index process. 
+The two-pathway Flow, as a common practice in Jina, is designed to store the vectors and Documents independently and in parallel. Of course, one can squeeze the two pathways into one pathway by concatenating the `doc_indexer` after the `chunk_indexer` and removing the `join_all` Pod. However, this woud slow down the indexing process. 
 
-As for the query Flow, it is pretty much the same as the index Flow, and thereafter we won't be too verbose to iterate. You might have notice that there is something new in the YAML files. Let's dig into them!
+As for the query Flow, it's pretty much the same as the index Flow, and so we won't go into it too much. But you might notice that there's something new in the YAML files: Let's dig into them!
 
 ### Hello, Docker!🐳
-In the YAML file, we add the `encoder` Pod in a different way from the other Pods. Instead of using the YAML file to config the Pods, we define the `encoder` with a Docker image with the `image` argument. By doing this, we will have the `encoder` Pod running in a Docker container. This is one key feature of jina. By wrapping the Pods into the docker image, we can safely forget about the complicated dependency and environment setting that are required to run the Pods. 
+In our YAML file, we've added the `encoder` Pod differently from the other Pods. Instead of using YAML to configure the Pods, we define the `encoder` with a Docker image using the `image` argument. This runs the `encoder` Pod in a Docker container. This is one key feature of Jina: By wrapping Pods into a Docker image, we can safely forget about complicated dependencies and environment settings needed to run the Pods. 
 
 
 ```yaml
@@ -178,10 +178,10 @@ pods:
     image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
 ```
 
-Back to our case, here we use the docker image containing the pretrained `mobilenet_v2` model from the `torchvision` lib. So that you do **NOT** need either to install the `torchvision` lib or to download the pretrained model. Everything is packed in the docker image. As long as you have docker installed, the container Pods will run out-of-box.
+Back to our example, here we use the Docker image containing the pre-trained `mobilenet_v2` model from the `torchvision` lib. So that you do **NOT** need to install the `torchvision` lib or download a pre-trained model. Everything is packed into the Docker image. As long as you have Docker installed, the container Pods will run out-of-the-box.
 
 ### Scale up 
-Another new comer is the `replicas` argument. As its name implies, `replicas` defines the number of parallel Peas in the Pod running at the same time. This is a useful argument to scale up your service. In this demo, as the encoding procedure with the deep learning models are well-known to be slow, we set the `replicas` to 4 and will start 4 Peas to encode the Chunks in parallel. This will greatly speed up the indexing process.
+Another newcomer is the `replicas` argument. As its name implies, `replicas` defines the number of parallel Peas in the Pod that can run at the same time. This is useful for scaling up your service. In this demo, as the encoding procedure with the deep learning models are well-known to be slow, we set the `replicas` to 4 and will start 4 Peas to encode the Chunks in parallel. This greatly speeds up the indexing process.
 
 ```yaml
 !Flow
@@ -199,7 +199,7 @@ Now we start indexing with the following command.
 python app.py -t index
 ```
 
-if you run into the following `TimeoutError`, the problem is probably because the docker image is too large to be downloaded in time. Please try `docker pull jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2` to download the image in before running the Flow.
+If you run into the following `TimeoutError`, it's probably because the Docker image is too large to download in time. Please try `docker pull jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2` to download the image before running the Flow.
 
 ```bash 
 TimeoutError: <class 'jina.peapods.container.ContainerPea'> with name encoder can not be initialized after 600000 ms
@@ -214,7 +214,7 @@ TimeoutError: <class 'jina.peapods.container.ContainerPea'> with name encoder ca
 
 </details> 
 
-Here we use the YAML file to define a Flow and use it to index the data. The `read_data()` function load the image file names in the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
+Here we use a YAML file to define a Flow and use it to index the data. The `read_data()` function loads the image filenames in the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
 
 ```python
 def read_data(img_path):
@@ -240,14 +240,14 @@ def main():
 python app.py -t query
 ```
 
-If you want to use your own image files to query, using the following shell command:
+If you want to query your own image files, use the following shell command:
 
 ```bash
 python app.py -t query -p <JPG file or directory>
 ```
-The command accepts a JPG file path or a directory that includes some JPG files. These JPG files' suffix is `.jpg`.
+The command accepts a file path or a directory that stores JPG files, with the `.jpg` extension.
 
-If only having a single JPG file in current directory, simply to call
+If you only have a single JPG in the current directory, just call:
 
 ```bash
 python app.py -t query -p .
@@ -262,7 +262,7 @@ python app.py -t query -p .
 
 </details> 
 
-For querying, we randomly sample 5 images from the dataset and feed them into the Flow using the following codes. 
+For querying, we randomly sample 5 images from the dataset and feed them into the Flow using the following code:
 
 ```python
 def read_data(img_path, max_sample_size=-1):
@@ -288,7 +288,7 @@ def main(task, num_docs, top_k):
             fl.search(read_data(data_path, 5), callback=ppr, top_k=top_k)
 ```
 
-We use the callback function `save_topk` to save the query results into the `/tmp/jina/flower/query_results.png`. As expected, the Top-1 results are always the query images themself.
+We use the callback function `save_topk` to save the query results as `/tmp/jina/flower/query_results.png`. As expected, the Top-1 results are always the query images themselves.
 
 ```python
 def save_topk(resp, output_fn=None):
@@ -320,12 +320,12 @@ def save_topk(resp, output_fn=None):
         plt.savefig(output_fn)
 ```
 
-Congratulations! Now you have an image search engine working at hand. We won't go into details of the Pods' YAML files because they are quite self explained. If you feel a bit lost when reading the YAML files, please check out the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
+Congratulations! Now you have an image search engine working. We won't go into too much detail of the Pods' YAML files because they are quite self-explanatory. If you feel a bit lost when reading the YAML files, please check the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
 
 ## Add a Customized Executor
-Although we have an image search engine at hand, we still have dozens of methods to make it better. One common method is to flip the images and index the flipped versions as well as the original image. So that we can retrieve the similar images even when the query image is flipped.
+Although we have an image search engine, there are still dozens of ways to make it better. One common method is to flip the images and index the flipped versions as well as the original, so that we can retrieve similar images even when the query image is flipped.
 
-We starts with add a new Pod with the name of `flipper`, to the Flow. 
+We starts by adding a new Pod called `flipper`, to our Flow. 
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -407,7 +407,7 @@ pods:
 </tr>
 </table>
 
-As stated in the Flow's YAML file, the `flipper` Pod is configed by the `yaml/craft-flip.yml`. Now we create this YAML file as following. For the `flipper` Pod, we use the an Executor with the name `ImageFlipper`, which we will create in the next step. 
+As stated in the Flow's YAML file, the `flipper` Pod is configured in `yaml/craft-flip.yml`. Let's create this YAML file as follows. For the `flipper` Pod, we use an Executor with the name `ImageFlipper`, which we'll create in the next step. 
 
 ```yaml
 !ImageFlipper
@@ -425,9 +425,9 @@ requests:
 
 In the YAML file, we define the Pod to behave in the same way on both `SearchRequest` and `IndexRequest`. In both cases, the Pod will use the `ChunkCraftDriver` to prepare the request data for the `ImageFlipper` and call the `craft()` function of the `ImageFlipper` to process the data.
 
-> `ChunkCraftDriver` craft the chunk-level information on given keys using the executor.
+> `ChunkCraftDriver` crafts the Chunk-level information on given keys using the Executor.
 
-The `py_modules` argument under the `metas` field is used to specify in which file the Executor is implemented. Therefore we can now move on to the `customized_executors.py` and implement `ImageFlipper`.
+The `py_modules` argument under the `metas` field is specifies the file in which the Executor is implemented. Therefore we can now move onto the `customized_executors.py` and implement `ImageFlipper`.
 
 ```yaml
 !ImageFlipper
@@ -435,11 +435,11 @@ metas:
   py_modules: customized_executors.py
 ```
 
-In this case, we need to inherit from the `ImageChunkCrafter` because we've saved the images in the Chunks of the requests.
+In this case, we need to inherit from `ImageChunkCrafter` because we've saved the images in the Chunks of the requests.
 
-> `ImageChunkCrafter` provides the basic functions for processing image data on chunk-level.
+> `ImageChunkCrafter` provides the basic functions for processing image data at the Chunk-level.
 
-Here come codes. The `load_image()` function from the `ImageChunkCrafter` will load the image array and return an `PIL.Image` object. With the `PIL.Image` object, we can simply call the `mirror()` function to flip the images. Note we need to restore the color channel by calling the `restore_channel_axis()` function. This is because the `PIL.Image` always put the color channel at the last axis. In contrast, the input images might use different axis for the color channel, which is defined in the YAML file by the `channel_axis`.
+Here somes the code: The `load_image()` function from `ImageChunkCrafter` loads the image array and returns a `PIL.Image` object. With the `PIL.Image` object, we can simply call the `mirror()` function to flip the images. Note we need to restore the color channel by calling the `restore_channel_axis()` function. This is because the `PIL.Image` always puts the color channel in the last axis. In contrast, the input images might use a different axis for the color channel, which is defined in the YAML file by the `channel_axis`.
 
 ```python
 import numpy as np
@@ -467,16 +467,16 @@ Finally, our customized Executor is ready to go. Let's check the results. Intere
 </details> 
 
 ## Wrap up
-Hooray! Now you've a pretty simple follower image search engine working. Let's wrap up what we've covered in this demo.
+Hooray! Now you've got a pretty simple flower image search engine working. Let's wrap up what we've covered in this demo.
 
-1. The Pods can use the docker image and run in a docker container. 
-2. The `replicas` argument allow you to quickly scale up the Pods.
-3. The Pods can use user defined Executors.  
+1. Pods can use a Docker image and run in a Docker container. 
+2. The `replicas` argument lets you quickly scale up the Pods.
+3. Pods can use user-defined Executors.  
 
 ## Next Steps
 
 - Write your own executors.
-- Check out the docker images at the Jina hub.
+- Check out the Docker images at Jina hub.
 
 ## Documentation 
 
@@ -484,7 +484,7 @@ Hooray! Now you've a pretty simple follower image search engine working. Let's w
 <img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
 </a>
 
-The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
+The best way to learn Jina in-depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. For more details, check out:
 
 - [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/main.html)
 - [Jina Python API interface](https://docs.jina.ai/api/jina.html)
