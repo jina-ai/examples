@@ -1,0 +1,17 @@
+!MyEncoder
+metas:
+  py_modules: customized_executors.py
+requests:
+  on:
+    IndexRequest:
+      - !EncodeDriver
+        with:
+          method: encode
+      - !DocPruneDriver
+        with:
+          pruned:
+            - meta_info
+    SearchRequest:
+      - !EncodeDriver
+        with:
+          method: encode
