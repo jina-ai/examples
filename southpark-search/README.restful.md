@@ -26,7 +26,7 @@ Now you can check out the results via HTTP POST request. Jina supports RESTful A
 
 ```bash
 curl --request POST \
-     -d '{"top_k": 10, "mode": "search",  "data": ["text:You're damn right"]}' \
+     -d '{"top_k": 10, "mode": "search",  "data": ["text:You are damn right"]}' \
      -H 'Content-Type: application/json' \
      'http://0.0.0.0:45678/api/search'
 ```
