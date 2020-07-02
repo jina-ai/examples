@@ -13,4 +13,6 @@ RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x=
 
 RUN python prepare_data.py && python app.py -t index -n 10000
 
+RUN rm -f /urban-dictionary-words-dataset.zip /jina/urbandict/urbandict-word-defs.csv
+
 CMD ["python", "app.py","-t","query"]
