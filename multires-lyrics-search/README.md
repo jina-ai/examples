@@ -1,3 +1,10 @@
+
+# Lyrics Live Search: Understanding the Concept of Chunk
+
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg?raw=true  "We fully commit to open-source")](https://get.jina.ai)
+
+[![](demo.gif)](https://www.youtube.com/watch?v=GzufeV8AY_w)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
@@ -11,12 +18,6 @@
   - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# Lyrics Live Search: Understanding the Concept of Chunk
-
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg?raw=true  "We fully commit to open-source")](https://get.jina.ai)
-
-[![](demo.gif)](https://www.youtube.com/watch?v=GzufeV8AY_w)
 
 
 ## Download lyrics data
