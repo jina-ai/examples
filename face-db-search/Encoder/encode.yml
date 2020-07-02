@@ -1,0 +1,15 @@
+!FaceNetTorchEncoder
+with:
+  pretrained: 'vggface2'
+  img_shape: 160
+
+metas:
+  name: face-encoder
+  py_modules: FaceNetEncoder.py
+  workspace: ./
+requests:
+  on:
+    [SearchRequest, IndexRequest, TrainRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
