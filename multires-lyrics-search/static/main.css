@@ -1,0 +1,29 @@
+.lyric-text {
+    font-size: 10px;
+    text-align: center;
+    max-height: 30em;
+    overflow: scroll;
+}
+
+.blockquote-footer {
+    text-align: center;
+}
+
+.query-chunk {
+    border-width: 1px;
+    border-radius: 3px;
+    border-style: solid;
+}
+
+.query-chunk-breakdown {
+    margin: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: lightgray;
+    padding: 5px;
+}
+
+.card {
+    margin: 5px;
+}

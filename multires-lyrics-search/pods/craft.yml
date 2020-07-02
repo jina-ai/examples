@@ -1,0 +1,3 @@
+!Sentencizer
+with:
+  min_sent_len: 6
