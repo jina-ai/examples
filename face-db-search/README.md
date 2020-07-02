@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Build an Face Search System in 3 minutes](#build-an-face-search-system-in-3-minutes)
+  - [<a name="custom-encoder">Overview</a>](#a-namecustom-encoderoverviewa)
+  - [Prerequirements](#prerequirements)
+  - [Prepare the data](#prepare-the-data)
+  - [Define the Flows](#define-the-flows)
+  - [<a name="custom-encoder">Custom Encoder</a>](#a-namecustom-encodercustom-encodera)
+  - [Run the Flows](#run-the-flows)
+  - [Next Steps](#next-steps)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Build an Face Search System in 3 minutes
 <p align="center">
  
