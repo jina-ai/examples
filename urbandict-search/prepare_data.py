@@ -1,7 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import os
 import zipfile
 import csv
@@ -14,7 +13,7 @@ MIN_WORD_LENGTH = 2
 MAX_WORD_LENGTH = 16
 
 
-def main(input_fn,output_fn):
+def main(input_fn, output_fn):
     # load the zip file and clean the data
     word_def_list = []
     with zipfile.ZipFile(input_fn) as z:
@@ -33,7 +32,7 @@ def main(input_fn,output_fn):
                 if len(word_def) == 0:
                     # filter out the empty definitions
                     continue
-                if up_votes < MIN_UP_VOTES or (up_votes+down_votes) < MIN_VOTES or weight <= MIN_UP_DOWN_RATIO:
+                if up_votes < MIN_UP_VOTES or (up_votes + down_votes) < MIN_VOTES or weight <= MIN_UP_DOWN_RATIO:
                     # filter out the entries that have too few up-votes
                     continue
                 if len(word) < MIN_WORD_LENGTH or len(word) > MAX_WORD_LENGTH:
@@ -44,7 +43,7 @@ def main(input_fn,output_fn):
                     continue
                 word = word.lower().strip()  # convert the words into the lower case
                 word_def = word_def.lower().strip()
-                word_def_list.append('{}+-={}'.format(word,word_def)) # '+-=' for unique seperation
+                word_def_list.append('{}+-={}'.format(word, word_def))  # '+-=' for unique seperation
     print('{} definitions are kept out of {} after washing'.format(len(word_def_list), idx))
     with open(output_fn, 'w') as f:
         f.write('\n'.join(word_def_list))
@@ -52,11 +51,11 @@ def main(input_fn,output_fn):
 
 
 if __name__ == '__main__':
-    data_dir = os.environ.get('DATA_DIR', '/tmp/')
-    work_dir = os.path.join(data_dir,'jina','urbandict')
+    work_dir = '/tmp/jina/urbandict'
     if not os.path.exists(work_dir):
         print('working directory: {}'.format(work_dir))
         os.makedirs(work_dir, exist_ok=True)
-    input_fn=os.path.join(data_dir,'urban-dictionary-words-dataset.zip')
-    output_fn = os.path.join(work_dir,'urbandict-word-defs.csv')
-    main(input_fn,output_fn)
+    input_fn = os.environ.get('RAW_DATA_DIR', '/tmp/urban-dictionary-words-dataset.zip')
+    output_fn = os.environ.get('WASHED_DATA_DIR', os.path.join(work_dir, 'urbandict-word-defs.csv'))
+
+    main(input_fn, output_fn)

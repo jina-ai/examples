@@ -1,7 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import click
 import os
 import string
@@ -9,10 +8,9 @@ import random
 
 from jina.flow import Flow
 
-RANDOM_SEED = 10 # 5
+RANDOM_SEED = 10  # 5
 os.environ['REPLICAS'] = str(2)
 os.environ['SHARDS'] = str(2)
-
 
 
 def get_random_ws(workspace_path, length=8):
@@ -20,7 +18,6 @@ def get_random_ws(workspace_path, length=8):
     letters = string.ascii_lowercase
     dn = ''.join(random.choice(letters) for i in range(length))
     return os.path.join(workspace_path, dn)
-
 
 
 def print_topk(resp, word):
@@ -35,10 +32,6 @@ def print_topk(resp, word):
             print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))
 
 
-def read_query_data(text):
-    yield '{}'.format(text)
-
-
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
@@ -47,8 +40,7 @@ def main(task, num_docs, top_k):
     workspace_path = '/tmp/jina/urbandict'
     os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
     print(f'{os.environ["TMP_WORKSPACE"]}')
-    data_dir = os.path.join(os.environ.get('DATA_DIR', '/tmp'), 'jina', 'urbandict')
-    data_fn = os.path.join(data_dir, "urbandict-word-defs.csv")
+    data_fn = os.environ.get('WASHED_DATA_DIR', os.path.join(workspace_path, 'urbandict-word-defs.csv'))
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
@@ -61,8 +53,7 @@ def main(task, num_docs, top_k):
                 if not text:
                     break
                 ppr = lambda x: print_topk(x, text)
-                f.search(read_query_data(text), callback=ppr, topk=top_k)
-                # f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+                f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
     elif task == 'query_restful':
         f = Flow().load_config('flow-query.yml')
         f.use_rest_gateway()
@@ -70,8 +61,7 @@ def main(task, num_docs, top_k):
             f.block()
     else:
         raise NotImplementedError(
-            f'unknown task: {task}. A valid task is either `index` or `query` or `query_restful`.')
-
+            f'unknown task: {task}. A valid task is `index` or `query` or `query_restful`.')
 
 
 if __name__ == '__main__':
