@@ -66,7 +66,7 @@ Now you can open your shell and check out the results via the RESTful API. The m
 curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 
-Check out more details about the docker image [here](rest-api/README.md).
+Check out more details about the docker image [here](README.restful.md).
 
 
 ## Prerequirements
