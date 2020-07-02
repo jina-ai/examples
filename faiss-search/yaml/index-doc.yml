@@ -2,7 +2,6 @@
 with:
   index_filename: doc.gzip
 metas:
-  name: docIndexer
   workspace: $TMP_WORKSPACE
 requests:
   on:
@@ -17,5 +16,5 @@ requests:
           pruned: ['chunks']
       - !KVIndexDriver
         with:
-          level: 'chunk'
+          level: doc
           method: add
