@@ -9,13 +9,12 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Lyrics Live Search: Understanding the Concept of Chunk](#lyrics-live-search-understanding-the-concept-of-chunk)
-  - [Download lyrics data](#download-lyrics-data)
-  - [Install](#install)
-  - [Run](#run)
-  - [Run as a Docker Container](#run-as-a-docker-container)
-  - [View in Browser](#view-in-browser)
-  - [License](#license)
+- [Download lyrics data](#download-lyrics-data)
+- [Install](#install)
+- [Run](#run)
+- [Run as a Docker Container](#run-as-a-docker-container)
+- [View in Browser](#view-in-browser)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
