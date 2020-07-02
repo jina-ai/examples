@@ -1,11 +1,8 @@
 !Flow
 with:
   read_only: true
-  rest_api: true
   port_grpc: $JINA_PORT
 pods:
-#  reader:
-#    yaml_path: pods/load.yml
   splittor:
     yaml_path: pods/craft-split.yml
     replicas: $REPLICAS
