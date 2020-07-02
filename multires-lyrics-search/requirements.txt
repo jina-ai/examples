@@ -1,0 +1,3 @@
+jina[devel]
+torch
+transformers
