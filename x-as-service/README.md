@@ -17,7 +17,7 @@
 
 </p>
 
-[BERT-as-service](https://github.com/hanxiao/bert-as-service/) is a popular and scalable architecture for extracting feature vectors using BERT model. Unfortunately, it is optimized for the original BERT model only. Adaption is required if one wants to employ other deep learning models with such architecture.
+[BERT-as-service](https://github.com/hanxiao/bert-as-service/) is a popular and scalable architecture for extracting feature vectors using the BERT model. Unfortunately, it is optimized for the original BERT model only. Adaption is required if one wants to employ other deep learning models with that architecture.
 
 In this short tutorial, we shall see how simple it is to use Jina for extracting feature vectors. The best part is, you can use any representation beyond BERT.
 
@@ -42,7 +42,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 
 ## Requirements
 
-You to have Docker installed for this example. To enable Docker feature in Jina:
+You need to have Docker installed to run this example. To enable Docker feature in Jina:
 
 ```bash
 pip install "jina[devel]"
@@ -52,11 +52,11 @@ pip install "jina[devel]"
 
 Let's look at the workflow:
 
-1. split the document by the punctuation, building a set of chunks from it;
+1. split the document at punctuation, building a set of chunks from it;
 2. use a deep learning model to embed sentences into vectors;
-3. print the embedding in the console. 
+3. print the embeddings on the console. 
 
-In the real-world application, you may want to use one of our [`BaseIndexer` class](https://jina-ai.github.io/docs/api/jina.executors.indexers.html) to store these embeddings instead of printing them out. Please refer to other examples for the end-to-end workflow.
+In a real-world application, you may want to use one of our [`BaseIndexer` class](https://jina-ai.github.io/docs/api/jina.executors.indexers.html) to store these embeddings instead of printing them out. Please refer to other examples for the end-to-end workflow.
 
 ```python
 from jina.flow import Flow
@@ -67,9 +67,9 @@ f = (Flow(callback_on_body=True)
           replicas=2, timeout_ready=20000))
 ```
 
-This creates a `Flow` with two `Pods`, corresponds to the first and second step described above. Here we start two `replicas`, so there will be two encoder running in parallel. `timeout_ready` is set to 20s (20000ms) as loading the pretrained model and starting pytorch take some time. 
+This creates a `Flow` with two `Pods`, corresponding to the first and second step described above. Here we start two `replicas`, so there will be two encoders running in parallel. `timeout_ready` is set to 20s (20000ms) as loading the pretrained model and starting pytorch take some time.
 
-In the second step, we use [transformers](https://github.com/huggingface/transformers) for embedding computation. In the example above, we use a prebuilt image from [Jina Hub](https://github.com/jina-ai/jina-hub). It automatically pulls the image to local when you run this flow. If you do not want to use Docker or if you already have transformer and pytorch installed locally, you can simply do:
+In the second step, we use [transformers](https://github.com/huggingface/transformers) for embedding computation. In the example above, we use a prebuilt image from [Jina Hub](https://github.com/jina-ai/jina-hub). If you do not want to use Docker or if you already have transformer and pytorch installed locally, you can simply do:
 
 ```python
 from jina.flow import Flow
