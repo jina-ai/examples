@@ -1,0 +1,9 @@
+!MySegmenter
+metas:
+  py_modules: customized_executors.py
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !SegmentDriver
+        with:
+          method: craft
