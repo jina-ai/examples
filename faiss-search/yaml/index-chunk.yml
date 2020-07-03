@@ -1,27 +1,28 @@
 !ChunkIndexer
 components:
-  - !NumpyIndexer
+  - !FaissIndexer
     with:
-      index_filename: vec.gz
-      metric: cosine
+      index_key: 'IVF10,PQ4'
+      index_filename: 'faiss_index.tgz'
+      train_filepath: './workspace/train.tgz'
     metas:
-      name: vecidx  # a customized name
-      workspace: $TMP_WORKSPACE
+      workspace: './workspace'
+      name: faissidx
   - !ChunkPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx
-      workspace: $TMP_WORKSPACE
+      workspace: './workspace'
 metas:
   name: chunk_indexer
-  workspace: $TMP_WORKSPACE
+  workspace: './workspace'
 requests:
   on:
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: vecidx
+          executor: faissidx
       - !PruneDriver
         with:
           level: chunk
@@ -37,7 +38,7 @@ requests:
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: vecidx
+          executor: faissidx
       - !PruneDriver
         with:
           level: chunk
