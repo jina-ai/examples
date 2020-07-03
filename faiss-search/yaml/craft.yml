@@ -1,0 +1,20 @@
+!ChunkIndexer
+components:
+  - !ArrayBytesReader
+    metas:
+      name: reader
+  - !MySegmenter
+    metas:
+      name: segmenter
+metas:
+  py_modules: customized_executors.py
+  name: crafter
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !DocCraftDriver
+        with:
+          executor: reader
+      - !SegmentDriver
+        with:
+          executor: segmenter
