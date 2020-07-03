@@ -8,11 +8,14 @@ pods:
   encoder:
     yaml_path: yaml/encode.yml
     replicas: $REPLICAS
-  chunk_indexer:
+  faiss_indexer:
+    image: jinaai/hub.executors.indexers.vector.faiss:latest
+    # image: jinaai/hub.executors.indexers.vector.my_custom_faiss:latest
+    replicas: 1
+    timeout_ready: 10000
+    read_only: true
     yaml_path: yaml/index-chunk.yml
-    separated_workspace: true
-    polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    volumes: './workspace'
   ranker:
     yaml_path: MinRanker
   doc_indexer:
