@@ -27,10 +27,10 @@ def print_topk(resp, word):
 @click.option("--host", default="localhost")
 @click.option("--top_k", "-k", default=5)
 def main(text, host, top_k):
-    py_client(host=host, port_grpc=56798).dry_run()
+    py_client(host=host, port_expose=56798).dry_run()
     ppr = lambda x: print_topk(x, text)
 
-    py_client(host=host, port_grpc=56798, top_k=top_k).search(
+    py_client(host=host, port_expose=56798, top_k=top_k).search(
         input_fn=read_query_data(text), output_fn=ppr
     )
 

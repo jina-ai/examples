@@ -1,7 +1,7 @@
 !Flow
 with:
   read_only: true
-  port_grpc: $JINA_PORT
+  port_expose: $JINA_PORT
 pods:
   splittor:
     yaml_path: pods/craft-split.yml
