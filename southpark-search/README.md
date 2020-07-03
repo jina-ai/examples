@@ -66,6 +66,12 @@ Now you can open your shell and check out the results via the RESTful API. The m
 curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 
+For a better visualization, you can also open [https://jina.ai/jinabox.js/](https://jina.ai/jinabox.js/) in your brower, and replace server endpoint with `http://localhost:45678/api/search`. If you want to learn more about jinabox, please check out [https://github.com/jina-ai/jinabox.js](https://github.com/jina-ai/jinabox.js) and enjoy playing.
+
+<p align="center">
+  <img src=".github/jinabox.png?raw=true" alt="Jinabox" width="80%">
+</p>
+
 Check out more details about the docker image [here](README.restful.md).
 
 
@@ -120,14 +126,14 @@ However, we have another Pod working in silence. In fact, the input to the very 
 !Flow
 pods:
   splitter:
-    yaml_path: yaml/craft-split.yml
+    yaml_path: pods/craft-split.yml
   encoder:
-    yaml_path: yaml/encode.yml
+    yaml_path: pods/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    yaml_path: pods/index-chunk.yml
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    yaml_path: pods/index-doc.yml
     needs: gateway
   join_all:
     yaml_path: _merge
@@ -147,7 +153,7 @@ By default, the input of each Pod is the Pod defined right above it, and the req
 
 ```yaml
 doc_indexer:
-  yaml_path: yaml/index-doc.yml
+  yaml_path: pods/index-doc.yml
   needs: gateway
 ```
 
@@ -155,7 +161,7 @@ As we can see, for most Pods, we only need to define the YAML file path. Given t
 
 ```yaml
 encoder:
-  yaml_path: yaml/encode.yml
+  yaml_path: pods/encode.yml
   timeout_ready: 60000
 ```
 
@@ -192,16 +198,16 @@ with:
   read_only: true
 pods:
   splitter:
-    yaml_path: yaml/craft-split.yml
+    yaml_path: pods/craft-split.yml
   encoder:
-    yaml_path: yaml/encode.yml
+    yaml_path: pods/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    yaml_path: pods/index-chunk.yml
   ranker:
     yaml_path: MinRanker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    yaml_path: pods/index-doc.yml
 ```
 
 </sub>
@@ -255,31 +261,15 @@ With the Flows, we can now write the code to run the Flow. For indexing, we star
 
 ```python
 def main(num_docs):
-    flow = Flow().load_config('flow-index.yml')
-    with flow.build() as fl:
+    f = Flow().load_config('flow-index.yml')
+    with f:
         data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
-        fl.index(buffer=read_data(data_fn, num_docs))
+        f.index_lines(filepath=data_fn, size=num_docs, batch_size=8)
 
 ```
 
-The content of the `IndexRequest` is fed from `read_data()`, which loads the processed `.csv` file and outputs each word together with its definition formatted into `bytes`.
+The content of the `IndexRequest` is fed from `index_lines()`, which loads the processed `.csv` file.
 Encoding the text with bert-family models takes a long time. To save your time, here we limit the number of indexed documents to 10,000.
-
-```python
-def read_data(f_path, max_sample_size=-1):
-    if not os.path.exists(f_path):
-        print('file not found: {}'.format(f_path))
-    doc_list = []
-    with open(f_path, 'r') as f:
-        for l in f:
-            doc_list.append(l.strip('\n').lower())
-    if max_sample_size > 0:
-        random.shuffle(doc_list)
-        doc_list = doc_list[:max_sample_size]
-    print('\n'.join(doc_list))
-    for d in doc_list:
-        yield d.encode('utf8')
-```
 
 ### Query
 
@@ -296,21 +286,18 @@ python app.py -t query
 
 </details>
 
-For querying, we follow the same process to define and build the Flow from the YAML file. The `search()` function is used to send a `SearchRequest` to the Flow. Here we accept the user's query input from the terminal and wrap it into request message formatted into `bytes`.
+For querying, we follow the same process to define and build the Flow from the YAML file. The `search_lines()` function is used to send a `SearchRequest` to the Flow. Here we accept the user's query input from the terminal and wrap it into a list of `string`.
 
 ```python
-def read_query_data(text):
-    yield '{}'.format(text).encode('utf8')
-
 def main(top_k):
-    flow = Flow().load_config('flow-query.yml')
-    with flow.build() as fl:
+    f = Flow().load_config('flow-query.yml')
+    with f:
         while True:
             text = input('please type a sentence: ')
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            fl.search(read_query_data(text), callback=ppr, topk=top_k)
+            f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
 ```
 
 The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a Protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
@@ -323,19 +310,19 @@ fl.search(read_query_data(text), callback=ppr, topk=top_k)
 ```python
 def print_topk(resp, word):
     for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {word}')
         for idx, kk in enumerate(d.topk_results):
             score = kk.score.value
-            if score <= 0.0:
+            if score < 0.0:
                 continue
-            doc = kk.match_doc.buffer.decode()
-            name, line = doc.split('!', maxsplit=1)
-            print('> {:>2d}({:f}). {} said: {}'.format(
-                idx, score, name.upper(), line))
+            doc = kk.match_doc.text
+            name, line = doc.split('[SEP]', maxsplit=1)
+            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
 ```
 
 ## Dive into the Pods
 If you want to know more about Pods, keep reading. As shown above, we defined the Pods by giving the YAML files. Now let's move on to see what is exactly written in these magic YAML files.
+
+> Note that since v0.3.0, the `requests` field in the `.yml` file is no longer necessary. The default behaviors upon the requests are definded at `jina/resources`. Feel free to skip the descriptions about `requests` and come back later if you want to know more about how jina works.
 
 ### `splitter`
 As a convention in Jina, A YAML config is used to describe the properties of an object so that we can easily configure the behavior of the Pods without touching the code.
@@ -348,7 +335,6 @@ Here is the YAML file for the `splitter`. We first use the built-in **Sentencize
 with:
   min_sent_len: 3
   max_sent_len: 128
-  punct_chars: '.,;!?:'
 requests:
   on:
     [SearchRequest, IndexRequest, TrainRequest]:
@@ -412,7 +398,7 @@ requests:
           method: add
 ```
 
-For the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` just like the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.
+For the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` just like the `IndexRequest`.
 ```yaml
 requests:
   on:

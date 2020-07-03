@@ -46,7 +46,6 @@ def main(task, num_docs, top_k):
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index_lines(filepath=data_path, size=num_docs, batch_size=8)
-        print('done')
     elif task == 'query':
         f = Flow().load_config('flow-query.yml')
         with f:
