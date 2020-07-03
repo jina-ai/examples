@@ -2,11 +2,8 @@
 metas:
   prefetch: 10
 pods:
-  loader:
-    yaml_path: yaml/craft-loader.yml
-    replicas: $REPLICAS
-  segmenter:
-    yaml_path: yaml/craft-segmenter.yml
+  crafter:
+    yaml_path: yaml/craft.yml
     replicas: $REPLICAS
   encoder:
     yaml_path: yaml/encode.yml
@@ -23,7 +20,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     yaml_path: yaml/index-doc.yml
-    needs: segmenter
+    needs: crafter
   join_all:
     yaml_path: _merge
     needs: [doc_indexer, chunk_indexer]

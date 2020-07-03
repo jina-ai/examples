@@ -1,7 +1,0 @@
-!ArrayBytesReader
-requests:
-  on:
-    [IndexRequest, SearchRequest]:
-      - !DocCraftDriver
-        with:
-          method: craft

@@ -2,11 +2,8 @@
 with:
   read_only: true
 pods:
-  loader:
-    yaml_path: yaml/craft-loader.yml
-    replicas: $REPLICAS
-  segmenter:
-    yaml_path: yaml/craft-segmenter.yml
+  crafter:
+    yaml_path: yaml/craft.yml
     replicas: $REPLICAS
   encoder:
     yaml_path: yaml/encode.yml
