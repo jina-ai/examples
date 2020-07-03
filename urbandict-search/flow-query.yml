@@ -1,7 +1,7 @@
 !Flow
 with:
   read_only: true
-  port_grpc: 45678
+  port_expose: 45678
 pods:
   splittor:
     yaml_path: yaml/craft-split.yml

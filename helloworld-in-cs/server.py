@@ -28,8 +28,8 @@ def hello_world(args):
     f = Flow.load_config(args.index_yaml_path)
     # run it!
     with f:
-        default_logger.success(f'hello-world server is started at {f.host}:{f.port_grpc}, '
-                               f'you can now use "python client.py --port-grpc {f.port_grpc} --host {f.host}" to send request!')
+        default_logger.success(f'hello-world server is started at {f.host}:{f.port_expose}, '
+                               f'you can now use "python client.py --port-expose {f.port_expose} --host {f.host}" to send request!')
         f.block()
 
 

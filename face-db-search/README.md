@@ -161,7 +161,7 @@ pods:
 with:
   read_only: true  # better add this in the query time
   rest_api: true
-  port_grpc: $JINA_PORT
+  port_expose: $JINA_PORT
 pods:
   loader:
     yaml_path: yaml/craft-load.yml
