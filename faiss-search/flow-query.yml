@@ -10,10 +10,8 @@ pods:
     replicas: $REPLICAS
   faiss_indexer:
     image: jinaai/hub.executors.indexers.vector.faiss:latest
-    # image: jinaai/hub.executors.indexers.vector.my_custom_faiss:latest
     replicas: 1
     timeout_ready: 10000
-    read_only: true
     yaml_path: yaml/index-chunk.yml
     volumes: './workspace'
   ranker:

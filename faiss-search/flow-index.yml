@@ -12,7 +12,6 @@ pods:
     image: jinaai/hub.executors.indexers.vector.faiss:latest
     replicas: 1
     timeout_ready: 10000
-    read_only: true
     yaml_path: yaml/index-chunk.yml
     volumes: './workspace'
   doc_indexer:
