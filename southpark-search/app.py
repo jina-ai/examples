@@ -14,6 +14,7 @@ random.seed(RANDOM_SEED)
 os.environ['REPLICAS'] = str(2)
 os.environ['SHARDS'] = str(2)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/southpark'
+os.environ['JINA_PORT'] = str('45678')
 
 
 def get_random_ws(workspace_path, length=8):
@@ -30,12 +31,8 @@ def print_topk(resp, word):
             if score < 0.0:
                 continue
             doc = kk.match_doc.text
-            name, line = doc.split('!', maxsplit=1)
+            name, line = doc.split('[SEP]', maxsplit=1)
             print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
-
-
-def read_query_data(text):
-    yield '{}'.format(text).lower()
 
 
 @click.command()
@@ -49,7 +46,6 @@ def main(task, num_docs, top_k):
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index_lines(filepath=data_path, size=num_docs, batch_size=8)
-        print('done')
     elif task == 'query':
         f = Flow().load_config('flow-query.yml')
         with f:
@@ -58,7 +54,7 @@ def main(task, num_docs, top_k):
                 if not text:
                     break
                 ppr = lambda x: print_topk(x, text)
-                f.search(read_query_data(text), callback=ppr, topk=top_k)
+                f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
