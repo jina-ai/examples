@@ -30,6 +30,7 @@ def index():
 
 def search():
     f = Flow().load_config('flow-query.yml')
+    f.use_rest_gateway()
     with f:
         f.block()
 
