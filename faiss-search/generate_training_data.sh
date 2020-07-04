@@ -1,3 +1,3 @@
 #!/bin/sh
-mkdir workspace
-python generate_random_training_data.py
+mkdir workspace || true
+python3.7 generate_training_data.py
