@@ -34,24 +34,29 @@ def read_data(db_file_path: str) -> Generator[bytes, Any, Any]:
         yield vectors[start_batch: end_batch].tobytes()
 
 
-def save_topk(resp, output_fn=None):
-    results = []
-    for d in resp.search.docs:
-        cur_result = []
-        d_fn = d.meta_info.decode()
-        cur_result.append(d_fn)
-        print("-" * 20)
-        print('query vector: {}'.format(np.frombuffer(d.blob.buffer, d.blob.dtype)))
-        print('matched vectors' + "*" * 10)
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
-            if score < 0.0:
-                continue
-            m_fn = np.frombuffer(kk.match_doc.blob.buffer, kk.match_doc.blob.dtype)
-            print('{:>2d}:({:f}):{}'.format(
-                idx, score, m_fn))
-            cur_result.append(m_fn)
-        results.append(cur_result)
+def save_topk(resp, output_file):
+    with open(output_file, 'w') as fw:
+        query_id = 0
+        for d in resp.search.docs:
+            fw.write('-' * 20)
+            fw.write('\n')
+            fw.write('query id {}: \n {}'.format(query_id, np.frombuffer(d.blob.buffer, d.blob.dtype)))
+            fw.write('\n')
+            fw.write('matched vectors' + "*" * 10)
+            fw.write('\n')
+            for idx, kk in enumerate(d.topk_results):
+                score = kk.score.value
+                if score < 0.0:
+                    continue
+                m_fn = np.frombuffer(kk.match_doc.blob.buffer, kk.match_doc.blob.dtype)
+                fw.write('\n')
+                fw.write('Idx: {:>2d}:(DocId {}, Ranking score: {:f}): \n{}'.
+                         format(idx, kk.match_doc.doc_id, score, m_fn))
+                fw.write('\n')
+            fw.write('\n')
+            query_id += 1
+
+    print(open(output_file, 'r').read())
 
 
 @click.command()
