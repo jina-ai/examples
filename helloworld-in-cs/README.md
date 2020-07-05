@@ -66,7 +66,7 @@ It will start the Flow and stop at
 ```text
 Flow@50431[I]:6 Pods (i.e. 15 Peas) are running in this Flow
 Flow@50431[S]:flow is now ready for use, current build_level is GRAPH
-JINA@50431[S]:hello-world server is started at 0.0.0.0:58596, you can now use "python client.py --port-grpc 58596 --host 0.0.0.0" to send request!
+JINA@50431[S]:hello-world server is started at 0.0.0.0:58596, you can now use "python client.py --port-expose 58596 --host 0.0.0.0" to send request!
 ```
 
 `58596` is the port number we need to write down as it will be used on the client side. 
@@ -79,23 +79,23 @@ The complete client-side code can be found in [client.py](client.py).
 
 On the client side, we simply use `py_client` to connect to the server that we just launched. 
 
-`host` and `port_grpc` are the most important arguments in the client.
+`host` and `port_expose` are the most important arguments in the client.
 
 ```python
 from jina.clients import py_client
 
 # run it!
-py_client(port_grpc=args.port_grpc, host=args.host).index(
+py_client(port_expose=args.port_expose, host=args.host).index(
     input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
 ```
 
 You can now start the client via:
 
 ```bash
-python client --port-grpc 58596
+python client --port-expose 58596
 ```
 
-In this example, our Flow and Client are on the same machine, so no host address is required. If you are running Flow remotely, please also add the remote IP address to `--host` and make sure the `port-grpc` is set to public in the remote security group.
+In this example, our Flow and Client are on the same machine, so no host address is required. If you are running Flow remotely, please also add the remote IP address to `--host` and make sure the `port-expose` is set to public in the remote security group.
 
 It will show the progress bar on client side while indexing
 
@@ -113,7 +113,7 @@ And that's how you use Flow in a C/S manner. Pretty easy right?
 ## Take home message
 
 - Use `with` context manager and `threading.Event().wait()` to start a Flow
-- Use `py_client` to connect to a Flow with proper `host` and `port_grpc`
+- Use `py_client` to connect to a Flow with proper `host` and `port_expose`
 - **You can also start a Flow directly from the console, check out `jina flow --help` for more details.**
 
 

@@ -27,12 +27,12 @@ def hello_world(args):
     download_data(targets)
 
     # run it!
-    py_client(port_grpc=args.port_grpc, host=args.host).index(
+    py_client(port_expose=args.port_expose, host=args.host).index(
         input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
 
 
 if __name__ == '__main__':
     p = set_hw_parser()
-    p.add_argument('--port-grpc', required=True, type=int, help='the grpc port of the hello-world server')
+    p.add_argument('--port-expose', required=True, type=int, help='the grpc port of the hello-world server')
     p.add_argument('--host', type=str, default='localhost', help='the address hello-world server')
     hello_world(p.parse_args())

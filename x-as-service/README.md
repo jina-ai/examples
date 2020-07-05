@@ -129,7 +129,7 @@ with f:
 Say if you don't have GPU resources locally and you want to deploy the encoding work to remote. You can simply start a gateway on the remote machine via:
 
 ```bash
-jina gateway --allow-spawn --port-grpc 34567
+jina gateway --allow-spawn --port-expose 34567
 ```
 
 Then you can change the local flow to:
@@ -141,7 +141,7 @@ f = (Flow(callback_on_body=True)
      .add(name='spit', yaml_path='Sentencizer')
      .add(name='encode', image='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
           host='192.168.1.100', # the ip/hostname of the remote GPU machine
-          port_grpc=34567,
+          port_expose=34567,
           replicas=2, timeout_ready=20000))
 ```
 

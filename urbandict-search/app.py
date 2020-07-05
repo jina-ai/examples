@@ -1,18 +1,16 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import click
-import json
 import os
 import string
 import random
 
 from jina.flow import Flow
 
-RANDOM_SEED = 10 # 5
-os.environ['REPLICAS'] = str(1)
-os.environ['SHARDS'] = str(1)
+RANDOM_SEED = 10  # 5
+os.environ['REPLICAS'] = str(2)
+os.environ['SHARDS'] = str(2)
 
 
 def get_random_ws(workspace_path, length=8):
@@ -22,15 +20,6 @@ def get_random_ws(workspace_path, length=8):
     return os.path.join(workspace_path, dn)
 
 
-def read_data(fn, max_sample_size=1000):
-    with open(fn, 'r') as f:
-        data_dict = json.load(f)
-        for r in data_dict[:max_sample_size]:
-            word = r['word'].lower()
-            def_text = r['text'].lower()
-            yield '{}: {}'.format(word, def_text).encode('utf8')
-
-
 def print_topk(resp, word):
     for d in resp.search.docs:
         print(f'Ta-Dah🔮, here are what we found for: {word}')
@@ -38,12 +27,9 @@ def print_topk(resp, word):
             score = kk.score.value
             if score <= 0.0:
                 continue
-            print('{:>2d}:({:f}):{}'.format(
-                idx, score, kk.match_doc.buffer.decode()))
-
-
-def read_query_data(text):
-    yield '{}'.format(text).encode('utf8')
+            doc = kk.match_doc.text
+            word, word_def = doc.split('+-=', maxsplit=1)
+            print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))
 
 
 @click.command()
@@ -54,23 +40,28 @@ def main(task, num_docs, top_k):
     workspace_path = '/tmp/jina/urbandict'
     os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
     print(f'{os.environ["TMP_WORKSPACE"]}')
-    data_fn = os.path.join('/tmp/jina/urbandict', "urbandict-word-defs.json")
+    data_fn = os.environ.get('WASHED_DATA_DIR', os.path.join(workspace_path, 'urbandict-word-defs.csv'))
     if task == 'index':
-        flow = Flow().load_config('flow-index.yml')
-        with flow.build() as fl:
-            fl.index(buffer=read_data(data_fn, num_docs), batch_size=16)
+        f = Flow().load_config('flow-index.yml')
+        with f:
+            f.index_lines(filepath=data_fn, size=num_docs, batch_size=16)
     elif task == 'query':
-        flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
+        f = Flow().load_config('flow-query.yml')
+        with f:
             while True:
                 text = input('word definition: ')
                 if not text:
                     break
                 ppr = lambda x: print_topk(x, text)
-                fl.search(read_query_data(text), callback=ppr, topk=top_k)
+                f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+    elif task == 'query_restful':
+        f = Flow().load_config('flow-query.yml')
+        f.use_rest_gateway()
+        with f:
+            f.block()
     else:
         raise NotImplementedError(
-            f'unknown task: {task}. A valid task is either `index` or `query`.')
+            f'unknown task: {task}. A valid task is `index` or `query` or `query_restful`.')
 
 
 if __name__ == '__main__':
