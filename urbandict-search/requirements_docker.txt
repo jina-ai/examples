@@ -1,0 +1,4 @@
+click
+transformers
+jina[devel]
+jina[scipy]

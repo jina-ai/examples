@@ -3,7 +3,7 @@ components:
   - !NumpyIndexer
     with:
       index_filename: vec.gz
-      metrix: cosine
+      metric: cosine
     metas:
       name: vecidx  # a customized name
       workspace: $TMP_WORKSPACE
@@ -16,37 +16,3 @@ components:
 metas:
   name: chunk_indexer
   workspace: $TMP_WORKSPACE
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVIndexDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVSearchDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer

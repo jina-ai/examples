@@ -3,16 +3,15 @@ components:
   - !NumpyIndexer
     with:
       index_filename: vec.gz
-      metric: cosine
     metas:
       name: vecidx  # a customized name
-      workspace: $TMP_WORKSPACE
+      workspace: $WORKDIR
   - !ChunkPbIndexer
     with:
       index_filename: chunk.gz
     metas:
-      name: chunkidx  # a customized name
-      workspace: $TMP_WORKSPACE
+      name: chunkidx
+      workspace: $WORKDIR
 metas:
-  name: chunk_indexer
-  workspace: $TMP_WORKSPACE
+  name: chunk_compound_indexer
+  workspace: $WORKDIR

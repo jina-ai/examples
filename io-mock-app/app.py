@@ -32,7 +32,7 @@ def index():
 
 
 def search():
-    f = (Flow(rest_api=True, port_grpc=int(os.environ['JINA_PORT']))
+    f = (Flow(rest_api=True, port_expose=int(os.environ['JINA_PORT']))
          .add(yaml_path='- !RandomPopRanker {}')
          .add(yaml_path='indexer.yml'))
     with f:
