@@ -33,7 +33,8 @@ One particularity of FAISS is that it needs to learn some structural patterns of
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
 - [Run the Flows](#run-the-flows)
-- [Dive into the Pods](#dive-into-the-pods)
+- [Dive into the FaissIndexer](#dive-into-the-faissindexer)
+- [Evaluate the results](#evaluate-the-results)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -142,6 +143,22 @@ pods:
 
 In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Later, the `MinRanker` ranks the chunks by min score value from all the retrieved chunks from `faiss_indexer`, Later, `doc_indexer` retrieves the actual document value from the Document Id.
 
+## Run the Flows
+
+### Index 
+
+Index is run with the following command, where batch_size can be chosen by the user. Indexing reads a file of numpy arrays, and sends them to the flow gateway in binary mode to be converted back into numpy arrays by the crafter.
+
+```bash
+python app.py -t index -n $batch_size
+```
+### Query
+
+Query can be run with the following command.
+
+```bash
+python app.py -t query
+```
 
 ## Dive into the FaissIndexer
 
@@ -151,7 +168,7 @@ To understand how it works, let's take a look at the yaml file used to construct
 Let's take a look at `yaml/index-chunk.yml`
 
 ```yaml
-!ChunkIndexer
+!CompoundExecutor
 components:
   - !FaissIndexer
     with:
@@ -214,23 +231,19 @@ As we can see, `FaissIndexer` receives 3 parameters:
 - [index_filename]: File name where to store the index.
 - [train_filepath]: Path where to find the data needed to train the index.
 
+## Evaluate the results
 
-## Run the Flows
+This demo also outputs the evaluation of search system. The used metric is recall@k where only the true nearest neighbor is considered to be a relevant document.
+Therefore, it computes how many times the true nearest neighbour is returned as one of the k closest vectors from a query. 
 
-### Index 
+With the default demo, the results are:
 
-Index is run with the following command, where batch_size can be chosen by the user. Indexing reads a file of numpy arrays, and sends them to the flow gateway in binary mode to be converted back into numpy arrays by the crafter.
+- recall@1: 0.26
+- recall@10: 0.56
+- recall@50: 0.7
+- recall@100: 0.74
 
-```bash
-python app.py -t index -n $batch_size
-```
-### Query
-
-Query can be run with the following command.
-
-```bash
-python app.py -t query
-```
+Using more complex inverted indices and encoders (different `index_key`) should lead to better results.
 
 ## Wrap up
 
@@ -239,8 +252,10 @@ In this example we have seen how to use FaissIndexer to use FAISS as a vector da
 **Enjoy Coding with Jina!**
 
 ## Next Steps
+- Try different kind of inverted indices and options from FAISS.
 - Try other indexers or rankers.
-- Try indexing larger datasets
+- Try indexing larger datasets.
+- Play around with different evaluation metrics.
 
 ## Documentation 
 

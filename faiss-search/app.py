@@ -9,7 +9,7 @@ import string
 import random
 import numpy as np
 
-from fvecs_read import fvecs_read
+from read_vectors_files import fvecs_read, ivecs_read
 from jina.flow import Flow
 
 RANDOM_SEED = 14
@@ -34,10 +34,12 @@ def read_data(db_file_path: str) -> Generator[bytes, Any, Any]:
         yield vectors[start_batch: end_batch].tobytes()
 
 
-def save_topk(resp, output_file):
+def save_topk(resp, output_file, top_k):
+    results = []
     with open(output_file, 'w') as fw:
         query_id = 0
         for d in resp.search.docs:
+            result = []
             fw.write('-' * 20)
             fw.write('\n')
             fw.write('query id {}: \n {}'.format(query_id, np.frombuffer(d.blob.buffer, d.blob.dtype)))
@@ -45,6 +47,7 @@ def save_topk(resp, output_file):
             fw.write('matched vectors' + "*" * 10)
             fw.write('\n')
             for idx, kk in enumerate(d.topk_results):
+                result.append(kk.match_doc.doc_id)
                 score = kk.score.value
                 if score < 0.0:
                     continue
@@ -54,9 +57,23 @@ def save_topk(resp, output_file):
                          format(idx, kk.match_doc.doc_id, score, m_fn))
                 fw.write('\n')
             fw.write('\n')
+            results.append(result)
             query_id += 1
+        fw.write(f'recall@{top_k}: {recall_at_k(np.array(results), top_k)}')
 
     print(open(output_file, 'r').read())
+
+
+def recall_at_k(results, k):
+    """
+    Computes how many times the true nearest neighbour is returned as one of the k closest vectors from a query.
+
+    Taken from https://gist.github.com/mdouze/046c1960bc82801e6b40ed8ee677d33e
+    """
+    groundtruth_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
+    groundtruth = ivecs_read(groundtruth_path)
+    eval = (results[:, :k] == groundtruth[:, :1]).sum() / float(results.shape[0])
+    return eval
 
 
 @click.command()
@@ -74,7 +91,7 @@ def main(task, batch_size, top_k):
         data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_query.fvecs')
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:
-            ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.txt'))
+            ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.txt'), top_k)
             fl.search(buffer=read_data(data_path), callback=ppr, top_k=top_k)
     else:
         raise NotImplementedError(

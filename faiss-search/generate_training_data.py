@@ -1,6 +1,6 @@
 import gzip
 import os
-from fvecs_read import fvecs_read
+from read_vectors_files import fvecs_read
 
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
 train_filepath = 'workspace/train.tgz'
