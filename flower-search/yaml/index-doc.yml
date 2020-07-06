@@ -15,6 +15,7 @@ requests:
       - !DocPruneDriver
         with:
           pruned: ['chunks']
-      - !DocKVIndexDriver
+      - !KVIndexDriver
         with:
+          level: doc
           method: add

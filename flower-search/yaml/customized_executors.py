@@ -4,7 +4,13 @@ __license__ = "Apache-2.0"
 
 import numpy as np
 from jina.executors.crafters.image import ImageChunkCrafter
+from jina.executors.crafters import BaseSegmenter
 from PIL import ImageOps
+
+
+class MySegmenter(BaseSegmenter):
+    def craft(self, blob, *args, **kwargs):
+        return [dict(blob=blob)]
 
 
 class ImageFlipper(ImageChunkCrafter):
