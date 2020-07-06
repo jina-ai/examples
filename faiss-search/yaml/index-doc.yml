@@ -9,7 +9,6 @@ requests:
       - !DocKVSearchDriver
         with:
           method: query
-
     IndexRequest:
       - !DocPruneDriver
         with:
