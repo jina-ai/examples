@@ -1,4 +1,4 @@
-!ChunkIndexer
+!CompoundExecutor
 components:
   - !ArrayBytesReader
     metas:
