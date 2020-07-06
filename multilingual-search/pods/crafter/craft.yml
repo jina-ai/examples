@@ -1,0 +1,5 @@
+!Sentencizer
+
+with:
+  min_sent_len: 2
+  max_sent_len: 512
