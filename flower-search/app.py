@@ -7,7 +7,8 @@ import os
 import string
 import random
 import sys
-
+import io
+from PIL import Image
 from jina.flow import Flow
 
 RANDOM_SEED = 14
@@ -60,7 +61,11 @@ def read_data(img_path, max_sample_size=-1):
         random.shuffle(fn_list)
         fn_list = fn_list[:max_sample_size]
     for fn in fn_list:
-        yield fn.encode('utf8')
+        image_buffer = io.BytesIO()
+        img = Image.open(fn)
+        img.save(image_buffer, format='PNG')
+        image_buffer.seek(0)
+        yield image_buffer.getvalue()
 
 
 def save_topk(resp, output_fn=None):
