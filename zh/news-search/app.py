@@ -11,45 +11,27 @@ workspace_path = '/tmp/jina/news/'
 
 os.environ['TMP_WORKSPACE'] = workspace_path
 
-def read_data(fn):
-    items = []
-    with open(fn, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.replace('\n', '')
-            item = json.loads(line)
-            content = item['content']
-            if content == '' or len(content) < 5:
-                continue
-
-            items.append({'content': content})
-
-    results = []
-    for content in items:
-        results.append(("{}".format(json.dumps(content, ensure_ascii=False))).encode("utf-8"))
-
-    for item in results[:100]:
-        yield item
-
 
 def print_topk(resp):
     print(f'以下是相似的新闻内容:')
     for d in resp.search.docs:
         for tk in d.topk_results:
-            item = json.loads(tk.match_doc.buffer.decode('utf-8'))
+            item = json.loads(tk.match_doc.text)
             print('👉%s.............' % item['content'][:50])
 
 def read_query_data(item):
-    yield ("{}".format(json.dumps(item, ensure_ascii=False))).encode('utf-8')
+    yield '{}'.format(json.dumps(item, ensure_ascii=False))
+
 
 @click.command()
-@click.option('--task', '-t', default='index')
+@click.option('--task', '-t', default='query')
 @click.option('--top_k', '-k', default=5)
 def main(task, top_k):
     if task == 'index':
-        data_fn = os.path.join(workspace_path, "news2016zh_valid.json")
+        data_fn = os.path.join(workspace_path, "pre_news2016zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow:
-            flow.index(read_data(data_fn), batch_size=32)
+            flow.index_lines(filepath=data_fn, size=100, batch_size=32)
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
@@ -65,6 +47,7 @@ def main(task, top_k):
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
+
 
 if __name__ == '__main__':
     main()
