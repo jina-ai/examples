@@ -1,0 +1,17 @@
+!LaserEncoder
+
+metas:
+  py_modules: laser_encoder.py
+
+with:
+  path_to_bpe_codes: $PATH_TO_BPE_CODES
+  path_to_bpe_vocab: $PATH_TO_BPE_VOCAB
+  path_to_encoder: $PATH_TO_ENCODER
+  language: 'en'
+
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
