@@ -1,6 +1,7 @@
 !Flow
 with:
   read_only: true
+  port_expose: $JINA_PORT
 pods:
   loader:
     yaml_path: yaml/craft-load.yml

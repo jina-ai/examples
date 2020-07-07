@@ -214,24 +214,14 @@ TimeoutError: <class 'jina.peapods.container.ContainerPea'> with name encoder ca
 
 </details> 
 
-Here we use a YAML file to define a Flow and use it to index the data. The `read_data()` function loads the image filenames in the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
+Here we use a YAML file to define a Flow and use it to index the data. The `index_file()` function loads the local files into the format of `bytes`, which will be further wrapped in an `IndexRequest` and send to the Flow. 
 
 ```python
-def read_data(img_path):
-    fn_list = []
-    for dirs, subdirs, files in os.walk(img_path):
-        for f in files:
-            fn = os.path.join(img_path, f)
-            if fn.endswith('.jpg'):
-                fn_list.append(fn)
-    for fn in fn_list:
-        yield fn.encode('utf8')
-        
 def main():
     data_path = os.path.join('/tmp/jina/flower/jpg')
-    flow = Flow().load_config('flow-index.yml')
-    with flow.build() as fl:
-        fl.index(buffer=read_data('/tmp/jina/flower/jpg'))
+    f = Flow().load_config('flow-index.yml')
+    with f:
+        f.index_files(f'{data_path}/*.jpg', size=num_docs, read_mode='rb')
 ```
 
 ### Query
@@ -239,19 +229,8 @@ def main():
 ```bash
 python app.py -t query
 ```
+In this case, we expose the RESTful APIs and use `jinabox` to visualize the results. Open [https://jina.ai/jinabox.js/](https://jina.ai/jinabox.js/) in your brower, and replace server endpoint with `http://localhost:45678/api/search`. If you want to learn more about jinabox, please check out [https://github.com/jina-ai/jinabox.js](https://github.com/jina-ai/jinabox.js) and enjoy playing.
 
-If you want to query your own image files, use the following shell command:
-
-```bash
-python app.py -t query -p <JPG file or directory>
-```
-The command accepts a file path or a directory that stores JPG files, with the `.jpg` extension.
-
-If you only have a single JPG in the current directory, just call:
-
-```bash
-python app.py -t query -p .
-```
 
 <details>
 <summary>Click here to see the console output</summary>
@@ -262,62 +241,14 @@ python app.py -t query -p .
 
 </details> 
 
-For querying, we randomly sample 5 images from the dataset and feed them into the Flow using the following code:
+For querying, we build the Flow and run it in the `block` mode so that it will stand by and listen to the port:
 
 ```python
-def read_data(img_path, max_sample_size=-1):
-    if not os.path.exists(img_path):
-        print('file not found: {}'.format(img_path))
-    fn_list = []
-    for dirs, subdirs, files in os.walk(img_path):
-        for f in files:
-            fn = os.path.join(img_path, f)
-            if fn.endswith('.jpg'):
-                fn_list.append(fn)
-    if max_sample_size > 0:
-        random.shuffle(fn_list)
-        fn_list = fn_list[:max_sample_size]
-    for fn in fn_list:
-        yield fn.encode('utf8')
-
 def main(task, num_docs, top_k):
-    data_path = os.path.join('/tmp/jina/flower/jpg')
-        flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
-            ppr = lambda x: save_topk(x, '/tmp/jina/flower/query_results.png')
-            fl.search(read_data(data_path, 5), callback=ppr, top_k=top_k)
-```
-
-We use the callback function `save_topk` to save the query results as `/tmp/jina/flower/query_results.png`. As expected, the Top-1 results are always the query images themselves.
-
-```python
-def save_topk(resp, output_fn=None):
-    results = []
-    for d in resp.search.docs:
-        d_fn = d.meta_info.decode()
-        cur_result.append(d_fn)
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
-            if score <= 0.0:
-                continue
-            m_fn = kk.match_doc.buffer.decode()
-            cur_result.append(m_fn)
-        results.append(cur_result)
-    if output_fn is not None:
-        import matplotlib.pyplot as plt
-        import matplotlib.image as mpimg
-        top_k = max([len(r) for r in results])
-        num_q = len(resp.search.docs)
-        f, ax = plt.subplots(num_q, top_k, figsize=(8, 20))
-        for q_idx, r in enumerate(results):
-            for m_idx, img in enumerate(r):
-                fname = os.path.split(img)[-1]
-                fname = f'Query: {fname}' if m_idx == 0 else f'top_{m_idx}: {fname}'
-                ax[q_idx][m_idx].imshow(mpimg.imread(img))
-                ax[q_idx][m_idx].set_title(fname, fontsize=7)
-        [aa.axis('off') for a in ax for aa in a]
-        plt.tight_layout()
-        plt.savefig(output_fn)
+    f = Flow().load_config('flow-query.yml')
+    f.use_rest_gateway()
+    with f:
+        f.block()
 ```
 
 Congratulations! Now you have an image search engine working. We won't go into too much detail of the Pods' YAML files because they are quite self-explanatory. If you feel a bit lost when reading the YAML files, please check the [bert-based semantic search demo](https://github.com/jina-ai/examples/tree/master/urbandict-search#dive-into-the-pods).
