@@ -25,7 +25,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     yaml_path: yaml/index-doc.yml
-    needs: loader
+    needs: gateway
   join_all:
     yaml_path: _merge
     needs: [doc_indexer, chunk_indexer]
