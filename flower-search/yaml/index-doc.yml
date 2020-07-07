@@ -1,4 +1,4 @@
-!DocPbIndexer
+!DataURIPbIndexer
 with:
   index_filename: doc.gzip
 metas:
@@ -6,16 +6,23 @@ metas:
   workspace: $TMP_WORKSPACE
 requests:
   on:
+    ControlRequest:
+      - !ControlReqDriver {}
     SearchRequest:
-      - !DocKVSearchDriver
+      - !KVSearchDriver
         with:
-          method: query
-
+          level: doc
     IndexRequest:
-      - !DocPruneDriver
+      - !Buffer2URI {}
+      - !MIMEDriver
         with:
-          pruned: ['chunks']
+          target: mime_type
+      - !PruneDriver
+        with:
+          level: doc
+          pruned:
+            - chunks
+            - buffer
       - !KVIndexDriver
         with:
           level: doc
-          method: add

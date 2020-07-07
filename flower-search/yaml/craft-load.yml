@@ -3,6 +3,7 @@ components:
   - !ImageReader
     with:
       channel_axis: $COLOR_CHANNEL_AXIS
+      from_bytes: true
     metas:
       name: reader
   - !MySegmenter
@@ -13,11 +14,16 @@ metas:
   name: crafter
 requests:
   on:
-    [IndexRequest, SearchRequest, TrainRequest]:
+    IndexRequest:
       - !DocCraftDriver
         with:
           executor: reader
-      - !SegmentDriver
+      - !UnarySegmentDriver {}
+    SearchRequest:
+      - !URI2Buffer {}
+      - !DocCraftDriver
         with:
-          save_buffer: True
-          executor: segmenter
+          executor: reader
+      - !UnarySegmentDriver {}
+    ControRequest:
+      - !ControlReqDriver {}

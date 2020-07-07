@@ -1,25 +1,18 @@
-!CompoundExecutor
-components:
-  - !ImageReader
-    with:
-      channel_axis: $COLOR_CHANNEL_AXIS
-    metas:
-      name: reader
-  - !MySegmenter
-    metas:
-      name: segmenter
-metas:
-  py_modules: customized_executors.py
-  name: crafter
+!ImageReader
+with:
+  channel_axis: $COLOR_CHANNEL_AXIS
 requests:
   on:
-    [IndexRequest, SearchRequest]:
-      - !DocCraftDriver
-        with:
-          executor: reader
+    IndexRequest:
       - !SegmentDriver
         with:
+          method: craft
           save_buffer: True
-          executor: segmenter
+    SearchRequest:
+      - !URI2Buffer {}
+      - !SegmentDriver
+        with:
+          method: craft
+          save_buffer: True
     ControlRequest:
       - !ControlReqDriver {}
