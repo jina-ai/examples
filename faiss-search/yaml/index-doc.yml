@@ -3,17 +3,3 @@ with:
   index_filename: doc.gzip
 metas:
   workspace: $TMP_WORKSPACE
-requests:
-  on:
-    SearchRequest:
-      - !DocKVSearchDriver
-        with:
-          method: query
-    IndexRequest:
-      - !DocPruneDriver
-        with:
-          pruned: ['chunks']
-      - !KVIndexDriver
-        with:
-          level: doc
-          method: add
