@@ -17,36 +17,6 @@ components:
 metas:
   name: chunk_indexer
   workspace: './workspace'
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: faissidx
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVIndexDriver
-        with:
-          level: chunk
-          executor: chunkidx
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: faissidx
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
       - !KVSearchDriver
         with:
           level: chunk
