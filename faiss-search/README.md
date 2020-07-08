@@ -168,7 +168,7 @@ To understand how it works, let's take a look at the yaml file used to construct
 Let's take a look at `yaml/index-chunk.yml`
 
 ```yaml
-!CompoundExecutor
+!ChunkIndexer
 components:
   - !FaissIndexer
     with:
@@ -187,40 +187,6 @@ components:
 metas:
   name: chunk_indexer
   workspace: './workspace'
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: faissidx
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVIndexDriver
-        with:
-          level: chunk
-          executor: chunkidx
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: faissidx
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVSearchDriver
-        with:
-          level: chunk
-          executor: chunkidx
 ```
 
 The chunk indexer is formed by a CompoundExecutor composed by a `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as FaissIndexer composed with a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value one will keep track of the actual chunk values.
@@ -244,7 +210,8 @@ With the default demo, the results are:
 - recall@100: 0.74
 
 Using more complex inverted indices and encoders (different `index_key`) should lead to better results.
-
+Using `index_key: 'Flat'` gives a recall equal to 1 because it is the exhaustive search mode for FAISS.
+Check https://github.com/facebookresearch/faiss/wiki/Faiss-indexes for a list of the supported keys and options.
 ## Wrap up
 
 In this example we have seen how to use FaissIndexer to use FAISS as a vector database. We also have seen how to use a pod inside a docker container inside our index and query flows.

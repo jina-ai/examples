@@ -25,13 +25,8 @@ def get_random_ws(workspace_path, length=8):
     return os.path.join(workspace_path, dn)
 
 
-def read_data(db_file_path: str) -> Generator[bytes, Any, Any]:
-    vectors = fvecs_read(db_file_path)
-    num_vectors = vectors.shape[0]
-    for i in range(1, num_vectors + 1):
-        start_batch = (i - 1)
-        end_batch = i if i < num_vectors else num_vectors
-        yield vectors[start_batch: end_batch].tobytes()
+def read_data(db_file_path: str):
+    return fvecs_read(db_file_path)
 
 
 def save_topk(resp, output_file, top_k):
@@ -86,13 +81,13 @@ def main(task, batch_size, top_k):
         data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_base.fvecs')
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
-            fl.index(read_data(data_path), batch_size=batch_size)
+            fl.index_ndarray(read_data(data_path), batch_size=batch_size)
     elif task == 'query':
         data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_query.fvecs')
         flow = Flow().load_config('flow-query.yml')
         with flow.build() as fl:
             ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.txt'), top_k)
-            fl.search(buffer=read_data(data_path), callback=ppr, top_k=top_k)
+            fl.search_ndarray(read_data(data_path), output_fn=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

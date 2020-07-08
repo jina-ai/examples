@@ -1,15 +1,5 @@
-!CompoundExecutor
-components:
-  - !ArrayBytesReader
-    metas:
-      name: reader
-metas:
-  py_modules: customized_executors.py
-  name: crafter
+!BaseExecutor
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !DocCraftDriver
-        with:
-          executor: reader
       - !UnarySegmentDriver {}
