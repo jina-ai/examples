@@ -17,7 +17,3 @@ components:
 metas:
   name: chunk_indexer
   workspace: './workspace'
-      - !KVSearchDriver
-        with:
-          level: chunk
-          executor: chunkidx
