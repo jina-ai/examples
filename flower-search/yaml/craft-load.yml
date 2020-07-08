@@ -6,9 +6,6 @@ components:
       from_bytes: true
     metas:
       name: reader
-  - !MySegmenter
-    metas:
-      name: segmenter
 metas:
   py_modules: customized_executors.py
   name: crafter

@@ -8,11 +8,6 @@ from jina.executors.crafters import BaseSegmenter
 from PIL import ImageOps
 
 
-class MySegmenter(BaseSegmenter):
-    def craft(self, blob, *args, **kwargs):
-        return [dict(blob=blob)]
-
-
 class ImageFlipper(ImageChunkCrafter):
     def craft(self, blob, doc_id, *args, **kwargs):
         raw_img = self.load_image(blob)
