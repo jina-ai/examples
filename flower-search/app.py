@@ -35,7 +35,7 @@ def main(task, num_docs):
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index_files(f'{data_path}/*.jpg', size=num_docs, read_mode='rb')
+            f.index_files(f'{data_path}/*.jpg', size=num_docs, read_mode='rb', batch_size=2)
     elif task == 'query':
         f = Flow().load_config('flow-query.yml')
         f.use_rest_gateway()

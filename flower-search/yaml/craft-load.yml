@@ -1,14 +1,9 @@
-!CompoundExecutor
-components:
-  - !ImageReader
-    with:
-      channel_axis: $COLOR_CHANNEL_AXIS
-      from_bytes: true
-    metas:
-      name: reader
+!ImageReader
+with:
+  channel_axis: $COLOR_CHANNEL_AXIS
+  from_bytes: true
 metas:
-  py_modules: customized_executors.py
-  name: crafter
+  name: reader
 requests:
   on:
     IndexRequest:
