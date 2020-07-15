@@ -2,4 +2,4 @@
 with:
   index_filename: doc.gzip
 metas:
-  workspace: $TMP_WORKSPACE
+  workspace: './workspace'
