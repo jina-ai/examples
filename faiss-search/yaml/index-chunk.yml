@@ -1,13 +1,11 @@
 !ChunkIndexer
 components:
-  - !FaissIndexer
+  - !NumpyIndexer
     with:
-      index_key: 'IVF10,PQ4'
       index_filename: 'faiss_index.tgz'
-      train_filepath: './workspace/train.tgz'
     metas:
       workspace: './workspace'
-      name: faissidx
+      name: wrapidx
   - !ChunkPbIndexer
     with:
       index_filename: chunk.gz
