@@ -1,3 +1,22 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Build a Search system using Facebook AI Similarity Search (FAISS) as vector database](#build-a-search-system-using-facebook-ai-similarity-search-faiss-as-vector-database)
+  - [Prerequirements](#prerequirements)
+  - [Prepare the data](#prepare-the-data)
+  - [Define the Flows](#define-the-flows)
+  - [Run the Flows](#run-the-flows)
+  - [Dive into the FaissIndexer](#dive-into-the-faissindexer)
+  - [Evaluate the results](#evaluate-the-results)
+  - [Wrap up](#wrap-up)
+  - [Next Steps](#next-steps)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Build a Search system using Facebook AI Similarity Search (FAISS) as vector database
 <p align="center">
  
