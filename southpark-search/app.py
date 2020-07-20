@@ -14,7 +14,7 @@ random.seed(RANDOM_SEED)
 os.environ['REPLICAS'] = str(2)
 os.environ['SHARDS'] = str(2)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/southpark'
-os.environ['JINA_PORT'] = str('45678')
+os.environ['JINA_PORT'] = str(45678)
 
 
 def get_random_ws(workspace_path, length=8):
