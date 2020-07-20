@@ -1,4 +1,4 @@
 click
 transformers
 torch
-jina[scipy]
+jina[scipy]==0.3.8
