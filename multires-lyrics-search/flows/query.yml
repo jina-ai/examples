@@ -16,7 +16,7 @@ pods:
     replicas: $SHARDS
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    reducing_yaml_path: _merge_all
     timeout_ready: -1 # larger timeout as in query time will read all the data
   ranker:
     yaml_path: BiMatchRanker

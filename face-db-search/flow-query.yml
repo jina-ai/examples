@@ -26,7 +26,7 @@ pods:
     separated_workspace: true
     polling: all
     replicas: $SHARDS
-    reducing_yaml_path: _merge_topk_chunks
+    reducing_yaml_path: _merge_all
   ranker:
     yaml_path: MinRanker
   doc_indexer:

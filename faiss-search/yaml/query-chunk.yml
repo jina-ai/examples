@@ -1,4 +1,4 @@
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !FaissIndexer
     with:
@@ -11,7 +11,7 @@ components:
           name: wrapidx
         with:
           index_filename: 'faiss_index.tgz'
-  - !ChunkPbIndexer
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:

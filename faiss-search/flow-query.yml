@@ -2,9 +2,6 @@
 with:
   read_only: true
 pods:
-  crafter:
-    yaml_path: yaml/craft.yml
-    replicas: $REPLICAS
   encoder:
     yaml_path: yaml/encode.yml
     replicas: $REPLICAS

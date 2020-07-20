@@ -1,8 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-from typing import Generator, Any
-
 import click
 import os
 import string
@@ -37,19 +35,24 @@ def save_topk(resp, output_file, top_k):
             result = []
             fw.write('-' * 20)
             fw.write('\n')
-            fw.write('query id {}: \n {}'.format(query_id, np.frombuffer(d.blob.buffer, d.blob.dtype)))
+            fw.write('query id {}'.format(query_id))
             fw.write('\n')
             fw.write('matched vectors' + "*" * 10)
             fw.write('\n')
-            for idx, kk in enumerate(d.topk_results):
-                result.append(kk.match_doc.doc_id)
-                score = kk.score.value
+            print(d.matches)
+            for idx, match in enumerate(d.matches):
+                print(match)
+                print(dir(match))
+                # document id is 1-indexed because 0 is reserved for root doc.
+                id = match.match.id - 1
+                result.append(id)
+                score = match.score.value
                 if score < 0.0:
                     continue
-                m_fn = np.frombuffer(kk.match_doc.blob.buffer, kk.match_doc.blob.dtype)
+                m_fn = np.frombuffer(match.match.blob.buffer, match.match.blob.dtype)
                 fw.write('\n')
                 fw.write('Idx: {:>2d}:(DocId {}, Ranking score: {:f}): \n{}'.
-                         format(idx, kk.match_doc.doc_id, score, m_fn))
+                         format(idx, id, score, m_fn))
                 fw.write('\n')
             fw.write('\n')
             results.append(result)

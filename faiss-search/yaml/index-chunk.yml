@@ -1,4 +1,4 @@
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !NumpyIndexer
     with:
@@ -6,7 +6,7 @@ components:
     metas:
       workspace: './workspace'
       name: wrapidx
-  - !ChunkPbIndexer
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
