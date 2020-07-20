@@ -80,7 +80,7 @@ Check out more details about the docker image [here](README.restful.md).
 This demo requires Python 3.7.
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 

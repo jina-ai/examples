@@ -81,7 +81,7 @@ In this demo, we will show how to define a custom Encoder to support a variety o
 This demo requires Python 3.7.
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 

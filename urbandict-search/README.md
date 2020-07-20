@@ -56,7 +56,7 @@ During indexing, Jina, _the_ neural search framework, uses vectors to represent 
 This demo requires Python 3.7.
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 

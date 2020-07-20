@@ -44,7 +44,7 @@
 With Python:
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 In Docker:
