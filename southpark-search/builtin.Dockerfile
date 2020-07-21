@@ -15,7 +15,7 @@ RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x=
 COPY . /
 
 RUN bash get_data.sh ./data && \
-    python app.py index && \
+    python app.py -t index && \
     rm -rf data
 
-ENTRYPOINT ["python", "app.py", "query_restful"]
+ENTRYPOINT ["python", "app.py", "-t", "query_restful"]

@@ -15,6 +15,6 @@ RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x=
 COPY . /
 
 RUN bash get_data.sh ./data && \
-    python app.py dryrun
+    python app.py -t dryrun
 
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python", "app.py", "-t"]
