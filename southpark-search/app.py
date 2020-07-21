@@ -39,7 +39,7 @@ def config(num_docs,mode='index'):
 
 
 def index(num_docs):
-    config(num_docs,mode = 'index')
+    config(num_docs, mode = 'index')
     data_path = os.path.join(os.environ['DATA_DIR'], os.environ['DATA_FILE'])
     f = Flow().load_config('flow-index.yml')
     with f:
@@ -57,7 +57,7 @@ def query(num_docs, top_k):
             f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
 
 def query_restful(num_docs):
-    config(num_docs,mode = 'search')
+    config(num_docs, mode = 'search')
     f = Flow().load_config('flow-query.yml')
     f.use_rest_gateway()
     with f:
@@ -65,7 +65,7 @@ def query_restful(num_docs):
 
 
 def dryrun(num_docs):
-    config(num_docs,mode = 'dryrun')
+    config(num_docs, mode = 'dryrun')
     f = Flow().load_config('flow-index.yml')
     with f:
         f.dry_run()
