@@ -44,7 +44,7 @@
     这个demo运行在Python3.7以上的环境
 
 ```shell
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 ## 数据预处理

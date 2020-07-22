@@ -1,1 +1,1 @@
-jina[devel]
+jina[devel]==0.3.8

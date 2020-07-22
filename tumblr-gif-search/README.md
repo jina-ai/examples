@@ -42,7 +42,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 ## Prerequirements
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 ### Download the data

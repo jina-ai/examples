@@ -65,7 +65,7 @@ In this demo, we'll show how to run the Pods in a Docker container and how to sc
 This demo requires Python 3.7.
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 
