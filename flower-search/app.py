@@ -12,11 +12,12 @@ from PIL import Image
 from jina.flow import Flow
 
 RANDOM_SEED = 14
-os.environ['REPLICAS'] = str(1)
+os.environ['PARALLEL'] = str(1)
 os.environ['SHARDS'] = str(1)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
 os.environ['COLOR_CHANNEL_AXIS'] = str(0)
 os.environ['JINA_PORT'] = str(45678)
+os.environ['ENCODER'] = os.environ.get('ENCODER', 'jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2')
 
 
 def get_random_ws(workspace_path, length=8):
@@ -30,7 +31,7 @@ def get_random_ws(workspace_path, length=8):
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
 def main(task, num_docs):
-    os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
+    os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'jpg')
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
