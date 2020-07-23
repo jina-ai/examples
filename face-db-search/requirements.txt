@@ -1,4 +1,2 @@
-click
 pillow
-matplotlib
 jina[devel]==0.3.8
