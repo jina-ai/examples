@@ -115,31 +115,31 @@ metas:
   prefetch: 10
 pods:
   loader:
-    yaml_path: yaml/craft-load.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-load.yml
+    parallel: $PARALLEL
     read_only: true
   flipper:
-    yaml_path: yaml/craft-flip.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-flip.yml
+    parallel: $PARALLEL
     read_only: true
   normalizer:
-    yaml_path: yaml/craft-normalize.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-normalize.yml
+    parallel: $PARALLEL
     read_only: true
   encoder:
-    image: jinaai/hub.executors.encoders.image.facenet
-    replicas: $REPLICAS
+    uses: jinaai/hub.executors.encoders.image.facenet
+    parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
-    replicas: $SHARDS
+    uses: yaml/index-chunk.yml
+    shards: $SHARDS
     separated_workspace: true
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
     needs: loader
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_indexer, chunk_indexer]
     read_only: true
 ```
@@ -164,32 +164,32 @@ with:
   port_expose: $JINA_PORT
 pods:
   loader:
-    yaml_path: yaml/craft-load.yml
+    uses: yaml/craft-load.yml
     read_only: true
-    replicas: $REPLICAS
+    parallel: $PARALLEL
   flipper:
-    yaml_path: yaml/craft-flip.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-flip.yml
+    parallel: $PARALLEL
     read_only: true
   normalizer:
-    yaml_path: yaml/craft-normalize.yml
+    uses: yaml/craft-normalize.yml
     read_only: true
-    replicas: $REPLICAS
+    parallel: $PARALLEL
   encoder:
-    image: jinaai/hub.executors.encoders.image.facenet
+    uses: jinaai/hub.executors.encoders.image.facenet
     timeout_ready: 600000
-    replicas: $REPLICAS
+    parallel: $PARALLEL
     read_only: true
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    uses: yaml/index-chunk.yml
     separated_workspace: true
     polling: all
-    replicas: $SHARDS
-    reducing_yaml_path: _merge_topk_chunks
+    shards: $SHARDS
+    uses_reducing: _merge_all
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
 ```
 
 </sub>
@@ -208,7 +208,7 @@ Afterwards, the Flow splits into two parallel pathways. In the pathway on the le
 
 In the other pathway, the `doc_indexer` Pod uses the key-value storage to save the Document IDs and the Document contents, i.e. the image file names. At the end, the `join_all` Pod merges the results from the `chunk_indexer` and the `doc_indexer`. In this case, the `join_all` Pods simply wait for the both incoming messages arrived because neither of the upstreaming Pods write into the request message.
 
-The two-pathway Flow, as a common practice in jina, is designed to storage the vectors and the Documents independently and in parallel. Of course, one can squeeze the two pathways into one pathway by concating the `doc_indexer` after the `chunk_indexer` and removing `join_all` Pod. However, this will slow down the index process. 
+The two-pathway Flow, as a common practice in jina, is designed to store the vectors and the Documents independently and in parallel. Of course, one can squeeze the two pathways into one pathway by concating the `doc_indexer` after the `chunk_indexer` and removing `join_all` Pod. However, this will slow down the index process. 
 
 As for the query Flow, it is pretty much the same as the index Flow, and thereafter we won't be too verbose to iterate. You might have notice that there is something new in the YAML files. Let's dig into them!
 
@@ -250,7 +250,7 @@ requests:
 ```
 
 The tags in 'with' are passed down to the FaceNetEncoder.py class as parameters.
-The 'py_modules' tag define the Python Class containing your encoder logic. The class should override an existing Executor.
+The 'py_modules' tag defines the Python Class containing your encoder logic. The class should override an existing Executor.
 
 ### Dockerfile
 
@@ -267,7 +267,7 @@ RUN python -c "from facenet_pytorch import InceptionResnetV1; model = InceptionR
 
 COPY . /
 
-ENTRYPOINT ["jina", "pod", "--yaml-path", "encode.yml"]
+ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
 
 ```
 
@@ -322,7 +322,7 @@ with f:
     f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=5)
 ```
 
-Run the following command to search images and display in a webpage.
+Run the following command to search images and display them in a webpage.
 
 ```bash
 python make_html.py
