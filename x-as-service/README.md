@@ -45,7 +45,7 @@ In this short tutorial, we shall see how simple it is to use Jina for extracting
 You need to have Docker installed to run this example. To enable Docker feature in Jina:
 
 ```bash
-pip install "jina[devel]"
+pip install --upgrade "jina[devel]"
 ```
 
 ## Design the Flow 

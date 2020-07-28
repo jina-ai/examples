@@ -11,6 +11,7 @@ from jina.flow import Flow
 RANDOM_SEED = 10
 random.seed(RANDOM_SEED)
 
+
 def get_random_ws(workspace_path, length=8):
     letters = string.ascii_lowercase
     dn = ''.join(random.choice(letters) for i in range(length))

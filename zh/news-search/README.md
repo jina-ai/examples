@@ -47,7 +47,7 @@
     这个demo运行在Python3.7以上的环境。   
 
 ```shell
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 ## 数据预处理
@@ -338,10 +338,10 @@ class WeightBiMatchRanker(BiMatchRanker):
 
 要深入学习Jina，最好的方法就是阅读我们的文档。文档建立在主分支的每个推送、合并和发布事件上。你可以在我们的文档中找到关于以下主题的更多细节。
 
-- [Jina命令行接口参数解释](https://docs.jina.ai/chapters/cli/main.html)
+- [Jina命令行接口参数解释](https://docs.jina.ai/chapters/cli/index.html)
 - [Jina Python API接口](https://docs.jina.ai/api/jina.html)
 - [用于Executor、Driver和Flow的Jina YAML语法](https://docs.jina.ai/chapters/yaml/yaml.html)
-- [Jina Protobuf方案](https://docs.jina.ai/chapters/proto/main.html)
+- [Jina Protobuf方案](https://docs.jina.ai/chapters/proto/index.html)
 - [Jina中使用的环境变量](https://docs.jina.ai/chapters/envs.html)
 - ...[更多](https://docs.jina.ai/index.html)
 

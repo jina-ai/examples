@@ -80,7 +80,7 @@ Check out more details about the docker image [here](README.restful.md).
 This demo requires Python 3.7.
 
 ```bash
-pip install -r requirements.txt
+pip install --upgrade -r requirements.txt
 ```
 
 
@@ -535,10 +535,10 @@ Let's wrap up what we've covered in this demo.
 
 The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
 
-- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/main.html)
+- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/index.html)
 - [Jina Python API interface](https://docs.jina.ai/api/jina.html)
 - [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
-- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/main.html)
+- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/index.html)
 - [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
 - ... [and more](https://docs.jina.ai/index.html)
 
