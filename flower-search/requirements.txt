@@ -2,3 +2,4 @@ click
 pillow
 torch
 jina[devel]==0.4.1
+

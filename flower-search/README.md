@@ -417,10 +417,10 @@ Hooray! Now you've got a pretty simple flower image search engine working. Let's
 
 The best way to learn Jina in-depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. For more details, check out:
 
-- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/main.html)
+- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/index.html)
 - [Jina Python API interface](https://docs.jina.ai/api/jina.html)
 - [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
-- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/main.html)
+- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/index.html)
 - [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
 - ... [and more](https://docs.jina.ai/index.html)
 

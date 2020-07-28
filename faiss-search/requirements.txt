@@ -1,3 +1,2 @@
-pillow
-torch
+click
 jina[devel]==0.3.8
