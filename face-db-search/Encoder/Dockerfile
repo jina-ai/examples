@@ -10,4 +10,4 @@ RUN python -c "from facenet_pytorch import InceptionResnetV1; model = InceptionR
 
 COPY . /
 
-ENTRYPOINT ["jina", "pod", "--yaml-path", "encode.yml"]
+ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
