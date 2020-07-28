@@ -2,18 +2,17 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import webbrowser
 import io
+import webbrowser
 from PIL import Image
 from jina.flow import Flow
 from pkg_resources import resource_filename
-import numpy as np
 
 image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
-replicas = 1
+parallel = 1
 shards = 8
 
-os.environ['REPLICAS'] = str(replicas)
+os.environ['PARALLEL'] = str(parallel)
 os.environ['SHARDS'] = str(shards)
 os.environ['TMP_WORKSPACE'] = '/tmp/jina/workspace'
 os.environ['TMP_RESULTS'] = '/tmp/jina/workspace/results'
@@ -31,9 +30,9 @@ def print_result(resp):
     for d in resp.search.docs:
         vi = d.uri
         result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
-        for kk in d.topk_results:
-            im = Image.open(io.BytesIO(kk.match_doc.meta_info))
-            fname="{}.jpg".format(kk.match_doc.doc_id)
+        for match in d.matches:
+            im = Image.open(io.BytesIO(match.meta_info))
+            fname="{}.jpg".format(match.id)
             fname = os.path.join(os.environ['TMP_RESULTS'], fname)
             im.save(fname)
             result_html.append(f'<img src="{fname}" />')
