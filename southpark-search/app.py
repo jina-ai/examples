@@ -20,11 +20,11 @@ def get_random_ws(workspace_path, length=8):
 def print_topk(resp, word):
     for d in resp.search.docs:
         print(f'Ta-Dah🔮, here are what we found for: {word}')
-        for idx, kk in enumerate(d.matches):
-            score = kk.score.value
+        for idx, match in enumerate(d.matches):
+            score = match.score.value
             if score < 0.0:
                 continue
-            doc = kk.match_doc.text
+            doc = match.meta_info.decode()
             name, line = doc.split('[SEP]', maxsplit=1)
             print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
 
