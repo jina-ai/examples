@@ -4,25 +4,25 @@ with:
   port_expose: $JINA_PORT
 pods:
   loader:
-    yaml_path: yaml/craft-load.yml
+    uses: yaml/craft-load.yml
     read_only: true
   flipper:
-    yaml_path: yaml/craft-flip.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-flip.yml
+    parallel: $PARALLEL
     read_only: true
   normalizer:
-    yaml_path: yaml/craft-normalize.yml
+    uses: yaml/craft-normalize.yml
     read_only: true
   encoder:
-    image: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
+    uses: $ENCODER
     timeout_ready: 600000
     read_only: true
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    uses: yaml/index-chunk.yml
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    reducing_yaml_path: _merge_all
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
