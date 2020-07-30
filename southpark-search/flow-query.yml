@@ -4,21 +4,21 @@ with:
   port_expose: $JINA_PORT
 pods:
   splittor:
-    yaml_path: pods/craft-split.yml
-    replicas: $REPLICAS
+    uses: pods/craft-split.yml
+    parallel: $PARALLEL
     read_only: true
   encoder:
-    yaml_path: pods/encode.yml
-    replicas: $REPLICAS
+    uses: pods/encode.yml
+    parallel: $PARALLEL
     timeout_ready: 60000
     read_only: true
   chunk_indexer:
-    yaml_path: pods/index-chunk.yml
-    replicas: $SHARDS
+    uses: pods/index-chunk.yml
+    shards: $SHARDS
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    reducing_uses: _merge_all
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: pods/index-doc.yml
+    uses: pods/index-doc.yml
