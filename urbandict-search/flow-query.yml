@@ -4,21 +4,21 @@ with:
   port_expose: 45678
 pods:
   splittor:
-    yaml_path: yaml/craft-split.yml
-    replicas: $REPLICAS
+    uses: yaml/craft-split.yml
+    parallel: $PARALLEL
     read_only: true
   encoder:
-    yaml_path: yaml/encode.yml
-    replicas: $REPLICAS
+    uses: yaml/encode.yml
+    parallel: $PARALLEL
     timeout_ready: 60000
     read_only: true
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
-    replicas: $SHARDS
+    uses: yaml/index-chunk.yml
+    shards: $SHARDS
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    uses_reducing: _merge_all
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
