@@ -32,8 +32,8 @@ def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
         for match in d.matches:
-            item = json.loads(match.chunks[0].text)
-            print('👉%s' % item['title'])
+            item = match.chunks[0].text
+            print('👉%s' % item)
 
 
 def read_query_data(item):
