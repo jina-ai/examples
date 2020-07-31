@@ -27,7 +27,7 @@ def print_topk(resp, word):
             score = match.score.value
             if score <= 0.0:
                 continue
-            doc = match.meta_info.decode()
+            doc = match.chunks[0].text
             word, word_def = doc.split('+-=', maxsplit=1)
             print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))
 
