@@ -7,6 +7,7 @@ requests:
       - !Chunk2DocRankDriver
         with:
           method: score
-      - !DocPruneDriver
+      - !ExcludeReqQL
         with:
-          pruned: chunks
+          fields:
+            - request
