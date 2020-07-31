@@ -93,22 +93,22 @@ metas:
   prefetch: 10
 pods:
   crafter:
-    yaml_path: yaml/craft.yml
-    replicas: $REPLICAS
+    uses: yaml/craft.yml
+    parallel: $PARALLEL
   encoder:
-    yaml_path: yaml/encode.yml
-    replicas: $REPLICAS
+    uses: yaml/encode.yml
+    parallel: $PARALLEL
   faiss_indexer:
-    image: jinaai/hub.executors.indexers.vector.faiss:latest
-    replicas: $REPLICAS
+    uses: jinaai/hub.executors.indexers.vector.faiss:latest
+    parallel: $PARALLEL
     timeout_ready: 10000
-    yaml_path: yaml/index-chunk.yml
+    uses_internal: yaml/index-chunk.yml
     volumes: './workspace'
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
     needs: crafter
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_indexer, faiss_indexer]
     read_only: true
 ```
@@ -133,21 +133,21 @@ with:
   read_only: true
 pods:
   crafter:
-    yaml_path: yaml/craft.yml
-    replicas: $REPLICAS
+    uses: yaml/craft.yml
+    parallel: $PARALLEL
   encoder:
-    yaml_path: yaml/encode.yml
-    replicas: $REPLICAS
+    uses: yaml/encode.yml
+    parallel: $PARALLEL
   faiss_indexer:
-    image: jinaai/hub.executors.indexers.vector.faiss:latest
-    replicas: $REPLICAS
+    uses: jinaai/hub.executors.indexers.vector.faiss:latest
+    parallel: $PARALLEL
     timeout_ready: 10000
-    yaml_path: yaml/index-chunk.yml
+    uses_inernal: yaml/index-chunk.yml
     volumes: './workspace'
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
 ```
 
 </sub>
@@ -183,7 +183,7 @@ To understand how it works, let's take a look at the yaml file used to construct
 Let's take a look at `yaml/index-chunk.yml`
 
 ```yaml
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !FaissIndexer
     with:
@@ -193,7 +193,7 @@ components:
     metas:
       workspace: './workspace'
       name: faissidx
-  - !ChunkPbIndexer
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
