@@ -88,7 +88,7 @@ def main(task, num_docs, top_k):
         dryrun(num_docs)
     else:
         raise NotImplementedError(
-            f'unknown task: {task}. A valid task should be `index` or `query` or `query_restful` or `dryrun`.')
+            f'unknown task: {task}. A valid task should be `index`, `query`, `query_restful`, or `dryrun`.')
 
 
 if __name__ == '__main__':
