@@ -41,15 +41,15 @@ def save_topk(resp, output_file, top_k):
             fw.write('\n')
             fw.write('matched vectors' + "*" * 10)
             fw.write('\n')
-            for idx, kk in enumerate(d.topk_results):
-                result.append(kk.match_doc.doc_id)
-                score = kk.score.value
+            for idx, match in enumerate(d.matches):
+                result.append(match.id)
+                score = match.score.value
                 if score < 0.0:
                     continue
-                m_fn = np.frombuffer(kk.match_doc.blob.buffer, kk.match_doc.blob.dtype)
+                m_fn = np.frombuffer(match.blob.buffer, match.blob.dtype)
                 fw.write('\n')
                 fw.write('Idx: {:>2d}:(DocId {}, Ranking score: {:f}): \n{}'.
-                         format(idx, kk.match_doc.doc_id, score, m_fn))
+                         format(idx, match.id, score, m_fn))
                 fw.write('\n')
             fw.write('\n')
             results.append(result)
