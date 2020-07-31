@@ -10,20 +10,16 @@ requests:
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
-      - !ExcludeQL
+      - !DocPruneDriver
         with:
-          fields:
-            - buffer
-            - chunks
+          pruned: buffer  # we will never use buffer in the remaining pipeline
     SearchRequest:
       - !URI2Buffer {}
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
-      - !ExcludeQL
+      - !DocPruneDriver
         with:
-          fields:
-            - buffer
-            - chunks
+          pruned: buffer  # we will never use buffer in the remaining pipeline
     ControlRequest:
       - !ControlReqDriver {}
