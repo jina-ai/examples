@@ -13,7 +13,7 @@ from read_vectors_files import fvecs_read, ivecs_read
 from jina.flow import Flow
 
 RANDOM_SEED = 14
-os.environ['REPLICAS'] = str(1)
+os.environ['PARALLEL'] = str(1)
 os.environ['SHARDS'] = str(1)
 os.environ['TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
 
