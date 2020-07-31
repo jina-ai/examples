@@ -12,10 +12,10 @@ GIF_BLOB = '/Volumes/TOSHIBA-4T/dataset/thumblr-gif-data/*.gif'
 
 
 def config():
-    parallel = 2 if sys.argv[1] == 'index' else 1
+    replicas = 2 if sys.argv[1] == 'index' else 1
     shards = 8
 
-    os.environ['PARALLEL'] = str(parallel)
+    os.environ['REPLICAS'] = str(replicas)
     os.environ['SHARDS'] = str(shards)
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
