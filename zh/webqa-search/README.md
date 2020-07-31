@@ -80,22 +80,26 @@ python prepare_data.py
 !Flow
 pods:
   doc_indexer:
-    yaml_path: doc_indexer.yml
+    uses: pods/doc_indexer/doc_indexer.yml
 
   extractor:
-    yaml_path: extractor.yml
+    uses: pods/extractor/extractor.yml
     needs: gateway
+    read_only: True
 
   encoder:
-    yaml_path: encoder.yml
+    uses: pods/encoder/encoder.yml
     timeout_ready: 60000
+    parallel: 3
+    read_only: True
 
   chunk_indexer:
-    yaml_path: chunk_indexer.yml
+    uses: pods/chunk_indexer/chunk_indexer.yml
 
   join:
-    yaml_path: _merger
-    needs: [doc_indexer, chunk_indexer]
+    uses: _merge
+    needs: [chunk_indexer, doc_indexer]
+    read_only: True
 ```
 
 </sub>
@@ -133,23 +137,26 @@ pods:
 
 ```yaml
 extractor:
-    yaml_path: extractor.yml
-    needs: gateway
+  uses: pods/extractor/extractor.yml
+  needs: gateway
+  read_only: True
 ```
 
     两个Pod在YAML文件中的顺序是依次的，则不需要定义`needs`，例如在`chunk_indexer`这个Pod。
 
 ```yaml
 chunk_indexer:
-    yaml_path: chunk_indexer.yml
+  uses: pods/chunk_indexer/chunk_indexer.yml
 ```
 
     如果一个Pod加载耗时很长，而在jina中Pod的默认加载时间为5s，我们则需要指定`timeout_ready`。例如在`encoder`这个Pod，我们指定它的加载时间为60s。
 
 ```yaml
 encoder:
-  yaml_path: encode.yml
+  uses: pods/encoder/encoder.yml
   timeout_ready: 60000
+  parallel: 3
+  read_only: True
 ```
 
     在这里你可能会发现还存在`gateway`这个Pod。这个Pod的主要作用是接受外部的请求，并将请求的数据发送到Flow中的Pod。在运行时，jina会自动在Flow的开头定义这个Pod，所以不需要在Flow的YAML文件中定义`gateway`。
@@ -189,20 +196,26 @@ encoder:
 !Flow
 pods:
   extractor:
-    yaml_path: extractor.yml
+    uses: pods/extractor/extractor.yml
+    read_only: True
 
   encoder:
-    yaml_path: encoder.yml
+    uses: pods/encoder/encoder.yml
     timeout_ready: 60000
+    read_only: True
 
   chunk_indexer:
-    yaml_path: chunk_indexer.yml
+    uses: pods/chunk_indexer/chunk_indexer.yml
+    timeout_ready: 600000
+    read_only: True
 
   ranker:
-    yaml_path: ranker.yml
+    uses: pods/ranker/ranker.yml
+    read_only: True
 
   doc_indexer:
-    yaml_path: doc_indexer.yml
+    uses: pods/doc_indexer/doc_indexer.yml
+    read_only: True
 ```
 
 </sub>
@@ -287,9 +300,9 @@ def read_query_data(item):
 def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
-        for tk in d.topk_results:
-            item = json.loads(tk.match_doc.text)
-            print('👉%s' % item['title'])
+        for match in d.matches:
+            item = match.chunks[0].text
+            print('👉%s' % item)
 ```
 
 ## 小结
@@ -315,25 +328,11 @@ def print_topk(resp):
     我们通过定义`with`修改了`BasePbIndexer`中`__init__`方法中参数的值，在这里我们修改了存储索引文件的文件名。
 
 ```yaml
-!BasePbIndexer
+!BinaryPbIndexer
 with:
   index_filename: doc_index.gzip
-
 metas:
   workspace: $TMP_WORKSPACE
-
-requests:
-  on:
-    IndexRequest:
-      - !KVIndexDriver
-        with:
-          method: add
-          level: doc
-
-    SearchRequest:
-      - !DocKVSearchDriver
-        with:
-          method: query
 ```
 
     在`requests on`部分，我们分别定义了`IndexRequest`和`SearchRequest`下的处理逻辑。
@@ -370,16 +369,15 @@ requests:
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, doc_id, text, *args, **kwargs):
+    def craft(self, id, text, *args, **kwargs):
         json_dict = json.loads(text)
         title = json_dict['title']
         return [{
-            'buffer': title.encode('utf-8'),
-            'doc_id': doc_id,
-            'offset': 0,
-            'length': len(title),
-            'text': title
-        }]
+                    'id': id,
+                    'offset': 0,
+                    'length': len(title),
+                    'text': title
+                }]
 ```
 
 ### encoder
@@ -406,49 +404,26 @@ requests:
     `chunk_indexer`的YAML文件有点复杂。别着急，这是最简单的方法了。`chunk_indexer`中的Executor称为`ChunkIndexer`。它封装了另外两个Executor，`components`字段指定两个包装好的Executor，`NumpyIndexer`用于存储问题的向量，`BasePbIndexer`用作键值存储来存储Document id和Chunk id的关联。并且我们通过分别定义了`metas`修改了两个Executor的名称和索引存储的路径。
 
 ```yaml
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !NumpyIndexer
     with:
       index_filename: vecidx_index.gzip
       metrix: cosine
-
     metas:
       name: vecidx_index
       workspace: $TMP_WORKSPACE
 
-  - !BasePbIndexer
+  - !BinaryPbIndexer
     with:
       index_filename: chunk_index.gzip
-
     metas:
       name: chunk_index
       workspace: $TMP_WORKSPACE
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE
 
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: vecidx_index
-          method: add
-      - !ChunkPruneDriver {}
-      - !KVIndexDriver
-        with:
-          executor: chunk_index
-          method: add
-          level: chunk
-
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: vecidx_index
-          method: query
-      - !ChunkPruneDriver {}
-      - !ChunkKVSearchDriver
-        with:
-          executor: chunk_index
-          method: query
 ```
 
     与`doc_indexer`一样，`chunk_indexer`在不同请求时，也有不同的处理逻辑。
@@ -463,8 +438,9 @@ requests:
 
 ```python
 join:
-    yaml_path: _merge
+    uses: _merge
     needs: [chunk_indexer, doc_indexer]
+    read_only: True
 ```
 
 ## 回顾
