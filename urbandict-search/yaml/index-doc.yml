@@ -4,6 +4,3 @@ with:
 metas:
   name: docIndexer
   workspace: $TMP_WORKSPACE
-
-
-
