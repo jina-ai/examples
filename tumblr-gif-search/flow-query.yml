@@ -5,19 +5,19 @@ with:
   rest_api: true
 pods:
   chunk_seg:
-    uses: craft/craft.yml
-    parallel: $PARALLEL
+    yaml_path: craft/craft.yml
+    replicas: $REPLICAS
   tf_encode:
-    uses: encode/encode.yml
-    parallel: $PARALLEL
+    yaml_path: encode/encode.yml
+    replicas: $REPLICAS
   chunk_idx:
-    uses: index/chunk.yml
-    shards: $SHARDS
+    yaml_path: index/chunk.yml
+    replicas: $SHARDS
     separated_workspace: true
     polling: all
-    uses_reducing: _merge_topk_chunks
+    reducing_yaml_path: _merge_topk_chunks
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   ranker:
-    uses: BiMatchRanker
+    yaml_path: BiMatchRanker
   doc_idx:
-    uses: index/doc.yml
+    yaml_path: index/doc.yml

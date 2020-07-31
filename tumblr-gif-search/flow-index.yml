@@ -3,22 +3,22 @@ with:
   logserver: true
 pods:
   chunk_seg:
-    uses: craft/craft.yml
-    parallel: $PARALLEL
+    yaml_path: craft/craft.yml
+    replicas: $REPLICAS
     read_only: true
   tf_encode:
-    uses: encode/encode.yml
+    yaml_path: encode/encode.yml
     needs: chunk_seg
-    parallel: $PARALLEL
+    replicas: $REPLICAS
     read_only: true
   chunk_idx:
-    uses: index/chunk.yml
-    shards: $SHARDS
+    yaml_path: index/chunk.yml
+    replicas: $SHARDS
     separated_workspace: true
   doc_idx:
-    uses: index/doc.yml
+    yaml_path: index/doc.yml
     needs: gateway
   join_all:
-    uses: _merge
+    yaml_path: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
