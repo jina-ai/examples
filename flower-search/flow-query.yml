@@ -21,7 +21,7 @@ pods:
     uses: yaml/index-chunk.yml
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_all
+    uses_reducing: _merge_all
   ranker:
     uses: MinRanker
   doc_indexer:
