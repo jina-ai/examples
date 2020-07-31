@@ -369,11 +369,10 @@ requests:
 
 ```python
 class WebQATitleExtractor(BaseSegmenter):
-    def craft(self, id, text, *args, **kwargs):
+    def craft(self, text, *args, **kwargs):
         json_dict = json.loads(text)
         title = json_dict['title']
         return [{
-                    'id': id,
                     'offset': 0,
                     'length': len(title),
                     'text': title
