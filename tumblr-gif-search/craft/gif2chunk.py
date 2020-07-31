@@ -17,7 +17,7 @@ class GifPreprocessor(BaseSegmenter):
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
 
-    def craft(self, buffer, doc_id):
+    def craft(self, buffer, id):
         result = []
         try:
             im = Image.open(io.BytesIO(buffer))
@@ -30,7 +30,7 @@ class GifPreprocessor(BaseSegmenter):
                         new_frame = frame.convert('RGB').resize([self.img_shape, ] * 2)
                         img = (np.array(new_frame) / 255).astype(np.float32)
                         # build chunk next, if the previous fail, then no chunk will be add
-                        result.append(dict(doc_id=doc_id, offset=idx,
+                        result.append(dict(id=id, offset=idx,
                                            weight=1., blob=img))
                 except Exception as ex:
                     self.logger.error(ex)
