@@ -62,12 +62,12 @@ In a real-world application, you may want to use one of our [`BaseIndexer` class
 from jina.flow import Flow
 
 f = (Flow(callback_on_body=True)
-     .add(name='spit', yaml_path='Sentencizer')
-     .add(name='encode', image='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
-          replicas=2, timeout_ready=20000))
+     .add(name='spit', uses='Sentencizer')
+     .add(name='encode', uses='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
+          parallel=2, timeout_ready=20000))
 ```
 
-This creates a `Flow` with two `Pods`, corresponding to the first and second step described above. Here we start two `replicas`, so there will be two encoders running in parallel. `timeout_ready` is set to 20s (20000ms) as loading the pretrained model and starting pytorch take some time.
+This creates a `Flow` with two `Pods`, corresponding to the first and second step described above. Here we start two `parallel`, so there will be two encoders running in parallel. `timeout_ready` is set to 20s (20000ms) as loading the pretrained model and starting pytorch take some time.
 
 In the second step, we use [transformers](https://github.com/huggingface/transformers) for embedding computation. In the example above, we use a prebuilt image from [Jina Hub](https://github.com/jina-ai/jina-hub). If you do not want to use Docker or if you already have transformer and pytorch installed locally, you can simply do:
 
@@ -75,9 +75,9 @@ In the second step, we use [transformers](https://github.com/huggingface/transfo
 from jina.flow import Flow
 
 f = (Flow(callback_on_body=True)
-     .add(name='spit', yaml_path='Sentencizer')
-     .add(name='encode', yaml_path='enc.yml',
-          replicas=2, timeout_ready=20000))
+     .add(name='spit', uses='Sentencizer')
+     .add(name='encode', uses='enc.yml',
+          parallel=2, timeout_ready=20000))
 ```
 
 with `enc.yml` such as 
@@ -138,11 +138,11 @@ Then you can change the local flow to:
 from jina.flow import Flow
 
 f = (Flow(callback_on_body=True)
-     .add(name='spit', yaml_path='Sentencizer')
-     .add(name='encode', image='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
+     .add(name='spit', uses='Sentencizer')
+     .add(name='encode', uses='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
           host='192.168.1.100', # the ip/hostname of the remote GPU machine
           port_expose=34567,
-          replicas=2, timeout_ready=20000))
+          parallel=2, timeout_ready=20000))
 ```
 
 Done!

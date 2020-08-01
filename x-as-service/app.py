@@ -22,9 +22,9 @@ def print_embed(req):
 
 
 f = (Flow(callback_on_body=True)
-     .add(name='spit', yaml_path='Sentencizer')
-     .add(name='encode', image='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
-          replicas=2, timeout_ready=20000))
+     .add(name='spit', uses='Sentencizer')
+     .add(name='encode', uses='jinaai/hub.executors.encoders.nlp.transformers-pytorch',
+          parallel=2, timeout_ready=20000))
 
 with f:
     f.index(input_fn, batch_size=32, callback=print_embed)
