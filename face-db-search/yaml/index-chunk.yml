@@ -1,4 +1,4 @@
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !NumpyIndexer
     with:
@@ -7,7 +7,7 @@ components:
     metas:
       name: vecidx  # a customized name
       workspace: $TMP_WORKSPACE
-  - !BasePbIndexer
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
