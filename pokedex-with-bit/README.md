@@ -106,22 +106,22 @@ with:
   logserver: true
 pods:
   crafter:
-    yaml_path: pods/craft.yml
+    uses: pods/craft.yml
     read_only: true
   encoder:
-    yaml_path: pods/encode.yml
-    replicas: $REPLICAS
+    uses: pods/encode.yml
+    parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_idx:
-    yaml_path: pods/chunk.yml
-    replicas: $SHARDS
+    uses: pods/chunk.yml
+    shards: $SHARDS
     separated_workspace: true
   doc_idx:
-    yaml_path: pods/doc.yml
+    uses: pods/doc.yml
     needs: crafter
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_idx, chunk_idx]
 ```
 

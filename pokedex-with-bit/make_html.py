@@ -9,10 +9,10 @@ from pkg_resources import resource_filename
 
 # replace this to whatever dir has png, it doesn't care whether its is pokemon, as long as there is a PNG it's fine
 image_src = 'data/**/*.png'
-replicas = 1
+parallel = 1
 shards = 8
 
-os.environ['REPLICAS'] = str(replicas)
+os.environ['PARALLEL'] = str(parallel)
 os.environ['SHARDS'] = str(shards)
 os.environ['WORKDIR'] = './workspace'
 os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
@@ -27,9 +27,9 @@ def print_result(resp):
     for d in resp.search.docs:
         vi = d.data_uri
         result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
-        for kk in d.topk_results:
-            kmi = kk.match_doc.data_uri
-            result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
+        for match in d.matches:
+            uri = match.data_uri
+            result_html.append(f'<img src="{uri}" style="opacity:{match.score.value}"/>')
             # k['score']['explained'] = json.loads(kk.score.explained)
         result_html.append('</td></tr>\n')
 
