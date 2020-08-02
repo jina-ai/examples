@@ -14,10 +14,10 @@ num_docs = os.environ.get('MAX_DOCS', 50000)
 
 
 def config():
-    replicas = 6 if sys.argv[1] == 'index' else 1
+    parallel = 6 if sys.argv[1] == 'index' else 1
     shards = 8
 
-    os.environ['REPLICAS'] = str(replicas)
+    os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(shards)
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
