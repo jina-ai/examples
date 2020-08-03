@@ -7,15 +7,13 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !DocCraftDriver
+      - !CraftDriver
         with:
           executor: reader
-      - !UnarySegmentDriver {}
     SearchRequest:
       - !URI2Buffer {}
-      - !DocCraftDriver
+      - !CraftDriver
         with:
           executor: reader
-      - !UnarySegmentDriver {}
     ControRequest:
       - !ControlReqDriver {}

@@ -6,6 +6,6 @@ with:
 requests:
   on:
     [SearchRequest, IndexRequest]:
-      - !ChunkCraftDriver
+      - !CraftDriver
         with:
           method: craft
