@@ -22,21 +22,23 @@ requests:
       - !VectorIndexDriver
         with:
           executor: vecidx
-          traverse_on: [chunks]
+          traverse_on: chunks
           depth_range: [1, 1]
       - !KVIndexDriver
         with:
           executor: chunkidx
-          traverse_on: [chunks]
+          traverse_on: chunks
           depth_range: [1, 1]
     SearchRequest:
       - !VectorSearchDriver
         with:
           executor: vecidx
-          traverse_on: [chunks]
+          top_k: 5
+          traverse_on: chunks
           depth_range: [0, 0]
       - !KVSearchDriver
         with:
           executor: chunkidx
-          traverse_on: [matches]
+          key: id
+          traverse_on: matches
           depth_range: [0, 1]
