@@ -9,7 +9,7 @@ import random
 from jina.flow import Flow
 
 RANDOM_SEED = 10  # 5
-os.environ['REPLICAS'] = str(2)
+os.environ['PARALLEL'] = str(2)
 os.environ['SHARDS'] = str(2)
 
 
@@ -23,12 +23,12 @@ def get_random_ws(workspace_path, length=8):
 def print_topk(resp, word):
     for d in resp.search.docs:
         print(f'Ta-Dah🔮, here are what we found for: {word}')
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
+        for idx, match in enumerate(d.matches):
+            score = match.score.value
             if score <= 0.0:
                 continue
-            doc = kk.match_doc.text
-            word, word_def = doc.split('+-=', maxsplit=1)
+            word_def = match.chunks[0].text
+            word = match.meta_info.decode()
             print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))
 
 

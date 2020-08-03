@@ -6,6 +6,6 @@ metas:
 requests:
   on:
     [SearchRequest, IndexRequest]:
-      - !DocCraftDriver
+      - !CraftDriver
         with:
           method: craft
