@@ -8,10 +8,10 @@ requests:
     IndexRequest:
       - !EncodeDriver
         with:
-          traverse_on: [chunks]
+          traverse_on: chunks
           depth_range: [1, 1]
     SearchRequest:
       - !EncodeDriver
         with:
-          traverse_on: [chunks]
+          traverse_on: chunks
           depth_range: [0, 0]
