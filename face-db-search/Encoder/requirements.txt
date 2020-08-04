@@ -1,2 +1,2 @@
-jina[devel]
+jina[devel]==0.4.1
 opencv-python

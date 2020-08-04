@@ -1,4 +1,4 @@
 click
 laserembeddings
 torch
-jina[scipy]==0.3.8
+jina[scipy]==0.4.1
