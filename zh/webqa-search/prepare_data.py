@@ -8,8 +8,6 @@ import json
 root_path = '/tmp/jina/'
 demo_name = 'webqa'
 workspace = os.path.join(root_path, demo_name)
-if not os.path.exists(root_path):
-    os.mkdir(root_path)
 if not os.path.exists(workspace):
     os.mkdir(workspace)
 
@@ -19,7 +17,7 @@ for file in fz.namelist():
     fz.extract(file, workspace)
 
 for filename in os.listdir(workspace):
-    if not filename.endswith('.json'):
+    if not filename.endswith('.json') or filename.startswith('pre_'):
         continue
 
     items = {}
