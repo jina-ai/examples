@@ -8,7 +8,7 @@ RUN apt-get update && \
 
 RUN python -m pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir transformers \
-                               jina[http]==0.3.8
+                               jina[http]==0.4.1
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
 
