@@ -35,11 +35,4 @@ def hello_world(args):
 
 if __name__ == '__main__':
     p = set_hw_parser()
-    p.add_argument('--index-uses', required=True, type=str, help='the yaml path of the index flow')
-    p.add_argument('--shards', type=int, default=1, help='number of shards when index and query')
-    p.add_argument('--parallel', type=int, default=1, help='number of parallel when index and query')
-    #p.add_argument('--workdir', type=str, default='localhost', help='the address hello-world server')
-    #p.add_argument('--logserver', type=str, default='localhost', help='start a log server for the dashboard')
-    p.add_argument('--host', type=str, default='localhost', help='the address hello-world server')
-    p.add_argument('--port_expose', type=int, default=51328, help='the grpc port of the hello-world server')
     hello_world(p.parse_args())
