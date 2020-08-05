@@ -1,0 +1,8 @@
+!FaissIndexer
+with:
+  index_key: 'IVF10,PQ4'
+  index_filename: 'faiss.tgz'
+  train_filepath: './data/train.tgz'
+metas:
+  workspace: './workspace'
+  name: 'faiss_indexer'
