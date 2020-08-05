@@ -2,25 +2,14 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import numpy as np
 from pathlib import Path
 
+from jina.clients.python.io import input_numpy
 from jina.clients import py_client
-from jina.helloworld.helper import load_mnist, download_data
+from jina.helloworld.helper import download_data
 from jina.main.parser import set_hw_parser
 
 
-def input_fn(fp, index=True, num_doc=None):
-    img_data = load_mnist(fp)
-    if not index:
-        # shuffle for random query
-        img_data = np.take(img_data, np.random.permutation(img_data.shape[0]), axis=0)
-    d_id = 0
-    for r in img_data:
-        yield r.tobytes()
-        d_id += 1
-        if num_doc is not None and d_id > num_doc:
-            break
 
 def hello_world(args):
     Path(args.workdir).mkdir(parents=True, exist_ok=True)
@@ -37,11 +26,12 @@ def hello_world(args):
     }
 
     # download the data
-    download_data(targets)
+    download_data(targets, args.download_proxy)
+
 
     # run it!
-    py_client(port_expose=args.port_expose, host=args.host).index(
-        input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
+    py_client(port_expose=args.port_expose, host=args.host, batch_size=args.index_batch_size).index(
+        input_numpy(targets['index']['data']), batch_size=args.index_batch_size)
 
 
 if __name__ == '__main__':
