@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 import json
 import os
 import zipfile
+import sys
 
 root_path = '/tmp/jina/'
 demo_name = 'news'
@@ -16,12 +17,15 @@ if not os.path.exists(workspace):
 fz = zipfile.ZipFile(os.path.join('/tmp', 'new2016zh.zip'), 'r')
 
 for file in fz.namelist():
+    if sys.argv[1] == 'valid' and not file.endswith('valid.json'):
+        continue
     fz.extract(file, workspace)
 
 for filename in os.listdir(workspace):
-    if not filename.endswith('.json'):
+    if not filename.endswith('.json') or filename.startswith('pre_'):
         continue
-
+    if sys.argv[1] == 'valid' and (filename.startswith('pre_') or not filename.endswith('valid.json')):
+        continue
     items = []
     with open(os.path.join(workspace, filename), 'r', encoding='utf-8') as f:
         for line in f:
