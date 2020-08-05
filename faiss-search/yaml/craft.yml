@@ -1,5 +1,7 @@
-!BaseExecutor
+!MySegmenter
+metas:
+  py_modules: custom_executors.py
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !EncodeDriver {}
+      - !SegmentDriver {}
