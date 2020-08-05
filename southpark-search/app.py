@@ -52,7 +52,7 @@ def query(num_docs, top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+            f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 
 def query_restful(num_docs):
     config(num_docs, mode = 'search')

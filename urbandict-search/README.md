@@ -280,14 +280,14 @@ def main(top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            fl.search(read_query_data(text), callback=ppr, topk=top_k)
+            fl.search(read_query_data(text), callback=ppr, top_k=top_k)
 ```
 
 The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are storaged under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
-fl.search(read_query_data(text), callback=ppr, topk=top_k)
+fl.search(read_query_data(text), callback=ppr, top_k=top_k)
 ```
 
 ```python
