@@ -3,21 +3,13 @@ metas:
   prefetch: 10
 pods:
   crafter:
-    uses: yaml/craft.yml
-    parallel: $PARALLEL
+    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
-  faiss_indexer:
-    uses: jinaai/hub.executors.indexers.vector.faiss:latest
+  indexer:
+    uses: jinaai/hub.executors.indexers.vector.my_custom_faiss:latest
     parallel: $PARALLEL
     timeout_ready: 10000
-    uses_internal: yaml/index-chunk.yml
+    uses_internal: yaml/indexer.yml
     volumes: './workspace'
-  doc_indexer:
-    uses: yaml/index-doc.yml
-    needs: crafter
-  join_all:
-    uses: _merge
-    needs: [doc_indexer, faiss_indexer]
-    read_only: true

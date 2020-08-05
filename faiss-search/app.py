@@ -37,7 +37,8 @@ def save_topk(resp, output_file, top_k):
             result = []
             fw.write('-' * 20)
             fw.write('\n')
-            fw.write('query id {}: \n {}'.format(query_id, np.frombuffer(d.blob.buffer, d.blob.dtype)))
+
+            fw.write('query id {}:'.format(query_id))
             fw.write('\n')
             fw.write('matched vectors' + "*" * 10)
             fw.write('\n')
