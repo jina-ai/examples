@@ -47,7 +47,7 @@ def main(task, top_k, num_docs):
                 if not title:
                     break
                 ppr = lambda x: print_topk(x)
-                flow.search(read_query_data(item), output_fn=ppr, topk=top_k)
+                flow.search(read_query_data(item), output_fn=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
