@@ -5,17 +5,17 @@ pods:
     parallel: 2
 
   encoder:
-    uses: jinaai/hub.executors.encoders.nlp.transformers-hitscir
+#    uses: jinaai/hub.executors.encoders.nlp.transformers-hitscir
+    uses: pods/encoder/encoder.yml
     timeout_ready: 6000000
 
   chunk_indexer:
     uses: pods/chunk_indexer/chunk_indexer.yml
     timeout_ready: 60000
-    shards: 2
+#    shards: 2
 
   ranker:
     uses: pods/ranker/ranker.yml
-    parallel: 2
 
   doc_indexer:
     uses: pods/doc_indexer/doc_indexer.yml
