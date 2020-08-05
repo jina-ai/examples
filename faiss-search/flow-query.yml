@@ -3,18 +3,15 @@ with:
   read_only: true
 pods:
   crafter:
-    uses: yaml/craft.yml
-    parallel: $PARALLEL
+    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
-  faiss_indexer:
+  indexer:
     uses: jinaai/hub.executors.indexers.vector.faiss:latest
     parallel: $PARALLEL
     timeout_ready: 10000
-    uses_internal: yaml/query-chunk.yml
+    uses_internal: yaml/query-indexer.yml
     volumes: './workspace'
   ranker:
     uses: MinRanker
-  doc_indexer:
-    uses: yaml/index-doc.yml
