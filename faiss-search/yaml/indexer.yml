@@ -1,0 +1,28 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: 'faiss_index.tgz'
+    metas:
+      workspace: './workspace'
+      name: wrapidx
+  - !BinaryPbIndexer
+    with:
+      index_filename: doc.gz
+    metas:
+      name: docidx
+      workspace: './workspace'
+metas:
+  name: indexer
+  workspace: './workspace'
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: wrapidx
+      - !KVIndexDriver
+        with:
+          executor: docidx
+    ControlRequest:
+      - !ControlReqDriver {}
