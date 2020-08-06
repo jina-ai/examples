@@ -19,8 +19,6 @@ for file in fz.namelist():
         continue
     fz.extract(file, workspace)
 
-print(sys.argv)
-
 for filename in os.listdir(workspace):
     if not filename.endswith('.json') or filename.startswith('pre_'):
         continue

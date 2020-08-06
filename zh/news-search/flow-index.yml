@@ -8,10 +8,11 @@ pods:
 #    uses: jinaai/hub.executors.encoders.nlp.transformers-hitscir
     uses: pods/encoder/encoder.yml
     timeout_ready: 6000000
+    parallel: 2
 
   chunk_indexer:
     uses: pods/chunk_indexer/chunk_indexer.yml
-#    shards: 2
+    shards: 2
 
   doc_indexer:
     uses: pods/doc_indexer/doc_indexer.yml
