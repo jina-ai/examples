@@ -11,5 +11,5 @@ pods:
     uses: jinaai/hub.executors.indexers.vector.faiss:latest
     parallel: $PARALLEL
     timeout_ready: 600000
-    uses_internal: yaml/index-chunk.yml
+    uses_internal: yaml/indexer.yml
     volumes: './workspace'
