@@ -30,7 +30,7 @@ def hello_world(args):
 
 
     # run it!
-    py_client(port_expose=args.port_expose, host=args.host, batch_size=args.index_batch_size).index(
+    py_client(port_expose=args.port_expose, host=args.host).index(
         input_numpy(targets['index']['data']), batch_size=args.index_batch_size)
 
 
