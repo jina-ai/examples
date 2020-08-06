@@ -8,6 +8,7 @@ RUN conda update -n base conda && \
 COPY faiss.yml .
 
 RUN conda install pip
-RUN pip install jina==0.4.1
+RUN pip install jina==0.4.1 \
+                uvloop
 
 ENTRYPOINT ["jina", "pod", "--uses", "faiss.yml"]
