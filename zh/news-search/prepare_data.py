@@ -9,22 +9,22 @@ import sys
 root_path = '/tmp/jina/'
 demo_name = 'news'
 workspace = os.path.join(root_path, demo_name)
-if not os.path.exists(root_path):
-    os.mkdir(root_path)
 if not os.path.exists(workspace):
     os.mkdir(workspace)
 
 fz = zipfile.ZipFile(os.path.join('/tmp', 'new2016zh.zip'), 'r')
 
 for file in fz.namelist():
-    if sys.argv[1] == 'valid' and not file.endswith('valid.json'):
+    if len(sys.argv)>1 and sys.argv[1] == 'valid' and not file.endswith('valid.json'):
         continue
     fz.extract(file, workspace)
+
+print(sys.argv)
 
 for filename in os.listdir(workspace):
     if not filename.endswith('.json') or filename.startswith('pre_'):
         continue
-    if sys.argv[1] == 'valid' and (filename.startswith('pre_') or not filename.endswith('valid.json')):
+    if len(sys.argv)>1 and sys.argv[1] == 'valid' and not filename.endswith('valid.json'):
         continue
     items = []
     with open(os.path.join(workspace, filename), 'r', encoding='utf-8') as f:
