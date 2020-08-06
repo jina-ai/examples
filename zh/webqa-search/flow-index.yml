@@ -1,23 +1,23 @@
 !Flow
 pods:
   doc_indexer:
-    yaml_path: pods/doc_indexer/doc_indexer.yml
+    uses: pods/doc_indexer/doc_indexer.yml
 
   extractor:
-    yaml_path: pods/extractor/extractor.yml
+    uses: pods/extractor/extractor.yml
     needs: gateway
     read_only: True
 
   encoder:
-    yaml_path: pods/encoder/encoder.yml
+    uses: pods/encoder/encoder.yml
     timeout_ready: 60000
-    replicas: 3
+    parallel: 3
     read_only: True
 
   chunk_indexer:
-    yaml_path: pods/chunk_indexer/chunk_indexer.yml
+    uses: pods/chunk_indexer/chunk_indexer.yml
 
   join:
-    yaml_path: _merge
+    uses: _merge
     needs: [chunk_indexer, doc_indexer]
     read_only: True

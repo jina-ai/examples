@@ -4,15 +4,13 @@ with:
 requests:
   on:
     IndexRequest:
-      - !SegmentDriver
+      - !CraftDriver
         with:
           method: craft
-          save_buffer: True
     SearchRequest:
       - !URI2Buffer {}
-      - !SegmentDriver
+      - !CraftDriver
         with:
           method: craft
-          save_buffer: True
     ControlRequest:
       - !ControlReqDriver {}

@@ -12,8 +12,8 @@ RUN mv urban-dictionary-words-dataset.zip ${RAW_DATA_FN}
 RUN python -m pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir click \
                                transformers \
-                               jina[devel]==0.3.8 \
-                               jina[scipy]==0.3.8
+                               jina[devel]==0.4.1 \
+                               jina[scipy]==0.4.1
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
 
