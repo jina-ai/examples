@@ -2,13 +2,11 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import threading
 
 from jina.flow import Flow
 from jina.logging import default_logger
 from jina.main.parser import set_hw_parser
 from pkg_resources import resource_filename
-from jina.helloworld.components import *
 
 
 def hello_world(args):

@@ -42,17 +42,12 @@ In this example, we will refactor the hello-world example into client-server arc
 The complete server-side code can be found in [server.py](server.py). The key is to start the Flow and then hangs in there forever, dropping the request sending part. 
 
 ```python
-import threading
-
-# ...
-
-f = Flow.load_config(args.index_yaml_path)
-# run it!
+f = Flow.load_config(args.index_uses)
 with f:
-    threading.Event().wait()
+    f.block()
 ```
 
-Here we use `threading.Event().wait()`, it is much more efficient way comparing to `while True: pass`.
+Here we use `f.block()`, it is much more efficient way comparing to `while True: pass`.
 
 
 You can start the server via:
@@ -83,10 +78,10 @@ On the client side, we simply use `py_client` to connect to the server that we j
 
 ```python
 from jina.clients import py_client
+from jina.clients.python.io import input_numpy
 
-# run it!
 py_client(port_expose=args.port_expose, host=args.host).index(
-    input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
+        input_numpy(targets['index']['data']), batch_size=args.index_batch_size)
 ```
 
 You can now start the client via:
@@ -112,7 +107,7 @@ And that's how you use Flow in a C/S manner. Pretty easy right?
 
 ## Take home message
 
-- Use `with` context manager and `threading.Event().wait()` to start a Flow
+- ###### Use `with` context manager and `block()` to start a Flow
 - Use `py_client` to connect to a Flow with proper `host` and `port_expose`
 - **You can also start a Flow directly from the console, check out `jina flow --help` for more details.**
 
