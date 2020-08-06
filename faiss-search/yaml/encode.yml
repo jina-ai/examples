@@ -1,5 +1,7 @@
-!BaseEncoder
+!MyEncoder
+metas:
+  py_modules: custom_executors.py
 requests:
   on:
     [IndexRequest, SearchRequest]:
-      - !UnaryEncodeDriver {}
+      - !EncodeDriver {}
