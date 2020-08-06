@@ -10,8 +10,8 @@ pods:
   indexer:
     uses: jinaai/hub.executors.indexers.vector.faiss:latest
     parallel: $PARALLEL
-    timeout_ready: 10000
-    uses_internal: yaml/query-indexer.yml
+    timeout_ready: 600000
+    uses_internal: yaml/query-chunk.yml
     volumes: './workspace'
   ranker:
     uses: MinRanker
