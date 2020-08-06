@@ -7,6 +7,7 @@ from jina.flow import Flow
 from jina.logging import default_logger
 from jina.main.parser import set_hw_parser
 from pkg_resources import resource_filename
+from jina.helloworld.components import *
 
 
 def hello_world(args):
