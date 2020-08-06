@@ -11,12 +11,27 @@ components:
           name: wrapidx
         with:
           index_filename: 'faiss_index.tgz'
+    metas:
+      name: faissidx
   - !BinaryPbIndexer
     with:
-      index_filename: chunk.gz
+      index_filename: doc.gz
     metas:
-      name: chunkidx
+      name: docidx
       workspace: './workspace'
 metas:
-  name: chunk_indexer
+  name: indexer
   workspace: './workspace'
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: faissidx
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          traverse_on: matches
+          depth_range: [0, 0]
+    ControlRequest:
+      - !ControlReqDriver {}
