@@ -7,9 +7,7 @@ from jina.executors.encoders.nlp.transformer import TransformerTorchEncoder
 class TransformerRobertaEncoder(TransformerTorchEncoder):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.model_name = 'hfl/chinese-roberta-wwm-ext'
         self.tmp_model_path = 'hfl/chinese-roberta-wwm-ext'
-        self.pooling_strategy = 'cls'
         self.max_length = 32
 
     def get_tokenizer(self):

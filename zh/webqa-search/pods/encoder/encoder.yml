@@ -1,6 +1,8 @@
 !TransformerRobertaEncoder
 metas:
   py_modules: transformer_roberta.py
+  on_gpu: True
+
 
 requests:
   on:
@@ -8,3 +10,4 @@ requests:
       - !EncodeDriver
         with:
           method: encode
+          depth_range: [1, 1]
