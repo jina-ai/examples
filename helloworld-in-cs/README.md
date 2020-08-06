@@ -90,6 +90,8 @@ You can now start the client via:
 python client.py --port-expose 58596
 ```
 
+Notice: this 58596 is not a fixed number. Please refer to the server side and find the port number there.
+
 In this example, our Flow and Client are on the same machine, so no host address is required. If you are running Flow remotely, please also add the remote IP address to `--host` and make sure the `port-expose` is set to public in the remote security group.
 
 It will show the progress bar on client side while indexing
