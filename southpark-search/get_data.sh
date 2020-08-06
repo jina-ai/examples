@@ -12,4 +12,4 @@ fi
 
 mkdir -p ${TEST_DATA_DIR}
 git clone https://github.com/BobAdamsEE/SouthParkData.git $TEST_DATA_DIR
-python3 prepare_data.py ${TEST_DATA_DIR}
+python prepare_data.py ${TEST_DATA_DIR}
