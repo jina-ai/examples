@@ -286,7 +286,7 @@ with flow:
         if not title:
             break
         ppr = lambda x: print_topk(x)
-        flow.search(read_query_data(item), output_fn=ppr, topk=top_k)
+        flow.search(read_query_data(item), output_fn=ppr, top_k=top_k)
 ```
 
 ```python

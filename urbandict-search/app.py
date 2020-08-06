@@ -53,7 +53,7 @@ def main(task, num_docs, top_k):
                 if not text:
                     break
                 ppr = lambda x: print_topk(x, text)
-                f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+                f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
     elif task == 'query_restful':
         f = Flow().load_config('flow-query.yml')
         f.use_rest_gateway()

@@ -299,14 +299,14 @@ def query(num_docs, top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+            f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 ```
 
 The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a Protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
-f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 ```
 
 ```python
