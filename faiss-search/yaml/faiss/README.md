@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Vector Indexer based on Faiss](#vector-indexer-based-on-faiss)
+  - [Usages](#usages)
+  - [Build locally](#build-locally)
+  - [Reference](#reference)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Vector Indexer based on Faiss
 
 This image is used for running a pod with a vector indexer running inside. The vector indexer is based on Faiss. 
