@@ -98,17 +98,17 @@ However, we have another Pod working in silent. Actually, the input to the very 
 !Flow
 pods:
   splitter:
-    yaml_path: yaml/craft-split.yml
+    uses: yaml/craft-split.yml
   encoder:
-    yaml_path: yaml/encode.yml
+    uses: yaml/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    uses: yaml/index-chunk.yml
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
     needs: gateway
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -125,7 +125,7 @@ By default, the input of each Pod is the Pod defined right above it, and the req
 
 ```yaml
 doc_indexer:
-  yaml_path: yaml/index-doc.yml
+  uses: yaml/index-doc.yml
   needs: gateway
 ```
 
@@ -133,7 +133,7 @@ As we can see, for most Pods, we only need to define the YAML file path. Given t
 
 ```yaml
 encoder:
-  yaml_path: yaml/encode.yml
+  uses: yaml/encode.yml
   timeout_ready: 60000
 ```
 
@@ -141,7 +141,7 @@ You might also notice the `join_all` Pod has a special YAML path. It denotes a b
 
 ```yaml
 join_all:
-  yaml_path: _merge
+  uses: _merge
   needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -170,16 +170,16 @@ with:
   read_only: true
 pods:
   splitter:
-    yaml_path: yaml/craft-split.yml
+    uses: yaml/craft-split.yml
   encoder:
-    yaml_path: yaml/encode.yml
+    uses: yaml/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: yaml/index-chunk.yml
+    uses: yaml/index-chunk.yml
   ranker:
-    yaml_path: BM25Ranker
+    uses: BM25Ranker
   doc_indexer:
-    yaml_path: yaml/index-doc.yml
+    uses: yaml/index-doc.yml
 ```
 
 </sub>
@@ -196,7 +196,7 @@ Eventually, here comes a new Pod with the name of `ranker`. Remember that Chunks
 
 ```yaml
 ranker:
-  yaml_path: BM25Ranker
+  uses: BM25Ranker
 ```
 
 At the last step, the `doc_indexer` comes into play. Sharing the same YAML file, `doc_indexer` will load the storaged key-value index and retrieve the matched Documents back according the Document Id.
@@ -231,11 +231,9 @@ With the Flows, we now can write the codes to run the Flow. For indexing, we sta
 
 ```python        
 def main(num_docs):
-    flow = Flow().load_config('flow-index.yml')
-    with flow.build() as fl:
-    	 data_fn = os.path.join('/tmp/jina/urbandict', "urbandict-word-defs.json")
-        fl.index(buffer=read_data(data_fn, num_docs))
-
+    f = Flow().load_config('flow-index.yml')
+    with f:
+        f.index_lines(filepath=data_fn, size=num_docs, batch_size=16)
 ```
 
 The content of the `IndexRequest` is fed from the `read_data()`, which loads the processed JSON file and output each word together with its defintion in `bytes` format.
@@ -282,26 +280,27 @@ def main(top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            fl.search(read_query_data(text), callback=ppr, topk=top_k)
+            fl.search(read_query_data(text), callback=ppr, top_k=top_k)
 ```
 
 The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are storaged under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
-fl.search(read_query_data(text), callback=ppr, topk=top_k)
+fl.search(read_query_data(text), callback=ppr, top_k=top_k)
 ```
 
 ```python
 def print_topk(resp, word):
     for d in resp.search.docs:
         print(f'Ta-Dah🔮, here are what we found for: {word}')
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
+        for idx, match in enumerate(d.matches):
+            score = match.score.value
             if score <= 0.0:
                 continue
-            print('{:>2d}:({:f}):{}'.format(
-                idx, score, kk.match_doc.buffer.decode()))       
+            doc = match.chunks[0].text
+            word, word_def = doc.split('+-=', maxsplit=1)
+            print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))     
 ```
 
 #### Via jina python client
@@ -329,12 +328,6 @@ with:
   min_sent_len: 3
   max_sent_len: 128
   punct_chars: '.,;!?:'
-requests:
-  on:
-    [SearchRequest, IndexRequest, TrainRequest]:
-      - !SegmentDriver
-        with:
-          method: craft
 ``` 
 
 In the `requests` field, we define the different behaviors of the Pod to different requests. Remember that both the index and the query Flows share the same Pods with the YAML files while they behaving differently to the requests. Here is how the magic works. For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On one hand, the Driver interpretes the request messages (in the format of Protobuf) into the format that the Executor can understand(e.g. Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and translate the processed results back into Protobuf format. For the time being, the `splitter` show the same behavior for both requests.
@@ -358,31 +351,18 @@ with:
   pooling_strategy: cls
   model_name: distilbert-base-cased
   max_length: 96
-requests:
-  on:
-    [SearchRequest, IndexRequest]:
-      - !EncodeDriver
-        with:
-          method: encode
 ```
 
 ### `doc_indexer`
 In contrast to the Pods above, the `doc_indexer` different behaviors on different requests. As for the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDriver` in sequence. The `DocPruneDriver` is used to prune the redundant data in the message that are not used by the downstream Pods. 
 
 ```yaml
-!LeveldbIndexer
+!BinaryPbIndexer
 with:
-  index_filename: 'meta_doc_index.db'
-requests:
-  on:
-    IndexRequest:
-      - !DocKVIndexDriver
-        with:
-          method: add
-    SearchRequest:
-      - !DocKVSearchDriver
-        with:
-          method: query
+  index_filename: doc.gzip
+metas:
+  name: docIndexer
+  workspace: $TMP_WORKSPACE
 ```
 
 As for the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` as in for the `IndexRequest`, but the Driver calls different functions in the Executor, `LeveldbIndexer`.
@@ -404,45 +384,19 @@ components:
   - !NumpyIndexer
     with:
       index_filename: vec.gz
-      metrix: cosine
-  - !ChunkPbIndexer
+      metric: cosine
+    metas:
+      name: vecidx  # a customized name
+      workspace: $TMP_WORKSPACE
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVIndexDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVSearchDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer
-
+    metas:
+      name: chunkidx  # a customized name
+      workspace: $TMP_WORKSPACE
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE
 ```
 
 As the same as the `doc_indexer`, the `chunk_indexer` also have different behaviors on different requests. For the `IndexRequest`, the `chunk_indexer` uses three Drivers in serial, namely, `VectorIndexDriver`, `PruneDriver`, and `KVIndexDriver`. The idea is to firstly use `VectorIndexDriver` to call the `index()` function from the `NumpyIndexer` so that the vectors for all the Chunks are indexed. Afterwards the `PruneDriver` prune the message, and the `KVIndexDriver` calls the `index()` function from the `BasePbIndexer`. This behavior is defined in the `executor` field.

@@ -1,4 +1,5 @@
 click
 pillow
 torch
-jina[devel]==0.3.8
+jina[devel]==0.4.1
+

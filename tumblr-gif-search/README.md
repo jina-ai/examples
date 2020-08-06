@@ -63,22 +63,22 @@ with:
   logserver: true
 pods:
   chunk_seg:
-    yaml_path: craft/index-craft.yml
-    replicas: $REPLICAS
+    uses: craft/index-craft.yml
+    parallel: $PARALLEL
     read_only: true
   doc_idx:
-    yaml_path: index/doc.yml
+    uses: index/doc.yml
   tf_encode:
-    yaml_path: encode/encode.yml
+    uses: encode/encode.yml
     needs: chunk_seg
-    replicas: $REPLICAS
+    parallel: $PARALLEL
     read_only: true
   chunk_idx:
-    yaml_path: index/chunk.yml
-    replicas: $SHARDS
+    uses: index/chunk.yml
+    shards: $SHARDS
     separated_workspace: true
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
 ```
@@ -106,22 +106,22 @@ with:
   read_only: true  # better add this in the query time
 pods:
   chunk_seg:
-    yaml_path: craft/index-craft.yml
-    replicas: $REPLICAS
+    uses: craft/index-craft.yml
+    parallel: $PARALLEL
   tf_encode:
-    yaml_path: encode/encode.yml
-    replicas: $REPLICAS
+    uses: encode/encode.yml
+    parallel: $PARALLEL
   chunk_idx:
-    yaml_path: index/chunk.yml
-    replicas: $SHARDS
+    uses: index/chunk.yml
+    shards: $SHARDS
     separated_workspace: true
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   ranker:
-    yaml_path: BiMatchRanker
+    uses: BiMatchRanker
   doc_idx:
-    yaml_path: index/doc.yml
+    uses: index/doc.yml
 ```
 
 ```bash
@@ -210,7 +210,7 @@ This is good. Because on the one hand you avoid loading too many data into memor
 
 ## Sharding
 
-In this example, we set the number of `replicas` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
+In this example, we set the number of `parallel` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
 
 ```bash
 .
@@ -264,14 +264,14 @@ If you think about it, a multi-replica indexer behaves no differently than a mul
 
 In the query time, replicas and shards behave differently on how they handle new requests. Replicas still compete on each request as they do in the index time. Shards, however, work more cooperatively: each request is published to *all* replicas, each replica works on the same request, and the final result has to be collected from all replicas.
 
-In Jina, such behavior in the query time can be simply specified via `polling` and `reducing_yaml_path`:
+In Jina, such behavior in the query time can be simply specified via `polling` and `uses_reducing`:
 
 ```yaml
     polling: all
-    reducing_yaml_path: _merge_topk_chunks
+    uses_reducing: _merge_all
 ```
 
-`polling` and `reducing_yaml_path` are Pod-specific argument, you can find more details in `jina pod --help`.
+`polling` and `uses_reducing` are Pod-specific argument, you can find more details in `jina pod --help`.
 
 ```bash
 --polling {ANY, ALL, ALL_ASYNC}
@@ -279,8 +279,8 @@ In Jina, such behavior in the query time can be simply specified via `polling` a
     ALL: all workers poll the message (like a broadcast) 
     (choose from: {ANY, ALL, ALL_ASYNC}; default: ANY)
     
---reducing-yaml-path
-    the executor used for reducing the result from all replicas, accepted type follows "--yaml-path"
+--uses-reducing
+    the executor used for reducing the result from all replicas, accepted type follows "--uses"
     (type: str; default: _forward)
 ```
 

@@ -26,15 +26,15 @@ def config():
 
 
 def index():
-    f = Flow().add(yaml_path='indexer.yml')
+    f = Flow().add(uses='indexer.yml')
     with f:
         f.index_files(sys.argv[2])
 
 
 def search():
     f = (Flow(rest_api=True, port_expose=int(os.environ['JINA_PORT']))
-         .add(yaml_path='- !RandomPopRanker {}')
-         .add(yaml_path='indexer.yml'))
+         .add(uses='- !RandomPopRanker {}')
+         .add(uses='indexer.yml'))
     with f:
         f.block()
 

@@ -93,24 +93,16 @@ metas:
   prefetch: 10
 pods:
   crafter:
-    uses: yaml/craft.yml
-    parallel: $PARALLEL
+    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
-  faiss_indexer:
+  indexer:
     uses: jinaai/hub.executors.indexers.vector.faiss:latest
     parallel: $PARALLEL
-    timeout_ready: 10000
-    uses_internal: yaml/index-chunk.yml
+    timeout_ready: 600000
+    uses_internal: yaml/indexer.yml
     volumes: './workspace'
-  doc_indexer:
-    uses: yaml/index-doc.yml
-    needs: crafter
-  join_all:
-    uses: _merge
-    needs: [doc_indexer, faiss_indexer]
-    read_only: true
 ```
 </sub>
 </td>
@@ -133,21 +125,18 @@ with:
   read_only: true
 pods:
   crafter:
-    uses: yaml/craft.yml
-    parallel: $PARALLEL
+    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
-  faiss_indexer:
+  indexer:
     uses: jinaai/hub.executors.indexers.vector.faiss:latest
     parallel: $PARALLEL
-    timeout_ready: 10000
-    uses_inernal: yaml/index-chunk.yml
+    timeout_ready: 600000
+    uses_internal: yaml/query-indexer.yml
     volumes: './workspace'
   ranker:
     uses: MinRanker
-  doc_indexer:
-    uses: yaml/index-doc.yml
 ```
 
 </sub>
@@ -180,28 +169,37 @@ python app.py -t query
 The main contribution of this example is to try and understand how FAISS can be used to build the index.
 To understand how it works, let's take a look at the yaml file used to construct the `faiss_indexer`. It is important to note that `faiss_indexer` will run inside a docker image.
 
-Let's take a look at `yaml/index-chunk.yml`
+Let's take a look at `yaml/indexer.yml`
 
 ```yaml
 !CompoundIndexer
 components:
-  - !FaissIndexer
+  - !NumpyIndexer
     with:
-      index_key: 'IVF10,PQ4'
       index_filename: 'faiss_index.tgz'
-      train_filepath: './workspace/train.tgz'
     metas:
       workspace: './workspace'
-      name: faissidx
+      name: wrapidx
   - !BinaryPbIndexer
     with:
-      index_filename: chunk.gz
+      index_filename: doc.gz
     metas:
-      name: chunkidx
+      name: docidx
       workspace: './workspace'
 metas:
-  name: chunk_indexer
+  name: indexer
   workspace: './workspace'
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: wrapidx
+      - !KVIndexDriver
+        with:
+          executor: docidx
+    ControlRequest:
+      - !ControlReqDriver {}
 ```
 
 The chunk indexer is formed by a CompoundExecutor composed by a `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as FaissIndexer composed with a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value one will keep track of the actual chunk values.

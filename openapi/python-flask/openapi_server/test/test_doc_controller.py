@@ -64,7 +64,7 @@ class TestDocController(BaseTestCase):
         }
         data = dict(file=(BytesIO(b'some file data'), 'file.txt'))
         response = self.client.open(
-            '/v2/Doc/query/'.format(topk=56),
+            '/v2/Doc/query/'.format(top_k=56),
             method='POST',
             headers=headers,
             data=data,

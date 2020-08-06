@@ -25,7 +25,7 @@ def get_random_ws(workspace_path, length=8):
 
 
 def configure_model(data_dir = '/tmp/jina/multilingual'):
-    os.environ['REPLICAS'] = str(2)
+    os.environ['PARALLEL'] = str(2)
     os.environ['SHARDS'] = str(2)
     os.environ['TMP_DATA_DIR'] = data_dir
     os.environ['PATH_TO_BPE_CODES'] = data_dir + '/93langs.fcodes'
@@ -35,15 +35,15 @@ def configure_model(data_dir = '/tmp/jina/multilingual'):
     
 
 def print_topk(resp, word):
-    for _doc in resp.search.docs:
+    for doc in resp.search.docs:
         print(f'\n\n\nHere are what we found for: {word}')
         # print(_doc.topk_results)
-        for idx, _match_doc in enumerate(_doc.topk_results):
-            score = _match_doc.score.value
+        for idx, match in enumerate(doc.matches):
+            score = match.score.value
             if score < 0.0:
                 continue
-            _text = _match_doc.match_doc.text
-            print('> {:>2d}({:.2f}). "{}"'.format(idx, score, _text.strip()))
+            text = match.text
+            print('> {:>2d}({:.2f}). "{}"'.format(idx, score, text.strip()))
 
 
 def read_query_data(text):
@@ -67,7 +67,7 @@ def query(top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search(read_query_data(text), callback=ppr, topk=top_k)
+            f.search(read_query_data(text), callback=ppr, top_k=top_k)
 
 
 @click.command()

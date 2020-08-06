@@ -17,10 +17,9 @@ requests:
       - !MIMEDriver
         with:
           target: mime_type
-      - !PruneDriver
+      - !ExcludeQL
         with:
-          level: doc
-          pruned:
+          fields:
             - chunks
             - buffer
       - !KVIndexDriver

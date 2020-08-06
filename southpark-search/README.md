@@ -126,17 +126,17 @@ However, we have another Pod working in silence. In fact, the input to the very 
 !Flow
 pods:
   splitter:
-    yaml_path: pods/craft-split.yml
+    uses: pods/craft-split.yml
   encoder:
-    yaml_path: pods/encode.yml
+    uses: pods/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: pods/index-chunk.yml
+    uses: pods/index-chunk.yml
   doc_indexer:
-    yaml_path: pods/index-doc.yml
+    uses: pods/index-doc.yml
     needs: gateway
   join_all:
-    yaml_path: _merge
+    uses: _merge
     needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -153,7 +153,7 @@ By default, the input of each Pod is the Pod defined right above it, and the req
 
 ```yaml
 doc_indexer:
-  yaml_path: pods/index-doc.yml
+  uses: pods/index-doc.yml
   needs: gateway
 ```
 
@@ -161,7 +161,7 @@ As we can see, for most Pods, we only need to define the YAML file path. Given t
 
 ```yaml
 encoder:
-  yaml_path: pods/encode.yml
+  uses: pods/encode.yml
   timeout_ready: 60000
 ```
 
@@ -169,7 +169,7 @@ You might also notice the `join_all` Pod has a special YAML path. It denotes a b
 
 ```yaml
 join_all:
-  yaml_path: _merge
+  uses: _merge
   needs: [doc_indexer, chunk_indexer]
 ```
 
@@ -198,16 +198,16 @@ with:
   read_only: true
 pods:
   splitter:
-    yaml_path: pods/craft-split.yml
+    uses: pods/craft-split.yml
   encoder:
-    yaml_path: pods/encode.yml
+    uses: pods/encode.yml
     timeout_ready: 60000
   chunk_indexer:
-    yaml_path: pods/index-chunk.yml
+    uses: pods/index-chunk.yml
   ranker:
-    yaml_path: MinRanker
+    uses: MinRanker
   doc_indexer:
-    yaml_path: pods/index-doc.yml
+    uses: pods/index-doc.yml
 ```
 
 </sub>
@@ -226,7 +226,7 @@ Eventually, there comes a new Pod named `ranker`. Remember that Chunks are the b
 
 ```yaml
 ranker:
-  yaml_path: MaxRanker
+  uses: MaxRanker
 ```
 
 In the last step, the `doc_indexer` comes into play. Sharing the same YAML file, `doc_indexer` will load the stored key-value index and retrieve the matched Documents according to the Document ID.
@@ -260,11 +260,12 @@ python app.py -t index -n 10000
 With the Flows, we can now write the code to run the Flow. For indexing, we start by defining the Flow with a YAML file. Afterwards, the `build()` function will do the magic to construct Pods and connect them together. After that, the `IndexRequest` will be sent to the flow by calling the `index()` function.
 
 ```python
-def main(num_docs):
+def index(num_docs):
+    config(num_docs, mode = 'index')
+    data_path = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
     f = Flow().load_config('flow-index.yml')
     with f:
-        data_fn = os.path.join('/tmp/jina/southpark', 'character-lines.csv')
-        f.index_lines(filepath=data_fn, size=num_docs, batch_size=8)
+        f.index_lines(filepath=data_path, batch_size=8, size=int(os.environ['MAX_NUM_DOCS']))
 
 ```
 
@@ -289,7 +290,8 @@ python app.py -t query
 For querying, we follow the same process to define and build the Flow from the YAML file. The `search_lines()` function is used to send a `SearchRequest` to the Flow. Here we accept the user's query input from the terminal and wrap it into a list of `string`.
 
 ```python
-def main(top_k):
+def query(num_docs, top_k):
+    config(num_docs, mode = 'search')
     f = Flow().load_config('flow-query.yml')
     with f:
         while True:
@@ -297,24 +299,25 @@ def main(top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+            f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 ```
 
 The `callback` argument is used to post-process the returned message. In this demo, we define a simple `print_topk` function to show the results. The returned message `resp` in a Protobuf message. `resp.search.docs` contains all the Documents for searching, and in our case there is only one Document. For each query Document, the matched Documents, `.match_doc`, together with the matching score, `.score`, are stored under the `.topk_results` as a repeated variable.
 
 ```python
 ppr = lambda x: print_topk(x, text)
-fl.search(read_query_data(text), callback=ppr, topk=top_k)
+f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 ```
 
 ```python
 def print_topk(resp, word):
     for d in resp.search.docs:
-        for idx, kk in enumerate(d.topk_results):
-            score = kk.score.value
+        print(f'Ta-Dah🔮, here are what we found for: {word}')
+        for idx, match in enumerate(d.matches):
+            score = match.score.value
             if score < 0.0:
                 continue
-            doc = kk.match_doc.text
+            doc = match.meta_info.decode()
             name, line = doc.split('[SEP]', maxsplit=1)
             print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
 ```
@@ -333,14 +336,8 @@ Here is the YAML file for the `splitter`. We first use the built-in **Sentencize
 ```yaml
 !Sentencizer
 with:
-  min_sent_len: 3
-  max_sent_len: 128
-requests:
-  on:
-    [SearchRequest, IndexRequest, TrainRequest]:
-      - !SegmentDriver
-        with:
-          method: craft
+  min_sent_len: 2
+  max_sent_len: 64
 ```
 
 In the `requests` field, we define the different behaviors of the Pod for different requests. Remember that both the index and query Flows share the same Pods with the YAML files while they behave differently to the requests. This is how the magic works: For `SearchRequest`, `IndexRequest`, and `TrainRequest`, the `splitter` will use the `SegmentDriver`. On the one hand, the Driver encodes the request messages in [Protobuf format](https://en.wikipedia.org/wiki/Protocol_Buffers) into a format that the Executor can understand (e.g. a Numpy array). On the other hand, the `SegmentDriver` will call the `craft()` function from the Executor to handle the message and encode the processed results back into Protobuf format. For the time being, the `splitter` shows the same behavior for both requests.
@@ -364,38 +361,18 @@ with:
   pooling_strategy: cls
   model_name: distilbert-base-cased
   max_length: 96
-requests:
-  on:
-    [SearchRequest, IndexRequest]:
-      - !EncodeDriver
-        with:
-          method: encode
 ```
 
 ### `doc_indexer`
 In contrast to the Pods above, the `doc_indexer` behave differently depending on different requests. For the `IndexRequest`, the Pod uses `DocPruneDriver` and the `DocKVIndexDRiver` in sequence. The `DocPruneDriver` prunes the redundant data in the message that is not used by the downstream Pods. Here we discard all the data in the `chunks` field because we only want to save the Document level data.
 
 ```yaml
-!DocPbIndexer
+!BinaryPbIndexer
 with:
   index_filename: doc.gzip
 metas:
   name: docIndexer
   workspace: $TMP_WORKSPACE
-requests:
-  on:
-    SearchRequest:
-      - !DocKVSearchDriver
-        with:
-          method: query
-
-    IndexRequest:
-      - !DocPruneDriver
-        with:
-          pruned: ['chunks']
-      - !DocKVIndexDriver
-        with:
-          method: add
 ```
 
 For the `SearchRequest`, the Pod uses the same `DocKVSearchDriver` just like the `IndexRequest`.
@@ -412,49 +389,24 @@ requests:
 The YAML file for `chunk_indexer` is a little bit cumbersome. But take it easy: It is as straightforward as it should be. The executor in the `chunk_indexer` Pod is called `ChunkIndexer`, which wraps two other executors. The `components` field specifies the two wrapped executors: The `NumpyIndexer` stores the Chunks' vectors, and the `BasePbIndexer` is used as a key-value storage to save the Chunk ID and Chunk details.
 
 ```yaml
-!ChunkIndexer
+!CompoundIndexer
 components:
   - !NumpyIndexer
     with:
       index_filename: vec.gz
       metrix: cosine
-  - !ChunkPbIndexer
+    metas:
+      name: vecidx  # a customized name
+      workspace: $TMP_WORKSPACE
+  - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVIndexDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: NumpyIndexer
-      - !PruneDriver
-        with:
-          level: chunk
-          pruned:
-            - embedding
-            - buffer
-            - blob
-            - text
-      - !KVSearchDriver
-        with:
-          level: chunk
-          executor: BasePbIndexer
+    metas:
+      name: chunkidx  # a customized name
+      workspace: $TMP_WORKSPACE
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE
 
 ```
 
