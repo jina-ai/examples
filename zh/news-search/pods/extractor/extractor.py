@@ -9,9 +9,9 @@ from jina.executors.crafters.nlp.split import Sentencizer
 
 
 class WeightSentencizer(Sentencizer):
-    def craft(self, text: str, id: int, *args, **kwargs) -> List[Dict]:
+    def craft(self, text: str, *args, **kwargs) -> List[Dict]:
         content = json.loads(text)['content']
-        results = super().craft(content, id)
+        results = super().craft(content)
         weights = np.linspace(1, 0.1, len(results))
         for result, weight in zip(results, weights):
             result['weight'] = weight

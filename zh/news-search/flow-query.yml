@@ -8,11 +8,12 @@ pods:
 #    uses: jinaai/hub.executors.encoders.nlp.transformers-hitscir
     uses: pods/encoder/encoder.yml
     timeout_ready: 6000000
+    parallel: 2
 
   chunk_indexer:
     uses: pods/chunk_indexer/chunk_indexer.yml
     timeout_ready: 60000
-#    shards: 2
+    shards: 2
 
   ranker:
     uses: pods/ranker/ranker.yml
