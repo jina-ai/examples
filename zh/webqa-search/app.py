@@ -3,7 +3,6 @@ __license__ = "Apache-2.0"
 
 import json
 import os
-import random
 
 import click
 from jina.flow import Flow
@@ -17,7 +16,7 @@ def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
         for match in d.matches:
-            item = match.chunks[0].text
+            item = json.loads(match.text)['title']
             print('👉%s' % item)
 
 
@@ -34,9 +33,7 @@ def main(task, top_k, num_docs):
         data_fn = os.path.join(workspace_path, "pre_web_text_zh_valid.json")
         flow = Flow().load_config('flow-index.yml')
         with flow:
-            # flow.index_lines(lines=read_data(data_fn, num_docs), batch_size=32)
             flow.index_lines(filepath=data_fn, size=num_docs, batch_size=32)
-
 
     elif task == 'query':
         flow = Flow().load_config('flow-query.yml')
@@ -47,7 +44,7 @@ def main(task, top_k, num_docs):
                 if not title:
                     break
                 ppr = lambda x: print_topk(x)
-                flow.search(read_query_data(item), output_fn=ppr, top_k=top_k)
+                flow.search(read_query_data(item), output_fn=ppr, topk=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

@@ -5,6 +5,7 @@ requests:
       - !Chunk2DocRankDriver
         with:
           method: score
+          depth_range: [1, 1]
       - !ExcludeQL
         with:
           fields:

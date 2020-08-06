@@ -17,3 +17,43 @@ components:
 metas:
   name: chunk_indexer
   workspace: $TMP_WORKSPACE
+
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: NumpyIndexer
+          depth_range: [1, 1]
+      - !ExcludeQL
+        with:
+          fields:
+            - embedding
+            - buffer
+            - blob
+            - text
+          depth_range: [0, 1]
+      - !KVSearchDriver
+        with:
+          executor: BinaryPbIndexer
+          traverse_on: chunks
+          depth_range: [1, 1]
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: NumpyIndexer
+          depth_range: [1, 1]
+      - !ExcludeQL
+        with:
+          fields:
+            - embedding
+            - buffer
+            - blob
+            - text
+          depth_range: [0, 1]
+      - !KVIndexDriver
+        with:
+          executor: BinaryPbIndexer
+          depth_range: [1, 1]
+    ControlRequest:
+      - !ControlReqDriver {}
