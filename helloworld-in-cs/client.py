@@ -4,9 +4,11 @@ __license__ = "Apache-2.0"
 import os
 from pathlib import Path
 
+from jina.clients.python.io import input_numpy
 from jina.clients import py_client
-from jina.helloworld.helper import input_fn, download_data
+from jina.helloworld.helper import download_data
 from jina.main.parser import set_hw_parser
+
 
 
 def hello_world(args):
@@ -24,11 +26,12 @@ def hello_world(args):
     }
 
     # download the data
-    download_data(targets)
+    download_data(targets, args.download_proxy)
+
 
     # run it!
     py_client(port_expose=args.port_expose, host=args.host).index(
-        input_fn(targets['index']['filename']), batch_size=args.index_batch_size)
+        input_numpy(targets['index']['data']), batch_size=args.index_batch_size)
 
 
 if __name__ == '__main__':
