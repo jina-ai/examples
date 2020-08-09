@@ -15,6 +15,4 @@ requests:
       - !KVSearchDriver
         with:
           executor: docIndexer
-          key: parent_id
           traverse_on: matches
-          depth_range: [1, 1]

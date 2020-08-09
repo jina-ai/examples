@@ -1,6 +1,6 @@
 !TransformerTorchEncoder
 with:
-  pooling_strategy: cls
+  pooling_strategy: auto
   model_name: distilbert-base-cased
   max_length: 96
 requests:
@@ -14,4 +14,4 @@ requests:
       - !EncodeDriver
         with:
           traverse_on: chunks
-          depth_range: [0, 0]
+          depth_range: [1, 1]

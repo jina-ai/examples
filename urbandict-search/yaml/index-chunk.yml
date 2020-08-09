@@ -35,10 +35,17 @@ requests:
           executor: vecidx
           top_k: 5
           traverse_on: chunks
-          depth_range: [0, 0]
+          depth_range: [1, 1]
       - !KVSearchDriver
         with:
           executor: chunkidx
           key: id
-          traverse_on: matches
-          depth_range: [0, 1]
+          traverse_on: chunk_matches
+          depth_range: [1, 1]
+      - !ExcludeQL
+        with:
+          fields:
+            - embedding
+            - buffer
+          traverse_on: 'matches'
+          depth_range: [1, 3]

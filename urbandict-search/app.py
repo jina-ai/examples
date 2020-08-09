@@ -9,8 +9,8 @@ import random
 from jina.flow import Flow
 
 RANDOM_SEED = 10  # 5
-os.environ['PARALLEL'] = str(2)
-os.environ['SHARDS'] = str(2)
+os.environ['PARALLEL'] = str(1)
+os.environ['SHARDS'] = str(1)
 
 
 def get_random_ws(workspace_path, length=8):
