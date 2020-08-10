@@ -17,7 +17,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     uses: pods/index-doc.yml
-    needs: gateway
+    needs: reader
   join_all:
     uses: _merge
     needs: [doc_indexer, chunk_indexer]
