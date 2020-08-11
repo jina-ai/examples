@@ -10,7 +10,7 @@ root_path = '/tmp/jina/'
 demo_name = 'news'
 workspace = os.path.join(root_path, demo_name)
 if not os.path.exists(workspace):
-    os.mkdir(workspace)
+    os.makedirs(workspace)
 
 fz = zipfile.ZipFile(os.path.join('/tmp', 'new2016zh.zip'), 'r')
 
