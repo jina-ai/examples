@@ -14,4 +14,4 @@ requests:
       - !EncodeDriver
         with:
           traverse_on: chunks
-          depth_range: [1, 1]
+          depth_range: [0, 0]
