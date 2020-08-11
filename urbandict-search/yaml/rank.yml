@@ -5,4 +5,4 @@ requests:
       - !Chunk2DocRankDriver
         with:
           depth_range: [0, 1]
-          traverse_on: 'chunks'
+          traverse_on: 'matches'
