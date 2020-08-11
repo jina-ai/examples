@@ -24,9 +24,9 @@ def print_topk(resp, word):
             score = match.score.value
             if score < 0.0:
                 continue
-            doc = match.meta_info.decode()
-            name, line = doc.split('[SEP]', maxsplit=1)
-            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
+            character = match.meta_info.decode()
+            sentence = match.chunks[0].text
+            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, character.upper(), sentence.strip()))
 
 
 def config(num_docs,mode='index'):
@@ -52,7 +52,7 @@ def query(num_docs, top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search_lines(lines=[text, ], output_fn=ppr, topk=top_k)
+            f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 
 def query_restful(num_docs):
     config(num_docs, mode = 'search')

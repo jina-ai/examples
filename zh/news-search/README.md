@@ -52,7 +52,7 @@ pip install --upgrade -r requirements.txt
 
 ## 数据预处理
 
-        在这个系统中我们采用数据集news-2016，数据集下载[百度云](https://pan.baidu.com/share/init?surl=MLLM-CdM6BhJkj8D0u3atA)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+        在这个系统中我们采用数据集news-2016，数据集下载[地址](https://drive.google.com/file/d/1BX8opiz3wJbKyV_uzyebao9olCt8oS9r/view?usp=sharing)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
 
      在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
@@ -249,7 +249,7 @@ with flow:
         item = {'content': content}
 
         ppr = lambda x: print_topk(x)
-        flow.search(read_query_data(item), callback=ppr, topk=top_k)
+        flow.search(read_query_data(item), callback=ppr, top_k=top_k)
 ```
 
     看了上面后，你会发现，无论是在创建索引任务中，还是在查询任务中，这跟第一篇文章中Flow的Pod完全一致。确实一致，`doc_indexer`, `encoder`, `chunk_indxer`, `join`这4个Pod的处理逻辑和YAML文件的定义完全和第一篇文章中一模一样，但是`extractor`和`ranker`这两个Pod的处理逻辑跟第一篇文章中的处理逻辑却大大不同，那么有什么不同呢？继续往下走。

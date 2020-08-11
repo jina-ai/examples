@@ -67,7 +67,7 @@ def query(top_k):
             if not text:
                 break
             ppr = lambda x: print_topk(x, text)
-            f.search(read_query_data(text), callback=ppr, topk=top_k)
+            f.search(read_query_data(text), callback=ppr, top_k=top_k)
 
 
 @click.command()

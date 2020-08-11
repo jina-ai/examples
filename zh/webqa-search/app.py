@@ -13,27 +13,12 @@ workspace_path = '/tmp/jina/webqa/'
 os.environ['TMP_WORKSPACE'] = workspace_path
 
 
-def read_data(fn, num_docs):
-    with open(os.path.join(workspace_path, fn), 'r', encoding='utf-8') as f:
-        items = json.load(f)
-    result = []
-    random.seed(0)
-    for _, value in items.items():
-        result.append("{}".format(json.dumps(value, ensure_ascii=False)))
-    if num_docs > 0:
-        random.shuffle(result)
-        result = result[:num_docs]
-    for item in result:
-        print(item)
-        yield item
-
-
 def print_topk(resp):
     print(f'以下是相似的问题:')
     for d in resp.search.docs:
-        for tk in d.topk_results:
-            item = json.loads(tk.match_doc.text)
-            print('👉%s' % item['title'])
+        for match in d.matches:
+            item = match.chunks[0].text
+            print('👉%s' % item)
 
 
 def read_query_data(item):
@@ -62,7 +47,7 @@ def main(task, top_k, num_docs):
                 if not title:
                     break
                 ppr = lambda x: print_topk(x)
-                flow.search(read_query_data(item), output_fn=ppr, topk=top_k)
+                flow.search(read_query_data(item), output_fn=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

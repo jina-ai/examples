@@ -1,4 +1,4 @@
-FROM jinaai/jina:0.3.8-devel
+FROM jinaai/jina:0.4.1-devel
 
 ADD requirements.txt .
 
