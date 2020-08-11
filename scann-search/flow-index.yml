@@ -1,0 +1,12 @@
+!Flow
+metas:
+  prefetch: 10
+pods:
+  encoder:
+    uses: yaml/encode.yml
+    parallel: $PARALLEL
+  indexer:
+    uses: yaml/indexer.yml
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    volumes: './workspace'
