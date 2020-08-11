@@ -1,23 +1,23 @@
 !Flow
 pods:
   extractor:
-    yaml_path: pods/extractor/extractor.yml
+    uses: pods/extractor/extractor.yml
     read_only: True
 
   encoder:
-    yaml_path: pods/encoder/encoder.yml
+    uses: pods/encoder/encoder.yml
     timeout_ready: 60000
     read_only: True
 
   chunk_indexer:
-    yaml_path: pods/chunk_indexer/chunk_indexer.yml
+    uses: pods/chunk_indexer/chunk_indexer.yml
     timeout_ready: 600000
     read_only: True
 
   ranker:
-    yaml_path: pods/ranker/ranker.yml
+    uses: pods/ranker/ranker.yml
     read_only: True
 
   doc_indexer:
-    yaml_path: pods/doc_indexer/doc_indexer.yml
+    uses: pods/doc_indexer/doc_indexer.yml
     read_only: True
