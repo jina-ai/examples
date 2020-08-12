@@ -14,7 +14,7 @@ from jina.flow import Flow
 RANDOM_SEED = 14
 
 def config():
-    os.environ['PARALLEL'] = str(1)
+    os.environ['PARALLEL'] = str(4)
     os.environ['SHARDS'] = str(2)
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
