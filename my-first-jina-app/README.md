@@ -296,7 +296,7 @@ Once you see this line:
 Flow@133216[S]:flow is closed and all resources should be released already, current build level is 0
 ```
 
-You'll know indexing is complete. This may take a little while the first time, since Jina needs to download the language model and tokenizer (XXX is this correct?) to deal with the data. You can think of these as the brains behind the neural network that powers the search.
+You'll know indexing is complete. This may take a little while the first time, since Jina needs to download the language model and tokenizer to deal with the data. You can think of these as the brains behind the neural network that powers the search.
 
 ### Search Flow
 
@@ -490,7 +490,7 @@ This code specifies:
 </td>
 <td>
 
-Similar to the above, but includes the `separated_workspaces` attribute in order to XXX
+Similar to the above, but includes the `separated_workspaces` attribute which forces each shard to store it's data in its own dedicated directory.
 
 </td>
 </tr>
