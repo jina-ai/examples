@@ -117,7 +117,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     uses: yaml/index-doc.yml
-    needs: gateway
+    needs: loader
   join_all:
     uses: _merge
     needs: [doc_indexer, chunk_indexer]
@@ -314,7 +314,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     uses: yaml/index-doc.yml
-    needs: gateway
+    needs: loader
   join_all:
     uses: _merge
     needs: [doc_indexer, chunk_indexer]
