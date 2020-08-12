@@ -199,7 +199,7 @@ pods:
 Back to our example, here we use the Docker image containing the pre-trained `mobilenet_v2` model from the `torchvision` lib. So that you do **NOT** need to install the `torchvision` lib or download a pre-trained model. Everything is packed into the Docker image. As long as you have Docker installed, the container Pods will run out-of-the-box.
 
 ### Scale up 
-Another newcomer is the `parallel` argument. As its name implies, `parallel` defines the number of parallel Peas in a Pod that can run at the same time. This is useful for scaling up your service. In this demo, as the encoding procedure with the deep learning models is well-known to be slow, we can set the `parallel` to 4 and will start 4 Peas to encode the Chunks in parallel. This greatly speeds up the indexing process.
+Another newcomer is the `parallel` argument. As its name implies, `parallel` defines the number of parallel Peas in a Pod that can run at the same time. This is useful for scaling up your service. In this demo, as the encoding procedure with the deep learning models is well-known to be slow, we set the `parallel` to 4 and will start 4 Peas to encode the Chunks in parallel. This greatly speeds up the indexing process.
 
 ```yaml
 !Flow
