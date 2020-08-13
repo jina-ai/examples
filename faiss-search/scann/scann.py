@@ -18,7 +18,7 @@ class ScannIndexer(BaseNumpyIndexer):
         Scann package dependency is only required at the query time.
     """
 
-    def __init__(self, train_filepath: str = None,
+    def __init__(self,
                  num_leaves: int = 2000,
                  num_leaves_to_search: int = 100,
                  training_iterations: int = 10,
@@ -32,17 +32,15 @@ class ScannIndexer(BaseNumpyIndexer):
         """
         Initialize an ScannIndexer
 
-        :param train_filepath: the training data file path.
-        :param num_leaves: The higher num_leaves, the higher-quality the partitioning will be.
-            It should be roughly the square root of the number of datapoints.
+        :param num_leaves: It should be roughly the square root of the number of datapoints.
+            The higher num_leaves, the higher-quality the partitioning will be.
         :param training_iterations: Number of iterations per training. Default is 10
-        :param distance_measure: The distance measurement used betwent the points.
+        :param distance_measure: The distance measurement used between the query and the points.
             It can be dot_product or squared_l2
         :param num_leaves_to_search: The amount of leaves to search.
             This should be tuned based on recall target
         :param training_sample_size: The size of the training sample.
-            Default is 25k
-        :param scoring: It can be score_ah (asymmetric hashing) or score_bf for brute force.
+        :param scoring: It can be score_ah (asymmetric hashing) or score_bf (brute force).
             For small datasets (less than 20k) brute force is recommended
         :param anisotropic_quantization_threshold: See https://arxiv.org/abs/1908.10396 for
             a description of this value
@@ -53,7 +51,6 @@ class ScannIndexer(BaseNumpyIndexer):
         :param kwargs:
         """
         super().__init__(*args, **kwargs)
-        self.train_filepath = train_filepath
         self.num_leaves = num_leaves
         self.training_iterations = training_iterations
         self.distance_measure = distance_measure
@@ -66,13 +63,15 @@ class ScannIndexer(BaseNumpyIndexer):
 
     def build_advanced_index(self, vecs: 'np.ndarray'):
         """Load vectors into Scann indexers
-        1) (Optional) The first step is the partitioning, and this will be done
-        with .tree(...), this happens during training time, and at
-        query time, it will select the top partitions to the next stage
-        2) The second stage is the Scoring, this is where the distance
-        between the datapoints happen. All datapoints will be measured
-        if there was not partitioning.
-        3) (Optional) This is highly recommended if AH scroing was used.
+        1) (Optional) The first step is the partitioning, this will be done
+        with .tree(...) during training time,
+        and at query time it will select the top partitions
+        2) The second stage is the Scoring.
+            If partitioning isn't enabled it will measure the distance
+            between the query and all datapoints.
+            If partitioning is enabled it will measure only within the
+            partition to search
+        3) (Optional) This is highly recommended if AH was used.
         It will take the top k-distances and re-compute the distance.
         Then the top-k from this new measurement will be selected.
         """
@@ -80,6 +79,9 @@ class ScannIndexer(BaseNumpyIndexer):
 
         _index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
-            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).reorder(self.reordering_num_neighbors).create_pybind()
-        return _index
+            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
+            reorder(self.reordering_num_neighbors).create_pybind()
+        return self._index
 
+    def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
+        neighbors, distances = self._index.search_batched(keys)
