@@ -27,18 +27,28 @@ class ScannIndexer(BaseNumpyIndexer):
                  scoring: str = "score_ah",
                  anisotropic_quantization_threshold: float = 0.2,
                  dimensions_per_block: int = 2,
+                 reordering_num_neighbors: int = 100,
                  *args, **kwargs):
         """
         Initialize an ScannIndexer
 
-        :param num_leaves: The higher num_leaves, the higher-quality the partitioning will be. It should be roughly the square root of the number of datapoints.
-        :param scoring: It can be score_brute_force and score_ah (asymmetric hashing)
-        :param training_iterations: Default is 10
-        :param distance_measure: It can be dot_product or squared_l2
-        :param training_sample_size: Default is 25k
-        :param scoring: It can be score_ah or score_bf for brute force
-        :param anisotropic_quantization_threshold:
+        :param train_filepath: the training data file path.
+        :param num_leaves: The higher num_leaves, the higher-quality the partitioning will be.
+            It should be roughly the square root of the number of datapoints.
+        :param training_iterations: Number of iterations per training. Default is 10
+        :param distance_measure: The distance measurement used betwent the points.
+            It can be dot_product or squared_l2
+        :param num_leaves_to_search: The amount of leaves to search.
+            This should be tuned based on recall target
+        :param training_sample_size: The size of the training sample.
+            Default is 25k
+        :param scoring: It can be score_ah (asymmetric hashing) or score_bf for brute force.
+            For small datasets (less than 20k) brute force is recommended
+        :param anisotropic_quantization_threshold: See https://arxiv.org/abs/1908.10396 for
+            a description of this value
         :param dimensions_per_block: Recommended for AH is 2
+        :param reordering_num_neighbors: Should be higher than the final number of neighbors
+            If this number is increased, the accuracy will increase but it will impact speed
         :param args:
         :param kwargs:
         """
@@ -52,12 +62,24 @@ class ScannIndexer(BaseNumpyIndexer):
         self.scoring = scoring
         self.anisotropic_quantization_threshold = anisotropic_quantization_threshold
         self.dimensions_per_block = dimensions_per_block
+        self.reordering_num_neighbors = reordering_num_neighbors
 
     def build_advanced_index(self, vecs: 'np.ndarray'):
-        """Load vectors into Scann indexers """
+        """Load vectors into Scann indexers
+        1) (Optional) The first step is the partitioning, and this will be done
+        with .tree(...), this happens during training time, and at
+        query time, it will select the top partitions to the next stage
+        2) The second stage is the Scoring, this is where the distance
+        between the datapoints happen. All datapoints will be measured
+        if there was not partitioning.
+        3) (Optional) This is highly recommended if AH scroing was used.
+        It will take the top k-distances and re-compute the distance.
+        Then the top-k from this new measurement will be selected.
+        """
         import scann
+
         _index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
-            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).reorder(100).create_pybind()
+            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).reorder(self.reordering_num_neighbors).create_pybind()
         return _index
 
