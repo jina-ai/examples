@@ -6,7 +6,6 @@ from typing import Tuple
 import numpy as np
 
 from jina.executors.indexers.vector import BaseNumpyIndexer
-from jina.executors.frameworks import BaseFrameworkExecutor
 
 
 class ScannIndexer(BaseNumpyIndexer):
