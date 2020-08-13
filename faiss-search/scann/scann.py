@@ -79,7 +79,7 @@ class ScannIndexer(BaseNumpyIndexer):
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
             score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
-        return self._index
+        return _index
 
     def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         neighbors, distances = self._index.search_batched(keys)
