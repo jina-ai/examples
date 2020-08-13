@@ -47,8 +47,6 @@ class ScannIndexer(BaseNumpyIndexer):
         :param dimensions_per_block: Recommended for AH is 2
         :param reordering_num_neighbors: Should be higher than the final number of neighbors
             If this number is increased, the accuracy will increase but it will impact speed
-        :param args:
-        :param kwargs:
         """
         super().__init__(*args, **kwargs)
         self.num_leaves = num_leaves
@@ -85,3 +83,5 @@ class ScannIndexer(BaseNumpyIndexer):
 
     def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         neighbors, distances = self._index.search_batched(keys)
+
+
