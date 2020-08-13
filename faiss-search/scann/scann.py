@@ -61,6 +61,10 @@ class ScannIndexer(BaseNumpyIndexer):
 
     def build_advanced_index(self, vecs: 'np.ndarray'):
         """Load vectors into Scann indexers
+        This is a lazy evaluation.
+        The .score_ah(...) and .reorder(...) are creating configuration
+        and only .create_pybind() is building the object
+
         1) (Optional) The first step is the partitioning, this will be done
         with .tree(...) during training time,
         and at query time it will select the top partitions
