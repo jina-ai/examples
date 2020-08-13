@@ -6,6 +6,7 @@ from typing import Tuple
 import numpy as np
 
 from jina.executors.indexers.vector import BaseNumpyIndexer
+from jina.executors.frameworks import BaseFrameworkExecutor
 
 
 class ScannIndexer(BaseNumpyIndexer):
@@ -49,6 +50,7 @@ class ScannIndexer(BaseNumpyIndexer):
             If this number is increased, the accuracy will increase but it will impact speed
         """
         super().__init__(*args, **kwargs)
+        self.searcher = None
         self.num_leaves = num_leaves
         self.training_iterations = training_iterations
         self.distance_measure = distance_measure
@@ -79,13 +81,15 @@ class ScannIndexer(BaseNumpyIndexer):
         """
         import scann
 
-        _index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
+        searcher = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
             score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
-        return _index
+        return self.searcher
 
     def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
-        neighbors, distances = self._index.search_batched(keys)
+        if self.reordering_num_neighbors < self.top_k:
+            self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
+        neighbors, distances = self.searcher.search_batched(keys)
 
 
