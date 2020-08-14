@@ -24,7 +24,6 @@ class VSEImageEncoder(ImageTorchEncoder):
         self.path = path
 
     def post_init(self):
-
         checkpoint = torch.load(self.path,
                                 map_location=torch.device('cpu' if not self.on_gpu else 'cuda'))
         opt = checkpoint['opt']
