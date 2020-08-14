@@ -47,5 +47,8 @@ class VSETextEncoder(BaseTorchEncoder):
         caption.append(self.vocab ('<start>'))
         caption.extend([self.vocab (token) for token in tokens])
         caption.append(self.vocab ('<end>'))
-        text_emb = self.model(torch.LongTensor(caption).unsqueeze(0), lengths=[len(caption)])
+        caption_tensor = torch.LongTensor(caption).unsqueeze(0)
+        if torch.cuda.is_available():
+            caption_tensor = caption_tensor.cuda()
+        text_emb = self.model(caption_tensor, lengths=[len(caption)])
         return text_emb.detach().squeeze(0).numpy()
