@@ -45,11 +45,10 @@ class ScannIndexer(BaseNumpyIndexer):
         :param anisotropic_quantization_threshold: See https://arxiv.org/abs/1908.10396 for
             a description of this value
         :param dimensions_per_block: Recommended for AH is 2
-        :param reordering_num_neighbors: Should be higher than the final number of neighbors
+        :param reordering_num_neighbors: Should be higher than the final number of neighborsjina
             If this number is increased, the accuracy will increase but it will impact speed
         """
         super().__init__(*args, **kwargs)
-        self.searcher = None
         self.num_leaves = num_leaves
         self.training_iterations = training_iterations
         self.distance_measure = distance_measure
@@ -90,5 +89,6 @@ class ScannIndexer(BaseNumpyIndexer):
         if self.reordering_num_neighbors < self.top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
         neighbors, distances = self.searcher.search_batched(keys)
+
 
 
