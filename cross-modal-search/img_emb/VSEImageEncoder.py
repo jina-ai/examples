@@ -3,7 +3,6 @@ __license__ = "Apache-2.0"
 
 import torch
 from torch.autograd import Variable
-from torchvision import transforms
 # model is a file from the vsepp github
 from model import VSE
 
@@ -37,18 +36,8 @@ class VSEImageEncoder(ImageTorchEncoder):
         del model.txt_enc
 
     def _get_features(self, data):
-
-        transformer = transforms.Compose([,
-            transforms.Resize(224),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ])
-
-        image = transformer(data)
-
-        image = Variable(image, requires_grad=False)
+        # It needs Resize and Normalization before reaching this Point in another Pod
+        image = Variable(data, requires_grad=False)
         image = image.unsqueeze(0)
-        if torch.cuda.is_available():
-            image = image.cuda()
         img_emb = self.model(image)
         return img_emb
