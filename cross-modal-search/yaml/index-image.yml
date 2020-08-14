@@ -1,0 +1,18 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: images_embs.gz
+      metrix: cosine
+    metas:
+      name: images_vec_idx  # a customized name
+      workspace: './workspace'
+  - !BinaryPbIndexer
+    with:
+      index_filename: images.gz
+    metas:
+      name: images_kv_idx  # a customized name
+      workspace: './workspace'
+metas:
+  name: images_indexer
+  workspace: './workspace'
