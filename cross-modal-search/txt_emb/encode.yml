@@ -6,7 +6,9 @@ metas:
 requests:
   on:
     [SearchRequest, IndexRequest]:
-      # need to add FilterQL for modality
+      - !FilterQL
+        with:
+          lookups: {'modality': 'text'}
       - !EncodeDriver
         with:
           method: encode

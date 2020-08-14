@@ -36,7 +36,8 @@ class VSEImageEncoder(ImageTorchEncoder):
 
     def _get_features(self, data):
         # It needs Resize and Normalization before reaching this Point in another Pod
-        image = Variable(data, requires_grad=False)
-        image = image.unsqueeze(0)
-        img_emb = self.model(image)
+        # Check how this works, it may not be necessary to squeeze
+        images = Variable(data, requires_grad=False)
+        images = images.unsqueeze(0)
+        img_emb = self.model(images)
         return img_emb
