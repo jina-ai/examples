@@ -8,6 +8,7 @@ import nltk
 import pickle
 
 from jina.executors.frameworks import BaseTorchEncoder
+from jina.executors.decorators import as_ndarray, batching
 
 
 class VSETextEncoder(BaseTorchEncoder):
@@ -41,6 +42,8 @@ class VSETextEncoder(BaseTorchEncoder):
         self.model = model.txt_enc
         del model.img_enc
 
+    @batching
+    @as_ndarray
     def encode(self, text):
         tokens = nltk.tokenize.word_tokenize(str(text).lower())
         caption = []

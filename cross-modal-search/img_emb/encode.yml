@@ -6,7 +6,6 @@ metas:
 requests:
   on:
     [SearchRequest, IndexRequest]:
-      # need to add FilterQL for modality
       - !EncodeDriver
         with:
           method: encode
