@@ -1,0 +1,11 @@
+!VSETextEncoder
+metas:
+  name: txt-encoder
+  py_modules: VSETextEncoder.py
+  workspace: ./
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
