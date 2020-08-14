@@ -45,7 +45,7 @@ class ScannIndexer(BaseNumpyIndexer):
         :param anisotropic_quantization_threshold: See https://arxiv.org/abs/1908.10396 for
             a description of this value
         :param dimensions_per_block: Recommended for AH is 2
-        :param reordering_num_neighbors: Should be higher than the final number of neighborsjina
+        :param reordering_num_neighbors: Should be higher than the final number of neighbors
             If this number is increased, the accuracy will increase but it will impact speed
         """
         super().__init__(*args, **kwargs)
