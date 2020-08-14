@@ -27,5 +27,3 @@ class FaceNetTorchEncoder(BaseCVTorchEncoder):
 
     def _get_features(self, data):
         return self.model(data)
-
-

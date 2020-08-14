@@ -10,7 +10,9 @@ RUN tar -xvf runs.tar
 RUN tar -xvf vocab.tar
 RUN rm -rf runs/coco* && rm -rf runs/f30k_vse0/ && rm -rf runs/f30k_order*/ && rm -rf runs/f30k_vse++/ && rm -rf runs/f30k_vse++_resnet* && rm -rf runs/f30k_vse++_vggfull_finetune/
 RUN rm -rf vocab/coco* && rm -rf vocab/f8k* && rm -rf vocab/10crop*/ && rm -rf vocab/f30k_precomp*
+RUN rm -rf runs.tar
+RUN rm -rf vocab.tar
 
-ADD VSETextEncoder.py encode.yml
+ADD VSETextEncoder.py encode.yml ./
 
 ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
