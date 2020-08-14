@@ -1,0 +1,35 @@
+!Flow
+metas:
+  prefetch: 10
+pods:
+  loader:
+    uses: yaml/image_load.yml
+    parallel: $PARALLEL
+    read_only: true
+  resize:
+    uses: yaml/image_resize.yml
+    parallel: $PARALLEL
+    read_only: true
+  normalize:
+    uses: yaml/normalize.yml
+    parallel: $PARALLEL
+    read_only: true
+  image_encoder:
+    uses: jinaai/hub.executors.encoders.image.vse
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
+  text_indexer:
+    uses: yaml/index-text.yml
+  text_ranker:
+    uses: MinRanker
+  text_encoder:
+    uses: jinaai/hub.executors.encoders.nlp.vse
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
+    needs: [gateway]
+  image_indexer:
+    uses: yaml/index-image.yml
+  image_ranker:
+    uses: MinRanker
