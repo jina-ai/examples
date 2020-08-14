@@ -1,0 +1,18 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: text_embs.gz
+      metrix: cosine
+    metas:
+      name: text_vec_idx  # a customized name
+      workspace: './workspace'
+  - !BinaryPbIndexer
+    with:
+      index_filename: text.gz
+    metas:
+      name: text_kv_idx  # a customized name
+      workspace: './workspace'
+metas:
+  name: text_indexer
+  workspace: './workspace'
