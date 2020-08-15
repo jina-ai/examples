@@ -2,7 +2,6 @@
 metas:
   py_modules: lenet_mindspore.py
 with:
-  model_name: LeNet5
   model_path: checkpoint_lenet-1_1875.ckpt
 requests:
   on:
