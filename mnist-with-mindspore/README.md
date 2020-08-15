@@ -33,3 +33,6 @@ python app.py -t index
 ```
 
 ## Search the data
+```bash
+python app.py -t search
+```
