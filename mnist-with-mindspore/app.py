@@ -7,6 +7,7 @@ import string
 import random
 import numpy as np
 from jina.flow import Flow
+from jina.helloworld.helper import print_result, write_html
 
 
 RANDOM_SEED = 14
@@ -21,9 +22,6 @@ def config():
     os.environ['PARALLEL'] = str(1)
     os.environ['SHARDS'] = str(1)
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/mnist'
-    os.environ['COLOR_CHANNEL_AXIS'] = str(0)
-    os.environ['JINA_PORT'] = str(45678)
-    os.environ['ENCODER'] = 'yaml/encode.yml'
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 
@@ -44,13 +42,14 @@ def main(task, num_docs):
         f = Flow().load_config('mnist-index.yml')
         with f:
             f.index_ndarray(load_mnist(data_path), size=num_docs, batch_size=2)
-    elif task == 'query':
+    elif task == 'search':
+        result_html = []
         f = Flow().load_config('mnist-query.yml')
-        f.use_rest_gateway()
         with f:
-            f.block()
+            f.search_ndarray(load_mnist(data_path), size=num_docs, batch_size=1, output_fn=print_result, top_k=10)
+        write_html('result.html')
     else:
-        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
+        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `search`.')
 
 
 if __name__ == '__main__':
