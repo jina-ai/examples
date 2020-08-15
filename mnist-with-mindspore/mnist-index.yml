@@ -1,0 +1,9 @@
+!Flow
+pods:
+    encode:
+        uses: pods/encoder.yml
+        parallel: $PARALLEL
+    index:
+        uses: pods/indexer.yml
+        shards: $SHARDS
+        separated_workspace: true
