@@ -1,0 +1,35 @@
+!CompoundIndexer
+components:
+  - !ScannIndexer
+    with:
+      ref_indexer:
+        !NumpyIndexer
+        metas:
+          workspace: './workspace'
+          name: wrapidx
+        with:
+          index_filename: 'index.tgz'
+    metas:
+      name: faissidx
+  - !BinaryPbIndexer
+    with:
+      index_filename: doc.gz
+    metas:
+      name: docidx
+      workspace: './workspace'
+metas:
+  name: indexer
+  workspace: './workspace'
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: scannidx
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          traverse_on: matches
+          depth_range: [0, 0]
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -2,7 +2,7 @@
 components:
   - !NumpyIndexer
     with:
-      index_filename: 'faiss_index.tgz'
+      index_filename: 'index.tgz'
     metas:
       workspace: './workspace'
       name: wrapidx
