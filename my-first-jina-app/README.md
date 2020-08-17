@@ -1,3 +1,26 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Build Your First Neural Search App](#build-your-first-neural-search-app)
+  - [👋 Introduction](#-introduction)
+  - [🗝️ Key Concepts](#-key-concepts)
+  - [🧪 Try it Out!](#%F0%9F%A7%AA-try-it-out)
+  - [🐍 Install](#-install)
+  - [📂 Files and Folders](#-files-and-folders)
+  - [Install Requirements](#install-requirements)
+  - [Download the Dataset](#download-the-dataset)
+  - [Check the Data](#check-the-data)
+  - [Load Data into Jina](#load-data-into-jina)
+  - [Run the Flows](#run-the-flows)
+- [How Does it Actually Work?](#how-does-it-actually-work)
+  - [🌱 Flows](#-flows)
+  - [Pods](#pods)
+  - [Troubleshooting](#troubleshooting)
+  - [🎁 Wrap Up](#-wrap-up)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Build Your First Neural Search App
 
 ## 👋 Introduction
