@@ -28,6 +28,7 @@ class ScannIndexer(BaseNumpyIndexer):
                  anisotropic_quantization_threshold: float = 0.2,
                  dimensions_per_block: int = 2,
                  reordering_num_neighbors: int = 100,
+                 final_num_neighbors: int = 20,
                  *args, **kwargs):
         """
         Initialize an ScannIndexer
@@ -47,6 +48,8 @@ class ScannIndexer(BaseNumpyIndexer):
         :param dimensions_per_block: Recommended for AH is 2
         :param reordering_num_neighbors: Should be higher than the final number of neighbors
             If this number is increased, the accuracy will increase but it will impact speed
+        :param final_num_neighbors: This is the final number of neighbors that will be returned
+            after rescoring (top_k)
         """
         super().__init__(*args, **kwargs)
         self.num_leaves = num_leaves
@@ -58,8 +61,9 @@ class ScannIndexer(BaseNumpyIndexer):
         self.anisotropic_quantization_threshold = anisotropic_quantization_threshold
         self.dimensions_per_block = dimensions_per_block
         self.reordering_num_neighbors = reordering_num_neighbors
+        self.final_num_neighbors = final_num_neighbors
 
-    def build_advanced_index(self, vecs: 'np.ndarray'):
+    def build_advanced_index(self,  vecs: 'np.ndarray'):
         """Load vectors into Scann indexers
         This is a lazy evaluation.
         The .score_ah(...) and .reorder(...) are creating configuration
@@ -85,10 +89,10 @@ class ScannIndexer(BaseNumpyIndexer):
             reorder(self.reordering_num_neighbors).create_pybind()
         return searcher
 
-    def query(self, searcher, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
+    def query(self, searcher,  keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         if self.reordering_num_neighbors < self.top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
-        neighbors, distances = searcher.search_batched(keys)
+        neighbors, distances = searcher.search_batched(keys, self.final_num_neighbors)
 
     def compute_recall(neighbors, true_neighbors):
         total = 0
