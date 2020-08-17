@@ -85,10 +85,16 @@ class ScannIndexer(BaseNumpyIndexer):
             reorder(self.reordering_num_neighbors).create_pybind()
         return searcher
 
-    def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
+    def query(self, searcher, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         if self.reordering_num_neighbors < self.top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
         neighbors, distances = searcher.search_batched(keys)
+
+    def compute_recall(neighbors, true_neighbors):
+        total = 0
+        for gt_row, row in zip(true_neighbors, neighbors):
+            total += np.intersect1d(gt_row, row).shape[0]
+        return total / true_neighbors.size
 
 
 
