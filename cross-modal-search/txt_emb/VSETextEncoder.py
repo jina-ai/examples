@@ -7,6 +7,7 @@ import torch
 from vocab import Vocabulary
 from model import VSE
 import nltk
+nltk.download('punkt')
 import pickle
 
 from jina.executors.encoders.frameworks import BaseTorchEncoder
