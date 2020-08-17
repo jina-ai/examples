@@ -1,6 +1,6 @@
 import torch
 import torch.utils.data as data
-import jsonmod
+import json as jsonmod
 import os
 
 
@@ -45,7 +45,7 @@ def get_data_loader(split, root, json, batch_size=8, shuffle=True,
                     num_workers=1, collate_fn=collate_fn):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
 
-    dataset = FlickrDataset(root=root, split=split, json=json)
+    dataset = FlickrDataset(images_root=root, split=split, json=json)
 
     # Data loader
     data_loader = torch.utils.data.DataLoader(dataset=dataset,
