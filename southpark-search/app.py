@@ -24,9 +24,9 @@ def print_topk(resp, word):
             score = match.score.value
             if score < 0.0:
                 continue
-            doc = match.meta_info.decode()
-            name, line = doc.split('[SEP]', maxsplit=1)
-            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, name.upper(), line.strip()))
+            character = match.meta_info.decode()
+            sentence = match.chunks[0].text
+            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, character.upper(), sentence.strip()))
 
 
 def config(num_docs,mode='index'):

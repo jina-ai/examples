@@ -52,7 +52,7 @@ pip install --upgrade -r requirements.txt
 
 ## 数据预处理
 
-        在这个系统中我们采用数据集news-2016，数据集下载[百度云](https://pan.baidu.com/share/init?surl=MLLM-CdM6BhJkj8D0u3atA)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
+        在这个系统中我们采用数据集news-2016，数据集下载[地址](https://drive.google.com/file/d/1BX8opiz3wJbKyV_uzyebao9olCt8oS9r/view?usp=sharing)，密码：k265。数据集包含了250万篇新闻。新闻来源涵盖了6.3万个媒体，含标题、关键词、描述、正文。
 
      在下载好数据集以后，我们将数据集放到`/tmp`文件夹中，运行下面命令。
 
