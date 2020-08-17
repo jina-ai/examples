@@ -1,3 +1,3 @@
 git clone https://github.com/JoanFM/vsepp.git -b works
-mv vsepp/* .
+mv vsepp/model.py .
 rm -rf vsepp

@@ -1,7 +1,9 @@
 !VSEImageEncoder
 metas:
   name: img-encoder
-  py_modules: VSEImageEncoder.py
+  py_modules:
+    - model.py
+    - VSEImageEncoder.py
   workspace: ./
 requests:
   on:
