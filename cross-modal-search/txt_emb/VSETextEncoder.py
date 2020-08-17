@@ -57,13 +57,18 @@ class VSETextEncoder(BaseTorchEncoder):
     @batching
     @as_ndarray
     def encode(self, text):
-        tokens = nltk.tokenize.word_tokenize(str(text).lower())
-        caption = []
-        caption.append(self.vocab('<start>'))
-        caption.extend([self.vocab(token) for token in tokens])
-        caption.append(self.vocab('<end>'))
-        caption_tensor = torch.LongTensor(caption).unsqueeze(0)
+        captions = []
+        lengths = []
+        for sentence in text:
+            tokens = nltk.tokenize.word_tokenize(str(sentence).lower())
+            caption = []
+            caption.append(self.vocab('<start>'))
+            caption.extend([self.vocab(token) for token in tokens])
+            caption.append(self.vocab('<end>'))
+            lengths.append(len(caption))
+            captions.append(caption)
+        captions_tensor = torch.LongTensor(captions)
         if torch.cuda.is_available():
-            caption_tensor = caption_tensor.cuda()
-        text_emb = self.model(caption_tensor, lengths=[len(caption)])
-        return text_emb.detach().squeeze(0).numpy()
+            captions_tensor = captions_tensor.cuda()
+        text_emb = self.model(captions_tensor, lengths=lengths)
+        return text_emb.detach()
