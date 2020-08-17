@@ -52,6 +52,14 @@
 
 <tr>
 <td>
+<h4><a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a></h4>
+Get started in your Jina journey by building a basic text search app and learning as you go
+</td>
+<td><h3>🐣</h3></td>
+</tr>
+
+<tr>
+<td>
 <h4><a href="https://docs.jina.ai/chapters/flow/index.html">Use Flow API to Compose Your Search Workflow</a></h4>
 Learn how to orchestrate Pods to work together: sequentially and in parallel; locally and remotely
 </td>
