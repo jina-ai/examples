@@ -132,7 +132,7 @@ For our Star Trek example, we recommend the following settings:
 
 Just use the defaults for all other fields.
 
-## 📂 Files and Folders
+### Files and Folders
 
 After running `cookiecutter`, run:
 
@@ -158,7 +158,7 @@ In `pods/` we see `chunk.yml`, `craft.yml`, `doc.yml`, and `encode.yml` - these 
 
 More on Flows and Pods later!
 
-## Install Requirements
+### Install Requirements
 
 In your terminal:
 
@@ -168,7 +168,9 @@ pip install -r requirements.txt
 
 ⚠️ Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
 
-## Download the Dataset
+## 🗃️ Work with Data
+
+### Download Data
 
 Our goal is to find out who said what in Star Trek episodes when a user queries a phrase. The [Star Trek dataset](https://www.kaggle.com/gjbroughton/start-trek-scripts) from Kaggle contains all the scripts and individual character lines from Star Trek: The Original Series all the way through Star Trek: Enterprise. We're using a subset in this example, which just contains the characters and lines from Star Trek: The Next Generation. This subset has also been converted from JSON to CSV format, which is more suitable for Jina to process.
 
@@ -201,7 +203,7 @@ startrek_tng.csv                               100%[============================
 
 </details>
 
-## Check the Data
+### Check Data
 
 Now that `get_data.sh` has downloaded the data, let's get back into the `star_trek` directory and make sure the file has everything we want:
 
@@ -227,7 +229,7 @@ MCCOY!What about my age?
 
 Note: Your character lines may be a little different. That's okay!
 
-## Load Data into Jina
+### Load Data
 
 Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. `app.py` is a little too simple out of the box, so we'll have to make some changes:
 
@@ -247,7 +249,7 @@ def index():
         f.index_lines(filepath='data/startrek_tng.csv', batch_size=64, read_mode='r', size=num_docs)
 ```
 
-### Index Fewer Documents
+#### Index Fewer Documents
 
 While we're here, let's reduce the number of documents we're indexing, just to speed things up while we're testing. We don't want to spend ages indexing only to have issues later on!
 
@@ -265,7 +267,7 @@ num_docs = os.environ.get('MAX_DOCS', 500)
 
 That should speed up our testing by a factor of 100! Once we've verified everything works we can set it back to `50000` to index more of our dataset. If it still seems too slow, reduce that number down to 50 or so.
 
-## Run the Flows
+## 🏃 Run the Flows
 
 Now that we've got the code to load our data, we're going to dive into writing our app and running our Flows!
 
@@ -378,11 +380,11 @@ You should see a lot of console output, but each result will will look similar t
 
 Congratulations! You've just built your very own search engine!
 
-# How Does it Actually Work?
+## 🤔 How Does it Actually Work?
 
 This is where we dive deeper to learn what happens inside each Flow and how they're built up from Pods.
 
-## 🌱 Flows
+### Flows
 
 <img src="https://raw.githubusercontent.com/jina-ai/jina/master/docs/chapters/101/img/ILLUS10.png" width="30%" align="left">
 
@@ -403,7 +405,7 @@ def index():
 
 It really is that simple! Alternatively you can build Flows in `app.py` itself [without specifying them in YAML](https://docs.jina.ai/chapters/flow/index.html).
 
-### Indexing
+#### Indexing
 
 Every Flow has well, a flow to it. Different Pods pass data along the Flow, with one Pod's output becoming another Pod's input. Look at our indexing Flow as an example:
 
@@ -431,7 +433,7 @@ Our Pods perform all the tasks needed to make this happen:
 | `join_all`      | Join the `chunk_idx` and `doc_idx` pathways          |
 
 
-#### Diving into `index.yml`
+##### Diving into `index.yml`
 
 For indexing, we define which Pods to use in `flows/index.yml`. Earlier, cookiecutter created some YAML files in `flows/` for us to start with. Let's break them down, starting with indexing:
 
@@ -554,7 +556,7 @@ So, is that all of the Pods? Not quite! We always have another Pod working in si
 
 With all these Pods defined in our Flow, we're all set up to index all the character lines in our dataset.
 
-### Querying
+#### Querying
 
 Just like indexing, the querying Flow is also defined in a YAML file. Much of it is similar to indexing:
 
@@ -612,11 +614,11 @@ So, in the query Flow we've got the following Pods:
 
 Since many of the Pods are the same as in indexing, they share the same YAML but perform differently based on the task at hand.
 
-### Index vs Query
+#### Index vs Query
 
 Now that both our Flows are ready for action, let's take a quick look at the differences between them:
 
-#### Code
+##### Code
 
 Compared to `index.yml`, we have some extra features in `query.yml`:
 
@@ -628,14 +630,14 @@ Compared to `index.yml`, we have some extra features in `query.yml`:
 | `reducing_yaml_path: _merge_topk_chunks` | Use `_merge_topk_chunks` to reduce result from all replicas              |
 | `ranker:`                                | A Pod to rank results by relevance                                       |
 
-#### Structures
+##### Structures
 
 While the two Flows share (most of) the same Pods, there are some differences in structure:
 
 * Index has a two-pathway design which deals with both Document and Chunk indexing in parallel, which speeds up message passing
 * Query has a single pipeline
 
-#### Request Messages
+##### Request Messages
 
 In our RESTful API we set the `mode` field in the JSON body and send the request to the corresponding API:
 
@@ -646,7 +648,7 @@ In our RESTful API we set the `mode` field in the JSON body and send the request
 
 This is how Pods in both Flows can play different roles while sharing the same YAML files.
 
-## Pods
+### Pods
 
 <img src="https://raw.githubusercontent.com/jina-ai/jina/master/docs/chapters/101/img/ILLUS8.png" width="20%" align="left">
 
