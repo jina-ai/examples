@@ -145,7 +145,9 @@ pip install -r requirements.txt
 
 ⚠️ Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
 
-## ⬇️ Download the Dataset
+## 🗃️ Work with Data
+
+### Download Data
 
 Our goal is to find out who said what in Star Trek episodes when a user queries a phrase. The [Star Trek dataset](https://www.kaggle.com/gjbroughton/start-trek-scripts) from Kaggle contains all the scripts and individual character lines from Star Trek: The Original Series all the way through Star Trek: Enterprise. We're using a subset in this example, which just contains the characters and lines from Star Trek: The Next Generation. This subset has also been converted from JSON to CSV format, which is more suitable for Jina to process.
 
@@ -178,7 +180,7 @@ startrek_tng.csv                               100%[============================
 
 </details>
 
-### Check the Data
+### Check Data
 
 Now that `get_data.sh` has downloaded the data, let's get back into the `star_trek` directory and make sure the file has everything we want:
 
@@ -204,7 +206,7 @@ MCCOY!What about my age?
 
 Note: Your character lines may be a little different. That's okay!
 
-## 🗃️ Load Data
+### Load Data
 
 Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. `app.py` is a little too simple out of the box, so we'll have to make some changes:
 
@@ -224,7 +226,7 @@ def index():
         f.index_lines(filepath='data/startrek_tng.csv', batch_size=64, read_mode='r', size=num_docs)
 ```
 
-### Index Fewer Documents
+#### Index Fewer Documents
 
 While we're here, let's reduce the number of documents we're indexing, just to speed things up while we're testing. We don't want to spend ages indexing only to have issues later on!
 
