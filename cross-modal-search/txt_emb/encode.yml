@@ -1,7 +1,10 @@
 !VSETextEncoder
 metas:
   name: txt-encoder
-  py_modules: VSETextEncoder.py
+  py_modules:
+    - vocab.py
+    - model.py
+    - VSETextEncoder.py
   workspace: ./
 requests:
   on:

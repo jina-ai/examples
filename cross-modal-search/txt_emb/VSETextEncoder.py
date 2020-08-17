@@ -3,12 +3,23 @@ __license__ = "Apache-2.0"
 
 import torch
 # model is a file from the vsepp github
+# vocab needed for pickle
+from vocab import Vocabulary
 from model import VSE
 import nltk
 import pickle
 
-from jina.executors.frameworks import BaseTorchEncoder
+from jina.executors.encoders.frameworks import BaseTorchEncoder
 from jina.executors.decorators import as_ndarray, batching
+
+
+class CustomUnpickler(pickle.Unpickler):
+
+    def find_class(self, module, name):
+        try:
+            return super().find_class(__name__, name)
+        except AttributeError:
+            return super().find_class(module, name)
 
 
 class VSETextEncoder(BaseTorchEncoder):
@@ -33,7 +44,7 @@ class VSETextEncoder(BaseTorchEncoder):
                                 map_location=torch.device('cpu' if not self.on_gpu else 'cuda'))
         opt = checkpoint['opt']
         with open(self.vocab_path, 'rb') as f:
-            self.vocab = pickle.load(f)
+            self.vocab = CustomUnpickler(f).load()
 
         opt.vocab_size = len(self.vocab)
         model = VSE(opt)
@@ -47,9 +58,9 @@ class VSETextEncoder(BaseTorchEncoder):
     def encode(self, text):
         tokens = nltk.tokenize.word_tokenize(str(text).lower())
         caption = []
-        caption.append(self.vocab ('<start>'))
-        caption.extend([self.vocab (token) for token in tokens])
-        caption.append(self.vocab ('<end>'))
+        caption.append(self.vocab('<start>'))
+        caption.extend([self.vocab(token) for token in tokens])
+        caption.append(self.vocab('<end>'))
         caption_tensor = torch.LongTensor(caption).unsqueeze(0)
         if torch.cuda.is_available():
             caption_tensor = caption_tensor.cuda()
