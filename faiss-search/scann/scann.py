@@ -6,6 +6,7 @@ from typing import Tuple
 import numpy as np
 import scann
 
+
 from jina.executors.indexers.vector import BaseNumpyIndexer
 
 
@@ -84,8 +85,9 @@ class ScannIndexer(BaseNumpyIndexer):
             reorder(self.reordering_num_neighbors).create_pybind()
         return index
 
+
     def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         if self.reordering_num_neighbors < top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than top_k')
-        neighbors, dist = self.get_query_handler.search_batched(keys, top_k)
+        neighbors, dist = self.query_handler.search_batched(keys, top_k)
         return neighbors, dist
