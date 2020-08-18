@@ -19,7 +19,7 @@ pods:
   text_indexer:
     uses: yaml/index-text.yml
   text_ranker:
-    uses: MinRanker
+    uses: yaml/rank.yml
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
     parallel: $PARALLEL
@@ -29,7 +29,7 @@ pods:
   image_indexer:
     uses: yaml/index-image.yml
   image_ranker:
-    uses: MinRanker
+    uses: yaml/rank.yml
   join_all:
     uses: _merge
     needs: [image_ranker, text_ranker]
