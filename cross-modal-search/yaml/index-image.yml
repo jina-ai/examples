@@ -31,8 +31,10 @@ requests:
       - !VectorSearchDriver
         with:
           executor: images_vec_idx
-          depth_range: [0, 0]
+          traverse_on: matches
+          depth_range: [0, 1]
       - !KVSearchDriver
         with:
           executor: images_kv_idx
-          depth_range: [0, 0]
+          traverse_on: matches
+          depth_range: [0, 1]
