@@ -1,6 +1,7 @@
 !Flow
 metas:
   prefetch: 10
+  port_expose: $JINA_PORT
 pods:
   loader:
     uses: yaml/image_load.yml
