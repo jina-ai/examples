@@ -44,28 +44,18 @@ class Flickr8kDataset(data.Dataset):
         self.images_root = images_root
         self.captions_file_path = captions_file_path
         with open(self.captions_file_path, 'r') as cf:
-            lines = cf.readlines()
-
-        self.dataset = []
-
-        last_image_file_name = None
-        for line in lines[1:]:
-            image_file_name, caption = line.split(',')
-            # take only one caption per image
-            if last_image_file_name and last_image_file_name != image_file_name:
-                self.dataset.append((image_file_name, caption))
-                last_image_file_name = image_file_name
+            self.lines = cf.readlines()[1:]
 
     def __getitem__(self, index):
         """This function returns a tuple that is further passed to collate_fn
         """
-        image_file_name, caption = self.dataset[index]
+        image_file_name, caption = self.lines[index*5].split(',', 1)
         with open(os.path.join(self.images_root, image_file_name), 'rb') as fp:
             image_buffer = fp.read()
         return image_buffer, str(caption).lower()
 
     def __len__(self):
-        return len(self.dataset)
+        return len(self.lines)/5
 
 
 def collate_fn(data):
