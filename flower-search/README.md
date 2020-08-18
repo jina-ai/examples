@@ -469,7 +469,7 @@ Hooray! Now you've got a pretty simple flower image search engine working. Let's
 
 ## Similar Examples
 
-The algorithm and logic of following examples are very similar to the flower example. Please use an analogous way to take a try.
+The flow design of following examples are very similar to the flower example. Please use an analogous way to take a try.
 
 ### Face-db-search
 
@@ -479,7 +479,7 @@ In this demo, we used the Labeled Faces in the Wild (LFW) Dataset data from [htt
   <img src=".github/face-demo.jpg" alt="Search Demo" width="90%">
 </p>
 
-To reproduce this example, we use the following codes:
+To reproduce this example, one can use the following codes:
 
 ```bash
 cd face-db-seach
