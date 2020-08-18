@@ -16,3 +16,23 @@ components:
 metas:
   name: text_indexer
   workspace: './workspace'
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: text_vec_idx
+          depth_range: [0, 0]
+      - !KVIndexDriver
+        with:
+          executor: text_kv_idx
+          depth_range: [0, 0]
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: text_vec_idx
+          depth_range: [0, 0]
+      - !KVSearchDriver
+        with:
+          executor: text_kv_idx
+          depth_range: [0, 0]
