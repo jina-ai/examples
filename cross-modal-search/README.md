@@ -104,9 +104,6 @@ mv Images data/f8k/images
 mv captions.txt data/f8k/captions.txt
 ```
 
-
-
-
 ## Build the docker images
 
 To abstract all dependencies, needed to make the model from (cite paper) work, docker images have been prepared to contain
@@ -145,6 +142,10 @@ python app.py -t query-i2t
 
 There is also the option to run `query-restful`, but is not ready to work at this moment, because we miss the possibility 
 to pass `modality` using REST API.
+
+Examples of captions in the dataset:
+
+`A man in an orange hat starring at something, A Boston terrier is running in the grass, A television with a picture of a girl on it`
 
 ## Documentation 
 
