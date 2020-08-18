@@ -32,6 +32,7 @@ In this demo, we'll use the [17flowers dataset](http://www.robots.ox.ac.uk/~vgg/
 - [Add a Customized Executor](#add-a-customized-executor)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Similar examples](#similar-examples)
 - [Documentation](#documentation)
 - [Community](#community)
 - [License](#license)
@@ -464,6 +465,30 @@ Hooray! Now you've got a pretty simple flower image search engine working. Let's
 <!---
 - Check out the Docker images at Jina hub.
 --->
+- Try similar examples.
+
+## Similar Examples
+
+The algorithm and logic of following examples are similar to the flower example. Please use an analogous way to take a try.
+
+### Face-db-search
+
+In this demo, we used the Labeled Faces in the Wild (LFW) Dataset data from [http://vis-www.cs.umass.edu/lfw/lfw.tgz](http://vis-www.cs.umass.edu/lfw/#download) to build a face search system.
+
+<p align="center">
+  <img src=".github/face-demo.jpg" alt="Search Demo" width="90%">
+</p>
+
+To reproduce this example, we use the following codes:
+
+```bash
+cd face-db-seach
+pip install --upgrade -r requirements.txt
+bash ./get_data.sh
+python app.py index
+python app.py query
+```
+
 
 ## Documentation 
 
