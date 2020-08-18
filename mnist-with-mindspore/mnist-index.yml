@@ -4,6 +4,6 @@ pods:
         uses: pods/encoder.yml
         parallel: $PARALLEL
     index:
-        uses: pods/indexer.yml
+        uses: pods/index.yml
         shards: $SHARDS
         separated_workspace: true
