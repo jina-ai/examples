@@ -9,6 +9,7 @@ import numpy as np
 from jina.executors.indexers import BaseIndexer
 from scann import ScannIndexer
 
+
 # fix the seed here
 np.random.seed(500)
 retr_idx = None
@@ -22,42 +23,25 @@ class ScannTestCase(unittest.TestCase):
 
     def test_scann_indexer(self):
 
-        loc = os.path.join(cur_dir, "glove.hdf5")
-
-        glove_h5py = h5py.File(loc)
-        list(glove_h5py.keys())
-        dataset = glove_h5py['train']
-        queries = glove_h5py['test']
-
-        with ScannIndexer(
-                num_leaves=2000,
-                num_leaves_to_search=100,
-                training_iterations=10,
-                distance_measure="dot_product",
-                training_sample_size=250000,
-                scoring="score_ah",
-                anisotropic_quantization_threshold=0.2,
-                dimensions_per_block=2,
-                reordering_num_neighbors=100) as a:
+        with ScannIndexer(index_filename='scann.test.gz') as a:
             a.add(vec_idx, vec)
-
             a.save()
             self.assertTrue(os.path.exists(a.index_abspath))
             index_abspath = a.index_abspath
             save_abspath = a.save_abspath
 
         with BaseIndexer.load(save_abspath) as b:
-            #print("*********** dataset: ", dataset, " ***")
-            searcher = ScannIndexer.build_advanced_index(self,  dataset)
-
-            idx, dist = b.query(queries, 10)
-
+            idx, dist = b.query(query, top_k=4)
+            print(idx, dist)
             global retr_idx
             if retr_idx is None:
                 retr_idx = idx
             else:
                 np.testing.assert_almost_equal(retr_idx, idx)
             self.assertEqual(idx.shape, dist.shape)
+            self.assertEqual(idx.shape, (10, 4))
+
+        self.add_tmpfile(index_abspath, save_abspath)
 
 
 if __name__ == '__main__':
