@@ -62,7 +62,6 @@ class ScannIndexer(BaseNumpyIndexer):
         self.anisotropic_quantization_threshold = anisotropic_quantization_threshold
         self.dimensions_per_block = dimensions_per_block
         self.reordering_num_neighbors = reordering_num_neighbors
-        #self.final_num_neighbors = final_num_neighbors
 
     def build_advanced_index(self,  vecs: 'np.ndarray'):
         """Load vectors into Scann indexers
@@ -88,10 +87,10 @@ class ScannIndexer(BaseNumpyIndexer):
             reorder(self.reordering_num_neighbors).create_pybind()
         return _index
 
-    def query(self, _index, keys: 'np.ndarray',  final_num_neighbors):
-        if self.reordering_num_neighbors <  final_num_neighbors:
+    def query(self, _index, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
+        if self.reordering_num_neighbors <  top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
-        neighbors, dist = _index.search_batched(keys, final_num_neighbors)
+        neighbors, dist = _index.search_batched(keys, top_k)
 
     def compute_recall(neighbors, true_neighbors):
         total = 0
