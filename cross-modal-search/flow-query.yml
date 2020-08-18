@@ -15,9 +15,9 @@ pods:
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
-  image_indexer:
-    uses: yaml/index-image.yml
-  image_ranker:
+  text_indexer:
+    uses: yaml/index-text.yml
+  text_ranker:
     uses: MinRanker
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
@@ -25,7 +25,7 @@ pods:
     timeout_ready: 600000
     read_only: true
     needs: [gateway]
-  text_indexer:
-    uses: yaml/index-text.yml
-  text_ranker:
+  image_indexer:
+    uses: yaml/index-image.yml
+  image_ranker:
     uses: MinRanker
