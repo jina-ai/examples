@@ -5,6 +5,7 @@ import torch
 # model is a file from the vsepp github
 # vocab needed for pickle
 from vocab import Vocabulary
+from torch.autograd import Variable
 from model import VSE
 import nltk
 nltk.download('punkt')
@@ -66,7 +67,11 @@ class VSETextEncoder(BaseTorchEncoder):
             caption.append(self.vocab('<end>'))
             lengths.append(len(caption))
             captions.append(caption)
-        captions_tensor = torch.LongTensor(captions)
+        targets = torch.zeros(len(captions), max(lengths)).long()
+        for i, cap in enumerate(captions):
+            end = lengths[i]
+            targets[i, :end] = cap[:end]
+        captions_tensor = Variable(targets, requires_grad=False)
         if torch.cuda.is_available():
             captions_tensor = captions_tensor.cuda()
         text_emb = self.model(captions_tensor, lengths=lengths)
