@@ -55,7 +55,7 @@ class Flickr8kDataset(data.Dataset):
         return image_buffer, str(caption).lower()
 
     def __len__(self):
-        return len(self.lines)/5
+        return int(len(self.lines)/5)
 
 
 def collate_fn(data):
