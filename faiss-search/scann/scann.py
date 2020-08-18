@@ -4,6 +4,7 @@ __license__ = "Apache-2.0"
 from typing import Tuple
 
 import numpy as np
+import scann
 
 from jina.executors.indexers.vector import BaseNumpyIndexer
 
@@ -63,7 +64,7 @@ class ScannIndexer(BaseNumpyIndexer):
         self.reordering_num_neighbors = reordering_num_neighbors
         self.final_num_neighbors = final_num_neighbors
 
-    def build_advanced_index(self,  vecs: 'np.ndarray'):
+    def build_advanced_index(self,  dataset):
         """Load vectors into Scann indexers
         This is a lazy evaluation.
         The .score_ah(...) and .reorder(...) are creating configuration
@@ -81,18 +82,16 @@ class ScannIndexer(BaseNumpyIndexer):
         It will take the top k-distances and re-compute the distance.
         Then the top-k from this new measurement will be selected.
         """
-        import scann
-
-        searcher = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
+        searcher = scann.ScannBuilder(dataset, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
             score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
         return searcher
 
-    def query(self, searcher,  keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
-        if self.reordering_num_neighbors < self.top_k:
+    def query(self, searcher, queries):
+        if self.reordering_num_neighbors < self.final_num_neighbors:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
-        neighbors, distances = searcher.search_batched(keys, self.final_num_neighbors)
+        neighbors, distances = searcher.search_batched(queries, self.final_num_neighbors)
 
     def compute_recall(neighbors, true_neighbors):
         total = 0
