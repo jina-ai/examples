@@ -16,7 +16,6 @@ def config():
     os.environ['SHARDS'] = str(1)
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['JINA_PORT'] = str(45678)
-    os.environ['JINA_PORT'] = ''
 
 
 def input_index_data(num_docs=None, batch_size=8):
