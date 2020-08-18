@@ -8,7 +8,6 @@ pods:
     read_only: true
   flipper:
     uses: yaml/craft-flip.yml
-    parallel: $PARALLEL
     read_only: true
   normalizer:
     uses: yaml/craft-normalize.yml
