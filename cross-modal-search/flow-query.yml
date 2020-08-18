@@ -29,3 +29,7 @@ pods:
     uses: yaml/index-image.yml
   image_ranker:
     uses: MinRanker
+  join_all:
+    uses: _merge
+    needs: [image_ranker, text_ranker]
+    read_only: true
