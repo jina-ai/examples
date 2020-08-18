@@ -52,7 +52,7 @@ def main(task, num_docs, batch_size):
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index(input_index_data(num_docs), batch_size=batch_size)
+            f.index(input_index_data(num_docs, batch_size), batch_size=batch_size)
     else:
         raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
 
