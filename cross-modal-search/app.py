@@ -18,12 +18,14 @@ def config():
     os.environ['JINA_PORT'] = str(45678)
 
 
-def input_index_data(num_docs=None, batch_size=8):
+def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
     from dataset import get_data_loader
-    data_loader = get_data_loader(root=os.path.join(cur_dir, 'data/f30k/images'),
-                                  json=os.path.join(cur_dir, 'data/f30k/dataset_flickr30k.json'),
+    captions = 'dataset_flickr30k.json' if dataset == 'f30k' else 'captions.txt'
+    data_loader = get_data_loader(root=os.path.join(cur_dir, f'data/{dataset}/images'),
+                                  captions=os.path.join(cur_dir, f'data/{dataset}/{captions}'),
                                   split='test',
-                                  batch_size=batch_size)
+                                  batch_size=batch_size,
+                                  dataset_type=dataset)
     for i, (images, captions) in enumerate(data_loader):
         for image in images:
             document = jina_pb2.Document()
@@ -82,12 +84,13 @@ def print_top_k(resp, img):
 @click.option('--num_docs', '-n', default=50)
 @click.option('--batch_size', '-b', default=16)
 @click.option('--top_k', '-k', default=5)
-def main(task, num_docs, batch_size, top_k):
+@click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f30k')
+def main(task, num_docs, batch_size, top_k, data_set):
     config()
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index(input_fn=input_index_data(num_docs, batch_size), batch_size=batch_size)
+            f.index(input_fn=input_index_data(num_docs, batch_size, data_set), batch_size=batch_size)
     elif task == 'query-t2i':
         f = Flow().load_config('flow-query.yml')
         with f:

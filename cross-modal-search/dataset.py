@@ -4,9 +4,9 @@ import json as jsonmod
 import os
 
 
-class FlickrDataset(data.Dataset):
+class Flickr30kDataset(data.Dataset):
     """
-    Dataset loader for Flickr30k and Flickr8k full datasets.
+    Dataset loader for Flickr30k full datasets.
     """
 
     def __init__(self, images_root, json, split):
@@ -35,18 +35,55 @@ class FlickrDataset(data.Dataset):
         return len(self.ids)
 
 
+class Flickr8kDataset(data.Dataset):
+    """
+    Dataset loader for Flickr8k full datasets.
+    """
+
+    def __init__(self, images_root, captions_file_path):
+        self.images_root = images_root
+        self.captions_file_path = captions_file_path
+        with open(self.captions_file_path, 'r') as cf:
+            lines = cf.readlines()
+
+        self.dataset = []
+
+        last_image_file_name = None
+        for line in lines[1:]:
+            image_file_name, caption = line.split(',')
+            # take only one caption per image
+            if last_image_file_name and last_image_file_name != image_file_name:
+                self.dataset.append((image_file_name, caption))
+                last_image_file_name = image_file_name
+
+    def __getitem__(self, index):
+        """This function returns a tuple that is further passed to collate_fn
+        """
+        image_file_name, caption = self.dataset[index]
+        with open(os.path.join(self.images_root, image_file_name), 'rb') as fp:
+            image_buffer = fp.read()
+        return image_buffer, str(caption).lower()
+
+    def __len__(self):
+        return len(self.dataset)
+
+
 def collate_fn(data):
     # Not sure this is actually needed
     images, captions = zip(*data)
     return images, captions
 
 
-def get_data_loader(split, root, json, batch_size=8, shuffle=True,
+def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', shuffle=True,
                     num_workers=1, collate_fn=collate_fn):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
 
-    dataset = FlickrDataset(images_root=root, split=split, json=json)
-
+    if dataset_type == 'f30k':
+        dataset = Flickr30kDataset(images_root=root, split=split, json=captions)
+    elif dataset_type == 'f8k':
+        dataset = Flickr8kDataset(images_root=root, captions_file_path=captions)
+    else:
+        raise NotImplementedError(f'Not valid dataset type {dataset_type}')
     # Data loader
     data_loader = torch.utils.data.DataLoader(dataset=dataset,
                                               batch_size=batch_size,

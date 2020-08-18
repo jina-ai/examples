@@ -70,6 +70,7 @@ To get it, once you have your Kaggle Token in your system as described in (https
 pip install kaggle
 kaggle datasets download hsankesara/flickr-image-dataset
 unzip flickr-image-dataset.zip
+rm flickr-image-dataset.zip
 ``` 
 
 Then we also need `captions` data, to get this:
@@ -88,6 +89,23 @@ mv flickr-image-dataset data/f30k/images
 Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have 
 a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of 
 `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
+
+### Use Flickr8k
+Although the model is trained on Flickr30k, you can test on Flickr8k dataset, which is a much smaller version of 
+flickr30k.
+
+To do so, instead of downloading the flickr30k from kaggle, just take its 8k counterpart
+
+```bash
+kaggle datasets download adityajn105/flickr8k
+unzip flickr8k.zip 
+rm flickr8k.zip
+mv Images data/f8k/images
+mv captions.txt data/f8k/captions.txt
+```
+
+
+
 
 ## Build the docker images
 
