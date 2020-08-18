@@ -55,7 +55,6 @@ class VSETextEncoder(BaseTorchEncoder):
         del model.img_enc
 
     @batching
-    @as_ndarray
     def encode(self, text):
         captions = []
         lengths = []
@@ -71,4 +70,4 @@ class VSETextEncoder(BaseTorchEncoder):
         if torch.cuda.is_available():
             captions_tensor = captions_tensor.cuda()
         text_emb = self.model(captions_tensor, lengths=lengths)
-        return text_emb.detach()
+        return text_emb.detach().numpy()
