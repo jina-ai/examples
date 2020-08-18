@@ -15,7 +15,8 @@ RANDOM_SEED = 14
 
 def load_mnist(path):
     with open(path, 'rb') as fp:
-        return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
+        return np.random.rand(10, 1, 32, 32)
+        # return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
 
 
 def config():
