@@ -19,12 +19,13 @@ def config():
     os.environ['JINA_PORT'] = ''
 
 
-def input_index_data(num_docs=None):
+def input_index_data(num_docs=None, batch_size=8):
     from jina.proto import jina_pb2
     from dataset import get_data_loader
     data_loader = get_data_loader(root=os.path.join(cur_dir, 'data/f30k/images'),
                                   json=os.path.join(cur_dir, 'data/f30k/dataset_flickr30k.json'),
-                                  split='test')
+                                  split='test',
+                                  batch_size=batch_size)
     for i, (images, captions) in enumerate(data_loader):
         for image in images:
             document = jina_pb2.Document()
@@ -38,7 +39,7 @@ def input_index_data(num_docs=None):
             document.modality = 'text'
             yield document
 
-        if num_docs and i >= num_docs:
+        if num_docs and (i + 1) * batch_size >= num_docs:
             break
 
 

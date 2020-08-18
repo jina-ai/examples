@@ -2,6 +2,8 @@ import torch
 import torch.utils.data as data
 import json as jsonmod
 import os
+import io
+from PIL import Image
 
 
 class FlickrDataset(data.Dataset):
@@ -27,8 +29,10 @@ class FlickrDataset(data.Dataset):
         img_file_name = self.dataset[img_id]['filename']
 
         image_file_path = os.path.join(images_root, img_file_name)
-        with open(image_file_path, 'rb') as fp:
-            image_buffer = fp.read()
+        img = Image.open(image_file_path, mode='rb').convert('RGB')
+        image_buffer = io.BytesIO()
+        img.save(image_buffer, format='PNG')
+        image_buffer = image_buffer.getvalue()
         return image_buffer, str(caption).lower()
 
     def __len__(self):
