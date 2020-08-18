@@ -62,9 +62,9 @@ class ScannIndexer(BaseNumpyIndexer):
         self.anisotropic_quantization_threshold = anisotropic_quantization_threshold
         self.dimensions_per_block = dimensions_per_block
         self.reordering_num_neighbors = reordering_num_neighbors
-        self.final_num_neighbors = final_num_neighbors
+        #self.final_num_neighbors = final_num_neighbors
 
-    def build_advanced_index(self,  dataset):
+    def build_advanced_index(self,  vecs: 'np.ndarray'):
         """Load vectors into Scann indexers
         This is a lazy evaluation.
         The .score_ah(...) and .reorder(...) are creating configuration
@@ -82,16 +82,16 @@ class ScannIndexer(BaseNumpyIndexer):
         It will take the top k-distances and re-compute the distance.
         Then the top-k from this new measurement will be selected.
         """
-        searcher = scann.ScannBuilder(dataset, self.training_iterations, self.distance_measure).\
+        _index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
             score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
-        return searcher
+        return _index
 
-    def query(self, searcher, queries):
-        if self.reordering_num_neighbors < self.final_num_neighbors:
+    def query(self, _index, keys: 'np.ndarray',  final_num_neighbors):
+        if self.reordering_num_neighbors <  final_num_neighbors:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
-        neighbors, distances = searcher.search_batched(queries, self.final_num_neighbors)
+        neighbors, dist = _index.search_batched(keys, final_num_neighbors)
 
     def compute_recall(neighbors, true_neighbors):
         total = 0
