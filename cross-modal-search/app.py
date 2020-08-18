@@ -53,8 +53,13 @@ def main(task, num_docs, batch_size):
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index(input_index_data(num_docs, batch_size), batch_size=batch_size)
+    elif task == 'query':
+        f = Flow().load_config('flow-query.yml')
+        f.use_rest_gateway()
+        with f:
+            f.block()
     else:
-        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
+        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index`, `query`.')
 
 
 if __name__ == '__main__':
