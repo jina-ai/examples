@@ -15,4 +15,7 @@ RUN pip install -r requirements.txt
 RUN bash install.sh
 ADD VSETextEncoder.py encode.yml ./
 
+RUN python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()"
+RUN python -c "import nltk; nltk.download('punkt')"
+
 ENTRYPOINT ["jina", "pod", "--uses", "encode.yml", "--timeout-ready", "60000"]

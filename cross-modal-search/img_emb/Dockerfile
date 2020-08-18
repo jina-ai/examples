@@ -10,4 +10,5 @@ RUN bash install.sh
 RUN pip install -r requirements.txt
 ADD VSEImageEncoder.py encode.yml ./
 
+RUN python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()"
 ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
