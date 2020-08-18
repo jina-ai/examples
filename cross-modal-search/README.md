@@ -39,17 +39,9 @@ In this example, jina is used to implement a Cross-modal search system. We encod
 in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings`
 and query the `image index` using `text embeddings`. 
 
-To make this search system retrieve good results, we have used the models trained in (cite paper). A model has been trained
+To make this search system retrieve good results, we have used the models trained in (https://github.com/fartashf/vsepp). A model has been trained
 that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
 
-```
-@article{faghri2017vse++,
-  title={VSE++: Improving Visual-Semantic Embeddings with Hard Negatives},
-  author={Faghri, Fartash and Fleet, David J and Kiros, Jamie Ryan and Fidler, Sanja},
-  journal={arXiv preprint arXiv:1707.05612},
-  year={2017}
-}
-```
 **Table of Contents**
 
 - [Prerequirements](#prerequirements)
@@ -77,15 +69,30 @@ To get it, once you have your Kaggle Token in your system as described in (https
 ```bash
 pip install kaggle
 kaggle datasets download hsankesara/flickr-image-dataset
+unzip flickr-image-dataset.zip
 ``` 
 
-Once downloaded and unzipped, we need to make sure that under `cross-modal-search/data/f30k` folder, we have 
-a folder `images` and a json file `dataset_flickr30k.json`
+Then we also need `captions` data, to get this:
+
+```bash
+wget http://www.cs.toronto.edu/~faghri/vsepp/data.tar
+tar -xvf data.tar
+rm -rf data.tar
+rm -rf data/coco*
+rm -rf data/f8k*
+rm -rf data/*precomp*
+rm -rf data/f30k/images
+mv flickr-image-dataset data/f30k/images
+```
+
+Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have 
+a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of 
+`Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
 
 ## Build the docker images
 
 To abstract all dependencies, needed to make the model from (cite paper) work, docker images have been prepared to contain
-text and image encoders. This images are very big (about 19GB each (working to make them smaller)).
+text and image encoders. This images are very big (about 5GB each (working to make them smaller)).
 
 In order to build them (it may take some time since a lot of data is downloaded),
 
