@@ -1,0 +1,1 @@
+For tutorial, please refer to [here](https://github.com/jina-ai/examples/tree/master/flower-search##similar-examples).
