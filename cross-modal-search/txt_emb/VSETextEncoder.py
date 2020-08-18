@@ -2,6 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import torch
+import numpy as np
 # model is a file from the vsepp github
 # vocab needed for pickle
 from vocab import Vocabulary
@@ -57,6 +58,7 @@ class VSETextEncoder(BaseTorchEncoder):
 
     @batching
     def encode(self, text):
+        text = text[np.argsort([len(t.split()) for t in text])[::-1]]
         captions = []
         lengths = []
         for sentence in text:
