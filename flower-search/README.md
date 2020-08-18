@@ -32,7 +32,7 @@ In this demo, we'll use the [17flowers dataset](http://www.robots.ox.ac.uk/~vgg/
 - [Add a Customized Executor](#add-a-customized-executor)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
-- [Similar examples](#similar-examples)
+- [Similar Examples](#similar-examples)
 - [Documentation](#documentation)
 - [Community](#community)
 - [License](#license)
@@ -469,7 +469,7 @@ Hooray! Now you've got a pretty simple flower image search engine working. Let's
 
 ## Similar Examples
 
-The algorithm and logic of following examples are similar to the flower example. Please use an analogous way to take a try.
+The algorithm and logic of following examples are very similar to the flower example. Please use an analogous way to take a try.
 
 ### Face-db-search
 
