@@ -29,7 +29,6 @@ class ScannIndexer(BaseNumpyIndexer):
                  anisotropic_quantization_threshold: float = 0.2,
                  dimensions_per_block: int = 2,
                  reordering_num_neighbors: int = 100,
-                 final_num_neighbors: int = 20,
                  *args, **kwargs):
         """
         Initialize an ScannIndexer
@@ -49,8 +48,6 @@ class ScannIndexer(BaseNumpyIndexer):
         :param dimensions_per_block: Recommended for AH is 2
         :param reordering_num_neighbors: Should be higher than the final number of neighbors
             If this number is increased, the accuracy will increase but it will impact speed
-        :param final_num_neighbors: This is the final number of neighbors that will be returned
-            after rescoring (top_k)
         """
         super().__init__(*args, **kwargs)
         self.num_leaves = num_leaves
@@ -81,22 +78,14 @@ class ScannIndexer(BaseNumpyIndexer):
         It will take the top k-distances and re-compute the distance.
         Then the top-k from this new measurement will be selected.
         """
-        _index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
+        index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
             tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size).\
             score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
-        return _index
+        return index
 
-    def query(self, _index, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
-        if self.reordering_num_neighbors <  top_k:
-            self.logger.warning('The number of reordering_num_neighbors should be the same or higher than the number of neighbors')
-        neighbors, dist = _index.search_batched(keys, top_k)
-
-    def compute_recall(neighbors, true_neighbors):
-        total = 0
-        for gt_row, row in zip(true_neighbors, neighbors):
-            total += np.intersect1d(gt_row, row).shape[0]
-        return total / true_neighbors.size
-
-
-
+    def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
+        if self.reordering_num_neighbors < top_k:
+            self.logger.warning('The number of reordering_num_neighbors should be the same or higher than top_k')
+        neighbors, dist = self.get_query_handler.search_batched(keys, top_k)
+        return neighbors, dist
