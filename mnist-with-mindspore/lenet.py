@@ -177,7 +177,7 @@ def train_net(args, model, epoch_size, mnist_path, repeat_size, ckpoint_cb, sink
     model.train(epoch_size, ds_train, callbacks=[ckpoint_cb, LossMonitor()], dataset_sink_mode=sink_mode)
 
 
-def test_net(args, network, model, mnist_path):
+def eval_net(args, network, model, mnist_path):
     """Define the evaluation method."""
     print("============== Starting Testing ==============")
     # load the saved model for evaluation
@@ -218,4 +218,4 @@ if __name__ == "__main__":
     model = Model(network, net_loss, net_opt, metrics={"Accuracy": Accuracy()})
 
     train_net(args, model, epoch_size, mnist_path, repeat_size, ckpoint_cb, dataset_sink_mode)
-    test_net(args, network, model, mnist_path)
+    eval_net(args, network, model, mnist_path)
