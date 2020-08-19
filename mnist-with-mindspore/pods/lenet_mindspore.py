@@ -1,6 +1,5 @@
 from jina.executors.encoders.frameworks import BaseMindsporeEncoder
 from jina.executors.crafters.image.io import ImageReader
-from jina.drivers.helper import pb2array
 
 import sys
 sys.path.append('..')
@@ -20,12 +19,7 @@ class LeNetImageEncoder(BaseMindsporeEncoder):
 
 
 class MnistImageReader(ImageReader):
-    def craft(self, buffer, *args, **kwargs):
-        result = []
+    def craft(self, blob, *args, **kwargs):
         # convert buffer to blob
-        array = pb2array(buffer)
-        for img in array:
-            _img = img.reshape(28, 28)
-            result.append(np.extend_dims(_img, axis=0))
-        return dict(weight=1., blob=np.array(result))
+        return dict(weight=1., blob=np.stack(blob.reshape(28, 28)))
 
