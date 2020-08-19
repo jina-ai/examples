@@ -108,17 +108,12 @@ In this example, we showed you 6 exampls on how to use `index` and `search`, and
 
 - Write your own Flows.
 - try more examples in `index` and `search`
-<br>
 
-`ndarray` - [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search)
-</br>
-<br>
-
-`files` - [Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search)
-</br>
-<br>
-
-`lines` - [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search)
+| APIs | Links  |
+| --- | --- |
+|`ndarray` | [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search) |
+|`files`  |[Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search)|
+|`lines` | [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search) |
 <!---
 - Check out the Docker images at Jina hub.
 --->
