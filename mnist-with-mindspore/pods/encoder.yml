@@ -7,7 +7,7 @@ with:
 requests:
   on:
     [IndexRequest, SearchRequest]:
-       # - !Blob2PngURI {}
+       - !Blob2PngURI {}
        - !EncodeDriver {}
        - !ExcludeQL
          with:

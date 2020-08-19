@@ -1,0 +1,12 @@
+!MnistImageReader
+metas:
+  py_modules: lenet_mindspore.py
+with:
+  channel_axis: 1
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !Blob2PngURI {}
+      - !LogInfoDriver {}
+      - !CraftDriver {}
+      - !LogInfoDriver {}
