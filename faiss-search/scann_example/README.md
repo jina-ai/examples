@@ -32,7 +32,7 @@ partitioner_base.h
 dataset.cc
 kmeans_tree_node.cc
 
-in ech file change the  `#include <ext/hash_set>`
+in ech file change the  `#include <hash_set>`
 for 
 
 ```
