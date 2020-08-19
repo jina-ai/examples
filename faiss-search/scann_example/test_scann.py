@@ -7,8 +7,7 @@ import gzip
 
 import numpy as np
 from jina.executors.indexers import BaseIndexer
-from scann import ScannIndexer
-
+from .scann import ScannIndexer
 
 # fix the seed here
 np.random.seed(500)
