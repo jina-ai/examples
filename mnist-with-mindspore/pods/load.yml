@@ -7,6 +7,4 @@ requests:
   on:
     [IndexRequest, SearchRequest]:
       - !Blob2PngURI {}
-      - !LogInfoDriver {}
       - !CraftDriver {}
-      - !LogInfoDriver {}
