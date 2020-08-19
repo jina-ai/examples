@@ -10,7 +10,7 @@ There are 3 ways to use index and search method in Jina, we have examples like f
 import numpy as np
 from jina.flow import Flow
 input_data = np.random.random(10,100)
-f = Flow().load_config('flow-index.yml')
+f = Flow().add(uses='_logforward')
 with f:
     f.index_ndarray(input_data)
 ```
