@@ -112,7 +112,8 @@ Index is run with the following command, where batch_size can be chosen by the u
 python app.py -t index -n $num_docs -b $batch_size -d 'f8k'
 ```
 
-Not that num_docs should be 8k or 30k depending on the flickr dataset you use. The dataset is provided with the `-d` parameter
+Not that num_docs should be 8k or 30k depending on the flickr dataset you use. If you decide to index the complete datasets,
+it is recommendable to increase the number of shards and parallelization. The dataset is provided with the `-d` parameter
 with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
 how `data` is provided and adapt to your own data source.
 
