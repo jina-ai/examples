@@ -1,5 +1,3 @@
-It resolves the issue: [#134](https://github.com/jina-ai/examples/issues/134)
-
 # Overview
 There are 3 ways to use index and search method in Jina, we have examples like faiss, southpark and flower-search. This note will help you understand the pattern beyond those 3 examples.
 
