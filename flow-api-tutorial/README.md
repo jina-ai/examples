@@ -1,63 +1,67 @@
 # Overview
-There are 3 ways to use index and search method in Jina, we have examples like faiss, southpark and flower-search. This note will help you understand the pattern beyond those 3 examples.
+Jina supports you to index and search your data in a simple way. And it exposes 3 APIs to each of them, which help you to index and search `ndarray`, `files`, and `lines` data.
 
-# 3 ways to initiate index flow
-<p>
- 
-1. index_ndarray supports ndarray, and you can use this method to index your array data, like pics and sounds. Here is the example: [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search)
-
-```python
-import numpy as np
-from jina.flow import Flow
-input_data = np.random.random(10,100)
-f = Flow().add(uses='_logforward')
-with f:
-    f.index_ndarray(input_data)
-```
-2. index_files supports you to load files. In our example we use jpg files. Here is the example: [Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search)
-```python
-from jina.flow import Flow
-f = Flow().load_config('flow-index.yml')
-data_src='/your/data/path/*.jpg'
-with f:
-    f.index_files(data_src)
-```
-3. index_lines supports you to load lines, which you can only use it in text. Here is the example: [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search)
-```python
-from jina.flow import Flow
-input_str = ['aaa','bbb']
-f = Flow().load_config('flow-index.yml')
-with f:
-    f.index_lines(lines=input_str)
-```
-
-# 3 ways to initiate query flow
+# 3 APIs for indexing your data
 <p>
 
-1. search_ndarray supports you to search ndarray by ANN models. Here is the example: [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search)
+1. `index_ndarray()` is the API for indexing `ndarray`.
 
-```python
-import numpy as np
-from jina.flow import Flow
-input_data = np.random.random(10,100)
-f = Flow().load_config('flow-query.yml')
-with f:
-   f.search_ndarray(input_data)
-```
+   ```python
+    import numpy as np
+    from jina.flow import Flow
+    input_data = np.random.random((10,100))
+    f = Flow().add(uses='_logforward')
+    with f:
+        f.index_ndarray(input_data)
+    ```
 
-2. search_files helps you to search from files. Here is the example: [Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search)
-```python
-from jina.flow import Flow
-data_src='/your/data/path/image001.jpg'
-f = Flow().load_config('flow-query.yml')
-with f:
-    f.search_files(data_src)
-```
-3. search_lines helps you to search in lines. Here is the example: [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search)
-```python
-from jina.flow import Flow
-text = input('please type a sentence: ')
-f = Flow().load_config('flow-query.yml')
-with f:   
-    f.search_lines(lines=[text, ])
-```
+2. `index_files()` is the API for indexing `files`
+
+    ```python
+    from jina.flow import Flow
+    f = Flow().add(uses='_logforward')
+    with f:
+        # Note that those yml files are in the examples project
+        # which you can download from the github
+        f.index_files(f'../pokedex-with-bit/pods/*.yml')
+    ```
+3. `index_lines()` is the API for indexing `lines`
+    ```python
+    from jina.flow import Flow
+    input_str = ['aaa','bbb']
+    f = Flow().add(uses='_logforward')
+    with f:
+        f.index_lines(lines=input_str)
+    ```
+
+# 3 APIs for querying your data
+<p>
+
+1. `search_ndarray()` is the API for searching `ndarray`
+
+    ```python
+    import numpy as np
+    from jina.flow import Flow
+    input_data = np.random.random((10,100))
+    f = Flow().add(uses='_logforward')
+    with f:
+       f.search_ndarray(input_data)
+    ```
+
+2. `search_files()` is the API for searching `files`
+    ```python
+    from jina.flow import Flow
+    f = Flow().add(uses='_logforward')
+    with f:
+        f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
+    ```
+3. `search_lines()` is the API for searching `lines`
+    ```python
+    from jina.flow import Flow
+    text = input('please type a sentence: ')
+    f = Flow().add(uses='_logforward')
+    with f:   
+        f.search_lines(lines=[text, ])
+    ```
+
+Those are just simple ways to build your indexing and searching code. Beyond those, we have examples like [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search), [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search) and [Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search), which show more details in configurations.
