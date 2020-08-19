@@ -23,6 +23,11 @@ requests:
         with:
           executor: images_vec_idx
           depth_range: [0, 0]
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
       - !KVIndexDriver
         with:
           executor: images_kv_idx

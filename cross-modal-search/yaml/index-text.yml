@@ -23,6 +23,11 @@ requests:
         with:
           executor: text_vec_idx
           depth_range: [0, 0]
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
       - !KVIndexDriver
         with:
           executor: text_kv_idx
