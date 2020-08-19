@@ -10,7 +10,7 @@ from jina.flow import Flow
 from jina.helloworld.helper import print_result, write_html
 
 
-RANDOM_SEED = 14
+RANDOM_SEED = 15
 
 
 def load_mnist(path):

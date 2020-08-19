@@ -10,6 +10,22 @@ import numpy as np
 from lenet import *
 
 
+class LeNet5Feat(LeNet5):
+    def construct(self, x):
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = self.max_pool2d(x)
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.max_pool2d(x)
+        x = self.flatten(x)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        return x
+
+
 class LeNetImageEncoder(BaseMindsporeEncoder):
 
     @batching
@@ -18,7 +34,7 @@ class LeNetImageEncoder(BaseMindsporeEncoder):
         return self.model(Tensor(data[:, 0:1, :, :].astype('float32'))).asnumpy()
 
     def get_model(self):
-        return LeNet5()
+        return LeNet5Feat()
 
 
 class MnistImageReader(ImageReader):

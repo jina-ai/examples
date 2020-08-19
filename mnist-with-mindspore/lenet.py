@@ -23,6 +23,7 @@ import argparse
 import mindspore.dataset as ds
 import mindspore.nn as nn
 from mindspore import context
+from mindspore import Tensor
 from mindspore.train.serialization import load_checkpoint, load_param_into_net
 from mindspore.train.callback import ModelCheckpoint, CheckpointConfig, LossMonitor
 from mindspore.train import Model
@@ -169,6 +170,22 @@ class LeNet5(nn.Cell):
         return x
 
 
+class LeNet5Feat(LeNet5):
+    def construct(self, x):
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = self.max_pool2d(x)
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.max_pool2d(x)
+        x = self.flatten(x)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        return x
+
+
 def train_net(args, model, epoch_size, mnist_path, repeat_size, ckpoint_cb, sink_mode):
     """Define the training method."""
     print("============== Starting Training ==============")
@@ -188,6 +205,21 @@ def eval_net(args, network, model, mnist_path):
     ds_eval = create_dataset(os.path.join(mnist_path, "test"))
     acc = model.eval(ds_eval, dataset_sink_mode=False)
     print("============== Accuracy:{} ==============".format(acc))
+
+
+import numpy as np
+
+
+def pred_net(network):
+    """Define the evaluation method."""
+    print("============== Starting Predicting ==============")
+    # load the saved model for evaluation
+    param_dict = load_checkpoint("checkpoint_lenet-1_1875.ckpt")
+    # load parameter to the network
+    load_param_into_net(network, param_dict)
+    # load testing dataset
+    a = network(Tensor(np.random.randint(0, 256, size=(3, 1, 32, 32)).astype('float32'))).asnumpy()
+    print(a.shape)
 
 
 if __name__ == "__main__":
@@ -217,5 +249,7 @@ if __name__ == "__main__":
     # group layers into an object with training and evaluation features
     model = Model(network, net_loss, net_opt, metrics={"Accuracy": Accuracy()})
 
-    train_net(args, model, epoch_size, mnist_path, repeat_size, ckpoint_cb, dataset_sink_mode)
-    eval_net(args, network, model, mnist_path)
+    # train_net(args, model, epoch_size, mnist_path, repeat_size, ckpoint_cb, dataset_sink_mode)
+    network_feat = LeNet5Feat()
+    pred_net(network_feat)
+    # eval_net(args, network, model, mnist_path)
