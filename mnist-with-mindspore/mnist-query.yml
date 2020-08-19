@@ -2,11 +2,17 @@
 with:
   read_only: true  # better add this in the query time
 pods:
+  load:
+    uses: pods/load.yml
+    parallel: $PARALLEL
+  resize:
+    uses: pods/resize.yml
+    parallel: $PARALLEL
   encode:
     uses: pods/encoder.yml
     parallel: $PARALLEL
   index:
-    uses: pods/indexer.yml
+    uses: pods/index.yml
     shards: $SHARDS
     separated_workspace: true
     polling: all
