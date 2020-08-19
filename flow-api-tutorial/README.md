@@ -1,4 +1,4 @@
-# Build an Image Search System in 3 minutes
+# Build a Search System in 3 minutes
 <p align="center">
  
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
