@@ -39,7 +39,7 @@ Jina supports you to index and search your data in a simple way. And it exposes 
     
     <p>
     
-    In this case, we used several parameters. `_logforward` is an internal yaml file, which locates in `/jina/resources/executors._forward.yml`. In the code `add(uses='_logforward')`, Flow will create an empty pod which just forward structured data to the clients. The structure is defined by `jina.proto`, which is a protobuf file. Pods forward the structured data file to each other or to the clients by gRPC.
+    In this case, we used several parameters. `_logforward` is an internal yaml file, which locates in `/jina/resources/executors._forward.yml`. In the code `add(uses='_logforward')`, Flow will create an empty pod which just forward structured data to the clients. The structure is defined by `jina.proto`, which is a [protobuf](https://docs.jina.ai/api/jina.proto.html?highlight=proto#module-jina.proto) file. Pods forward the structured data file to each other or to the clients by [gRPC](https://docs.jina.ai/chapters/restapi/index.html?highlight=grpc).
     
     <p>
     
