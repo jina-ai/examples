@@ -1,22 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
-
-- [Build a Search system using Facebook AI Similarity Search (FAISS) as vector database](#build-a-search-system-using-facebook-ai-similarity-search-faiss-as-vector-database)
-  - [Prerequirements](#prerequirements)
-  - [Prepare the data](#prepare-the-data)
-  - [Define the Flows](#define-the-flows)
-  - [Run the Flows](#run-the-flows)
-  - [Dive into the FaissIndexer](#dive-into-the-faissindexer)
-  - [Evaluate the results](#evaluate-the-results)
-  - [Wrap up](#wrap-up)
-  - [Next Steps](#next-steps)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [License](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Build a CrossModal Search System to look for Images from Captions and viceversa
 <p align="center">
  
@@ -128,8 +109,13 @@ docker build -f Dockerfile -t jinaai/hub.executors.encoders.nlp.vse .
 Index is run with the following command, where batch_size can be chosen by the user. Index will index both images and captions
 
 ```bash
-python app.py -t index -n $num_docs -b $batch_size
+python app.py -t index -n $num_docs -b $batch_size -d 'f8k'
 ```
+
+Not that num_docs should be 8k or 30k depending on the flickr dataset you use. The dataset is provided with the `-d` parameter
+with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
+how `data` is provided and adapt to your own data source.
+
 ### Query
 
 Currently there are 2 query modes: `query-i2t` which will query captions given an image (the input will be an image file path) and 
