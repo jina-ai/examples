@@ -45,8 +45,4 @@ The results is shown at `results.html`
 
 ## TODOs
 
-We still need to figure out how to extract the outputs of the second last layer.
-
-reference:
-
-[https://github.com/mindspore-ai/mindspore/issues/76](https://github.com/mindspore-ai/mindspore/issues/76#issuecomment-675840001)
+- The images are flipped in the `results.html`
