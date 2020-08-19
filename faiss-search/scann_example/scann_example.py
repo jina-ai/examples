@@ -79,15 +79,15 @@ class ScannIndexer(BaseNumpyIndexer):
         It will take the top k-distances and re-compute the distance.
         Then the top-k from this new measurement will be selected.
         """
-        index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure). \
-            tree(self.num_leaves, self.num_leaves_to_search, self.training_sample_size). \
-            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold). \
+        index = scann.ScannBuilder(vecs, self.training_iterations, self.distance_measure).\
+            score_ah(self.dimensions_per_block, self.anisotropic_quantization_threshold).\
             reorder(self.reordering_num_neighbors).create_pybind()
         return index
 
     def query(self, keys: 'np.ndarray', top_k: int, *args, **kwargs) -> Tuple['np.ndarray', 'np.ndarray']:
         if self.reordering_num_neighbors < top_k:
             self.logger.warning('The number of reordering_num_neighbors should be the same or higher than top_k')
+
         neighbors, dist = self.query_handler.search_batched(keys, top_k)
         return neighbors, dist
 

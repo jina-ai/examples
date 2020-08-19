@@ -22,7 +22,7 @@ class ScannTestCase(unittest.TestCase):
 
     def test_scann_indexer(self):
 
-        with ScannIndexer(index_filename='scann.test.gz') as a:
+        with ScannIndexer(index_filename='scann.test_small_num_neighbors.gz') as a:
             a.add(vec_idx, vec)
             a.save()
             self.assertTrue(os.path.exists(a.index_abspath))
@@ -40,7 +40,7 @@ class ScannTestCase(unittest.TestCase):
             self.assertEqual(idx.shape, dist.shape)
             self.assertEqual(idx.shape, (10, 4))
 
-        self.add_tmpfile(index_abspath, save_abspath)
+        #self.add_tmpfile(index_abspath, save_abspath)
 
 
 if __name__ == '__main__':
