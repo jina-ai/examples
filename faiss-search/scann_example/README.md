@@ -27,10 +27,10 @@ They have a typo when running under MacOs,  [you can find more info here](https:
 
 You need to change the following files:
 
-memory_logging.h
-partitioner_base.h
-dataset.cc
-kmeans_tree_node.cc
+`memory_logging.h`
+`partitioner_base.h`
+`dataset.cc`
+`kmeans_tree_node.cc`
 
 in ech file change the  `#include <hash_set>`
 for 
