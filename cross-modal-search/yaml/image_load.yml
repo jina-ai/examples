@@ -16,7 +16,7 @@ requests:
     SearchRequest:
       - !FilterQL
         with:
-          lookups: {'modality': 'image'}
+          lookups: {'mime_type': 'image/png'}
       - !URI2Buffer {}
       - !CraftDriver
         with:
