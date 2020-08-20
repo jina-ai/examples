@@ -23,13 +23,13 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 - [Overview](#overview)
 - [3 APIs for indexing your data](#3-APIs-for-indexing-your-data)
-    - [index_ndarray API](1-index_ndarry-api)
-    - [index_files API](2-index_files-api)
-    - [index_lines API](3-index_lines-api)
+    - [index_ndarray API](#1-index_ndarry-api)
+    - [index_files API](#2-index_files-api)
+    - [index_lines API](#3-index_lines-api)
 - [3 APIs for searching your data](#3-APIs-for-searching-your-data)
-    - [search_ndarray API](1-search_ndarry-api)
-    - [search_files API](2-search_files-api)
-    - [search_lines API](3-search_lines-api)
+    - [search_ndarray API](#1-search_ndarry-api)
+    - [search_files API](#2-search_files-api)
+    - [search_lines API](#3-search_lines-api)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -264,7 +264,7 @@ request {
 }
 ```
 
-## 3 APIs for querying your data
+## 3 APIs for searching your data
 
 ### 1. search_ndarry API
 `search_ndarray()` is the API for searching `ndarray`. 
