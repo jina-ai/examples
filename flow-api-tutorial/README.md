@@ -23,11 +23,11 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 - [Overview](#overview)
 - [3 APIs for indexing your data](#3-APIs-for-indexing-your-data)
-    - [index_ndarray API](#1-index_ndarry-api)
+    - [index_ndarray API](#1-index_ndarray-api)
     - [index_files API](#2-index_files-api)
     - [index_lines API](#3-index_lines-api)
 - [3 APIs for searching your data](#3-APIs-for-searching-your-data)
-    - [search_ndarray API](#1-search_ndarry-api)
+    - [search_ndarray API](#1-search_ndarray-api)
     - [search_files API](#2-search_files-api)
     - [search_lines API](#3-search_lines-api)
 - [Wrap up](#wrap-up)
@@ -42,7 +42,7 @@ Jina supports you to index/search your data in a simple way. And it exposes 3 AP
 
 ## 3 APIs for indexing your data
 
-### 1. index ndarry API
+### 1. index_ndarray API
 `index_ndarray()` is the API for indexing `ndarray`. 
 
 ```python
@@ -140,7 +140,7 @@ with f:
     f.index_files(f'../pokedex-with-bit/pods/*.yml')
 ```
 #### Let's explain the main part in code snippets and logs
-API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 yaml files. As a result, you can find 5 `request.index.docs` in the log, and the paths of the 5 files stores in `request.index.docs.uri`. Please refer to [index_ndarray()](#1-index_ndarry-api) for more information.
+API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 yaml files. As a result, you can find 5 `request.index.docs` in the log, and the paths of the 5 files stores in `request.index.docs.uri`. Please refer to [index_ndarray()](#1-index_ndarray-api) for more information.
 ```protobuf
 envelope {
   receiver_id: "4c5eff0d35"
@@ -214,7 +214,7 @@ with f:
     f.index_lines(lines=input_str)
 ``` 
 #### Let's explain the main part in code snippets and logs
-API `index_lines()` reads input data from `input_str`. There are 2 elements in the `input_str`. As a result, you can find 2 `request.index.docs` in the log, and the input data stores in `request.index.docs.text`. Please refer to [index_ndarray API](#1-index_ndarry-api) for more information.
+API `index_lines()` reads input data from `input_str`. There are 2 elements in the `input_str`. As a result, you can find 2 `request.index.docs` in the log, and the input data stores in `request.index.docs.text`. Please refer to [index_ndarray API](#1-index_ndarray-api) for more information.
 
 ```protobuf
 envelope {
@@ -266,7 +266,7 @@ request {
 
 ## 3 APIs for searching your data
 
-### 1. search_ndarry API
+### 1. search_ndarray API
 `search_ndarray()` is the API for searching `ndarray`. 
 ```python
 import numpy as np
@@ -276,7 +276,7 @@ f = Flow().add(uses='_logforward')
 with f:
    f.search_ndarray(input_data)
 ```
-The steps and logs are quite the same as [index_ndarray API](#1-index_ndarry-api), the main difference is that `request.index` is replaced by `request.search`
+The steps and logs are quite the same as [index_ndarray API](#1-index_ndarray-api), the main difference is that `request.index` is replaced by `request.search`
 ### 2. search_files API
 `search_files()` is the API for searching `files`. 
 ```python
