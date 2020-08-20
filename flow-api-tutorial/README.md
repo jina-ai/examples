@@ -23,13 +23,13 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 - [Overview](#overview)
 - [3 APIs for indexing your data](#3-APIs-for-indexing-your-data)
-    - [index_ndarray API](index_ndarry-API)
-    - [index_files API](index_files-API)
-    - [index_lines API](index_lines-API)
+    - [index_ndarray API](1-index_ndarry-api)
+    - [index_files API](2-index_files-api)
+    - [index_lines API](3-index_lines-api)
 - [3 APIs for searching your data](#3-APIs-for-searching-your-data)
-    - [search_ndarray API](search_ndarry-API)
-    - [search_files API](search_files-API)
-    - [search_lines API](search_lines-API)
+    - [search_ndarray API](1-search_ndarry-api)
+    - [search_files API](2-search_files-api)
+    - [search_lines API](3-search_lines-api)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -42,7 +42,7 @@ Jina supports you to index/search your data in a simple way. And it exposes 3 AP
 
 ## 3 APIs for indexing your data
 
-### 1. index_ndarry API
+### 1. index ndarry API
 `index_ndarray()` is the API for indexing `ndarray`. 
 
 ```python
@@ -266,7 +266,7 @@ request {
 
 ## 3 APIs for querying your data
 
-###1. search_ndarry API
+### 1. search_ndarry API
 `search_ndarray()` is the API for searching `ndarray`. 
 ```python
 import numpy as np
@@ -277,7 +277,7 @@ with f:
    f.search_ndarray(input_data)
 ```
 The steps and logs are quite the same as [index_ndarray API](`index_ndarray()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
-###2. search_files API
+### 2. search_files API
 `search_files()` is the API for searching `files`. 
 ```python
 from jina.flow import Flow
@@ -286,7 +286,7 @@ with f:
     f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
 ```
 The steps and logs are quite the same as [index_files API](`index_files()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
-###3. search_lines API
+### 3. search_lines API
 `search_lines()` is the API for searching `lines`. 
 ```python
 from jina.flow import Flow
