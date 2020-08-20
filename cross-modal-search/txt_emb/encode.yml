@@ -8,10 +8,17 @@ metas:
   workspace: ./
 requests:
   on:
-    [SearchRequest, IndexRequest]:
+    IndexRequest:
       - !FilterQL
         with:
           lookups: {'modality': 'text'}
+      - !EncodeDriver
+        with:
+          method: encode
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'mime_type': 'text/plain'}
       - !EncodeDriver
         with:
           method: encode
