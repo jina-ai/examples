@@ -125,7 +125,7 @@ request {
   }
 }
 ```
-Printed in the log, Flow formatted the input data by `jina.proto`, which is a [protobuf](https://docs.jina.ai/api/jina.proto.html?highlight=proto#module-jina.proto) file. Pods forward the structured input data to each other or to the clients by [gRPC](https://docs.jina.ai/chapters/restapi/index.html?highlight=grpc).
+Printed in the log, Flow formatted the input data by `jina.proto`, which is a [protobuf](https://docs.jina.ai/chapters/proto/docs.html) file. Pods forward the structured input data to each other or to the clients by [gRPC](https://docs.jina.ai/chapters/restapi/index.html?highlight=grpc).
 
 `envelope` and `request` are the top of the log structure. `envelope` includes some metadata and control data. `request` contains input data and related metadata. A 3*8 matrix was sent to the Flow as an input. which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
 
