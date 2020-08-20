@@ -140,7 +140,7 @@ with f:
     f.index_files(f'../pokedex-with-bit/pods/*.yml')
 ```
 #### Let's explain the main part in code snippets and logs
-API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 yaml files. As a result, you can find 5 `request.index.docs` in the log, and the paths of the 5 files stores in `request.index.docs.uri`. Please refer to [index_ndarray()](`index_ndarray()`-is-the-API-for-indexing-`ndarray`) for more information.
+API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 yaml files. As a result, you can find 5 `request.index.docs` in the log, and the paths of the 5 files stores in `request.index.docs.uri`. Please refer to [index_ndarray()](#1-index_ndarry-api) for more information.
 ```protobuf
 envelope {
   receiver_id: "4c5eff0d35"
@@ -214,7 +214,7 @@ with f:
     f.index_lines(lines=input_str)
 ``` 
 #### Let's explain the main part in code snippets and logs
-API `index_lines()` reads input data from `input_str`. There are 2 elements in the `input_str`. As a result, you can find 2 `request.index.docs` in the log, and the input data stores in `request.index.docs.text`. Please refer to [index_ndarray()](`index_ndarray()`-is-the-API-for-indexing-`ndarray`) for more information.
+API `index_lines()` reads input data from `input_str`. There are 2 elements in the `input_str`. As a result, you can find 2 `request.index.docs` in the log, and the input data stores in `request.index.docs.text`. Please refer to [index_ndarray API](#1-index_ndarry-api) for more information.
 
 ```protobuf
 envelope {
@@ -276,7 +276,7 @@ f = Flow().add(uses='_logforward')
 with f:
    f.search_ndarray(input_data)
 ```
-The steps and logs are quite the same as [index_ndarray API](`index_ndarray()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
+The steps and logs are quite the same as [index_ndarray API](#1-index_ndarry-api), the main difference is that `request.index` is replaced by `request.search`
 ### 2. search_files API
 `search_files()` is the API for searching `files`. 
 ```python
@@ -285,7 +285,7 @@ f = Flow().add(uses='_logforward')
 with f:
     f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
 ```
-The steps and logs are quite the same as [index_files API](`index_files()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
+The steps and logs are quite the same as [index_files API](#2-index_files-api), the main difference is that `request.index` is replaced by `request.search`
 ### 3. search_lines API
 `search_lines()` is the API for searching `lines`. 
 ```python
@@ -295,7 +295,7 @@ f = Flow().add(uses='_logforward')
 with f:   
     f.search_lines(lines=[text, ])
 ```
-The steps and logs are quite the same as [index_lines API](`index_lines()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
+The steps and logs are quite the same as [index_lines API](#3-index_lines-api), the main difference is that `request.index` is replaced by `request.search`
 ## Wrap up
 In this example, we showed you how to use `index` and `search` API in a `flow`, and described the data structure in `flow` procedure.
 
