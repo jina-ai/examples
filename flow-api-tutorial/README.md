@@ -23,13 +23,13 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 - [Overview](#overview)
 - [3 APIs for indexing your data](#3-APIs-for-indexing-your-data)
-    - [index_ndarray API](`index_ndarray()`-is-the-API-for-indexing-`ndarray`)
-    - [index_files API](`index_files()`-is-the-API-for-indexing-`files`)
-    - [index_lines API](`index_lines()`-is-the-API-for-indexing-`lines`) 
+    - [index_ndarray API](index_ndarry-API)
+    - [index_files API](index_files-API)
+    - [index_lines API](index_lines-API)
 - [3 APIs for searching your data](#3-APIs-for-searching-your-data)
-    - [search_ndarray API](`search_ndarray()`-is-the-API-for-searching-`ndarray`)
-    - [search_files API](`search_files()`-is-the-API-for-searching-`files`)
-    - [search_lines API](`search_lines()`-is-the-API-for-searching-`lines`) 
+    - [search_ndarray API](search_ndarry-API)
+    - [search_files API](search_files-API)
+    - [search_lines API](search_lines-API)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -42,7 +42,8 @@ Jina supports you to index/search your data in a simple way. And it exposes 3 AP
 
 ## 3 APIs for indexing your data
 
-### 1. `index_ndarray()` is the API for indexing `ndarray`. 
+### 1. index_ndarry API
+`index_ndarray()` is the API for indexing `ndarray`. 
 
 ```python
 import numpy as np
@@ -129,7 +130,8 @@ Printed in the log, Flow formatted the input data by `jina.proto`, which is a [p
 
 `envelope` and `request` are the top of the log structure. `envelope` includes some metadata and control data. `request` contains input data and related metadata. A 3*8 matrix was sent to the Flow as an input. which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
 
-### 2. `index_files()` is the API for indexing `files` 
+### 2. index_files API
+`index_files()` is the API for indexing `files` 
 
 ```python
 from jina.flow import Flow
@@ -202,7 +204,8 @@ request {
   }
 }
 ```
-### 3. `index_lines()` is the API for indexing `lines`. 
+### 3. index_lines API
+`index_lines()` is the API for indexing `lines`. 
 ```python
 from jina.flow import Flow
 input_str = ['aaa','bbb']
@@ -263,7 +266,8 @@ request {
 
 ## 3 APIs for querying your data
 
-###1. `search_ndarray()` is the API for searching `ndarray`. 
+###1. search_ndarry API
+`search_ndarray()` is the API for searching `ndarray`. 
 ```python
 import numpy as np
 from jina.flow import Flow
@@ -273,7 +277,8 @@ with f:
    f.search_ndarray(input_data)
 ```
 The steps and logs are quite the same as [index_ndarray API](`index_ndarray()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
-###2. `search_files()` is the API for searching `files`. 
+###2. search_files API
+`search_files()` is the API for searching `files`. 
 ```python
 from jina.flow import Flow
 f = Flow().add(uses='_logforward')
@@ -281,7 +286,8 @@ with f:
     f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
 ```
 The steps and logs are quite the same as [index_files API](`index_files()`-is-the-API-for-indexing), the main difference is that `request.index` is replaced by `request.search`
-###3. `search_lines()` is the API for searching `lines`. 
+###3. search_lines API
+`search_lines()` is the API for searching `lines`. 
 ```python
 from jina.flow import Flow
 text = input('please type a sentence: ')
