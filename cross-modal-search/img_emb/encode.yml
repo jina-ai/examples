@@ -3,7 +3,7 @@ metas:
   name: img-encoder
   py_modules:
     - model.py
-    - VSEImageEncoder.py
+    - __init__.py
   workspace: ./
 requests:
   on:

@@ -4,9 +4,11 @@ __license__ = "Apache-2.0"
 import torch
 from torch.autograd import Variable
 # model is a file from the vsepp github
+import sys
+sys.path.append(".")
 from model import VSE
 
-from jina.executors.encoders.image.torchvision import ImageTorchEncoder
+from jina.hub.encoders.image.torchvision import ImageTorchEncoder
 
 
 class VSEImageEncoder(ImageTorchEncoder):
