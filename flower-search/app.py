@@ -2,14 +2,13 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 
-import click
 import os
-import string
 import random
-import sys
-import io
-from PIL import Image
+import string
+
+import click
 from jina.flow import Flow
+
 
 RANDOM_SEED = 14
 
@@ -20,7 +19,6 @@ def config():
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['JINA_PORT'] = str(45678)
     os.environ['ENCODER'] = os.environ.get('ENCODER', 'jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2')
-    # os.environ['ENCODER'] = 'yaml/encode.yml'
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 def get_random_ws(workspace_path, length=8):
@@ -45,10 +43,14 @@ def main(task, num_docs):
         f.use_rest_gateway()
         with f:
             f.block()
+    elif task == 'dryrun':
+        f = Flow.load_config('flow-query.yml')
+        with f:
+            pass
     else:
-        raise NotImplementedError(f'unknown task: {task}. A valid task is either `index` or `query`.')
+        raise NotImplementedError(
+            f'unknown task: {task}. A valid task is either `index` or `query` or `dryrun`.')
 
 
 if __name__ == '__main__':
     main()
-

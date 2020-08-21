@@ -8,23 +8,18 @@ from PIL import Image
 from jina.flow import Flow
 from pkg_resources import resource_filename
 
-image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
-parallel = 1
-shards = 8
-
-os.environ['PARALLEL'] = str(parallel)
-os.environ['SHARDS'] = str(shards)
-os.environ['TMP_WORKSPACE'] = '/tmp/jina/workspace'
-os.environ['TMP_RESULTS'] = '/tmp/jina/workspace/results'
-os.environ['WORKDIR'] = '/tmp/jina/workspace'
-os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45696))
-os.environ['COLOR_CHANNEL_AXIS'] = str(0)
-
-f = Flow.load_config('flow-query.yml')
-f.use_grpc_gateway()
 
 result_html = []
-os.makedirs(os.environ['TMP_RESULTS'], exist_ok=True)
+
+def config():
+    os.environ['PARALLEL'] = str(1)
+    os.environ['SHARDS'] = str(8)
+    os.environ['COLOR_CHANNEL_AXIS'] = str(0)
+    os.environ['TMP_WORKSPACE'] = '/tmp/jina/workspace'
+    os.environ['TMP_RESULTS'] = '/tmp/jina/workspace/results'
+    os.makedirs(os.environ['TMP_RESULTS'], exist_ok=True)
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45696))
+
 
 def print_result(resp):
     for d in resp.search.docs:
@@ -37,6 +32,7 @@ def print_result(resp):
             im.save(fname)
             result_html.append(f'<img src="{fname}" />')
         result_html.append('</td></tr>\n')
+
 
 def write_html(html_path):
     with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
@@ -53,7 +49,18 @@ def write_html(html_path):
         pass
 
 
-with f:
-    f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=5)
+def main():
+    config()
+    image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
+    f = Flow.load_config('flow-query.yml')
+    f.use_grpc_gateway()
 
-write_html('result.html')
+    with f:
+        f.search_files(image_src, sampling_rate=.01, batch_size=8, output_fn=print_result, top_k=5)
+
+    write_html('result.html')
+
+
+if __name__ == '__main__':
+    main()
+    
