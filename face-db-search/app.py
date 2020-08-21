@@ -3,63 +3,43 @@ __license__ = "Apache-2.0"
 
 
 import os
-import sys
+import click
 
 from jina.flow import Flow
 
-num_docs = os.environ.get('MAX_DOCS', 500)
-image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
-
 
 def config():
-    parallel = 2 if sys.argv[1] == 'index' else 1
-    shards = 8
-
     os.environ['TMP_WORKSPACE'] = '/tmp/jina/workspace'
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['SHARDS'] = str(shards)
-    os.environ['WORKDIR'] = '/tmp/jina/workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['SHARDS'] = str(8)
+    os.makedirs(os.environ['TMP_WORKSPACE'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45692))
 
 
-# for index
-def index():
-    f = Flow.load_config('flow-index.yml')
-
-    with f:
-        f.index_files(image_src, batch_size=8, read_mode='rb', size=num_docs)
-
-
-# for search
-def search():
-    f = Flow.load_config('flow-query.yml')
-
-    with f:
-        f.block()
-
-
-# for test before put into docker
-def dryrun():
-    f = Flow.load_config('flow-query.yml')
-
-    with f:
-        pass
+@click.command()
+@click.option('--task', '-t')
+@click.option('--num_docs', '-n', default=500)
+def main(task, num_docs):
+    config()
+    image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
+    os.environ['PARALLEL'] = str(2) if task == 'index' else str(1)
+    if task == 'index':
+        f = Flow().load_config('flow-index.yml')
+        with f:
+            f.index_files(image_src, batch_size=8, read_mode='rb', size=num_docs)
+    elif task == 'query':
+        f = Flow().load_config('flow-query.yml')
+        f.use_rest_gateway()
+        with f:
+            f.block()
+    elif task == 'dryrun':
+        f = Flow.load_config('flow-query.yml')
+        with f:
+            pass
+    else:
+        raise NotImplementedError(
+            f'unknown task: {task}. A valid task is either `index` or `query` or `dryrun`.')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('choose between "index" and "search" mode')
-        exit(1)
-    if sys.argv[1] == 'index':
-        config()
-        index()
-    elif sys.argv[1] == 'search':
-        config()
-        search()
-    elif sys.argv[1] == 'dryrun':
-        config()
-        dryrun()
-    else:
-        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
+    main()
