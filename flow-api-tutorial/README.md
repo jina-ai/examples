@@ -50,10 +50,10 @@ with f:
     f.index_ndarray(input_data)
 ```
     
-* Add an empty pod with config `_logforward` to the Flow. [`_logforward`](https://docs.jina.ai/chapters/simple_exec.html) is a built-in yaml, which just forwards input data to the results, and it locates in `jina/resources/executors._forward.yml`. You can also use your own [yaml](https://docs.jina.ai/chapters/yaml/yaml.html) to organize `pods`.
-* Start the Flow by using API `index_ndarray()`. The results will be printed in the logs. 
+* Add an dummy pod with config `_logforward` to the Flow. [`_logforward`](https://docs.jina.ai/chapters/simple_exec.html) is a built-in yaml, which just forwards input data to the results and prints it to the log. It locates in `jina/resources/executors._forward.yml`. You can also use your own [yaml](https://docs.jina.ai/chapters/yaml/yaml.html) to organize `pods`.
+* Use the Flow to index an `ndarray` by calling the `index_ndarray()` API. 
 
-The data structure for `index_ndarray()` is used to transfer data. As we use `_logforward`, it will be printed out in the logs as follows:
+Calling the `index_ndarray()` API will generate requests with the following message.
 ```protobuf
 envelope {
   receiver_id: "7b6015cb12"
@@ -117,11 +117,11 @@ request {
   }
 }
 ```
-The data structure is defined in `jina.proto`. `jina.proto` is a [protobuf](https://docs.jina.ai/chapters/proto/docs.html) file. Pods forward the structured input data to each other or to the clients by [gRPC](https://docs.jina.ai/chapters/restapi/index.html?highlight=grpc) services.
+The structure of the message is defined in the format of [protobuf](https://docs.jina.ai/chapters/proto/docs.html). Check more details of the data structure at [`jina.proto`](/jina/proto/jina.proto).  Messages are passed between the Pods in the Flow.
 
 `envelope` and `request` are the top of the data structure. `envelope` includes some metadata and control data. `request` contains input data and related metadata. A 3*8 matrix was sent to the Flow as an input. which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
 
-`search_ndarray` is the API for searching `np.ndarray`. The data structure will be replaced from `request.index` to `request.search`. and the other nodes stay the same.
+`search_ndarray()` is the API for searching `np.ndarray`. The data structure will be replaced from `request.index` to `request.search`. and the other nodes stay the same.
 ```python
 import numpy as np
 from jina.flow import Flow
