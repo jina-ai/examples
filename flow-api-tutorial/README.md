@@ -34,7 +34,7 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## Overview
-Jina supports you to index/search your data in a simple way. And it exposes 3 APIs for each of them, which help you to index or search `np.ndarray`, `files`, and `text`.
+Jina supports you to index/search your data in a simple way. And it exposes 3 APIs for each of them, which help you to index or search *np.ndarray*, *files*, and *text*.
 
 ## 3 APIs for indexing and searching your data
 
