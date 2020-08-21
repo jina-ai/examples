@@ -8,13 +8,13 @@ rm -rf runs/f30k_vse++/ && rm -rf runs/f30k_vse++_resnet* && rm -rf runs/f30k_vs
 rm -rf vocab/coco* && rm -rf vocab/f8k* && rm -rf vocab/10crop*/ && rm -rf vocab/f30k_precomp* && \
 rm -rf runs.tar && rm -rf vocab.tar
 
-ADD requirements.txt ./
+COPY . ./
 
 RUN git clone https://github.com/JoanFM/vsepp.git -b works && mv vsepp/model.py . && mv vsepp/vocab.py . && rm -rf vsepp && \
 pip install -r requirements.txt && \
 python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()" && \
 python -c "import nltk; nltk.download('punkt')"
 
-ADD VSETextEncoder.py encode.yml ./
+RUN pip install pytest && pytest -v -s
 
-ENTRYPOINT ["jina", "pod", "--uses", "encode.yml", "--timeout-ready", "60000"]
+ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
