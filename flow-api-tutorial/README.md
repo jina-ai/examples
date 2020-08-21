@@ -281,10 +281,11 @@ with f:
 ```
 ## Wrap up
 Now you've got a simple flow to index/search different data, let's wrap up what we've covered in the demo.
+
 `Flow` offers three different types of API for indexing/searching data,
-    1. `index_ndarray` and `search_ndarray` are used to handle `np.ndarray` and load the `ndarray` into `request.[index|search].docs.blob` field.
-    2. `index_files` and `search_files` are used to process files and store the file names in `request.[index|search].docs.uri`  
-    3. `index_lines` and `search_lines` are used to process text data and store the texts in `request.[index|search]docs.text`
+1. `index_ndarray` and `search_ndarray` are used to handle `np.ndarray` and load the `ndarray` into `request.[index|search].docs.blob` field.
+2. `index_files` and `search_files` are used to process files and store the file names in `request.[index|search].docs.uri`  
+3. `index_lines` and `search_lines` are used to process text data and store the texts in `request.[index|search]docs.text`
 ## Next Steps
 
 - Write your own Flows.
