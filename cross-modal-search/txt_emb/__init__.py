@@ -5,6 +5,8 @@ import torch
 import numpy as np
 # model is a file from the vsepp github
 # vocab needed for pickle
+import sys
+sys.path.append(".")
 from vocab import Vocabulary
 from torch.autograd import Variable
 from model import VSE

@@ -4,7 +4,7 @@ metas:
   py_modules:
     - vocab.py
     - model.py
-    - VSETextEncoder.py
+    - __init__.py
   workspace: ./
 requests:
   on:
