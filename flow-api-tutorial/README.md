@@ -23,9 +23,9 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 - [Overview](#overview)
 - [3 APIs for indexing and searching your data](#3-APIs-for-indexing-and-searching-your-data)
-    - [ndarray API](#1-ndarray-api)
-    - [files API](#2-files-api)
-    - [lines API](#3-lines-api)
+    - [API for ndarray](#1-api-for-ndarray)
+    - [API for files](#2-api-for-files)
+    - [API for text](#3-api-for-text)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
@@ -38,7 +38,7 @@ Jina supports you to index/search your data in a simple way. And it exposes 3 AP
 
 ## 3 APIs for indexing and searching your data
 
-### 1. ndarray API
+### 1. API for ndarray
 `index_ndarray()` is the API for indexing `np.ndarray` 
 
 ```python
@@ -117,7 +117,7 @@ request {
   }
 }
 ```
-The structure of the message is defined in the format of [protobuf](https://docs.jina.ai/chapters/proto/docs.html). Check more details of the data structure at [`jina.proto`](/jina/proto/jina.proto).  Messages are passed between the Pods in the Flow.
+The structure of the message is defined in the format of [protobuf](https://docs.jina.ai/chapters/proto/docs.html). Check more details of the data structure at [`jina.proto`](https://docs.jina.ai/chapters/proto/docs.html#jina.proto).  Messages are passed between the Pods in the Flow.
 
 `envelope` and `request` are the top of the data structure. `envelope` includes some metadata and control data. `request` contains input data and related metadata. A 3*8 matrix was sent to the Flow as an input. which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
 
@@ -131,7 +131,7 @@ with f:
     f.search_ndarray(input_data)
 ```
 
-### 2. files API
+### 2. API for files
 `index_files()` is the API for indexing `files`. 
 
 ```python
@@ -213,7 +213,7 @@ with f:
     f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
 ```
 
-### 3. lines API
+### 3. API for text
 `index_lines()` is the API for indexing `text`. 
 ```python
 from jina.flow import Flow
@@ -281,13 +281,10 @@ with f:
 ```
 ## Wrap up
 Now you've got a simple flow to index/search different data, let's wrap up what we've covered in the demo.
-1. `flow` transfers data with a protobuf structure. 
-2. Both of built-in yaml and customized yaml are available to set your `flow` up.
-3. `flow` process 3 kinds of data
-    1. `index_ndarray` and `search_ndarray` process `np.ndarray`. 
-    2. `index_files` and `search_files` process `files`.  
-    3. `index_lines` and `search_lines` process `text`.  
-
+`Flow` offers three different types of API for indexing/searching data,
+    1. `index_ndarray` and `search_ndarray` are used to handle `np.ndarray` and load the `ndarray` into `request.[index|search].docs.blob` field.
+    2. `index_files` and `search_files` are used to process files and store the file names in `request.[index|search].docs.uri`  
+    3. `index_lines` and `search_lines` are used to process text data and store the texts in `request.[index|search]docs.text`
 ## Next Steps
 
 - Write your own Flows.
