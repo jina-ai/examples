@@ -8,10 +8,13 @@ import click
 from jina.flow import Flow
 
 
-def config():
+def config(task):
+    parallel = 2 if task == 'index' else 1
+
     os.environ['TMP_WORKSPACE'] = '/tmp/jina/workspace'
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['SHARDS'] = str(8)
+    os.environ['PARALLEL'] = str(parallel)
     os.makedirs(os.environ['TMP_WORKSPACE'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45692))
 
@@ -20,9 +23,8 @@ def config():
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=500)
 def main(task, num_docs):
-    config()
+    config(task)
     image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
-    os.environ['PARALLEL'] = str(2) if task == 'index' else str(1)
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
