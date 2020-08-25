@@ -47,6 +47,7 @@ def input_search_text_data(text):
     document = jina_pb2.Document()
     document.text = text
     document.modality = 'text'
+    document.mime_type = 'plain/text'
     return [document]
 
 
@@ -56,6 +57,7 @@ def input_search_image_file(image_file_path):
     document = jina_pb2.Document()
     document.buffer = image_buffer
     document.modality = 'image'
+    document.mime_type = 'image'
     return [document]
 
 
