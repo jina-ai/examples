@@ -14,13 +14,13 @@ from jina.flow import Flow
 RANDOM_SEED = 14
 
 def config():
-    os.environ['PARALLEL'] = str(1)
+    os.environ['PARALLEL'] = str(4)
     os.environ['SHARDS'] = str(2)
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/flower'
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['JINA_PORT'] = str(45678)
-    # os.environ['ENCODER'] = os.environ.get('ENCODER', 'jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2')
-    os.environ['ENCODER'] = 'yaml/encode.yml'
+    os.environ['ENCODER'] = os.environ.get('ENCODER', 'jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2')
+    # os.environ['ENCODER'] = 'yaml/encode.yml'
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 def get_random_ws(workspace_path, length=8):

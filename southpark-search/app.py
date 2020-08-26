@@ -17,19 +17,20 @@ def get_random_ws(workspace_path, length=8):
     dn = ''.join(random.choice(letters) for i in range(length))
     return os.path.join(workspace_path, dn)
 
-def print_topk(resp, word):
+
+def print_topk(resp, sentence):
     for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {word}')
+        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
             score = match.score.value
             if score < 0.0:
                 continue
             character = match.meta_info.decode()
-            sentence = match.chunks[0].text
-            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, character.upper(), sentence.strip()))
+            dialog = match.chunks[0].text
+            print('> {:>2d}({:.2f}). {} said, "{}"'.format(idx, score, character.upper(), dialog))
 
 
-def config(num_docs,mode='index'):
+def config(num_docs, mode='index'):
     os.environ['PARALLEL'] = os.environ.get('PARALLEL', str(2) if mode == 'index' else str(1))
     os.environ['SHARDS'] = os.environ.get('SHARDS', str(1))
     os.environ['MAX_NUM_DOCS'] = os.environ.get('MAX_NUM_DOCS', str(num_docs))
@@ -37,14 +38,15 @@ def config(num_docs,mode='index'):
 
 
 def index(num_docs):
-    config(num_docs, mode = 'index')
+    config(num_docs, mode='index')
     data_path = os.path.join(os.environ['DATA_DIR'], os.environ['DATA_FILE'])
     f = Flow().load_config('flow-index.yml')
     with f:
         f.index_lines(filepath=data_path, batch_size=8, size=int(os.environ['MAX_NUM_DOCS']))
 
+
 def query(num_docs, top_k):
-    config(num_docs, mode = 'search')
+    config(num_docs, mode='search')
     f = Flow().load_config('flow-query.yml')
     with f:
         while True:
@@ -54,8 +56,9 @@ def query(num_docs, top_k):
             ppr = lambda x: print_topk(x, text)
             f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 
+
 def query_restful(num_docs):
-    config(num_docs, mode = 'search')
+    config(num_docs, mode='search')
     f = Flow().load_config('flow-query.yml')
     f.use_rest_gateway()
     with f:
@@ -63,11 +66,10 @@ def query_restful(num_docs):
 
 
 def dryrun(num_docs):
-    config(num_docs, mode = 'dryrun')
+    config(num_docs, mode='dryrun')
     f = Flow().load_config('flow-index.yml')
     with f:
         f.dry_run()
-
 
 
 @click.command()

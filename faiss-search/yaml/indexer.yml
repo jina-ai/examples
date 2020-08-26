@@ -17,6 +17,15 @@ metas:
   workspace: './workspace'
 requests:
   on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: wrapidx
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          traverse_on: matches
+          depth_range: [0, 0]
     IndexRequest:
       - !VectorIndexDriver
         with:
