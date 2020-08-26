@@ -42,7 +42,7 @@ def print_topk(resp, word):
             score = match.score.value
             if score < 0.0:
                 continue
-            text = match.text
+            text = match.chunks[0].text
             print('> {:>2d}({:.2f}). "{}"'.format(idx, score, text.strip()))
 
 
