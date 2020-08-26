@@ -2,7 +2,6 @@
 requests:
   on:
     SearchRequest:
-      - !Chunk2DocRankDriver
+      - !CollectMatches2DocRankDriver
         with:
-          depth_range: [0, 1]
           traverse_on: 'matches'
