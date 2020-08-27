@@ -104,8 +104,8 @@ You should have also read the key concepts at the top of this page to get a good
 Let's get the basic files we need to get moving:
 
 ```
-git clone git@github.com:alexcg1/my-first-jina-app.git
-cd my-first-jina-app
+git clone https://github.com/jina-ai/examples.git
+cd examples/my-first-jina-app
 ```
 
 ### Cookiecutter
