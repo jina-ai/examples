@@ -32,6 +32,7 @@ In this example, we'll use the [17flowers dataset](http://www.robots.ox.ac.uk/~v
 - [Add a Customized Executor](#add-a-customized-executor)
 - [Wrap Up](#wrap-up)
 - [Next Steps](#next-steps)
+- [Similar Examples](#similar-examples)
 - [Documentation](#documentation)
 - [Community](#community)
 - [License](#license)
@@ -198,6 +199,30 @@ pods:
 
 Back to our example, here we use the Docker image containing the pre-trained `mobilenet_v2` model from the `torchvision` lib. So that you do **NOT** need to install the `torchvision` lib or download a pre-trained model. Everything is packed into the Docker image. As long as you have Docker installed, the container Pods will run out-of-the-box.
 
+### Dockerfile
+
+```docker
+FROM pytorch/pytorch:latest
+
+RUN pip install jina==0.4.1 uvloop
+RUN python -c "import torchvision.models as models; models.mobilenet_v2(pretrained=True)"
+
+ENTRYPOINT ["jina", "pod", "--uses", "ImageTorchEncoder"]
+```
+
+The docker can be made from jina[devel] or any other image (pytorch in this case). We add dependancies such as jina , uvloop etc. The model weights are downloaded and cached in the 'RUN python -c ...' command. The entrypoint runs this container as a jina pod. All arguments of jina pod can be overridden during runtime(such as specifying another yaml file).
+
+We build this docker using the following command :
+
+
+```bash
+docker build -t jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2 .
+```
+
+Once built, we can pass this image tag to the Flow API.
+
+
+
 ### Scale up 
 Another newcomer is the `parallel` argument. As its name implies, `parallel` defines the number of parallel Peas in a Pod that can run at the same time. This is useful for scaling up your service. In this example, as the encoding procedure with the deep-learning models is well-known to be slow, we set the `parallel` to 4, thus starting 4 Peas to encode the Chunks in parallel. This greatly speeds up the indexing process.
 
@@ -208,6 +233,8 @@ pods:
     uses: jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2
     parallel: 4
 ```
+
+
 
 ## Run the Flows
 ### Index 
@@ -440,6 +467,30 @@ Hooray! Now you've got a pretty simple flower image search engine working. Let's
 <!---
 - Check out the Docker images at Jina hub.
 --->
+- Try similar examples.
+
+## Similar Examples
+
+The flow design of following examples are very similar to the flower example. Please use an analogous way to take a try.
+
+### Face-db-search
+
+In this demo, we used the Labeled Faces in the Wild (LFW) Dataset data from [http://vis-www.cs.umass.edu/lfw/lfw.tgz](http://vis-www.cs.umass.edu/lfw/#download) to build a face search system.
+
+<p align="center">
+  <img src=".github/face-demo.jpg" alt="Search Demo" width="90%">
+</p>
+
+To reproduce this example, one can use the following codes:
+
+```bash
+cd face-db-seach
+pip install --upgrade -r requirements.txt
+bash ./get_data.sh
+python app.py index
+python app.py query
+```
+
 
 ## Documentation 
 

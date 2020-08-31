@@ -19,6 +19,7 @@ pods:
   chunk_indexer:
     uses: yaml/index-chunk.yml
     separated_workspace: true
+    shards: $SHARDS
     polling: all
     uses_reducing: _merge_all
   ranker:
