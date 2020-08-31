@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [MNIST Search with Mindspore](#mnist-search-with-mindspore)
+  - [Train LeNet with Mindspore](#train-lenet-with-mindspore)
+  - [Index the data](#index-the-data)
+  - [Search the data](#search-the-data)
+  - [TODOs](#todos)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # MNIST Search with Mindspore
 
 ## Train LeNet with Mindspore
