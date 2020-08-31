@@ -15,18 +15,18 @@
 
 </p>
 
-In this demo, we'll use some code snippets to show you how to use flow API for indexing/searching different data. Make sure you've gone through [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and understood the Pod, Flow, Yaml before moving on. 
+In this demo, we'll use some code snippets to show you how to use Jina's Flow API to index or search different data. Make sure you've gone through [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and understood Pods, Flows, and YAML continuing.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
 - [Overview](#overview)
-- [3 APIs for indexing and searching your data](#3-APIs-for-indexing-and-searching-your-data)
+- [3 APIs for Indexing and Searching Your Data](#3-APIs-for-indexing-and-searching-your-data)
     - [API for ndarray](#1-api-for-ndarray)
-    - [API for files](#2-api-for-files)
-    - [API for text](#3-api-for-text)
-- [Wrap up](#wrap-up)
+    - [API for Files](#2-api-for-files)
+    - [API for Text](#3-api-for-text)
+- [Wrap Up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -34,11 +34,13 @@ In this demo, we'll use some code snippets to show you how to use flow API for i
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## Overview
-Jina supports you to index/search your data in a simple way. And it exposes 3 APIs for each of them, which help you to index or search *np.ndarray*, *files*, and *text*.
 
-## 3 APIs for indexing and searching your data
+Jina lets you index or search your data in a simple way. Whether you're indexing or searching, there are 3 APIs for each task, which cover *np.ndarray*, *files*, or *text*.
 
-### 1. API for ndarray
+## 3 APIs for Indexing and Searching Your Data
+
+### 1. API for `ndarray`
+
 `index_ndarray()` is the API for indexing `np.ndarray` 
 
 ```python
@@ -46,14 +48,15 @@ import numpy as np
 from jina.flow import Flow
 input_data = np.random.random((3,8))
 f = Flow().add(uses='_logforward')
-with f:
+with [f](f):
     f.index_ndarray(input_data)
 ```
     
-* Add an dummy pod with config `_logforward` to the Flow. [`_logforward`](https://docs.jina.ai/chapters/simple_exec.html) is a built-in yaml, which just forwards input data to the results and prints it to the log. It locates in `jina/resources/executors._forward.yml`. You can also use your own [yaml](https://docs.jina.ai/chapters/yaml/yaml.html) to organize `pods`.
+* Add a dummy Pod with config `_logforward` to the Flow. [`_logforward`](https://docs.jina.ai/chapters/simple_exec.html) is a built-in YAML, which just forwards input data to the results and prints it to the log. It is located in `jina/resources/executors._forward.yml`. You can also use your own [YAML](https://docs.jina.ai/chapters/yaml/yaml.html) to organize `pods`.
 * Use the Flow to index an `ndarray` by calling the `index_ndarray()` API. 
 
-Calling the `index_ndarray()` API will generate requests with the following message.
+Calling the `index_ndarray()` API generates requests with the following message:
+
 ```protobuf
 envelope {
   receiver_id: "7b6015cb12"
@@ -117,11 +120,16 @@ request {
   }
 }
 ```
-The structure of the message is defined in the format of [protobuf](https://docs.jina.ai/chapters/proto/docs.html). Check more details of the data structure at [`jina.proto`](https://docs.jina.ai/chapters/proto/docs.html#jina.proto).  Messages are passed between the Pods in the Flow.
 
-`envelope` and `request` are the top of the data structure. `envelope` includes some metadata and control data. `request` contains input data and related metadata. A 3*8 matrix was sent to the Flow as an input. which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
+The structure of this message is defined in the format of [protobuf](https://docs.jina.ai/chapters/proto/docs.html). Check more details of the data structure at [`jina.proto`](https://docs.jina.ai/chapters/proto/docs.html#jina.proto). Messages are passed between the Pods in the Flow.
 
-`search_ndarray()` is the API for searching `np.ndarray`. The data structure will be replaced from `request.index` to `request.search`. and the other nodes stay the same.
+`envelope` and `request` are at the top of the data structure:
+
+* `envelope` includes metadata and control data. 
+* `request` contains input data and related metadata. The input is a 3*8 matrix that is sent to the Flow, which matches 3 `request.index.docs`, and the `request.index.docs.blog.shape` is 8. The vector of the matrix is stored in `request.index.docs.blob`, and the `request.index.docs.blob.dtype` indicates the type of the vector.
+
+`search_ndarray()` is the API for searching `np.ndarray`. The data structure will be replaced from `request.index` to `request.search`, and the other nodes stay the same.
+
 ```python
 import numpy as np
 from jina.flow import Flow
@@ -131,8 +139,9 @@ with f:
     f.search_ndarray(input_data)
 ```
 
-### 2. API for files
-`index_files()` is the API for indexing `files`. 
+### 2. API for Files
+
+`index_files()` is the API for indexing files. 
 
 ```python
 from jina.flow import Flow
@@ -140,7 +149,12 @@ f = Flow().add(uses='_logforward')
 with f:
     f.index_files(f'../pokedex-with-bit/pods/*.yml')
 ```
-API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 yaml files. As a result, you can find 5 `request.index.docs` in the log, and the paths of the 5 files stores in `request.index.docs.uri`. 
+
+API `index_files()` reads input data from `../pokedex-with-bit/pods/*.yml`. In this directory, there are 5 YAML files, so you in the protobuf you can see:
+
+* 5 `docs` under `request.index`
+* Each file's path in a `request.index.doc.uri`
+
 ```protobuf
 envelope {
   receiver_id: "4c5eff0d35"
@@ -205,7 +219,9 @@ request {
 }
 
 ```
+
 `search_files()` is the API for searching `files`. 
+
 ```python
 from jina.flow import Flow
 f = Flow().add(uses='_logforward')
@@ -213,8 +229,10 @@ with f:
     f.search_files(f'../pokedex-with-bit/pods/chunk.yml')
 ```
 
-### 3. API for text
+### 3. API for Text
+
 `index_lines()` is the API for indexing `text`. 
+
 ```python
 from jina.flow import Flow
 input_str = ['aaa','bbb']
@@ -222,7 +240,11 @@ f = Flow().add(uses='_logforward')
 with f:
     f.index_lines(lines=input_str)
 ``` 
-API `index_lines()` reads input data from `input_str`. There are 2 elements in the `input_str`. As a result, you can find 2 `request.index.docs` in the log, and the input data is stored in `request.index.docs.text`. 
+
+`index_lines()` reads input data from `input_str`. As you can see above, there are 2 elements in `input_str`, so in the protobuf you can see:
+
+* 2 `docs` under `request.index.docs`
+* Each individual string in `request.index.docs.text`. 
 
 ```protobuf
 envelope {
@@ -279,23 +301,29 @@ f = Flow().add(uses='_logforward')
 with f:   
     f.search_lines(lines=[text, ])
 ```
-## Wrap up
-Now you've got a simple flow to index/search different data, let's wrap up what we've covered in the demo.
+## Wrap Up
 
-`Flow` offers three different types of API for indexing/searching data,
-1. `index_ndarray` and `search_ndarray` are used to handle `np.ndarray` and load the `ndarray` into `request.[index|search].docs.blob` field.
-2. `index_files` and `search_files` are used to process files and store the file names in `request.[index|search].docs.uri`  
-3. `index_lines` and `search_lines` are used to process text data and store the texts in `request.[index|search]docs.text`
+Now you've got a simple Flow to index or search different data. Let's wrap up what we've covered in the demo:
+
+`Flow` offers three different types of API for indexing/searching data:
+
+| API                                  | Input        | Storage Location                            |
+| ---                                  | ---          | ---                                         |
+| `index_ndarray` and `search_ndarray` | `np.ndarray` | `request.[index.search].docs.blob`   |
+| `index_files` and `search_files`     | Files        | `request.[index.search].docs.uri`         |
+| `index_lines` and `search_lines`     | Text data    | `request.[index.search]docs.text`         |
+
 ## Next Steps
 
 - Write your own Flows.
-- try more examples on `index` and `search`
+- Try more examples on `index` and `search`
 
-| APIs | Links  |
+| API | Links  |
 | --- | --- |
 |`ndarray` | [Faiss Search](https://github.com/jina-ai/examples/tree/master/faiss-search) |
 |`files`  |[Flower Search](https://github.com/jina-ai/examples/tree/master/flower-search)|
 |`lines` | [Southpark Search](https://github.com/jina-ai/examples/tree/master/southpark-search) |
+
 <!---
 - Check out the Docker images at Jina hub. 
 --->
