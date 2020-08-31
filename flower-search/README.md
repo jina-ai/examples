@@ -30,7 +30,7 @@ In this example, we'll use the [17flowers dataset](http://www.robots.ox.ac.uk/~v
 - [Define the Flows](#define-the-flows)
 - [Run the Flows](#run-the-flows)
 - [Add a Customized Executor](#add-a-customized-executor)
-- [Wrap up](#wrap-up)
+- [Wrap Up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
 - [Community](#community)
