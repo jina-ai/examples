@@ -233,15 +233,13 @@ else:
     f.index_lines(lines=['abc', 'cde', 'efg'], batch_size=16, read_mode='r', size=num_docs)
 ```
 
-In this example, we already assigned the data path to be our `startrek_tng.csv` data when we download it. If data path is not assigned, it will index just 3 simple strings. 
+In this example, we already assigned the data path to be our `startrek_tng.csv` dataset when we downloaded it. If data path is not assigned, it will index only 3 simple strings. 
 
 #### Index More Documents
 
-While we're build this search engine, we don't want to spend ages indexing only to have issues later on! So we set the number of indexed document to 500 to speed things up while we're testing
+While we're build this search engine, we don't want to spend ages indexing only to have issues later on! So we set the number of indexed document to 500 to speed things up while we're testing.
 
-Once we've verified everything works, we can set it to `50000` or any number less than `62605`, which is the number of lines of the dataset, to index more.
-
-In the section above the `config` function, let's change:
+Once we've verified everything works, we can set it to `50000` or any number less than `62605`, which is the number of lines in the dataset, to index more. To change that, edit the number in the section above the `config` function:
 
 ```python
 num_docs = os.environ.get('MAX_DOCS', 500)
@@ -250,7 +248,7 @@ num_docs = os.environ.get('MAX_DOCS', 500)
 to:
 
 ```python
-num_docs = os.environ.get('MAX_DOCS', 50000) # any number you like
+num_docs = os.environ.get('MAX_DOCS', 50000) # any number you like ,but less than 62605
 ```
 
 
