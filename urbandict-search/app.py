@@ -9,8 +9,8 @@ import random
 from jina.flow import Flow
 
 RANDOM_SEED = 10  # 5
-os.environ['PARALLEL'] = str(2)
-os.environ['SHARDS'] = str(2)
+os.environ['PARALLEL'] = str(1)
+os.environ['SHARDS'] = str(1)
 
 
 def get_random_ws(workspace_path, length=8):
@@ -27,9 +27,9 @@ def print_topk(resp, word):
             score = match.score.value
             if score <= 0.0:
                 continue
-            word_def = match.chunks[0].text
             word = match.meta_info.decode()
-            print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_def.strip()))
+            word_defs = match.text
+            print('> {:>2d}({:.2f}). {}: "{}"'.format(idx, score, word, word_defs.strip()))
 
 
 @click.command()
@@ -39,7 +39,6 @@ def print_topk(resp, word):
 def main(task, num_docs, top_k):
     workspace_path = '/tmp/jina/urbandict'
     os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
-    print(f'{os.environ["TMP_WORKSPACE"]}')
     data_fn = os.environ.get('WASHED_DATA_DIR', os.path.join(workspace_path, 'urbandict-word-defs.csv'))
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
