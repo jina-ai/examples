@@ -17,7 +17,7 @@ pods:
     shards: $SHARDS
     separated_workspace: true
     polling: all
-    reducing_uses: _merge_all
+    uses_reducing: _merge_all
   ranker:
     uses: MinRanker
   doc_indexer:
