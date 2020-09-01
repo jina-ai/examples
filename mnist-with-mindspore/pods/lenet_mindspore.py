@@ -1,3 +1,6 @@
+__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__license__ = "Apache-2.0"
+
 from jina.executors.encoders.frameworks import BaseMindsporeEncoder
 from jina.executors.crafters.image.io import ImageReader
 from jina.executors.decorators import batching
