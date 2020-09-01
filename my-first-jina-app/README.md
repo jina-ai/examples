@@ -223,41 +223,36 @@ Note: Your character lines may be a little different. That's okay!
 
 ### Load Data
 
-Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. `app.py` is a little too simple out of the box, so we'll have to make some changes:
-
-Open `app.py` in your editor and check the `index` function, we currently have:
+Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it.
 
 ```python
-def index():
-    with f:
-        f.index_lines(['abc', 'cde', 'efg'], batch_size=64, read_mode='r', size=num_docs)
+data_path = os.environ.get('DATA_PATH', None)
+if data_path:
+    f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+else:
+    f.index_lines(lines=['abc', 'cde', 'efg'], batch_size=16, read_mode='r', size=num_docs)
 ```
 
-As you can see, this indexes just 3 strings. Let's load up our Star Trek file instead with the `filepath` parameter. Just replace the last line of the function:
+In this example, we already assigned the data path to be our `startrek_tng.csv` data when we download it. If data path is not assigned, it will index just 3 simple strings. 
 
-```python
-def index():
-    with f:
-        f.index_lines(filepath='data/startrek_tng.csv', batch_size=64, read_mode='r', size=num_docs)
-```
+#### Index More Documents
 
-#### Index Fewer Documents
+While we're build this search engine, we don't want to spend ages indexing only to have issues later on! So we set the number of indexed document to 500 to speed things up while we're testing
 
-While we're here, let's reduce the number of documents we're indexing, just to speed things up while we're testing. We don't want to spend ages indexing only to have issues later on!
+Once we've verified everything works, we can set it to `50000` or any number less than `62605`, which is the number of lines of the dataset, to index more.
 
 In the section above the `config` function, let's change:
-
-```python
-num_docs = os.environ.get('MAX_DOCS', 50000)
-```
-
-to:
 
 ```python
 num_docs = os.environ.get('MAX_DOCS', 500)
 ```
 
-That should speed up our testing by a factor of 100! Once we've verified everything works we can set it back to `50000` to index more of our dataset. If it still seems too slow, reduce that number down to 50 or so.
+to:
+
+```python
+num_docs = os.environ.get('MAX_DOCS', 50000) # any number you like
+```
+
 
 ## 🏃 Run the Flows
 
