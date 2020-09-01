@@ -3,10 +3,6 @@ with:
   read_only: true
   port_expose: 45678
 pods:
-  splitter:
-    uses: yaml/query-craft.yml
-    parallel: $PARALLEL
-    read_only: true
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
@@ -18,7 +14,10 @@ pods:
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
+    read_only: true
   ranker:
-    uses: MinRanker
+    uses: yaml/rank.yml
+    read_only: true
   doc_indexer:
     uses: yaml/index-doc.yml
+    read_only: true

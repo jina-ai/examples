@@ -4,6 +4,10 @@ pods:
     uses: yaml/craft-split.yml
     parallel: $PARALLEL
     read_only: true
+  sentencizer:
+    uses: yaml/craft-sentencizer.yml
+    parallel: $PARALLEL
+    read_only: true
   encoder:
     uses: yaml/encode.yml
     parallel: $PARALLEL
@@ -15,7 +19,7 @@ pods:
     separated_workspace: true
   doc_indexer:
     uses: yaml/index-doc.yml
-    needs: gateway
+    needs: splitter
   join_all:
     uses: _merge
     needs: [doc_indexer, chunk_indexer]
