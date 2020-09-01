@@ -118,11 +118,11 @@ We use [cookiecutter](https://github.com/cookiecutter/cookiecutter) to spin up a
 
 For our Star Trek example, we recommend the following settings:
 
-* `project_name`: `Star Trek`
-* `project_slug`: `star_trek` (default value)
-* `task_type`: `nlp`
-* `index_type`: `strings`
-* `public_port`: `65481` (default value)
+* `project_name`: `Star Trek` (non-default)
+* `project_slug`: `star_trek` 
+* `task_type`: `nlp` (non-default)
+* `index_type`: `strings` (non-default)
+* `public_port`: `65481` 
 
 Just use the defaults for all other fields.
 
@@ -171,8 +171,7 @@ Our goal is to find out who said what in Star Trek episodes when a user queries 
 Now let's ensure we're back in our base folder and download and the dataset by running:
 
 ```bash
-cd ..
-bash ./get_data.sh
+bash ../get_data.sh
 ```
 
 <details>
@@ -202,7 +201,6 @@ startrek_tng.csv                               100%[============================
 Now that `get_data.sh` has downloaded the data, let's get back into the `star_trek` directory and make sure the file has everything we want:
 
 ```shell
-cd star_trek
 head data/startrek_tng.csv
 ```
 
