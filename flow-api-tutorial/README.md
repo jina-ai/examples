@@ -22,10 +22,7 @@ In this demo, we'll use some code snippets to show you how to use Jina's Flow AP
 **Table of Contents**
 
 - [Overview](#overview)
-- [3 APIs for Indexing and Searching Your Data](#3-APIs-for-indexing-and-searching-your-data)
-    - [API for ndarray](#1-api-for-ndarray)
-    - [API for Files](#2-api-for-files)
-    - [API for Text](#3-api-for-text)
+- [3 APIs for Indexing and Searching Your Data](#3-apis-for-indexing-and-searching-your-data)
 - [Wrap Up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
