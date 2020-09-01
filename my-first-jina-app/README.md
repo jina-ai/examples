@@ -79,7 +79,7 @@ You'll see the results output in JSON format. Each result looks like:
           },
 ```
 
-Now go back to your terminal and hit `Ctrl-C` (or `Command-C` on Mac) a few times to ensure you've stopped Docker.
+Now go back to your terminal and hit `Ctrl-C` a few times to ensure you've stopped Docker.
 
 </details>
 
