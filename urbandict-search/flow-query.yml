@@ -18,7 +18,10 @@ pods:
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
+    read_only: true
   ranker:
     uses: MinRanker
+    read_only: true
   doc_indexer:
     uses: yaml/index-doc.yml
+    read_only: true
