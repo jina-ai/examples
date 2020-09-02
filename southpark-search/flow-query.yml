@@ -4,7 +4,7 @@ with:
   port_expose: $JINA_PORT
 pods:
   splittor:
-    uses: pods/craft-split.yml
+    uses: pods/craft-index.yml
     parallel: $PARALLEL
     read_only: true
   encoder:
