@@ -3,6 +3,13 @@ components:
   - !Splitter
     metas:
       name: splitter  # a customized name
+      workspace: $TMP_WORKSPACE
+      requests:
+        on:
+          [SearchRequest, IndexRequest]:
+            - !CraftDriver
+              with:
+                method: craft
   - !Sentencizer
     with:
       min_sent_len: 3
