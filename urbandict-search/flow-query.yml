@@ -4,7 +4,7 @@ with:
   port_expose: 45678
 pods:
   splitter:
-    uses: yaml/query-craft.yml
+    uses: yaml/craft-query.yml
     parallel: $PARALLEL
     read_only: true
   encoder:
