@@ -1,9 +1,32 @@
-!Splitter
+!CompoundExecutor
+components:
+  - !Splitter
+    metas:
+      name: splitter  # a customized name
+      workspace: $TMP_WORKSPACE
+      requests:
+        on:
+          [SearchRequest, IndexRequest]:
+            - !CraftDriver
+              with:
+                method: craft
+  - !Sentencizer
+    with:
+      min_sent_len: 3
+      max_sent_len: 128
+      punct_chars: '.,;!?:'
+    metas:
+      name: sentencizer  # a customized name
+name: crafter
+workspace: $TMP_WORKSPACE
 metas:
-  name: splitter  # a customized name
-  workspace: $TMP_WORKSPACE
   py_modules: splitter.py
 requests:
   on:
     [SearchRequest, IndexRequest]:
-      - !CraftDriver {}
+      - !CraftDriver
+        with:
+          executor: splitter
+      - !SegmentDriver
+        with:
+          executor: sentencizer

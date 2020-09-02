@@ -1,7 +1,0 @@
-!MinRanker
-requests:
-  on:
-    SearchRequest:
-      - !CollectMatches2DocRankDriver
-        with:
-          traverse_on: 'matches'
