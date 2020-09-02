@@ -3,7 +3,7 @@ pods:
   reader:
     uses: pods/extract.yml
   splittor:
-    uses: pods/craft-index.yml
+    uses: pods/craft-split.yml
     parallel: $PARALLEL
     read_only: true
   encoder:
