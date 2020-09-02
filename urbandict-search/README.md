@@ -98,7 +98,7 @@ However, we have another Pod working in silent. Actually, the input to the very 
 !Flow
 pods:
   splitter:
-    uses: yaml/craft-split.yml
+    uses: yaml/craft-index.yml
   encoder:
     uses: yaml/encode.yml
     timeout_ready: 60000
@@ -170,7 +170,7 @@ with:
   read_only: true
 pods:
   splitter:
-    uses: yaml/craft-split.yml
+    uses: yaml/craft-index.yml
   encoder:
     uses: yaml/encode.yml
     timeout_ready: 60000
