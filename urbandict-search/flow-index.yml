@@ -1,7 +1,7 @@
 !Flow
 pods:
   splitter:
-    uses: yaml/craft-index.yml
+    uses: yaml/craft-split.yml
     parallel: $PARALLEL
     read_only: true
   encoder:
