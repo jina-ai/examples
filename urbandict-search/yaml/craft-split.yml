@@ -1,9 +1,0 @@
-!Splitter
-metas:
-  name: splitter  # a customized name
-  workspace: $TMP_WORKSPACE
-  py_modules: splitter.py
-requests:
-  on:
-    [SearchRequest, IndexRequest]:
-      - !CraftDriver {}
