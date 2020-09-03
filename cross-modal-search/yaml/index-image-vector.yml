@@ -1,0 +1,19 @@
+!NumpyIndexer
+with:
+  index_filename: images_embs.gz
+  metrix: cosine
+metas:
+  name: images_vec_idx  # a customized name
+  workspace: './workspace'
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: images_vec_idx
+          depth_range: [0, 0]
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: images_vec_idx
+          depth_range: [0, 0]

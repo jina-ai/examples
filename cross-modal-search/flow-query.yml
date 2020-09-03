@@ -26,8 +26,10 @@ pods:
     timeout_ready: 600000
     read_only: true
     needs: [gateway]
-  image_indexer:
-    uses: yaml/index-image.yml
+  image_vector_indexer:
+    uses: yaml/index-image-vector.yml
+  image_kv_indexer:
+    uses: yaml/index-image-kv.yml
   image_ranker:
     uses: yaml/rank.yml
   join_all:

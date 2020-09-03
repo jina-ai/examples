@@ -15,8 +15,11 @@ pods:
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
-  image_indexer:
-    uses: yaml/index-image.yml
+  image_vector_indexer:
+    uses: yaml/index-image-vector.yml
+  image_kv_indexer:
+    uses: yaml/index-image-kv.yml
+    needs: [loader]
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
     parallel: $PARALLEL
