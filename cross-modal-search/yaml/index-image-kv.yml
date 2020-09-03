@@ -1,0 +1,25 @@
+!BinaryPbIndexer
+with:
+  index_filename: images.gz
+metas:
+  name: images_kv_idx  # a customized name
+  workspace: './workspace'
+requests:
+  on:
+    IndexRequest:
+      - !Buffer2URI {}
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
+      - !KVIndexDriver
+        with:
+          executor: images_kv_idx
+          depth_range: [0, 0]
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          executor: images_kv_idx
+          traverse_on: matches
+          depth_range: [0, 1]
