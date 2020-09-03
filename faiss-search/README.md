@@ -1,4 +1,4 @@
-# Build a Search system using Facebook AI Similarity Search (FAISS) as vector database
+# Build a Search system using Facebook AI Similarity Search (FAISS) as vector database <!-- omit in toc -->
 
 <p align="center">
 
@@ -22,24 +22,30 @@ In this demo, we use Jina to build a vector search engine that finds the closest
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Build a Search system using Facebook AI Similarity Search (FAISS) as vector database](#build-a-search-system-using-facebook-ai-similarity-search-faiss-as-vector-database)
-  - [Prerequirements](#prerequirements)
-  - [Prepare the data](#prepare-the-data)
-  - [Define the Flows](#define-the-flows)
-  - [Run the Flows](#run-the-flows)
-  - [Dive into the FaissIndexer](#dive-into-the-faissindexer)
-  - [Evaluate the results](#evaluate-the-results)
-  - [Wrap up](#wrap-up)
-  - [Next Steps](#next-steps)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [License](#license)
+- [Prerequirements](#prerequirements)
+- [Prepare the data](#prepare-the-data)
+- [Define the Flows](#define-the-flows)
+  - [Index](#index)
+  - [Query](#query)
+- [Run the Flows](#run-the-flows)
+  - [Index](#index-1)
+  - [Query](#query-1)
+- [Dive into the FaissIndexer](#dive-into-the-faissindexer)
+- [Evaluate the results](#evaluate-the-results)
+- [Wrap up](#wrap-up)
+- [Next Steps](#next-steps)
+- [Documentation](#documentation)
+- [Community](#community)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Prerequirements
 
-This demo requires Python 3.7 and jina installation. Since FAISS introduces many dependencies, the [Jina hub image](https://github.com/jina-ai/jina-hub/tree/master/indexers/vector/FaissIndexer) is used for simplicity.
+- Python 3.7
+- [Jina installation](https://github.com/jina-ai/jina#get-started)
+
+Additionally, since FAISS introduces many dependencies, the [Jina hub image](https://github.com/jina-ai/jina-hub/tree/master/indexers/vector/FaissIndexer) is used for simplicity.
 
 ## Prepare the data
 
