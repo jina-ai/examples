@@ -24,20 +24,18 @@ In this demo, we use Jina to build a vector search engine that finds the closest
   
 These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a document and only one chunk per document is used.
 
+Before moving forward, we highly suggest completing/reviewing our lovely [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jina#jina-hello-world-).
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 **Table of Contents**
 
-- [Prerequirements](#prerequirements)
+- [Requirements](#requirements)
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
-  - [Index](#index)
-  - [Query](#query)
 - [Run the Flows](#run-the-flows)
-  - [Index](#index-1)
-  - [Query](#query-1)
-- [Dive into the FaissIndexer](#dive-into-the-faissindexer)
+- [Dive into the `FaissIndexer`](#dive-into-the-faissindexer)
 - [Evaluate the results](#evaluate-the-results)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
@@ -47,10 +45,17 @@ These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_t
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Prerequirements
+## Requirements
 
-- Python 3.7
-- [Jina installation](https://github.com/jina-ai/jina#get-started)
+Be sure to create an environment with Python 3.7 or higher installed.
+
+Next, open a terminal and run:
+
+```Bash
+wget https://raw.githubusercontent.com/jina-ai/examples/master/faiss-search/requirements.txt
+
+pip install -r requirements.txt
+```
 
 Additionally, since FAISS introduces many dependencies, the [Jina hub image](https://github.com/jina-ai/jina-hub/tree/master/indexers/vector/FaissIndexer) is used for simplicity.
 
@@ -58,7 +63,10 @@ Additionally, since FAISS introduces many dependencies, the [Jina hub image](htt
 
 FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index.
 
-Running these scripts will set you up to use the example. It will fetch the ANN_SIFT10K dataset files and generate a workspace folder where the training data will be stored.
+Running these scripts will set you up the rest of the way for this example by:
+
+1. downloading the ANN_SIFT10K dataset files and
+2. generating a workspace folder where the training data will be stored
 
 This workspace folder will contain the built index once the vectors are indexed and will be mapped to the docker image.
 
@@ -69,11 +77,17 @@ This workspace folder will contain the built index once the vectors are indexed 
 
 ## Define the Flows
 
-### Index
+### Index <!-- omit in toc -->
 
-To index the data we first need to define our **Flow**. Here we use **YAML** file to define the Flow. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have 5 pods defined with the name of `crafter`, `encoder`, `faiss_indexer`, `doc_indexer`, and `join_all`. 
+To index the data we first need to define our **Flow** and for this example we'll use a **YAML** file. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have five pods defined:
 
-However, we have another Pod working in silent. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, the Forgotten Pod. For most time, we can safely ignore the **gateway** because it basically do the dirty orchestration work for the Flow.
+- `crafter`
+- `encoder`
+- `faiss_indexer`
+- `doc_indexer`
+- `join_all`
+
+However, we have another Pod working in silence. Actually, the input to the very first Pod is always the Pod with the name of **gateway**, aka the "Forgotten" Pod. Most of the time, we can safely ignore the **gateway** because it essentially does the dirty work of orchestrating the work for the Flow.
 
 <table style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -105,9 +119,10 @@ pods:
 </tr>
 </table>
 
-### Query
+### Query <!-- omit in toc -->
 
-As in the indexing time, we also need a Flow to process the request message during querying. The only difference with its index counterpart is that `doc_indexer` is piped to the `faiss_indexer` with a `ranker` in the middle.
+Just as we need to index, we also need a Flow to process the request message during querying. The only difference with its index counterpart is that `doc_indexer` is piped to the `faiss_indexer` with a `ranker` in the middle (see below).
+
 <table  style="margin-left:auto;margin-right:auto;">
 <tr>
 <td> flow-query.yml</td>
@@ -142,19 +157,19 @@ pods:
 </tr>
 </table>
 
-In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Later, the `MinRanker` ranks the chunks by min score value from all the retrieved chunks from `faiss_indexer`, Later, `doc_indexer` retrieves the actual document value from the Document Id.
+In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Later, the `MinRanker` ranks the chunks by minimum score value from all the chunks retrieved from the `faiss_indexer`, Later, `doc_indexer` retrieves the actual document value from the Document Id.
 
 ## Run the Flows
 
-### Index 
+### Index <!-- omit in toc -->
 
 Index is run with the following command, where batch_size can be chosen by the user. Indexing reads a file of numpy arrays, and sends them to the flow gateway in binary mode to be converted back into numpy arrays by the crafter.
 
 ```bash
-python app.py -t index -n 10000
+python app.py -t index -n $batch_size
 ```
 
-### Query
+### Query <!-- omit in toc -->
 
 Query can be run with the following command.
 
@@ -162,7 +177,7 @@ Query can be run with the following command.
 python app.py -t query
 ```
 
-## Dive into the FaissIndexer
+## Dive into the `FaissIndexer`
 
 The main contribution of this example is to try and understand how FAISS can be used to build the index. To understand how it works, let's take a look at the yaml file used to construct the `faiss_indexer`. It is important to note that `faiss_indexer` will run inside a docker image.
 
@@ -199,18 +214,17 @@ requests:
       - !ControlReqDriver {}
 ```
 
-The chunk indexer is formed by a CompoundExecutor composed by a `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as `FaissIndexer` composed with a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value one will keep track of the actual chunk values.
+The chunk indexer is formed by a CompoundExecutor which is composed of the `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as `FaissIndexer` composed of a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value will keep track of the actual chunk values.
 
 As we can see, `FaissIndexer` receives 3 parameters:
 
-- [`index_key`]: Relates to parameters used in the faiss [index factory](https://github.com/facebookresearch/faiss/wiki/The-index-factory) which determine types of inverted indexes and encoders used to index the vectors.
-- [`index_filename`]: File name where to store the index.
-- [`train_filepath`]: Path where to find the data needed to train the index.
+- [`index_key`]: Relates to parameters used in the faiss [index factory](https://github.com/facebookresearch/faiss/wiki/The-index-factory) which determines the types of inverted indexes and encoders used to index the vectors
+- [`index_filename`]: File name where the index is stored
+- [`train_filepath`]: Path where the train data to be indexed is stored
 
 ## Evaluate the results
 
-This demo also outputs the evaluation of search system. The used metric is recall@k where only the true nearest neighbor is considered to be a relevant document.
-Therefore, it computes how many times the true nearest neighbour is returned as one of the k closest vectors from a query. 
+This demo also outputs the evaluation of search system. The metric is recall@k where only the true nearest neighbor is considered to be a relevant document. To that end, it computes how many times the true nearest neighbour is returned as one of the k closest vectors from a query.
 
 With the default demo, the results are:
 
@@ -219,24 +233,23 @@ With the default demo, the results are:
 - recall@50: 0.7
 - recall@100: 0.74
 
-Using more complex inverted indices and encoders (different `index_key`) should lead to better results.
-Using `index_key: 'Flat'` gives a recall equal to 1 because it is the exhaustive search mode for FAISS. To learn more about the range of supported keys and options, be sure to visit [FAISS indexes](https://github.com/facebookresearch/faiss/wiki/Faiss-indexes).
+Using more complex inverted indices and encoders (i.e., different `index_key`) should lead to better results. Using `index_key: 'Flat'` gives a recall equal to 1 because it is the exhaustive search mode for FAISS. To learn more about the range of supported keys and options, be sure to visit [FAISS indexes](https://github.com/facebookresearch/faiss/wiki/Faiss-indexes).
 
 ## Wrap up
 
 In this example we have seen how to use `FaissIndexer` to use FAISS as a vector database. We also have seen how to use a pod inside a docker container inside our index and query flows.
 
-**Enjoy Coding with Jina!**
-
 ## Next Steps
 
-Going forward, try:  
+Where to go from here? You can always try:  
 
 - different kinds of inverted indices and options from FAISS.
 - other indexers or rankers.
 - indexing larger datasets.
 
 Finally, play around with different evaluation metrics.
+
+**Enjoy Coding with Jina!**
 
 ## Documentation
 
