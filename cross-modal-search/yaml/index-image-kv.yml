@@ -7,7 +7,7 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !Blob2PngURI {}
+      - !Buffer2URI {}
       - !ExcludeQL
         with:
           fields:
