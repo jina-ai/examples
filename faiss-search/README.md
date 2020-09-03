@@ -1,7 +1,7 @@
 # Build a Search system using Facebook AI Similarity Search (FAISS) as vector database
 
 <p align="center">
- 
+
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
@@ -16,7 +16,7 @@
 
 </p>
 
-In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query one. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/). This dataset is formed by 10K vectors to index, 100 vectors to query and 25K vectors to train the vector index. These vectors are SIFT descriptors for some image dataset. The example can very easily be adapted to work with larger datasets from the same source such as ANN_SIFT1M, ANN_GIFT1M or ANN_SIFT1B. For this demo, a vector is considered to be a document and only one chunk per document is used.
+In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query one. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/). This dataset is formed by 10K vectors to index, 100 vectors to query and 25K vectors to train the vector index. These vectors are SIFT descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source (see [here](http://corpus-texmex.irisa.fr/)). For this demo, a vector is considered to be a document and only one chunk per document is used.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -39,13 +39,14 @@ In this demo, we use Jina to build a vector search engine that finds the closest
 
 ## Prerequirements
 
-This demo requires Python 3.7 and jina installation. Since FAISS introduces many dependencies, the [jina hub image](https://github.com/jina-ai/jina-hub/tree/master/indexers/vector/FaissIndexer) is used for purposes of demonstration and simplicity.
+This demo requires Python 3.7 and jina installation. Since FAISS introduces many dependencies, the [Jina hub image](https://github.com/jina-ai/jina-hub/tree/master/indexers/vector/FaissIndexer) is used for simplicity.
 
 ## Prepare the data
 
 FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index. In this demo, running the next script will generate under workspace/ a file train.tgz that will be used by FAISS to train the index.
 
 Running these scripts will set you up to use the example. It will fetch the ANN_SIFT10K dataset files and generate a workspace folder where the training data will be stored.
+
 This workspace folder will contain the built index once the vectors are indexed and will be mapped to the docker image.
 
 ```bash
