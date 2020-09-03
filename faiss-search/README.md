@@ -16,10 +16,17 @@
 
 </p>
 
-In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query one. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/). This dataset is formed by 10K vectors to index, 100 vectors to query and 25K vectors to train the vector index. These vectors are SIFT descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source (see [here](http://corpus-texmex.irisa.fr/)). For this demo, a vector is considered to be a document and only one chunk per document is used.
+In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/), which is a dataset comprised of three vectors:  
+
+- 10K index
+- 100 vectors query
+- 25K vectors to train
+  
+These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a document and only one chunk per document is used.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
 **Table of Contents**
 
 - [Prerequirements](#prerequirements)
@@ -49,14 +56,13 @@ Additionally, since FAISS introduces many dependencies, the [Jina hub image](htt
 
 ## Prepare the data
 
-FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index. In this demo, running the next script will generate under workspace/ a file train.tgz that will be used by FAISS to train the index.
+FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index.
 
 Running these scripts will set you up to use the example. It will fetch the ANN_SIFT10K dataset files and generate a workspace folder where the training data will be stored.
 
 This workspace folder will contain the built index once the vectors are indexed and will be mapped to the docker image.
 
 ```bash
-./generate_training_data.sh
 ./get_siftsmall.sh
 ./generate_training_data.sh
 ```
@@ -145,7 +151,7 @@ In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours
 Index is run with the following command, where batch_size can be chosen by the user. Indexing reads a file of numpy arrays, and sends them to the flow gateway in binary mode to be converted back into numpy arrays by the crafter.
 
 ```bash
-python app.py -t index -n $batch_size
+python app.py -t index -n 10000
 ```
 
 ### Query
@@ -158,8 +164,7 @@ python app.py -t query
 
 ## Dive into the FaissIndexer
 
-The main contribution of this example is to try and understand how FAISS can be used to build the index.
-To understand how it works, let's take a look at the yaml file used to construct the `faiss_indexer`. It is important to note that `faiss_indexer` will run inside a docker image.
+The main contribution of this example is to try and understand how FAISS can be used to build the index. To understand how it works, let's take a look at the yaml file used to construct the `faiss_indexer`. It is important to note that `faiss_indexer` will run inside a docker image.
 
 Let's take a look at `yaml/indexer.yml`
 
@@ -194,13 +199,13 @@ requests:
       - !ControlReqDriver {}
 ```
 
-The chunk indexer is formed by a CompoundExecutor composed by a `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as FaissIndexer composed with a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value one will keep track of the actual chunk values.
+The chunk indexer is formed by a CompoundExecutor composed by a `FaissIndexer` and a `ChunkPbIndexer`. Having a vector indexer such as `FaissIndexer` composed with a key-value indexer is a common pattern in Jina since the vector indexer will do the similarity search and the key-value one will keep track of the actual chunk values.
 
 As we can see, `FaissIndexer` receives 3 parameters:
 
-- [index_key]: Relates to parameters used in the faiss [index factory](https://github.com/facebookresearch/faiss/wiki/The-index-factory) which determine types of inverted indexes and encoders used to index the vectors.
-- [index_filename]: File name where to store the index.
-- [train_filepath]: Path where to find the data needed to train the index.
+- [`index_key`]: Relates to parameters used in the faiss [index factory](https://github.com/facebookresearch/faiss/wiki/The-index-factory) which determine types of inverted indexes and encoders used to index the vectors.
+- [`index_filename`]: File name where to store the index.
+- [`train_filepath`]: Path where to find the data needed to train the index.
 
 ## Evaluate the results
 
