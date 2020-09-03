@@ -30,5 +30,5 @@ pods:
     uses: yaml/index-text.yml
   join_all:
     uses: _merge
-    needs: [image_indexer, text_indexer]
+    needs: [image_vector_indexer, image_kv_indexer, text_indexer]
     read_only: true
