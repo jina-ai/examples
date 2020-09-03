@@ -23,6 +23,7 @@ requests:
         with:
           executor: images_vec_idx
           depth_range: [0, 0]
+      - !Buffer2URI {}
       - !ExcludeQL
         with:
           fields:
