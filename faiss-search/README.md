@@ -215,21 +215,23 @@ With the default demo, the results are:
 - recall@100: 0.74
 
 Using more complex inverted indices and encoders (different `index_key`) should lead to better results.
-Using `index_key: 'Flat'` gives a recall equal to 1 because it is the exhaustive search mode for FAISS.
-Check https://github.com/facebookresearch/faiss/wiki/Faiss-indexes for a list of the supported keys and options.
+Using `index_key: 'Flat'` gives a recall equal to 1 because it is the exhaustive search mode for FAISS. To learn more about the range of supported keys and options, be sure to visit [FAISS indexes](https://github.com/facebookresearch/faiss/wiki/Faiss-indexes).
 
 ## Wrap up
 
-In this example we have seen how to use FaissIndexer to use FAISS as a vector database. We also have seen how to use a pod inside a docker container inside our index and query flows.
+In this example we have seen how to use `FaissIndexer` to use FAISS as a vector database. We also have seen how to use a pod inside a docker container inside our index and query flows.
 
 **Enjoy Coding with Jina!**
 
 ## Next Steps
 
-- Try different kind of inverted indices and options from FAISS.
-- Try other indexers or rankers.
-- Try indexing larger datasets.
-- Play around with different evaluation metrics.
+Going forward, try:  
+
+- different kinds of inverted indices and options from FAISS.
+- other indexers or rankers.
+- indexing larger datasets.
+
+Finally, play around with different evaluation metrics.
 
 ## Documentation
 
