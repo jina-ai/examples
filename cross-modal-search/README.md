@@ -119,16 +119,12 @@ how `data` is provided and adapt to your own data source.
 
 ### Query
 
-Currently there are 2 query modes: `query-i2t` which will query captions given an image (the input will be an image file path) and 
-`query-t2i` which will search `images` given text descriptions in input.
-
 ```bash
-python app.py -t query-t2i
-python app.py -t query-i2t
+python app.py -t query-restful
 ```
 
-There is also the option to run `query-restful`, but is not ready to work at this moment, because we miss the possibility 
-to pass `modality` using REST API.
+You can then query the system from [jinabox](https://jina.ai/jinabox.js/) using either images or text. 
+The default port number will be `45678`
 
 Examples of captions in the dataset:
 
