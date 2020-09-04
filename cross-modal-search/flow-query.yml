@@ -3,7 +3,11 @@ metas:
   prefetch: 10
   port_expose: $JINA_PORT
 pods:
-  normalize:
+  loader:
+    uses: yaml/image_load.yml
+    parallel: $PARALLEL
+    read_only: true
+  normalizer:
     uses: yaml/image_normalize.yml
     parallel: $PARALLEL
     read_only: true
