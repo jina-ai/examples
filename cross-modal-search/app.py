@@ -95,24 +95,6 @@ def main(task, num_docs, batch_size, top_k, data_set):
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index(input_fn=input_index_data(num_docs, batch_size, data_set), batch_size=batch_size)
-    elif task == 'query-t2i':
-        f = Flow().load_config('flow-query.yml')
-        with f:
-            while True:
-                text = input('please type a caption to search an image from: ')
-                if not text:
-                    break
-                f.search(input_fn=input_search_text_data(text),
-                         output_fn=lambda x: show_top_k(x, text), top_k=top_k)
-    elif task == 'query-i2t':
-        f = Flow().load_config('flow-query.yml')
-        with f:
-            while True:
-                image_file_path = input('please type an image file path to search for a caption: ')
-                if not image_file_path:
-                    break
-                f.search(input_fn=input_search_image_file(image_file_path),
-                         output_fn=lambda x: print_top_k(x, text), top_k=top_k)
     elif task == 'query-restful':
         # not working, missing a way to send modality via REST API
         f = Flow().load_config('flow-query.yml')
