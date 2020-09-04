@@ -1,5 +1,5 @@
 !Flow
-metas:
+with:
   prefetch: 10
 pods:
   loader:
