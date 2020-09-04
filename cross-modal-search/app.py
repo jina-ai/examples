@@ -31,12 +31,14 @@ def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
             document = jina_pb2.Document()
             document.buffer = image
             document.modality = 'image'
+            document.mime_type = 'image/jpeg'
             yield document
 
         for caption in captions:
             document = jina_pb2.Document()
             document.text = caption
             document.modality = 'text'
+            document.mime_type = 'plain/text'
             yield document
 
         if num_docs and (i + 1) * batch_size >= num_docs:
@@ -57,7 +59,7 @@ def input_search_image_file(image_file_path):
     document = jina_pb2.Document()
     document.buffer = image_buffer
     document.modality = 'image'
-    document.mime_type = 'image'
+    document.mime_type = 'image/jpeg'
     return [document]
 
 

@@ -7,12 +7,18 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !Buffer2URI {}
+      - !FilterQL
+        with:
+          lookups: {'modality': 'image'}
+      - !Buffer2URI
+        with:
+          base64: True
       - !ExcludeQL
         with:
           fields:
             - chunks
             - embedding
+            - buffer
       - !KVIndexDriver
         with:
           executor: images_kv_idx

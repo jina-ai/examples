@@ -19,7 +19,7 @@ pods:
     uses: yaml/index-image-vector.yml
   image_kv_indexer:
     uses: yaml/index-image-kv.yml
-    needs: [loader]
+    needs: [gateway]
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
     parallel: $PARALLEL
