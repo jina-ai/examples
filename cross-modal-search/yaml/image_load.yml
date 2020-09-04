@@ -13,5 +13,18 @@ requests:
       - !CraftDriver
         with:
           executor: reader
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'mime_type__contains': 'image'}
+      - !URI2Buffer {}
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - uri
+      - !CraftDriver
+        with:
+          executor: reader
     ControRequest:
       - !ControlReqDriver {}
