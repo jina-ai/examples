@@ -16,7 +16,7 @@
 
 </p>
 
-In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/), which is a dataset comprised of three vectors:  
+In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query. We will use the Facebook AI Similarity Search, ([FAISS](https://github.com/facebookresearch/faiss)), which is a library for efficient similarity search and clustering of dense vectors. This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/), which is a dataset comprised of three vector sets:  
 
 - 10K index
 - 100 vectors query
@@ -121,7 +121,7 @@ pods:
 
 ### Query <!-- omit in toc -->
 
-Just as we need to index, we also need a Flow to process the request message during querying. The only difference with its index counterpart is that `doc_indexer` is piped to the `faiss_indexer` with a `ranker` in the middle (see below).
+Just as we need to index, we also need a Flow to process the request message during querying. The only difference with its index counterpart is that `doc_indexer` is piped to the `faiss_indexer` (see below).
 
 <table  style="margin-left:auto;margin-right:auto;">
 <tr>
@@ -157,7 +157,7 @@ pods:
 </tr>
 </table>
 
-In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Later, the `MinRanker` ranks the chunks by minimum score value from all the chunks retrieved from the `faiss_indexer`, Later, `doc_indexer` retrieves the actual document value from the Document Id.
+In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Additionally, it will return the top_k most similiar documents in order of similiarity. Later, `doc_indexer` retrieves the actual document value from the Document Id.
 
 ## Run the Flows
 
@@ -244,7 +244,7 @@ In this example we have seen how to use `FaissIndexer` to use FAISS as a vector 
 Where to go from here? You can always try:  
 
 - different kinds of inverted indices and options from FAISS.
-- other indexers or rankers.
+- other indexers.
 - indexing larger datasets.
 
 Finally, play around with different evaluation metrics.
