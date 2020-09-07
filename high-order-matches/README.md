@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Retrieving High-order Matches](#retrieving-high-order-matches)
+  - [Prerequisite](#prerequisite)
+  - [Run & Plot](#run--plot)
+  - [Understand the YAML](#understand-the-yaml)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Retrieving High-order Matches
 
 New feature since `0.5.0`.
