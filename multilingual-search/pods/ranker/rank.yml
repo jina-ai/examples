@@ -1,0 +1,11 @@
+!MinRanker
+with:
+  {}
+requests:
+  on:
+    SearchRequest:
+      #- !LogInfoDriver {}
+      - !Chunk2DocRankDriver {}
+      - !LogInfoDriver {}
+    ControlRequest:
+      - !ControlReqDriver {}

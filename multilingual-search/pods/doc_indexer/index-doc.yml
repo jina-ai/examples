@@ -4,3 +4,16 @@ with:
 metas:
   name: docIndexer
   workspace: $TMP_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !KVIndexDriver
+        with:
+          recur_range: [0, 0]
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          recur_range: [0, 0]
+          recur_on: matches
+    ControlRequest:
+      - !ControlReqDriver {}

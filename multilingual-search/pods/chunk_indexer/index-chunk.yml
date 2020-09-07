@@ -13,8 +13,30 @@ components:
     metas:
       name: chunkidx  # a customized name
       workspace: $TMP_WORKSPACE
-
 metas:
   name: chunk_indexer
   workspace: $TMP_WORKSPACE
-
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+          recur_range: [1, 1]
+      - !LogInfoDriver {}
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+      - !LogInfoDriver {}
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
+          recur_range: [0, 1]
+          recur_on: (chunks, matches)
+      - !LogInfoDriver {}
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -1,5 +1,14 @@
 !Sentencizer
-
 with:
   min_sent_len: 2
   max_sent_len: 512
+requests:
+    on:
+      IndexRequest:
+        - !SegmentDriver {}
+      SearchRequest:
+        - !SegmentDriver {}
+        - !ExcludeQL
+          with:
+            fields:
+              - text
