@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Jina Gif Search Demo</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="main.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container-fluid" id="jina-ui" style="background: black">
+    <div class="row">
+        <div class="col-2">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    Query <span class="badge badge-light">{{loadedQuery}}/{{results.length}}</span>
+                </div>
+                <div class="card-body scroll-card">
+                    <div class="card" v-for="item in results" v-on:click="setQueryItem(item)"
+                         v-bind:class="{'inactive-query-card': item!=queryItem }">
+                        <img :src="'/dataset/thumblr-gif-data/' + getGifName(item.metaInfo)" class="card-img" loading="lazy"
+                             @load="addLoadedQuery">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card text-white bg-dark">
+                <div class="card-header">
+                    Results <span class="badge badge-light">{{loadedItem}}</span>
+                </div>
+                <div class="card-body scroll-card">
+                    <div v-masonry transition-duration="1s" item-selector=".item" class="masonry-container"
+                         style="height: 100%" id="my-masonry">
+                        <div v-masonry-tile class="item" :key="index"
+                             v-for="(item, index) in queryItem.topkResults" style="width: 16%">
+                            <div class="card bg-dark text-white" :class="{'border-danger': item.matchDoc.metaInfo==queryItem.metaInfo,
+                              'border-success': item == docItem}" data-toggle="modal" data-target="#exampleModal"
+                                 v-on:click="setDocItem(item)">
+                                <img :src="'/dataset/thumblr-gif-data/' + getGifName(item.matchDoc.metaInfo)" class="card-img"
+                                     loading="lazy"
+                                     @load="addLoadedImage">
+                                <div class="card-img-overlay">
+                                    <h5 class="card-title">{{index + 1}}</h5>
+                                    <p class="card-text">{{item.score.value.toFixed(3)}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
+<!--         aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-lg" role="document">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header">-->
+<!--                    <h5 class="modal-title" id="exampleModalLabel">-->
+<!--                        doc_id: <span class="badge badge-light">{{docItem.matchDoc.docId}}</span>-->
+<!--                        Score: <span class="badge badge-light">{{docItem.score.value.toFixed(4)}}</span>-->
+<!--                    </h5>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <div class="container col-md-12">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-3">-->
+<!--                                <h5>Doc info</h5>-->
+<!--                                <div class="table-responsive">-->
+<!--                                    <table class="table table-striped table-dark">-->
+<!--                                        <tbody>-->
+<!--                                        <tr v-for="(value, name) in docItem.matchDoc">-->
+<!--                                            <th scope="row">{{ name }}</th>-->
+<!--                                            <td>{{ value }}</td>-->
+<!--                                        </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col">-->
+<!--                                <h5>Breakdown</h5>-->
+<!--                                <div class="well" style="overflow: hidden">-->
+<!--                                    <json-tree :data="docItem.score.explained" :level="jsonTreeLevel"></json-tree>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <h5>Query frames: <span class="badge badge-light">{{queryItem.query.length}}</span></h5>-->
+<!--                            <img :src="getThumbnail(queryItem.query.metaInfo)" width="100%" loading="lazy">-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <h5>Doc frames: <span class="badge badge-light"> {{docItem.matchDoc.length}}</span></h5>-->
+<!--                            <img :src="getThumbnail(docItem.matchDoc.metaInfo)" width="100%" loading="lazy">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script async defer src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.0.0/masonry.pkgd.min.js"></script>
+<!--<script src="vue.js"></script>-->
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue-masonry@0.11.3/dist/vue-masonry-plugin-window.js"></script>
+<script src="https://unpkg.com/vue-json-tree@0.4.1/dist/json-tree.js"></script>
+<script type="text/javascript" src="vue-bindings.js"></script>
+
+</body>
+</html>

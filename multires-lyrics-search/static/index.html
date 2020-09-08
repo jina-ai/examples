@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Lyrics Search Demo</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/theme/default.css">
+
+    <link href="main.css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container-fluid">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="https://jina.ai">
+            <img src="jina-logo.svg" width="30" height="30"
+                 class="d-inline-block align-top" alt="" loading="lazy">
+            Lyrics Search Demo with Jina
+        </a>
+        <form class="form-inline">
+            <a class="btn btn-sm btn-outline-danger" type="button" href="https://www.youtube.com/watch?v=GzufeV8AY_w">Watch it on Youtube</a>
+            <a class="btn btn-sm btn-outline-secondary" type="button" href="https://get.jina.ai">Fork it on Github</a>
+        </form>
+    </nav>
+</div>
+
+<div class="container-fluid" id="jina-ui">
+    <div class="row">
+        <div class="col-3">
+            <div class="card">
+                <div class="card-header">
+                    Query
+                </div>
+                <div class="card-body">
+                    <label for="queryDoc">Input a multiline doc here:</label>
+                    <textarea class="form-control" id="queryDoc" rows="10" v-model="searchQuery"></textarea>
+                    <p class="card-text"><small class="text-muted">{{ searchIndicator }}</small></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Breakdown
+                    <button type="button" v-on:click="clearAllSelect()" class="btn btn-sm btn-secondary float-right">
+                        Toggle all
+                    </button>
+                </div>
+                <div class="card-body">
+                    <vue-slider ref="slider"
+                                v-model="distThreshold"
+                                v-bind="sliderOptions"></vue-slider>
+                    <small class="card-text text-muted">only show distance < {{ distThreshold }}</small>
+
+
+                    <div class="query-chunk-breakdown">
+                        <span class="query-chunk" v-on:click="selectChunk(item)"
+                              v-bind:style="{background: selectColor(index, item['isSelect'])}"
+                              v-for="(item, index) in queryChunks">{{searchQuery.substring(item.location[0], item.location[1])}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Top-{{topkDocs.length}} Results
+                </div>
+                <div class="card-body scroll-card">
+                    <div v-masonry transition-duration="1s" item-selector=".item" class="masonry-container"
+                         style="height: 100%" id="my-masonry">
+                        <div v-masonry-tile class="item" :key="index"
+                             v-for="(item, index) in topkDocs" style="width: 16%">
+                            <div class="card" v-on:click="searchQuery=item.matchDoc.text">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p class="lyric-text"
+                                           v-html="topkDocsDict.get(item.matchDoc.docId)['renderHTML']"></p>
+                                        <footer class="blockquote-footer">
+                                            <small class="text-muted">
+                                                in <cite title="Source Title">{{item.matchDoc.tags["SName"]}} </cite>
+                                            </small>
+                                        </footer>
+                                    </blockquote>
+                                    <p class="card-text">
+                                        <span class="badge badge-warning">{{index+1}}</span>
+                                        <small class="text-muted">Relevance {{ item.score.value.toFixed(3) }}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"-->
+    <!--         aria-hidden="true">-->
+    <!--        <div class="modal-dialog modal-lg" role="document">-->
+    <!--            <div class="modal-content">-->
+    <!--                <div class="modal-header">-->
+    <!--                    <h5 class="modal-title" id="exampleModalLabel">-->
+    <!--                        doc_id: <span class="badge badge-light">{{docItem.matchDoc.docId}}</span>-->
+    <!--                        Score: <span class="badge badge-light">{{docItem.score.value.toFixed(4)}}</span>-->
+    <!--                    </h5>-->
+    <!--                </div>-->
+    <!--                <div class="modal-body">-->
+    <!--                    <div class="container col-md-12">-->
+    <!--                        <div class="row">-->
+    <!--                            <div class="col-3">-->
+    <!--                                <h5>Doc info</h5>-->
+    <!--                                <div class="table-responsive">-->
+    <!--                                    <table class="table table-striped table-dark">-->
+    <!--                                        <tbody>-->
+    <!--                                        <tr v-for="(value, name) in docItem.matchDoc">-->
+    <!--                                            <th scope="row">{{ name }}</th>-->
+    <!--                                            <td>{{ value }}</td>-->
+    <!--                                        </tr>-->
+    <!--                                        </tbody>-->
+    <!--                                    </table>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="col">-->
+    <!--                                <h5>Breakdown</h5>-->
+    <!--                                <div class="well" style="overflow: hidden">-->
+    <!--                                    <json-tree :data="docItem.score.explained" :level="jsonTreeLevel"></json-tree>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
+    <!--                        <div class="row">-->
+    <!--                            <h5>Query frames: <span class="badge badge-light">{{queryItem.query.length}}</span></h5>-->
+    <!--                            <img :src="getThumbnail(queryItem.query.metaInfo)" width="100%" loading="lazy">-->
+    <!--                        </div>-->
+    <!--                        <div class="row">-->
+    <!--                            <h5>Doc frames: <span class="badge badge-light"> {{docItem.matchDoc.length}}</span></h5>-->
+    <!--                            <img :src="getThumbnail(docItem.matchDoc.metaInfo)" width="100%" loading="lazy">-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--                <div class="modal-footer">-->
+    <!--                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+</div>
+
+<script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script async defer src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.0.0/masonry.pkgd.min.js"></script>
+<!--<script src="vue.js"></script>-->
+<script src="https://unpkg.com/jinabox"></script>
+<script src="https://unpkg.com/vue@2.6.10/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue-masonry@0.11.3/dist/vue-masonry-plugin-window.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-slider-component@latest/dist/vue-slider-component.umd.min.js"></script>
+<script type="text/javascript" src="vue-bindings.js"></script>
+</body>
+</html>

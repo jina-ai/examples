@@ -1,0 +1,151 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: apiteam@swagger.io
+  description: This is a sample server for jinaai.  You can find out more about     Jinaai
+    at [https://github.com/jina-ai/](https://github.com/jina-ai/)    For this sample,
+    you can use the api key `special-key` to test the authorization     filters.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Docstore
+  version: 1.0.0
+servers:
+- url: https://Docstore.swagger.io/v2
+- url: http://Docstore.swagger.io/v2
+tags:
+- description: Everything about your Docs
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+  name: Doc
+paths:
+  /Doc/index/:
+    post:
+      description: index with an flow yaml file
+      operationId: upload_flow_file
+      parameters:
+      - description: limit number of indexing
+        in: path
+        name: limit
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  description: file to upload
+                  format: binary
+                  type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: index with an flow
+      tags:
+      - Doc
+      x-openapi-router-controller: openapi_server.controllers.doc_controller
+  /Doc/query/:
+    post:
+      operationId: upload_query_file
+      parameters:
+      - description: topk numbers  to return
+        in: path
+        name: topk
+        required: true
+        schema:
+          format: int64
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  description: ' image file to upload'
+                  format: binary
+                  type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: querydoc with an image
+      tags:
+      - Doc
+      x-openapi-router-controller: openapi_server.controllers.doc_controller
+  /Doc/{DocId}:
+    get:
+      description: Returns a single Doc
+      operationId: get_doc_by_id
+      parameters:
+      - description: ID of Doc to return
+        in: path
+        name: DocId
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Doc'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Doc'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid ID supplied
+        "404":
+          content: {}
+          description: Doc not found
+      summary: Find Doc by ID
+      tags:
+      - Doc
+      x-openapi-router-controller: openapi_server.controllers.doc_controller
+components:
+  schemas:
+    Doc:
+      example:
+        name: name
+        id: 0
+        tag: tag
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+        tag:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    ApiResponse:
+      example:
+        code: 0
+        type: type
+        message: message
+      properties:
+        code:
+          format: int32
+          type: integer
+        type:
+          type: string
+        message:
+          type: string
+      type: object
