@@ -66,6 +66,7 @@ def query(top_k):
             text = input('\n\n\n- Please type a sentence to find semantic similarity in multiple languages : ')
             if not text:
                 break
+            
             ppr = lambda x: print_topk(x, text)
             f.search(read_query_data(text), callback=ppr, top_k=top_k)
 
