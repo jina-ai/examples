@@ -1,0 +1,39 @@
+!Flow
+with:
+  prefetch: 10
+  rest_api: true
+  port_expose: 45678
+pods:
+  loader:
+    uses: yaml/image_load.yml
+    parallel: $PARALLEL
+    read_only: true
+  normalizer:
+    uses: yaml/image_normalize.yml
+    parallel: $PARALLEL
+    read_only: true
+  image_encoder:
+    uses: jinaai/hub.executors.encoders.image.vse
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
+  text_indexer:
+    uses: yaml/index-text.yml
+  text_ranker:
+    uses: yaml/rank.yml
+  text_encoder:
+    uses: jinaai/hub.executors.encoders.nlp.vse
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
+    needs: [gateway]
+  image_vector_indexer:
+    uses: yaml/index-image-vector.yml
+  image_kv_indexer:
+    uses: yaml/index-image-kv.yml
+  image_ranker:
+    uses: yaml/rank.yml
+  join_all:
+    uses: _merge
+    needs: [image_ranker, text_ranker]
+    read_only: true

@@ -1,0 +1,30 @@
+!ImageReader
+with:
+  channel_axis: 0
+  from_bytes: true
+metas:
+  name: reader
+requests:
+  on:
+    IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'modality': 'image'}
+      - !CraftDriver
+        with:
+          executor: reader
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'mime_type__contains': 'image'}
+      - !URI2Buffer {}
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - uri
+      - !CraftDriver
+        with:
+          executor: reader
+    ControRequest:
+      - !ControlReqDriver {}

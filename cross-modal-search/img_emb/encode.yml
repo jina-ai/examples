@@ -1,0 +1,13 @@
+!VSEImageEncoder
+metas:
+  name: img-encoder
+  py_modules:
+    - model.py
+    - __init__.py
+  workspace: ./
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
