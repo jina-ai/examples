@@ -160,7 +160,7 @@ In your terminal:
 pip install -r requirements.txt
 ```
 
-⚠️ Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
+⚠️  Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
 
 ## 🗃️ Work with Data
 
@@ -171,7 +171,7 @@ Our goal is to find out who said what in Star Trek episodes when a user queries 
 Now let's ensure we're back in our base folder and download and the dataset by running:
 
 ```bash
-bash ../get_data.sh
+source ../get_data.sh
 ```
 
 <details>
@@ -195,6 +195,8 @@ startrek_tng.csv                               100%[============================
 ```
 
 </details>
+
+⁉️  Why do we use `source`, not `sh`? This is because we're setting some environment variables. By running with `bash` or `sh` those would only be set in the sub-shell, not the shell we're working in. You can check the data path using `echo $DATA_PATH`
 
 ### Check Data
 
@@ -223,7 +225,7 @@ Note: Your character lines may be a little different. That's okay!
 
 ### Load Data
 
-Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it.
+Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. Luckily we don't need to touch any code! As you can see in `app.py`:
 
 ```python
 data_path = os.environ.get('DATA_PATH', None)
@@ -234,23 +236,6 @@ else:
 ```
 
 In this example, we already assigned the data path to be our `startrek_tng.csv` dataset when we downloaded it. If data path is not assigned, it will index only 3 simple strings. 
-
-#### Index More Documents
-
-While we're build this search engine, we don't want to spend ages indexing only to have issues later on! So we set the number of indexed document to 500 to speed things up while we're testing.
-
-Once we've verified everything works, we can set it to `50000` or any number less than `62605`, which is the number of lines in the dataset, to index more. To change that, edit the number in the section above the `config` function:
-
-```python
-num_docs = os.environ.get('MAX_DOCS', 500)
-```
-
-to:
-
-```python
-num_docs = os.environ.get('MAX_DOCS', 50000) # any number you like ,but less than 62605
-```
-
 
 ## 🏃 Run the Flows
 
@@ -307,6 +292,16 @@ Flow@133216[S]:flow is closed and all resources should be released already, curr
 ```
 
 You'll know indexing is complete. This may take a little while the first time, since Jina needs to download the language model and tokenizer to deal with the data. You can think of these as the brains behind the neural network that powers the search.
+
+#### Index More Documents
+
+To speed things along, by default Jina is set to index a maximum of 500 [Documents](https://github.com/jina-ai/jina/tree/master/docs/chapters/101#document--chunk). This is great for testing our search engine works, but not so good for searching through every little piece of data.
+
+Once we've verified everything works, we can set it to `50000` (or any number less than `62605`) to index many more lines of the dataset:
+
+```sh
+export $MAX_DOCS=50000
+```
 
 ### Search Flow
 
