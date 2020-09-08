@@ -408,7 +408,7 @@ components:
   - !NumpyIndexer
     with:
       index_filename: vecidx_index.gzip
-      metrix: cosine
+      metric: cosine
     metas:
       name: vecidx_index
       workspace: $TMP_WORKSPACE
