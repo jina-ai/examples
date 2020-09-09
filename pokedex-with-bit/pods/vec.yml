@@ -1,0 +1,6 @@
+!NumpyIndexer
+with:
+  index_filename: vec.gz
+metas:
+  name: vecidx  # a customized name
+  workspace: $WORKDIR

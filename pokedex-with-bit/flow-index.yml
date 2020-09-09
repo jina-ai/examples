@@ -10,7 +10,16 @@ pods:
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
+  vec_idx:
+    uses: pods/vec.yml
+    shards: $SHARDS
+    separated_workspace: true
   doc_idx:
     uses: pods/doc.yml
     shards: $SHARDS
     separated_workspace: true
+    needs: [gateway]
+  join_all:
+    uses: _merge
+    needs: [vec_idx, doc_idx]
+    read_only: true
