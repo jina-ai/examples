@@ -4,13 +4,20 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  chunk_seg:
+  crafter:
     uses: pods/craft.yml
     parallel: $PARALLEL
   tf_encode:
     uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
+  vec_idx:
+     uses: pods/vec.yml
+     shards: $SHARDS
+     separated_workspace: true
+     polling: all
+     uses_reducing: _merge_all
+     timeout_ready: 100000 # larger timeout as in query time will read all the data
   doc_idx:
     uses: pods/doc.yml
     shards: $SHARDS
