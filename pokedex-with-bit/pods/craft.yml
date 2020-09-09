@@ -17,15 +17,12 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: img_read
-      - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: img_norm
-      - !LogInfoDriver {}
     SearchRequest:
       - !URI2Buffer {}
       - !CraftDriver

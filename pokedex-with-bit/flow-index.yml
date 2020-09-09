@@ -1,6 +1,6 @@
 !Flow
 with:
-  logserver: true
+  logserver: false
 pods:
   crafter:
     uses: pods/craft.yml
@@ -13,13 +13,19 @@ pods:
   vec_idx:
     uses: pods/vec.yml
     shards: $SHARDS
-    separated_workspace: false
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
   doc_idx:
     uses: pods/doc.yml
     shards: $SHARDS
-    separated_workspace: false
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
     needs: [gateway]
   join_all:
     uses: _merge
-    needs: [vec_idx, doc_idx]
+    needs: [doc_idx, vec_idx]
     read_only: true

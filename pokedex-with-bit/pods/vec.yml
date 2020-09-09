@@ -2,21 +2,18 @@
 with:
   index_filename: vec.gz
 metas:
-  name: vecidx  # a customized name
+  name: vec_idx  # a customized name
   workspace: $WORKDIR
 requests:
   on:
     ControlRequest:
       - !ControlReqDriver {}
     SearchRequest:
-      - !LogInfoDriver {}
       - !VectorSearchDriver {}
     IndexRequest:
-      - !LogInfoDriver {}
       - !ExcludeQL
         with:
           fields:
             - buffer
             - chunks
-      - !LogInfoDriver {}
       - !VectorIndexDriver {}
