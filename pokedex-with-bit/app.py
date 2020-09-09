@@ -5,14 +5,14 @@ import os
 import sys
 
 from jina.flow import Flow
-
-num_docs = os.environ.get('MAX_DOCS', 50000)
-image_src = 'data/**/*.png'
+# num_docs = os.environ.get('MAX_DOCS', 50000)
+num_docs = os.environ.get('MAX_DOCS', 1)
+image_src = 'data/*.png'
 
 
 def config():
     parallel = 2 if sys.argv[1] == 'index' else 1
-    shards = 8
+    shards = 1
 
     os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(shards)
@@ -29,7 +29,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs)
+        f.index_files(image_src, batch_size=1, read_mode='rb', size=num_docs, skip_dry_run=True)
 
 
 # for search

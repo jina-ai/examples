@@ -1,4 +1,5 @@
-!BiTImageEncoder
+!BigTransferEncoder
 with:
   model_path: pretrained
   pool_strategy: avg
+  channel_axis: -1

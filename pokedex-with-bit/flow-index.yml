@@ -10,13 +10,7 @@ pods:
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
-  chunk_idx:
-    uses: pods/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
   doc_idx:
     uses: pods/doc.yml
-    needs: gateway
-  join_all:
-    uses: _merge
-    needs: [doc_idx, chunk_idx]
+    shards: $SHARDS
+    separated_workspace: true
