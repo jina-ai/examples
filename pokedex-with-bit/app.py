@@ -10,7 +10,7 @@ image_src = 'data/*.png'
 
 
 def config():
-    parallel = 8 if sys.argv[1] == 'index' else 1
+    parallel = 1 if sys.argv[1] == 'index' else 1
     shards = 1
 
     os.environ['PARALLEL'] = str(parallel)
@@ -28,7 +28,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(image_src, batch_size=5, read_mode='rb', size=num_docs, skip_dry_run=True)
+        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs, skip_dry_run=True)
 
 
 # for search
