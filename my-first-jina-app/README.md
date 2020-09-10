@@ -223,7 +223,15 @@ MCCOY!What about my age?
 
 Note: Your character lines may be a little different. That's okay!
 
-Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. Luckily we don't need to touch any code! `app.py` simply loads data from the `DATA_PATH` environment variable, which was set by `get_data.sh`. You can double check it by running:
+### Set Data Path
+
+Now we need to tell Jina where to find the data. By default, `app.py` uses the environment variable `DATA_PATH` for this. We can simply run:
+
+```sh
+export DATA_PATH='data/startrek_tng.csv'
+```
+
+You can double check it was set successfully by running:
 
 ```sh
 echo $DATA_PATH
