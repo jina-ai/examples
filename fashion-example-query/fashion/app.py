@@ -2,8 +2,11 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import urllib.request
+import sys
+
 from jina.flow import Flow
+
+import urllib.request
 import gzip
 import numpy as np
 from jina.clients.python import ProgressBar
@@ -11,6 +14,7 @@ from jina.helper import colored
 from jina.logging import default_logger
 from pkg_resources import resource_filename
 import webbrowser
+from components import *
 
 result_html = []
 
@@ -66,20 +70,35 @@ def download_data(targets, download_proxy=None):
             v['data'] = load_mnist(v['filename'])
 
 
-def index(args, targets):
-    f = Flow.load_config(args.index_uses)
+def index():
+    f = Flow.load_config('flow-index.yml')
     # run it!
     with f:
-        f.index_ndarray(targets['index']['data'], batch_size=args.index_batch_size)
+        f.index_ndarray(targets['index']['data'], batch_size=1024)
 
 
-def query(args, targets):
+def query():
     # now load query flow from another YAML file
-    f = Flow.load_config(args.query_uses)
+    f = Flow.load_config('flow-query.yml')
     # run it!
     with f:
-        f.search_ndarray(targets['query']['data'], shuffle=True, size=args.num_query,
-                         output_fn=print_result, batch_size=args.query_batch_size)
+        f.search_ndarray(targets['query']['data'], shuffle=True, size=128,
+                         output_fn=print_result, batch_size=32)
+    # write result to html
+    write_html(os.path.join('./workspace', 'hello-world.html'))
+
+
+def config():
+    parallel = 2 if sys.argv[1] == 'index' else 1
+    shards = 8
+    # this envs are referred in index and query flow YAMLs
+    os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
+    os.environ['SHARDS'] = str(shards)
+    os.environ['PARALLEL'] = str(parallel)
+    os.environ['HW_WORKDIR'] = './workspace'
+    os.makedirs(os.environ['HW_WORKDIR'], exist_ok=True)
+    #os.environ['WITH_LOGSERVER'] = False
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
 if __name__ == '__main__':
@@ -94,5 +113,16 @@ if __name__ == '__main__':
         }
     }
     download_data(targets, None)
+    config()
 
-    # hello_world()
+    if len(sys.argv) < 2:
+        print('choose between "index" and "search" mode')
+        exit(1)
+    if sys.argv[1] == 'index':
+        config()
+        index()
+    elif sys.argv[1] == 'query':
+        config()
+        query()
+    else:
+        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
