@@ -4,3 +4,19 @@ with:
 metas:
   name: doc_indexer  # a customized name
   workspace: $WORKDIR
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+    IndexRequest:
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks  # we don't want to save nested structure
+            - buffer
+      - !KVIndexDriver {}

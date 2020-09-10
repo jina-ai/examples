@@ -15,3 +15,23 @@ components:
 metas:
   name: chunk_compound_indexer
   workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+          granularity_range: [1, 1]
+          adjacency_range: [0, 0]
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
+          granularity_range: [1, 1]
+          adjacency_range: [1, 1]

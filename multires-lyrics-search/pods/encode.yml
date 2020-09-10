@@ -1,6 +1,6 @@
 !TransformerTorchEncoder
 with:
-  pooling_strategy: cls
+  pooling_strategy: auto
   model_name: distilbert-base-cased
   max_length: 96
 #metas:

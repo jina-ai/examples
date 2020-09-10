@@ -19,6 +19,6 @@ pods:
     uses_reducing: _merge_all
     timeout_ready: -1 # larger timeout as in query time will read all the data
   ranker:
-    uses: BiMatchRanker
+    uses: pods/ranker.yml
   doc_idx:
     uses: pods/doc.yml

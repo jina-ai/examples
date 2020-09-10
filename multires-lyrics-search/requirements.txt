@@ -1,1 +1,1 @@
-jina[devel,torch,transformers]==0.4.1
+jina[devel,torch,transformers]
