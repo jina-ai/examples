@@ -160,9 +160,11 @@ In your terminal:
 pip install -r requirements.txt
 ```
 
-⚠️ Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
+⚠️  Now we're going to get our hands dirty, and if we're going to run into trouble, this is where we'll find it. If you hit any snags, check our **[troubleshooting](#troubleshooting)** section!
 
 ## 🗃️ Work with Data
+
+❗ **Note:** Cleaning and restructuring data is a key part of machine learning, but is outside the scope of this example. We simply download a pre-processed version of the dataset.
 
 ### Download Data
 
@@ -171,7 +173,7 @@ Our goal is to find out who said what in Star Trek episodes when a user queries 
 Now let's ensure we're back in our base folder and download and the dataset by running:
 
 ```bash
-bash ../get_data.sh
+source ../get_data.sh
 ```
 
 <details>
@@ -196,9 +198,11 @@ startrek_tng.csv                               100%[============================
 
 </details>
 
+⁉️  Why do we use `source`, not `sh`? This is because we're setting some environment variables. By running with `bash` or `sh` those would only be set in the sub-shell, not the shell we're working in. You can check the data path using `echo $DATA_PATH`
+
 ### Check Data
 
-Now that `get_data.sh` has downloaded the data, let's get back into the `star_trek` directory and make sure the file has everything we want:
+Now that `get_data.sh` has downloaded the data, let's make sure the file has everything we want:
 
 ```shell
 head data/startrek_tng.csv
@@ -221,36 +225,21 @@ MCCOY!What about my age?
 
 Note: Your character lines may be a little different. That's okay!
 
-### Load Data
+### Set Data Path
 
-Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it.
+Now we need to tell Jina where to find the data. By default, `app.py` uses the environment variable `DATA_PATH` for this. We can simply run:
 
-```python
-data_path = os.environ.get('DATA_PATH', None)
-if data_path:
-    f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
-else:
-    f.index_lines(lines=['abc', 'cde', 'efg'], batch_size=16, read_mode='r', size=num_docs)
+```sh
+export DATA_PATH='data/startrek_tng.csv'
 ```
 
-In this example, we already assigned the data path to be our `startrek_tng.csv` dataset when we downloaded it. If data path is not assigned, it will index only 3 simple strings. 
+You can double check it was set successfully by running:
 
-#### Index More Documents
-
-While we're build this search engine, we don't want to spend ages indexing only to have issues later on! So we set the number of indexed document to 500 to speed things up while we're testing.
-
-Once we've verified everything works, we can set it to `50000` or any number less than `62605`, which is the number of lines in the dataset, to index more. To change that, edit the number in the section above the `config` function:
-
-```python
-num_docs = os.environ.get('MAX_DOCS', 500)
+```sh
+echo $DATA_PATH
 ```
 
-to:
-
-```python
-num_docs = os.environ.get('MAX_DOCS', 50000) # any number you like ,but less than 62605
-```
-
+⚠️  If `DATA_PATH` is empty, `app.py` is set to index only 3 sample strings, so be sure to check this!
 
 ## 🏃 Run the Flows
 
@@ -258,7 +247,7 @@ Now that we've got the code to load our data, we're going to dive into writing o
 
 ### Index Flow
 
-First up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
+[First](First) up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
 
 ```bash
 python app.py index
@@ -307,6 +296,16 @@ Flow@133216[S]:flow is closed and all resources should be released already, curr
 ```
 
 You'll know indexing is complete. This may take a little while the first time, since Jina needs to download the language model and tokenizer to deal with the data. You can think of these as the brains behind the neural network that powers the search.
+
+#### Index More Documents
+
+To speed things along, by default Jina is set to index a maximum of 500 [Documents](https://github.com/jina-ai/jina/tree/master/docs/chapters/101#document--chunk). This is great for testing our search engine works, but not so good for searching through every little piece of data.
+
+Once we've verified everything works, we can set it to `50000` (or any number less than `62605`) to index many more lines of the dataset:
+
+```sh
+export $MAX_DOCS=50000
+```
 
 ### Search Flow
 
