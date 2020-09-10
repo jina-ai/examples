@@ -200,7 +200,7 @@ startrek_tng.csv                               100%[============================
 
 ### Check Data
 
-Now that `get_data.sh` has downloaded the data, let's get back into the `star_trek` directory and make sure the file has everything we want:
+Now that `get_data.sh` has downloaded the data, let's make sure the file has everything we want:
 
 ```shell
 head data/startrek_tng.csv
@@ -225,17 +225,13 @@ Note: Your character lines may be a little different. That's okay!
 
 ### Load Data
 
-Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. Luckily we don't need to touch any code! As you can see in `app.py`:
+Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. Luckily we don't need to touch any code! `app.py` simply loads data from the `DATA_PATH` environment variable, which was set by `get_data.sh`. You can double check it by running:
 
-```python
-data_path = os.environ.get('DATA_PATH', None)
-if data_path:
-    f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
-else:
-    f.index_lines(lines=['abc', 'cde', 'efg'], batch_size=16, read_mode='r', size=num_docs)
+```sh
+echo $DATA_PATH
 ```
 
-In this example, we already assigned the data path to be our `startrek_tng.csv` dataset when we downloaded it. If data path is not assigned, it will index only 3 simple strings. 
+⚠️  If `DATA_PATH` is empty, `app.py` is set to index only 3 sample strings, so be sure to check this!
 
 ## 🏃 Run the Flows
 
