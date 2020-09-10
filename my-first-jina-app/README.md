@@ -164,6 +164,8 @@ pip install -r requirements.txt
 
 ## 🗃️ Work with Data
 
+❗ **Note:** Cleaning and restructuring data is a key part of machine learning, but is outside the scope of this example. We simply download a pre-processed version of the dataset.
+
 ### Download Data
 
 Our goal is to find out who said what in Star Trek episodes when a user queries a phrase. The [Star Trek dataset](https://www.kaggle.com/gjbroughton/start-trek-scripts) from Kaggle contains all the scripts and individual character lines from Star Trek: The Original Series all the way through Star Trek: Enterprise. We're using a subset in this example, which just contains the characters and lines from Star Trek: The Next Generation. This subset has also been converted from JSON to CSV format, which is more suitable for Jina to process.
