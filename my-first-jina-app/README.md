@@ -223,8 +223,6 @@ MCCOY!What about my age?
 
 Note: Your character lines may be a little different. That's okay!
 
-### Load Data
-
 Now we we need to pass `startrek_tng.csv` into `app.py` so we can index it. Luckily we don't need to touch any code! `app.py` simply loads data from the `DATA_PATH` environment variable, which was set by `get_data.sh`. You can double check it by running:
 
 ```sh
@@ -239,7 +237,7 @@ Now that we've got the code to load our data, we're going to dive into writing o
 
 ### Index Flow
 
-First up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
+[First](First) up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
 
 ```bash
 python app.py index
