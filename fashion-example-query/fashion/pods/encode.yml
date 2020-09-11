@@ -1,6 +1,0 @@
-
-!TransformerTorchEncoder
-with:
-  pool_strategy: auto
-  model_name: distilbert-base-cased
-  max_length: 96

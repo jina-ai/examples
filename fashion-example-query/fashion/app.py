@@ -23,6 +23,18 @@ result_html = []
 num_docs = 500
 index_docs = []
 
+label = {
+    0: 'T-shirt/top',
+    1: 'Trouser',
+    2: 'Pullover',
+    3: 'Dress',
+    4: 'Coat',
+    5: 'Sandal',
+    6: 'Shirt',
+    7: 'Sneaker',
+    8: 'Bag',
+    9: 'Ankle boot'
+}
 
 def get_mapped_label(label_int):
     """
@@ -39,19 +51,6 @@ def get_mapped_label(label_int):
     8	        Bag
     9	        Ankle boot
     """
-
-    label = {
-        0: 'T-shirt/top',
-        1: 'Trouser',
-        2: 'Pullover',
-        3: 'Dress',
-        4: 'Coat',
-        5: 'Sandal',
-        6: 'Shirt',
-        7: 'Sneaker',
-        8: 'Bag',
-        9: 'Ankle boot'
-    }
     return label.get(label_int, "Invalid tag")
 
 
@@ -120,7 +119,7 @@ def index():
         d = jina_pb2.Document()
         d.embedding.CopyFrom(array2pb(targets['index']['data'][j]))
         label = (targets['labels']['data'][j]).item()
-        d.tags.update({'id': label})
+        d.tags.update({'tags': label})
         index_docs.append(d)
 
     f = Flow.load_config('flow-index.yml')

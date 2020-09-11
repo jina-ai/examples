@@ -1,9 +1,0 @@
-!Sentencizer
-metas:
-  name: sent_splitter
-requests:
-  on:
-    SearchRequest:
-      - !FilterQL
-      with:
-        lookups: {text__startswith: 'MCCOY!'}
