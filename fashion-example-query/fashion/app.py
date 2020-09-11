@@ -4,19 +4,27 @@ __license__ = "Apache-2.0"
 import os
 import sys
 
-from jina.flow import Flow
-
 import urllib.request
 import gzip
 import numpy as np
+import webbrowser
+
+from jina.flow import Flow
 from jina.clients.python import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
+from jina.proto import jina_pb2
+from jina.drivers.helper import array2pb
+
+
+
 from pkg_resources import resource_filename
-import webbrowser
 from components import *
 
 result_html = []
+num_docs = 500
+index_docs = []
+
 
 
 def print_result(resp):
@@ -56,6 +64,10 @@ def load_mnist(path):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
 
+def load_labels(path):
+    with gzip.open(path, 'rb') as fp:
+        labels = np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 1])
+        return labels
 
 def download_data(targets, download_proxy=None):
     opener = urllib.request.build_opener()
@@ -67,14 +79,23 @@ def download_data(targets, download_proxy=None):
         for v in targets.values():
             if not os.path.exists(v['filename']):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            v['data'] = load_mnist(v['filename'])
+            if v['filename'] == './workspace/labels-original':
+                v['data'] = load_labels(v['filename'])
+            else:
+                v['data'] = load_mnist(v['filename'])
 
 
 def index():
+    for j in range(num_docs):
+        d = jina_pb2.Document()
+        d.embedding.CopyFrom(array2pb(targets['index']['data'][j]))
+        label = (targets['labels']['data'][j]).item()
+        d.tags.update({'id': label})
+        index_docs.append(d)
+
     f = Flow.load_config('flow-index.yml')
-    # run it!
     with f:
-        f.index_ndarray(targets['index']['data'], batch_size=1024)
+        f.index(index_docs)
 
 
 def query():
@@ -91,13 +112,11 @@ def query():
 def config():
     parallel = 2 if sys.argv[1] == 'index' else 1
     shards = 8
-    # this envs are referred in index and query flow YAMLs
     os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
     os.environ['SHARDS'] = str(shards)
     os.environ['PARALLEL'] = str(parallel)
     os.environ['HW_WORKDIR'] = './workspace'
     os.makedirs(os.environ['HW_WORKDIR'], exist_ok=True)
-    #os.environ['WITH_LOGSERVER'] = False
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
@@ -110,6 +129,10 @@ if __name__ == '__main__':
         'query': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
             'filename': os.path.join('./workspace', 'query-original')
+        },
+        'labels': {
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
+            'filename': os.path.join('./workspace', 'labels-original')
         }
     }
     download_data(targets, None)
