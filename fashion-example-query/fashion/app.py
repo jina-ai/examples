@@ -23,7 +23,7 @@ result_html = []
 num_docs = 500
 index_docs = []
 
-label = {
+label_id = {
     0: 'T-shirt/top',
     1: 'Trouser',
     2: 'Pullover',
@@ -51,7 +51,7 @@ def get_mapped_label(label_int):
     8	        Bag
     9	        Ankle boot
     """
-    return label.get(label_int, "Invalid tag")
+    return label_id.get(label_int, "Invalid tag")
 
 
 def print_result(resp):
@@ -106,9 +106,12 @@ def download_data(targets, download_proxy=None):
     urllib.request.install_opener(opener)
     with ProgressBar(task_name='download fashion-mnist', batch_unit='') as t:
         for v in targets.values():
+            # target type: 0 -> index, 1 -> query 2 -> indey-labels 3 -> query-labels
+            target_type = 0
             if not os.path.exists(v['filename']):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            if v['filename'] == './workspace/labels-original':
+            #Check if it's label or not. Labels are reshape diferently
+            if target_type is 2 or 3:
                 v['data'] = load_labels(v['filename'])
             else:
                 v['data'] = load_mnist(v['filename'])
@@ -118,9 +121,8 @@ def index():
     for j in range(num_docs):
         d = jina_pb2.Document()
         d.embedding.CopyFrom(array2pb(targets['index']['data'][j]))
-        label_int = (targets['labels']['data'][j]).item()
-        label_category = get_mapped_label(label_int)
-        d.tags.update({'tags': label_category})
+        label_int = targets['index-labels']['data'][j][0]
+        d.tags.update({'label': get_mapped_label(label_int)})
         index_docs.append(d)
 
     f = Flow.load_config('flow-index.yml')
@@ -160,9 +162,13 @@ if __name__ == '__main__':
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
             'filename': os.path.join('./workspace', 'query-original')
         },
-        'labels': {
+        'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./workspace', 'labels-original')
+            'filename': os.path.join('./workspace', 'index-labels-original')
+        },
+        'query-labels': {
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
+            'filename': os.path.join('./workspace', 'query-labels-original')
         }
     }
     download_data(targets, None)
