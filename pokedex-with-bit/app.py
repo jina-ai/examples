@@ -5,14 +5,13 @@ import os
 import sys
 
 from jina.flow import Flow
-
 num_docs = os.environ.get('MAX_DOCS', 50000)
-image_src = 'data/**/*.png'
+image_src = 'data/*.png'
 
 
 def config():
-    parallel = 2 if sys.argv[1] == 'index' else 1
-    shards = 8
+    parallel = 1 if sys.argv[1] == 'index' else 1
+    shards = 1
 
     os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(shards)

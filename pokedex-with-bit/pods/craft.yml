@@ -17,7 +17,7 @@ metas:
 requests:
   on:
     IndexRequest:
-      - !SegmentDriver
+      - !CraftDriver
         with:
           executor: img_read
       - !CraftDriver
@@ -25,7 +25,7 @@ requests:
           executor: img_norm
     SearchRequest:
       - !URI2Buffer {}
-      - !SegmentDriver
+      - !CraftDriver
         with:
           executor: img_read
       - !CraftDriver
