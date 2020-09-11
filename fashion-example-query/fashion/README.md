@@ -1,4 +1,4 @@
-# Star Trek QueryLang
+# Fashion MNIST QueryLang
 
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg?raw=true  "We fully commit to open-source")](https://get.jina.ai)
 
@@ -17,11 +17,6 @@ To install it in editable mode
 ```bash
 pip install -e .
 ```
-## Set environment variables
-
-Set env variables like ```DATA_PATH``` and ```MAX_DOCS```
-For example, relative from the data/ folder:
-EXPORT DATA_PATH='./data/startrek_tng.csv'
 
 ## Run
 
@@ -29,7 +24,6 @@ EXPORT DATA_PATH='./data/startrek_tng.csv'
 | :---                     | :---                         |
 | ``python app.py index``  | To index files/data          |
 | ``python app.py search`` | To run query on the index    |
-| ``python app.py dryrun`` | Sanity check on the topology |
 
 ## Run as a Docker Container
 
