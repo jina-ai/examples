@@ -62,34 +62,12 @@ def input_search_image_file(image_file_path):
     document.mime_type = 'image/jpeg'
     return [document]
 
-
-def show_top_k(resp, text):
-    for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for caption: {text}')
-        for idx, match in enumerate(d.matches):
-            score = match.score.value
-            if score < 0.0:
-                continue
-            print(f'match {match}')
-
-
-def print_top_k(resp, img):
-    for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for image: {img}')
-        for idx, match in enumerate(d.matches):
-            score = match.score.value
-            if score < 0.0:
-                continue
-            print(f'match {match}')
-
-
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
 @click.option('--batch_size', '-b', default=16)
-@click.option('--top_k', '-k', default=5)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f30k')
-def main(task, num_docs, batch_size, top_k, data_set):
+def main(task, num_docs, batch_size, data_set):
     config()
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
