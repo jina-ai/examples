@@ -15,8 +15,8 @@ num_docs = os.environ.get('MAX_DOCS', 500)
 
 
 def config():
-    parallel = 1 if sys.argv[1] == 'index' else 1
-    shards = 1
+    parallel = 2 if sys.argv[1] == 'index' else 1
+    shards = 4
 
     os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(shards)
@@ -26,7 +26,8 @@ def config():
 
 
 def input_fn():
-    with open('toy-data/lyrics-toy-data1000.csv', newline='', encoding='utf-8') as f:
+    lyrics_file = os.environ.get('DATA_PATH', 'toy-data/lyrics-toy-data1000.csv')
+    with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in itertools.islice(reader, num_docs):
             if row[-1] == 'ENGLISH':
