@@ -118,8 +118,9 @@ def index():
     for j in range(num_docs):
         d = jina_pb2.Document()
         d.embedding.CopyFrom(array2pb(targets['index']['data'][j]))
-        label = (targets['labels']['data'][j]).item()
-        d.tags.update({'tags': label})
+        label_int = (targets['labels']['data'][j]).item()
+        label_category = get_mapped_label(label_int)
+        d.tags.update({'tags': label_category})
         index_docs.append(d)
 
     f = Flow.load_config('flow-index.yml')
