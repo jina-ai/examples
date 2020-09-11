@@ -23,8 +23,6 @@ pods:
     uses: yaml/rank.yml
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
-    uses_internal: text_encoder.yml
-    volumes: ./yaml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
