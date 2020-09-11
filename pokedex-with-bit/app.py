@@ -28,7 +28,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs, skip_dry_run=True)
+        f.index_files(image_src, batch_size=64, read_mode='rb', size=num_docs)
 
 
 # for search
