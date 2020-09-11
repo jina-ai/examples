@@ -16,8 +16,6 @@ from jina.logging import default_logger
 from jina.proto import jina_pb2
 from jina.drivers.helper import array2pb
 
-
-
 from pkg_resources import resource_filename
 from components import *
 
@@ -25,6 +23,36 @@ result_html = []
 num_docs = 500
 index_docs = []
 
+
+def get_mapped_label(label_int):
+    """
+    Get a label_int and return the description of that label
+    label_int	Description
+    0	        T-shirt/top
+    1	        Trouser
+    2	        Pullover
+    3	        Dress
+    4	        Coat
+    5	        Sandal
+    6	        Shirt
+    7	        Sneaker
+    8	        Bag
+    9	        Ankle boot
+    """
+
+    label = {
+        0: 'T-shirt/top',
+        1: 'Trouser',
+        2: 'Pullover',
+        3: 'Dress',
+        4: 'Coat',
+        5: 'Sandal',
+        6: 'Shirt',
+        7: 'Sneaker',
+        8: 'Bag',
+        9: 'Ankle boot'
+    }
+    return label.get(label_int, "Invalid tag")
 
 
 def print_result(resp):
@@ -64,10 +92,12 @@ def load_mnist(path):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
 
+
 def load_labels(path):
     with gzip.open(path, 'rb') as fp:
         labels = np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 1])
         return labels
+
 
 def download_data(targets, download_proxy=None):
     opener = urllib.request.build_opener()
