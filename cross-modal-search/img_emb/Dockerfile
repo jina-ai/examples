@@ -13,4 +13,4 @@ python -c "import torchvision.models as models; model = getattr(models, 'vgg19')
 
 RUN pip install pytest && pytest -v -s
 
-ENTRYPOINT ["jina", "pod", "--uses", "encode.yml"]
+ENTRYPOINT ["jina", "pod", "--uses", "config.yml"]

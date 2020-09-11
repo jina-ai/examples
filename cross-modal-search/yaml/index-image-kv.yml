@@ -22,10 +22,9 @@ requests:
       - !KVIndexDriver
         with:
           executor: images_kv_idx
-          depth_range: [0, 0]
     SearchRequest:
       - !KVSearchDriver
         with:
           executor: images_kv_idx
-          traverse_on: matches
-          depth_range: [0, 1]
+          adjacency_range: [0, 1]
+          granularity_range: [0, 0]

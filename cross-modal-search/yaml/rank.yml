@@ -4,5 +4,5 @@ requests:
     SearchRequest:
       - !Chunk2DocRankDriver
         with:
-          depth_range: [0, 1]
-          traverse_on: 'matches'
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]

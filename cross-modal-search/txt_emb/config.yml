@@ -1,11 +1,9 @@
 !VSETextEncoder
 metas:
-  name: txt-encoder
   py_modules:
     - vocab.py
     - model.py
     - __init__.py
-  workspace: ./
 requests:
   on:
     IndexRequest:
