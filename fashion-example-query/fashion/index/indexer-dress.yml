@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Dress
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_dress
   workspace: $HW_WORKDIR/Dress
 requests:
   on:

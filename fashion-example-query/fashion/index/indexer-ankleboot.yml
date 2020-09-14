@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/AnkleBoot
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_ankleboot
   workspace: $HW_WORKDIR/AnkleBoot
 requests:
   on:

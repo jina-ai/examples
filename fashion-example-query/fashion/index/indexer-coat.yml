@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Coat
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_coat
   workspace: $HW_WORKDIR/Coat
 requests:
   on:

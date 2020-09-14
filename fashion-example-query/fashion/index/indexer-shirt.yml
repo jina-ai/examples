@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Shirt
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_shirt
   workspace: $HW_WORKDIR/Shirt
 requests:
   on:

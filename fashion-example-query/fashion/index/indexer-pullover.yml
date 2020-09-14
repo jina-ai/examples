@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Pullover
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_pullover
   workspace: $HW_WORKDIR/Pullover
 requests:
   on:

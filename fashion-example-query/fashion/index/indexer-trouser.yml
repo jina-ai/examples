@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Trouser
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_trouser
   workspace: $HW_WORKDIR/Trouser
 requests:
   on:

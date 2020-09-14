@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Bag
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_bag
   workspace: $HW_WORKDIR/Bag
 requests:
   on:

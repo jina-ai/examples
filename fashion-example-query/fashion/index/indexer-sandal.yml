@@ -13,7 +13,7 @@ components:
       name: chunkidx
       workspace: $HW_WORKDIR/Sandal
 metas:
-  name: chunk_indexer
+  name: chunk_indexer_sandal
   workspace: $HW_WORKDIR/Sandal
 requests:
   on:
