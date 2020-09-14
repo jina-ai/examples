@@ -1,0 +1,44 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+    metas:
+      name: vecidx  # a customized name
+      workspace: $HW_WORKDIR/Trouser
+  - !BinaryPbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx
+      workspace: $HW_WORKDIR/Trouser
+metas:
+  name: chunk_indexer
+  workspace: $HW_WORKDIR/Trouser
+requests:
+  on:
+    IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Trouser'}
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Trouser'}
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+      - !KVSearchDriver
+        with:
+          executor: chunkidx

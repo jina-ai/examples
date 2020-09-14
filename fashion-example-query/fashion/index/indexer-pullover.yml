@@ -1,0 +1,44 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+    metas:
+      name: vecidx  # a customized name
+      workspace: $HW_WORKDIR/Pullover
+  - !BinaryPbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx
+      workspace: $HW_WORKDIR/Pullover
+metas:
+  name: chunk_indexer
+  workspace: $HW_WORKDIR/Pullover
+requests:
+  on:
+    IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Pullover'}
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Pullover'}
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
