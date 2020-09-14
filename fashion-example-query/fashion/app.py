@@ -20,8 +20,6 @@ from pkg_resources import resource_filename
 from components import *
 
 result_html = []
-num_docs = 500
-index_docs = []
 
 label_id = {
     0: 'T-shirt/top',
@@ -35,6 +33,7 @@ label_id = {
     8: 'Bag',
     9: 'Ankle boot'
 }
+
 
 def get_mapped_label(label_int):
     """
@@ -110,24 +109,26 @@ def download_data(targets, download_proxy=None):
             target_type = 0
             if not os.path.exists(v['filename']):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            #Check if it's label or not. Labels are reshape diferently
+            # Check if it's label or not. Labels are reshape diferently
             if target_type is 2 or 3:
                 v['data'] = load_labels(v['filename'])
             else:
                 v['data'] = load_mnist(v['filename'])
 
 
-def index():
-    for j in range(num_docs):
+def index_generator(num_docs):
+    for j in range(num_docs):  # it's the targets number index data
         d = jina_pb2.Document()
         d.embedding.CopyFrom(array2pb(targets['index']['data'][j]))
         label_int = targets['index-labels']['data'][j][0]
         d.tags.update({'label': get_mapped_label(label_int)})
-        index_docs.append(d)
+        yield d
 
+
+def index(num_docs, batch_size):
     f = Flow.load_config('flow-index.yml')
     with f:
-        f.index(index_docs)
+        f.index(index_generator(num_docs), batch_size=4)
 
 
 def query():
@@ -143,7 +144,7 @@ def query():
 
 def config():
     parallel = 2 if sys.argv[1] == 'index' else 1
-    shards = 8
+    shards = 1
     os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
     os.environ['SHARDS'] = str(shards)
     os.environ['PARALLEL'] = str(parallel)
@@ -153,6 +154,7 @@ def config():
 
 
 if __name__ == '__main__':
+    num_docs = 100
     targets = {
         'index': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
@@ -179,7 +181,7 @@ if __name__ == '__main__':
         exit(1)
     if sys.argv[1] == 'index':
         config()
-        index()
+        index(num_docs, 4)
     elif sys.argv[1] == 'query':
         config()
         query()
