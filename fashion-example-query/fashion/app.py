@@ -97,20 +97,19 @@ def load_labels(path):
         return labels
 
 
-def download_data(targets, download_proxy=None):
+def download_data(target, download_proxy=None):
     opener = urllib.request.build_opener()
     if download_proxy:
         proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
         opener.add_handler(proxy)
     urllib.request.install_opener(opener)
     with ProgressBar(task_name='download fashion-mnist', batch_unit='') as t:
-        for v in targets.values():
-            # target type: 0 -> index, 1 -> query 2 -> indey-labels 3 -> query-labels
-            target_type = 0
+        #for v in target.values():
+        for k, v in target.items():
             if not os.path.exists(v['filename']):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            # Check if it's label or not. Labels are reshape diferently
-            if target_type is 2 or 3:
+            # Check if it's label or not. Labels are reshape differently
+            if k is 'index-labels' or 'query-labels':
                 v['data'] = load_labels(v['filename'])
             else:
                 v['data'] = load_mnist(v['filename'])

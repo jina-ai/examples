@@ -58,5 +58,5 @@ pods:
     needs: [encode]
   join_all:
     uses: _merge
-    needs: [indexer_tshirt, indexer_trouser, indexer_pullover, indexer_dress, indexer_coat, indexer_sandal, indexer_shirt, indexer_sneaker, indexer_bag, indexer_ankleboot:wq]
+    needs: [indexer_tshirt, indexer_trouser, indexer_pullover, indexer_dress, indexer_coat, indexer_sandal, indexer_shirt, indexer_sneaker, indexer_bag, indexer_ankleboot]
     read_only: true
