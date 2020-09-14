@@ -1,0 +1,23 @@
+!Flow
+with:
+  logserver: false
+pods:
+  crafter:
+    uses: pods/craft.yml
+    read_only: true
+  dummy_encoder:
+    uses: pods/dummy_encode.yml
+    read_only: true
+  vec_indexer:
+    uses: pods/vec.yml
+    shards: $SHARDS
+    separated_workspace: true
+  doc_indexer:
+    uses: pods/doc.yml
+    needs: [gateway]
+    shards: $SHARDS
+    separated_workspace: true
+  join_all:
+    uses: _merge
+    needs: [vec_indexer, doc_indexer]
+    read_only: true
