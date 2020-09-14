@@ -1,4 +1,4 @@
-jina[devel]
+jina
 torch>=1.1.0
 nltk
 pycocotools

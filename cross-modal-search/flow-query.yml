@@ -19,10 +19,9 @@ pods:
     read_only: true
   text_indexer:
     uses: yaml/index-text.yml
-  text_ranker:
-    uses: yaml/rank.yml
   text_encoder:
     uses: jinaai/hub.executors.encoders.nlp.vse
+    uses_internal: yaml/text_encoder.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -31,9 +30,7 @@ pods:
     uses: yaml/index-image-vector.yml
   image_kv_indexer:
     uses: yaml/index-image-kv.yml
-  image_ranker:
-    uses: yaml/rank.yml
   join_all:
     uses: _merge
-    needs: [image_ranker, text_ranker]
+    needs: [text_indexer, image_kv_indexer]
     read_only: true

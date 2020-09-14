@@ -1,24 +1,18 @@
 !VSETextEncoder
 metas:
-  name: txt-encoder
   py_modules:
-    - vocab.py
-    - model.py
-    - __init__.py
-  workspace: ./
+    - workspace/vocab.py
+    - workspace/model.py
+    - workspace/__init__.py
 requests:
   on:
     IndexRequest:
       - !FilterQL
         with:
           lookups: {'modality': 'text'}
-      - !EncodeDriver
-        with:
-          method: encode
+      - !EncodeDriver {}
     SearchRequest:
       - !FilterQL
         with:
           lookups: {'mime_type__contains': 'text'}
-      - !EncodeDriver
-        with:
-          method: encode
+      - !EncodeDriver {}

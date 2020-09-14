@@ -2,17 +2,13 @@
 with:
   channel_axis: 0
   from_bytes: true
-metas:
-  name: reader
 requests:
   on:
     IndexRequest:
       - !FilterQL
         with:
           lookups: {'modality': 'image'}
-      - !CraftDriver
-        with:
-          executor: reader
+      - !CraftDriver {}
     SearchRequest:
       - !FilterQL
         with:
@@ -23,8 +19,6 @@ requests:
           fields:
             - chunks
             - uri
-      - !CraftDriver
-        with:
-          executor: reader
+      - !CraftDriver {}
     ControRequest:
       - !ControlReqDriver {}

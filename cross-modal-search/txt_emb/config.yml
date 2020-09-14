@@ -1,0 +1,6 @@
+!VSETextEncoder
+metas:
+  py_modules:
+    - vocab.py
+    - model.py
+    - __init__.py
