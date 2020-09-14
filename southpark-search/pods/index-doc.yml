@@ -2,5 +2,5 @@
 with:
   index_filename: doc.gzip
 metas:
-  name: doc_indexer
-  workspace: $JINA_WORKSPACE
+  name: docIndexer
+  workspace: $TMP_WORKSPACE
