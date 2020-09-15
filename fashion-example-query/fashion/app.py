@@ -8,6 +8,8 @@ import urllib.request
 import gzip
 import numpy as np
 import webbrowser
+import random
+
 
 from jina.flow import Flow
 from jina.clients.python import ProgressBar
@@ -108,7 +110,6 @@ def download_data(target, download_proxy=None):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
             if k == 'index-labels' or k == 'query-labels':
                 v['data'] = load_labels(v['filename'])
-
             if k == 'index' or k == 'query':
                 v['data'] = load_mnist(v['filename'])
 
@@ -124,9 +125,10 @@ def index_generator(num_doc, target):
 
 def query_generator(num_doc, target):
     for j in range(num_doc):
+        n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
         d = jina_pb2.Document()
-        label_int = targets['query-labels']['data'][j][0]
-        d.blob.CopyFrom(array2pb(target['query']['data'][j]))
+        label_int = targets['query-labels']['data'][n][0]
+        d.blob.CopyFrom(array2pb(target['query']['data'][n]))
         d.tags.update({'label': get_mapped_label(label_int)})
         yield d
 
@@ -184,7 +186,7 @@ if __name__ == '__main__':
     time.sleep(1)
 
     num_docs_index = 60000
-    num_docs_query = 10000
+    num_docs_query = 100
 
     config()
 
