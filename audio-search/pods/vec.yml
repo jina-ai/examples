@@ -12,6 +12,7 @@ requests:
       - !VectorSearchDriver
         with:
           granularity: [1, 2]
+      - !LogInfoDriver {}
     IndexRequest:
       - !VectorIndexDriver
         with:

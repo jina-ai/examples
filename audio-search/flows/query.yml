@@ -10,7 +10,7 @@ pods:
   segmenter:
     uses: pods/wav_segment.yml
     parallel: $PARALLEL
-  converter:
+  wav2mel:
     uses: pods/wav2mel.yml
     parallel: $PARALLEL
   encoder:
@@ -18,15 +18,15 @@ pods:
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
-#  vec_idx:
-#    uses: pods/vec.yml
-#    shards: $SHARDS
-#    separated_workspace: true
-#    polling: all
-#    uses_reducing: _merge_all
-#    timeout_ready: 100000
-#  ranker:
-#    uses: MaxRanker
+  vec_idx:
+    uses: pods/vec.yml
+    shards: $SHARDS
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
+    timeout_ready: 100000
+  ranker:
+    uses: MaxRanker
 #  doc_idx:
 #    uses: pods/doc.yml
 #    shards: $SHARDS
