@@ -37,6 +37,7 @@ in separate indexes, which are later queried in a `cross-modal` fashion. It quer
 and query the `image index` using `text embeddings`. 
 
 **Motive behind Cross Modal Retrieval**
+
 Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
 Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. Example: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
 Different encoders map different modalities to a common embedding space. They need to extract semantic information from the documents. 
@@ -44,6 +45,7 @@ In this embedding space, documents that are semantically relevant to each other 
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
 **Research for Cross Modal Retrieval**
+
 The models used for the example are cited from this paper: 
 Improving Visual-Semantic Embeddings with Hard Negatives (https://arxiv.org/pdf/1707.05612.pdf)
 To make this search system retrieve good results, we have used the models trained in (https://github.com/fartashf/vsepp). A model has been trained
@@ -56,6 +58,7 @@ Last layers of these networks are removed and they are used as feature extractor
 They are trained on Flickr30k dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples)
 
 **VSE Encoders in Jina for Cross Modal Search**
+
 Two encoders have been created for this example, namely VSEImageEncoder and VSETextEncoder
 Process followed is as below:
 Load the weights published by the research paper as result. Then instantiate their VSE encoder and extracts the branch interesting for the modality.
