@@ -6,6 +6,7 @@ pods:
   encode:
     uses: encode/encode.yml
     parallel: $PARALLEL
+    timeout_ready: 600000
   indexer_tshirt:
     uses: index/indexer-tshirt.yml
     shards: $SHARDS

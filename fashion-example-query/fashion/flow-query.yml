@@ -1,7 +1,7 @@
 !Flow
 with:
   read_only: true  # better add this in the query time
-  logserver: $WITH_LOGSERVER
+  logserver: False
   compress_hwm: 1024
 pods:
   encode:
@@ -87,3 +87,7 @@ pods:
     polling: all
     uses_after: index/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data
+  join_all:
+    uses: _merge
+    needs: [indexer_tshirt, indexer_trouser, indexer_pullover, indexer_dress, indexer_coat, indexer_sandal, indexer_shirt, indexer_sneaker, indexer_bag, indexer_ankleboot]
+    read_only: true
