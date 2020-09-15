@@ -10,7 +10,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Run the Hello World exyample using query language
+# Run the Hello World example using query language
 
 ## 🗝️ Key Concepts
 
