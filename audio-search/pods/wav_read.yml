@@ -6,6 +6,4 @@ requests:
     ControlRequest:
       - !ControlReqDriver {}
     [SearchRequest, IndexRequest]:
-      - !LogInfoDriver {}
       - !CraftDriver {}
-      - !LogInfoDriver {}

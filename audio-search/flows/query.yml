@@ -10,14 +10,14 @@ pods:
   segmenter:
     uses: pods/wav_segment.yml
     parallel: $PARALLEL
-#  crafter:
-#    uses: pods/wav_read.yml
-#    parallel: $PARALLEL
-#  encoder:
-#    uses: pods/vggish_encode.yml
-#    parallel: $PARALLEL
-#    timeout_ready: 600000
-#    read_only: true
+  converter:
+    uses: pods/wav2mel.yml
+    parallel: $PARALLEL
+  encoder:
+    uses: pods/encode.yml
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
 #  vec_idx:
 #    uses: pods/vec.yml
 #    shards: $SHARDS

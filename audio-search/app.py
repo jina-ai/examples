@@ -34,9 +34,8 @@ def load_hdf5_data(data_fn, size=num_docs):
         doc = Document()
         doc.blob.CopyFrom(array2pb(_emb))
         doc.embedding.CopyFrom(array2pb(np.mean(_emb, axis=0)))
-        doc.meta_info = _vid
+        doc.uri = os.path.join('data', 'wav', f'{_vid.decode()}')
         doc.id = idx
-        print(f'{_vid}')
         yield doc
 
 
@@ -56,7 +55,7 @@ def index():
     f = Flow.load_config('flows/index.yml')
 
     with f:
-        f.index(load_hdf5_data('data/packed_features/eval.h5'), batch_size=2)
+        f.index(load_hdf5_data('data/packed_features/eval.h5'), batch_size=2, output_fn=print)
 
 
 # for search
@@ -65,7 +64,7 @@ def search():
 
     with f:
         f.search_files(
-            'data/R9_ZSCveAHg_7s.wav',
+            'data/test/R9_ZSCveAHg_7s.wav',
             output_fn=print, top_k=5)
         # f.block()
 
