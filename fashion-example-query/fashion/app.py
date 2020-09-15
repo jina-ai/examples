@@ -9,7 +9,6 @@ import gzip
 import numpy as np
 import webbrowser
 
-
 from jina.flow import Flow
 from jina.clients.python import ProgressBar
 from jina.helper import colored
@@ -34,6 +33,7 @@ label_id = {
     8: 'Bag',
     9: 'Ankle boot'
 }
+
 
 
 def get_mapped_label(label_int):
@@ -94,10 +94,11 @@ def load_mnist(path):
 
 def load_labels(path):
     with gzip.open(path, 'rb') as fp:
-        return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 1])
+        return np.frombuffer(fp.read(), dtype=np.uint8, offset=8).reshape([-1, 1])
 
 
 def download_data(target, download_proxy=None):
+    labels_len = -1
     opener = urllib.request.build_opener()
     if download_proxy:
         proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
@@ -107,9 +108,9 @@ def download_data(target, download_proxy=None):
         for k, v in target.items():
             if not os.path.exists(v['filename']):
                 urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            # Check if it's label or not. Labels are reshape differently
             if k == 'index-labels' or k == 'query-labels':
                 v['data'] = load_labels(v['filename'])
+
             if k == 'index' or k == 'query':
                 v['data'] = load_mnist(v['filename'])
 
@@ -120,15 +121,62 @@ def index_generator(num_doc, target):
         d.blob.CopyFrom(array2pb((target['index']['data'][j])))
         label_int = target['index-labels']['data'][j][0]
         d.tags.update({'label': get_mapped_label(label_int)})
+        test = get_mapped_label(label_int)
+        if test == "Dress":
+            print("Dress is ", d.tags.fields)
+        elif test == "Bag":
+            print("Bag is ", d.tags.fields)
+        elif test == "Sneaker":
+            print("Sneaker is ", d.tags.fields)
+        elif test == "Shirt":
+            print("Shirt is ", d.tags.fields)
+        elif test == "T-shirt/top":
+            print("T-shirt/top is ", d.tags.fields)
+        elif test == "Pullover":
+            print("Pullover is ", d.tags.fields)
+        elif test == "Trouser":
+            print("Trouser is ", d.tags.fields)
+        elif test == "Ankle boot":
+            print("Ankle boot is ", d.tags.fields)
+        elif test == "Coat":
+            print("Coat is ", d.tags.fields)
+        elif test == "Sandal":
+            print("Sandal is ", d.tags.fields)
+        else:
+            print("unmatching results ", d.tags.fields)
         yield d
 
 
-def query_generator(num_doc):
+def query_generator(num_doc, target):
     for j in range(num_doc):
         d = jina_pb2.Document()
-        d.blob.CopyFrom(array2pb(targets['query']['data'][j]))
         label_int = targets['query-labels']['data'][j][0]
+        #if test == "Dress":
+        d.blob.CopyFrom(array2pb(target['query']['data'][j]))
         d.tags.update({'label': get_mapped_label(label_int)})
+        test = get_mapped_label(label_int)
+        if test == "Dress":
+            print("Dress is ", d.tags.fields)
+        elif test == "Bag":
+            print("Bag is ", d.tags.fields)
+        elif test == "Sneaker":
+            print("Sneaker is ", d.tags.fields)
+        elif test == "Shirt":
+            print("Shirt is ", d.tags.fields)
+        elif test == "T-shirt/top":
+            print("T-shirt/top is ", d.tags.fields)
+        elif test == "Pullover":
+            print("Pullover is ", d.tags.fields)
+        elif test == "Trouser":
+            print("Trouser is ", d.tags.fields)
+        elif test == "Ankle boot":
+            print("Ankle boot is ", d.tags.fields)
+        elif test == "Coat":
+            print("Coat is ", d.tags.fields)
+        elif test == "Sandal":
+            print("Sandal is ", d.tags.fields)
+        else:
+            print("unmatching results ", d.tags.fields)
         yield d
 
 
@@ -138,10 +186,10 @@ def index(num_doc, target):
         f.index(index_generator(num_doc, target), batch_size=32)
 
 
-def query(num_doc):
+def query(num_doc, target):
     f = Flow.load_config('flow-query.yml')
     with f:
-        f.search(query_generator(num_doc), shuffle=True, size=128,
+        f.search(query_generator(num_doc, target), shuffle=True, size=128,
                  output_fn=print_result, batch_size=32)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
@@ -158,19 +206,10 @@ def config():
 
 
 if __name__ == '__main__':
-    num_docs = 500
 
     if not os.path.exists('./workspace'):
         os.makedirs('./workspace')
     targets = {
-        'index': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
-            'filename': os.path.join('./workspace', 'index')
-        },
-        'query': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
-            'filename': os.path.join('./workspace', 'query')
-        },
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
             'filename': os.path.join('./workspace', 'index-labels')
@@ -178,11 +217,27 @@ if __name__ == '__main__':
         'query-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
             'filename': os.path.join('./workspace', 'query-labels')
+        },
+        'index': {
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
+            'filename': os.path.join('./workspace', 'index')
+        },
+        'query': {
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
+            'filename': os.path.join('./workspace', 'query')
         }
     }
     download_data(targets, None)
+    print("Target index data ", targets['index']['data'].shape)
+    print("Target index-labels data ", targets['index-labels']['data'].shape)
+    print("Target query data ", targets['query']['data'].shape)
+    print("Target query-labels data ", targets['query-labels']['data'].shape)
     import time
+
     time.sleep(1)
+
+    num_docs_index = 60000
+    num_docs_query = 10000
 
     config()
 
@@ -191,9 +246,9 @@ if __name__ == '__main__':
         exit(1)
     if sys.argv[1] == 'index':
         config()
-        index(num_docs, targets)
+        index(num_docs_index, targets)
     elif sys.argv[1] == 'query':
         config()
-        query(num_docs)
+        query(num_docs_query, targets)
     else:
         raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
