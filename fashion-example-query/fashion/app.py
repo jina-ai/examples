@@ -61,6 +61,7 @@ def print_result(resp):
         result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
         for kk in d.matches:
             kmi = kk.uri
+            print("kmi ", kmi)
             result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
             # k['score']['explained'] = json.loads(kk.score.explained)
         result_html.append('</td></tr>\n')
@@ -125,7 +126,7 @@ def index_generator(num_doc, target):
 
 
 def query_generator(num_doc):
-    for j in range(1):
+    for j in range(num_doc):
         d = jina_pb2.Document()
         d.blob.CopyFrom(array2pb(targets['query']['data'][j]))
         label_int = targets['query-labels']['data'][j][0]
@@ -134,7 +135,6 @@ def query_generator(num_doc):
         print("D ", d)
         print("label_int ", get_mapped_label(label_int))
         print("********************************************************************************")
-
         yield d
 
 
@@ -147,7 +147,7 @@ def index(num_doc, target):
 def query(num_doc):
     f = Flow.load_config('flow-query.yml')
     with f:
-        f.search(query_generator(1), shuffle=True, size=128,
+        f.search(query_generator(num_doc), shuffle=True, size=128,
                  output_fn=print_result, batch_size=32)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
@@ -164,7 +164,10 @@ def config():
 
 
 if __name__ == '__main__':
-    num_docs = 50
+    num_docs = 500
+
+    if not os.path.exists('./workspace'):
+        os.makedirs('./workspace')
     targets = {
         'index': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
@@ -176,11 +179,11 @@ if __name__ == '__main__':
         },
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./workspace', 'index-labels-original')
+            'filename': os.path.join('./workspace', 'index-labels')
         },
         'query-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./workspace', 'query-labels-original')
+            'filename': os.path.join('./workspace', 'query-labels')
         }
     }
     download_data(targets, None)

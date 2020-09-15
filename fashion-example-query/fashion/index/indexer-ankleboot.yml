@@ -20,7 +20,7 @@ requests:
     IndexRequest:
       - !FilterQL
         with:
-          lookups: {'tags__label': 'Ankle Boot'}
+          lookups: {'tags__label': 'Ankle boot'}
       - !VectorIndexDriver
         with:
           executor: vecidx
@@ -35,7 +35,7 @@ requests:
     SearchRequest:
       - !FilterQL
         with:
-          lookups: {'tags__label': 'Ankle Boot'}
+          lookups: {'tags__label': 'Ankle boot'}
       - !VectorSearchDriver
         with:
           executor: vecidx
