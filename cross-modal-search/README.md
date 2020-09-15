@@ -179,7 +179,7 @@ Internally, TextEncoder targets ImageVectorIndexer and ImageEncoder targets Text
 ImageVectorIndexer and TextVectorIndexer map to a common Embedding Space. (To Jina it means having common dimensionality).
 
 ## Results
-![alt text](https://github.com/jina-ai/examples/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
 
 ## Documentation 
 
