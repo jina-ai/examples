@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Run the Hello World exyample using query language](#run-the-hello-world-exyample-using-query-language)
+- [Run the Hello World example using query language](#run-the-hello-world-example-using-query-language)
   - [🗝️ Key Concepts](#-key-concepts)
   - [🏃 Run the Flows](#-run-the-flows)
   - [Results](#results)
