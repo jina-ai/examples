@@ -1,0 +1,15 @@
+!DummyEncoder
+metas:
+  py_modules: customized_executors.py
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !EncodeDriver
+        with:
+          granularity_range: [1, 2]
+    IndexRequest:
+      - !EncodeDriver
+        with:
+          granularity_range: [1, 2]
