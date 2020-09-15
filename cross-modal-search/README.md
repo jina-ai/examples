@@ -7,7 +7,7 @@
   - [Prepare the data](#prepare-the-data)
   - [Build the docker images](#build-the-docker-images)
   - [Run the Flows](#run-the-flows)
-  - [Results] (#results)
+  - [Results](#results)
   - [Documentation](#documentation)
   - [Community](#community)
   - [License](#license)
