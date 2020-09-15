@@ -117,33 +117,11 @@ def download_data(target, download_proxy=None):
 
 def index_generator(num_doc, target):
     for j in range(num_doc):
+        label_int = target['index-labels']['data'][j][0]
+        test = get_mapped_label(label_int)
         d = jina_pb2.Document()
         d.blob.CopyFrom(array2pb((target['index']['data'][j])))
-        label_int = target['index-labels']['data'][j][0]
         d.tags.update({'label': get_mapped_label(label_int)})
-        test = get_mapped_label(label_int)
-        if test == "Dress":
-            print("Dress is ", d.tags.fields)
-        elif test == "Bag":
-            print("Bag is ", d.tags.fields)
-        elif test == "Sneaker":
-            print("Sneaker is ", d.tags.fields)
-        elif test == "Shirt":
-            print("Shirt is ", d.tags.fields)
-        elif test == "T-shirt/top":
-            print("T-shirt/top is ", d.tags.fields)
-        elif test == "Pullover":
-            print("Pullover is ", d.tags.fields)
-        elif test == "Trouser":
-            print("Trouser is ", d.tags.fields)
-        elif test == "Ankle boot":
-            print("Ankle boot is ", d.tags.fields)
-        elif test == "Coat":
-            print("Coat is ", d.tags.fields)
-        elif test == "Sandal":
-            print("Sandal is ", d.tags.fields)
-        else:
-            print("unmatching results ", d.tags.fields)
         yield d
 
 
@@ -151,36 +129,13 @@ def query_generator(num_doc, target):
     for j in range(num_doc):
         d = jina_pb2.Document()
         label_int = targets['query-labels']['data'][j][0]
-        #if test == "Dress":
         d.blob.CopyFrom(array2pb(target['query']['data'][j]))
         d.tags.update({'label': get_mapped_label(label_int)})
-        test = get_mapped_label(label_int)
-        if test == "Dress":
-            print("Dress is ", d.tags.fields)
-        elif test == "Bag":
-            print("Bag is ", d.tags.fields)
-        elif test == "Sneaker":
-            print("Sneaker is ", d.tags.fields)
-        elif test == "Shirt":
-            print("Shirt is ", d.tags.fields)
-        elif test == "T-shirt/top":
-            print("T-shirt/top is ", d.tags.fields)
-        elif test == "Pullover":
-            print("Pullover is ", d.tags.fields)
-        elif test == "Trouser":
-            print("Trouser is ", d.tags.fields)
-        elif test == "Ankle boot":
-            print("Ankle boot is ", d.tags.fields)
-        elif test == "Coat":
-            print("Coat is ", d.tags.fields)
-        elif test == "Sandal":
-            print("Sandal is ", d.tags.fields)
-        else:
-            print("unmatching results ", d.tags.fields)
         yield d
 
 
 def index(num_doc, target):
+
     f = Flow.load_config('flow-index.yml')
     with f:
         f.index(index_generator(num_doc, target), batch_size=32)
