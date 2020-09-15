@@ -1,0 +1,11 @@
+!AudioReader
+with:
+  target_sample_rate: 5000
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    [SearchRequest, IndexRequest]:
+      - !LogInfoDriver {}
+      - !CraftDriver {}
+      - !LogInfoDriver {}

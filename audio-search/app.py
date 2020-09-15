@@ -64,7 +64,9 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        f.search(load_hdf5_data('data/packed_features/eval.h5'), output_fn=print, top_k=5)
+        f.search_files(
+            'data/R9_ZSCveAHg_7s.wav',
+            output_fn=print, top_k=5)
         # f.block()
 
 

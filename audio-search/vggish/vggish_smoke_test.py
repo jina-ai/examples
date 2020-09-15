@@ -57,8 +57,9 @@ t = np.arange(0, num_secs, 1 / sr)
 x = np.sin(2 * np.pi * freq * t)
 
 # Produce a batch of log mel spectrogram examples.
+print('x: ', x.shape)
 input_batch = vggish_input.waveform_to_examples(x, sr)
-print('Log Mel Spectrogram example: ', input_batch[0])
+print('Log Mel Spectrogram example: ', input_batch[0].shape)
 np.testing.assert_equal(
     input_batch.shape,
     [num_secs, vggish_params.NUM_FRAMES, vggish_params.NUM_BANDS])
@@ -75,7 +76,7 @@ with tf.Graph().as_default(), tf.Session() as sess:
       vggish_params.OUTPUT_TENSOR_NAME)
   [embedding_batch] = sess.run([embedding_tensor],
                                feed_dict={features_tensor: input_batch})
-  print('VGGish embedding: ', embedding_batch[0])
+  print('VGGish embedding: ', embedding_batch[0].shape)
   expected_embedding_mean = -0.0333
   expected_embedding_std = 0.380
   np.testing.assert_allclose(
@@ -86,7 +87,7 @@ with tf.Graph().as_default(), tf.Session() as sess:
 # Postprocess the results to produce whitened quantized embeddings.
 pproc = vggish_postprocess.Postprocessor(pca_params_path)
 postprocessed_batch = pproc.postprocess(embedding_batch)
-print('Postprocessed VGGish embedding: ', postprocessed_batch[0])
+print('Postprocessed VGGish embedding: ', postprocessed_batch[0].shape)
 expected_postprocessed_mean = 122.0
 expected_postprocessed_std = 93.5
 np.testing.assert_allclose(
