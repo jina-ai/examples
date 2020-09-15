@@ -35,7 +35,6 @@ label_id = {
 }
 
 
-
 def get_mapped_label(label_int):
     """
     Get a label_int and return the description of that label
@@ -118,7 +117,6 @@ def download_data(target, download_proxy=None):
 def index_generator(num_doc, target):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
-        test = get_mapped_label(label_int)
         d = jina_pb2.Document()
         d.blob.CopyFrom(array2pb((target['index']['data'][j])))
         d.tags.update({'label': get_mapped_label(label_int)})
@@ -135,7 +133,6 @@ def query_generator(num_doc, target):
 
 
 def index(num_doc, target):
-
     f = Flow.load_config('flow-index.yml')
     with f:
         f.index(index_generator(num_doc, target), batch_size=32)
@@ -183,10 +180,6 @@ if __name__ == '__main__':
         }
     }
     download_data(targets, None)
-    print("Target index data ", targets['index']['data'].shape)
-    print("Target index-labels data ", targets['index-labels']['data'].shape)
-    print("Target query data ", targets['query']['data'].shape)
-    print("Target query-labels data ", targets['query-labels']['data'].shape)
     import time
 
     time.sleep(1)

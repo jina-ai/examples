@@ -14,6 +14,8 @@
 First of all, read up on [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) so you have a clear understanding of how Jina works. We're going to refer to those concepts a lot. We assume you already have some knowledge of Python and machine learning.
 
 This is an extension of the Hello World example, but here we use QueryLanguage to filter the results by category.
+
+
 ### Install Requirements
 
 In your terminal:
@@ -29,15 +31,49 @@ Now that we've got the code to load our data, we're going to dive into writing o
 
 ### Index Flow
 
-First up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
+To run the index you type:
 
 ```bash
 python app.py index
 ```
 
-### Search Flow
+So what is happening here?
+First up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
 
-Run:
+There are 10 categories in the fashion-mnist-data
+
+    0	        T-shirt/top
+    1	        Trouser
+    2	        Pullover
+    3	        Dress
+    4	        Coat
+    5	        Sandal
+    6	        Shirt
+    7	        Sneaker
+    8	        Bag
+    9	        Ankle boot
+    
+What we are doing here is create a separate index per each category, so each category will have its own flow yml file. 
+This will be done during index time so they all will be under the /index folder
+
+![alt text](index_categories.png "Results")
+
+We index the data updating updating the label
+
+```
+d.tags.update({'label': get_mapped_label(label_int)})
+```
+This is where you could tweak the code if you would like to see only one category.
+For example if you would like to see only dresses, you could do something like this
+
+![alt text](filter.png "Results")
+
+Then we have ready all the indexes!
+
+
+### Query Flow
+
+Now for the query time, run:
 
 ```bash
 python app.py query
@@ -45,9 +81,21 @@ python app.py query
 
 ## Results
 
-This is an example of the results after query.
-
+This is an example of the results after the query using all categories
 
 ![alt text](results.png "Results")
 
 
+## QueryLanguage
+
+So the real magic here, if you compare it with the original HelloWorld, is that we are using QueryLanguage.
+This is happening in the index flow of each category, for example, for the ```indexer-dress.yml``` we have
+
+```
+IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Dress'}
+```
+
+The key is the ```!FilterQL```, here we are filtering with some specific label, like Dress in this example.
