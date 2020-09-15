@@ -13,7 +13,8 @@
 
 First of all, read up on [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) so you have a clear understanding of how Jina works. We're going to refer to those concepts a lot. We assume you already have some knowledge of Python and machine learning.
 
-This is an extension of the Hello World example, but here we use QueryLanguage to filter the results by category.
+This is an extension of the Hello World example, but here we use QueryLanguage to create an index per category and then, with that we can filter by category
+
 
 
 ### Install Requirements
@@ -36,9 +37,8 @@ To run the index you type:
 ```bash
 python app.py index
 ```
-
+First up we need to build up an index and then we'll search through this index when we use the query Flow later.
 So what is happening here?
-First up we need to build up an index of our file. We'll search through this index when we use the query Flow later.
 
 There are 10 categories in the fashion-mnist-data
 
@@ -53,7 +53,7 @@ There are 10 categories in the fashion-mnist-data
     8	        Bag
     9	        Ankle boot
     
-What we are doing here is create a separate index per each category, so each category will have its own flow yml file. 
+What we are doing here is create a separate index per each category, so each category will have its own pod yml file. 
 This will be done during index time so they all will be under the /index folder
 
 ![alt text](index_categories.png "Results")
@@ -89,7 +89,7 @@ This is an example of the results after the query using all categories
 ## QueryLanguage
 
 So the real magic here, if you compare it with the original HelloWorld, is that we are using QueryLanguage.
-This is happening in the index flow of each category, for example, for the ```indexer-dress.yml``` we have
+This is happening in the index and query flow of each category, for example, for the ```indexer-dress.yml``` we have
 
 ```
 IndexRequest:

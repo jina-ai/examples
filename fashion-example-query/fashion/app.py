@@ -97,7 +97,6 @@ def load_labels(path):
 
 
 def download_data(target, download_proxy=None):
-    labels_len = -1
     opener = urllib.request.build_opener()
     if download_proxy:
         proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
