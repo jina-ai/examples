@@ -1,0 +1,46 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+    metas:
+      name: vecidx  # a customized name
+      workspace: $HW_WORKDIR/Dress
+  - !BinaryPbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx
+      workspace: $HW_WORKDIR/Dress
+metas:
+  name: chunk_indexer_dress
+  workspace: $HW_WORKDIR/Dress
+requests:
+  on:
+    IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Dress'}
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - embedding
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'tags__label': 'Dress'}
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]

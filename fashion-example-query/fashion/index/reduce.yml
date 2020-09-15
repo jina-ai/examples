@@ -1,0 +1,25 @@
+!BaseExecutor
+with: {}
+metas:
+  name: top50
+requests:
+  on:
+    [SearchRequest]:
+      - !ReduceAllDriver
+        with:
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+      - !SortQL
+        with:
+          reverse: true
+          field: 'score.value'
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+      - !SliceQL
+        with:
+          start: 0
+          end: 50
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+    ControlRequest:
+      - !ControlReqDriver {}
