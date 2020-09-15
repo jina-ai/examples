@@ -13,6 +13,7 @@
 
 First of all, read up on [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) so you have a clear understanding of how Jina works. We're going to refer to those concepts a lot. We assume you already have some knowledge of Python and machine learning.
 
+This is an extension of the Hello World example, but here we use QueryLanguage to filter the results by category.
 ### Install Requirements
 
 In your terminal:
@@ -42,5 +43,11 @@ Run:
 python app.py query
 ```
 
+## Results
 
-Now that you have a broad understanding of how things work, you can try out some of more [example tutorials](https://github.com/jina-ai/examples) to build image or video search, or stay tuned for our next set of tutorials that build upon your Star Trek app.
+This is an example of the results after query.
+
+
+![alt text](results.png "Results")
+
+

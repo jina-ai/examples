@@ -55,13 +55,11 @@ def get_mapped_label(label_int):
 
 
 def print_result(resp):
-    print("REESP ", resp)
     for d in resp.search.docs:
         vi = d.uri
         result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
         for kk in d.matches:
             kmi = kk.uri
-            print("kmi ", kmi)
             result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
             # k['score']['explained'] = json.loads(kk.score.explained)
         result_html.append('</td></tr>\n')
@@ -131,10 +129,6 @@ def query_generator(num_doc):
         d.blob.CopyFrom(array2pb(targets['query']['data'][j]))
         label_int = targets['query-labels']['data'][j][0]
         d.tags.update({'label': get_mapped_label(label_int)})
-        print("********************************************************************************")
-        print("D ", d)
-        print("label_int ", get_mapped_label(label_int))
-        print("********************************************************************************")
         yield d
 
 
