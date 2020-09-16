@@ -39,7 +39,6 @@ requests:
       - !VectorSearchDriver
         with:
           executor: vecidx
-          top_k: 2
       - !KVSearchDriver
         with:
           executor: chunkidx
