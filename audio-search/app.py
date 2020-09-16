@@ -35,7 +35,7 @@ def load_hdf5_data(data_fn, size=num_docs):
         doc.blob.CopyFrom(array2pb(_emb))
         doc.embedding.CopyFrom(array2pb(np.mean(_emb, axis=0)))
         doc.uri = os.path.join('data', 'wav', f'{_vid.decode()}')
-        doc.id = idx
+        doc.id = idx + 1
         yield doc
 
 
@@ -63,9 +63,7 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        f.search_files(
-            'data/test/R9_ZSCveAHg_7s.wav',
-            output_fn=print, top_k=5)
+        f.search_files('data/test/R9_ZSCveAHg_7s.wav', top_k=5, output_fn=print)
         # f.block()
 
 

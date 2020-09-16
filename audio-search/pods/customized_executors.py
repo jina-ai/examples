@@ -44,7 +44,9 @@ class Wav2LogMelSpectrogram(BaseCrafter):
 
     def craft(self, blob, *args, **kwargs) -> Dict:
         import vggish_input
+        self.logger.info(f'blob: {blob.shape}')
         mel_spec = vggish_input.waveform_to_examples(blob, self.sample_rate)
+        self.logger.info(f'mel_spec: {mel_spec.shape}')
         return dict(blob=mel_spec.squeeze())
 
 

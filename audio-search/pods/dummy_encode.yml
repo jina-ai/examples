@@ -1,6 +1,6 @@
 !DummyEncoder
 metas:
-  py_modules: customized_executors.py
+  py_modules: [vggish/vggish_params.py, customized_executors.py]
 requests:
   on:
     ControlRequest:

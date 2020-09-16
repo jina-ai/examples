@@ -25,8 +25,8 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000
-  ranker:
-    uses: MaxRanker
+#  ranker:
+#    uses: pods/rank.yml
 #  doc_idx:
 #    uses: pods/doc.yml
 #    shards: $SHARDS

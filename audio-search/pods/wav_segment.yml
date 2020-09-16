@@ -1,6 +1,6 @@
 !AudioSlicer
 with:
-  frame_size: 5
+  frame_size: 10000
 requests:
   on:
     ControlRequest:

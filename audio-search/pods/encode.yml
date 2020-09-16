@@ -1,7 +1,7 @@
 !VggishEncoder
 with:
-  model_path: pods/models/vggish_model.ckpt
-  pca_path: pods/models/vggish_pca_params.npz
+  model_path: models/vggish_model.ckpt
+  pca_path: models/vggish_pca_params.npz
 metas:
   py_modules: [vggish/vggish_params.py, vggish/mel_features.py, vggish/vggish_input.py,vggish/vggish_slim.py, vggish/vggish_postprocess.py, customized_executors.py]
 requests:
@@ -10,4 +10,3 @@ requests:
       - !EncodeDriver
         with:
           granularity_range: [1, 2]
-      - !LogInfoDriver {}
