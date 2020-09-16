@@ -24,11 +24,6 @@
 We have included 1000 lyrics as toy data in [`toy-data`](toy-data).
 If you want to use this instead of the full dataset run
 
-```
-mkdir data
-cp toy-data/lyrics-toy-data1000.csv data/lyrics-data.csv
-```
-
 ## Download lyrics data
 
 We have included 1000 lyrics as toy data in [`toy-data`](toy-data). Please download the full data via:
@@ -36,6 +31,7 @@ We have included 1000 lyrics as toy data in [`toy-data`](toy-data). Please downl
 ```bash
 pip install kaggle
 kaggle datasets download -d neisse/scrapped-lyrics-from-6-genres
+export JINA_DATA_PATH=data/lyrics-data.csv
 ```
 
 Move `lyrics-data.csv` to `data/`.

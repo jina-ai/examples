@@ -6,14 +6,14 @@ with:
 pods:
   chunk_seg:
     uses: pods/craft.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
   tf_encode:
     uses: pods/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
   chunk_idx:
     uses: pods/chunk.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
