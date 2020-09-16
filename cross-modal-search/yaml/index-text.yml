@@ -38,4 +38,5 @@ requests:
         with:
           executor: text_kv_idx
           granularity_range: [0, 0]
-          adjacency_range: [0, 1]
+          adjacency_range: [1, 1]
+          recur_on: matches
