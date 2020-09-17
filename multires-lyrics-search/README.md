@@ -13,7 +13,7 @@
 - [Download lyrics data](#download-lyrics-data)
 - [Install](#install)
 - [Run](#run)
-- [Run as a Docker Container](#run-as-a-docker-container)
+<!-- - [Run as a Docker Container](#run-as-a-docker-container) -->
 - [View in Browser](#view-in-browser)
 - [License](#license)
 
@@ -57,6 +57,7 @@ pip install -e .
 | ``python app.py search`` | To run query on the index |
 | ``python app.py dryrun`` | Sanity check on the topology |
 
+<!--
 ## Run as a Docker Container
 
 To build the docker image
@@ -72,7 +73,7 @@ docker run -v "$(pwd)/j:/workspace" jinaai/hub.app.multires_lyrics_search:0.0.1
 To query
 ```bash
 docker run -p 65481:65481 -e "JINA_PORT=65481" jinaai/hub.app.multires_lyrics_search:0.0.1 search
-```
+``` -->
 
 ## View in Browser
 
