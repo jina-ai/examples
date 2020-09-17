@@ -13,7 +13,6 @@
 - [Download lyrics data](#download-lyrics-data)
 - [Install](#install)
 - [Run](#run)
-<!-- - [Run as a Docker Container](#run-as-a-docker-container) -->
 - [View in Browser](#view-in-browser)
 - [License](#license)
 
