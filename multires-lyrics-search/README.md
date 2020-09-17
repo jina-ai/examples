@@ -26,7 +26,8 @@ This data is ready to use with this example.
 
 ## [Optional] Download full lyrics dataset
 
-If you want to use the full dataset, please run:
+If you want to use the full dataset, you can download it from kaggle (https://www.kaggle.com/hsankesara/flickr-image-dataset).
+To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
 
 ```bash
 pip install kaggle
