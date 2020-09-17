@@ -366,7 +366,7 @@ On the other hand, the `CraftDriver` will call the `craft()` function from the E
 For the time being, the `extractor` shows the same behavior for both requests.
 
 ### `encoder`
-The YAML file of the `encoder` is pretty similar to the `extractor`. As one can see, we specify the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `model_name`.
+The YAML file of the `encoder` is pretty similar to the `extractor`. As one can see, we specify the `distilbert-base-cased` model. One can easily switch to other fancy pretrained models from **transformers** by giving another `pretrained_model_name_or_path`.
 
 ```yaml
 !TransformerTorchEncoder
