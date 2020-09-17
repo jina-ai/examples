@@ -25,11 +25,11 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000
-#  ranker:
-#    uses: pods/rank.yml
-#  doc_idx:
-#    uses: pods/doc.yml
-#    shards: $SHARDS
-#    separated_workspace: true
-#    polling: all
-#    uses_reducing: _merge_all
+  ranker:
+    uses: pods/rank.yml
+  doc_idx:
+    uses: pods/doc.yml
+    shards: $SHARDS
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
