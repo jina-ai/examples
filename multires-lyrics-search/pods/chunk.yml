@@ -5,13 +5,35 @@ components:
       index_filename: vec.gz
     metas:
       name: vecidx  # a customized name
-      workspace: $WORKDIR
+      workspace: $JINA_WORKSPACE
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx
-      workspace: $WORKDIR
+      workspace: $JINA_WORKSPACE
 metas:
   name: chunk_compound_indexer
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+          granularity_range: [1, 1]
+          adjacency_range: [0, 0]
+          recur_on: chunks
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
+          granularity_range: [1, 1]
+          adjacency_range: [1, 1]
+          recur_on: matches
