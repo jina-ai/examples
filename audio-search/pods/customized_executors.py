@@ -38,7 +38,7 @@ class NdArraySegmentor(BaseSegmenter):
 class Wav2LogMelSpectrogram(BaseCrafter):
     required_keys = {'blob', }
 
-    def __init__(self, sample_rate: int = 7000, *args, **kwargs):
+    def __init__(self, sample_rate: int = 32000, *args, **kwargs):
         super(Wav2LogMelSpectrogram, self).__init__()
         self.sample_rate = sample_rate
 
@@ -78,3 +78,13 @@ class VggishEncoder(BaseTFEncoder):
                                           feed_dict={self.feature_tensor: data})
         result = self.post_processor.postprocess(embedding_batch)
         return result
+
+
+class VggishAudioReader(BaseCrafter):
+    def craft(self, uri, *args, **kwargs) -> Dict:
+        import soundfile as sf
+        wav_data, sample_rate = sf.read(uri, dtype='int16')
+        self.logger.info(f'sample_rate: {sample_rate}')
+        data = wav_data / 32768.0
+        self.logger.info(f'blob: {data.shape}')
+        return dict(weight=1., blob=data)

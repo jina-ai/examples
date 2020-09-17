@@ -1,6 +1,6 @@
-!AudioReader
-with:
-  target_sample_rate: 5000
+!VggishAudioReader
+metas:
+  py_modules: [vggish/vggish_params.py, vggish/mel_features.py, vggish/vggish_input.py, customized_executors.py]
 requests:
   on:
     ControlRequest:

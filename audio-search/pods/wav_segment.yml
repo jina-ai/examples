@@ -1,9 +1,10 @@
 !AudioSlicer
 with:
-  frame_size: 10000
+  frame_size: 10
 requests:
   on:
     ControlRequest:
       - !ControlReqDriver {}
     [SearchRequest, IndexRequest]:
       - !SegmentDriver {}
+#      - !LogInfoDriver {}

@@ -20,7 +20,12 @@ def bool_to_float32(y):
     return np.float32(y)
 
 
-def load_hdf5_data(data_fn, size=num_docs):
+def load_hdf5_data(data_fn, wave_path, size=num_docs):
+    wav_fn_set = set()
+    for dirs, subdirs, files in os.walk(wave_path):
+        for fn in files:
+            wav_fn_set.add(fn)
+    print(f'wav files: {len(wav_fn_set)}')
     with h5py.File(data_fn, 'r') as hf:
         x = hf.get('x')
         # y = hf.get('y')
@@ -30,18 +35,22 @@ def load_hdf5_data(data_fn, size=num_docs):
         # y = list(y)
         video_id_list = list(video_id_list)
     for idx, (_emb, _vid) in \
-            enumerate(zip(x[:size], video_id_list[:size])):
+            enumerate(zip(x, video_id_list)):
+        fn = f'Y{_vid.decode()}.wav'
+        # wav_fn_set = frozenset(['Ypr6t5b2zM7Q.wav', 'YppSWMKKGZtM.wav', 'YpqM5KgE0T44.wav'])
+        if fn not in wav_fn_set:
+            continue
         doc = Document()
         doc.blob.CopyFrom(array2pb(_emb))
         doc.embedding.CopyFrom(array2pb(np.mean(_emb, axis=0)))
-        doc.uri = os.path.join('data', 'wav', f'{_vid.decode()}')
+        doc.uri = os.path.join('data', 'wav', fn)
         doc.id = idx + 1
         yield doc
 
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
-    shards = 2
+    shards = 1
     os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(shards)
     os.environ['WORKDIR'] = './workspace'
@@ -51,11 +60,11 @@ def config():
 
 # for index
 def index():
-
     f = Flow.load_config('flows/index.yml')
 
     with f:
-        f.index(load_hdf5_data('data/packed_features/eval.h5'), batch_size=2, output_fn=print)
+        f.index(
+            load_hdf5_data('data/packed_features/bal_train.h5', 'data/wav'), batch_size=2)
 
 
 # for search
@@ -63,7 +72,7 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        f.search_files('data/test/R9_ZSCveAHg_7s.wav', top_k=5, output_fn=print)
+        f.search_files('data/wav/YpqM5KgE0T44.wav', top_k=3, output_fn=print)
         # f.block()
 
 
