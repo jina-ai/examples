@@ -10,7 +10,7 @@
 **Table of Contents**
 
 - [Use toy data](#use-toy-data)
-- [Download lyrics data](#download-lyrics-data)
+- [[Optional] Download full lyrics dataset](#optional-download-full-lyrics-dataset)
 - [Install](#install)
 - [Run](#run)
 - [View in Browser](#view-in-browser)
