@@ -36,12 +36,6 @@ export JINA_DATA_PATH=data/lyrics-data.csv
 pip install -r requirements.txt
 ```
 
-To install it in editable mode
-
-```bash
-pip install -e .
-```
-
 ## Run
 
 | Command | Description |
