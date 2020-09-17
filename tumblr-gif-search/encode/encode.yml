@@ -1,4 +1,13 @@
-!KerasImageEncoder
+!ImageKerasEncoder
 with:
   model_name: MobileNetV2
   pool_strategy: avg
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    [IndexRequest, SearchRequest]:
+      - !EncodeDriver
+        with:
+          recur_on: ['chunks', ]
+          granularity_range: [1, 1]

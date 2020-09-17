@@ -15,6 +15,7 @@ requests:
           fields:
             - buffer
             - chunks
+
     SearchRequest:
       - !URI2Buffer {}
       - !SegmentDriver
@@ -25,5 +26,6 @@ requests:
           fields:
             - buffer
             - chunks
+
     ControlRequest:
       - !ControlReqDriver {}
