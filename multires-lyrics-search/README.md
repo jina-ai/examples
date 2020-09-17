@@ -9,6 +9,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
+- [Use toy data](#use-toy-data)
 - [Download lyrics data](#download-lyrics-data)
 - [Install](#install)
 - [Run](#run)
