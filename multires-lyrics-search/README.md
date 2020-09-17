@@ -19,7 +19,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## Download lyrics data
+## Use toy data
+
+We have included 1000 lyrics as toy data in [`toy-data`](toy-data).
+This data is ready to use with this example.
+
+## [Optional] Download full lyrics dataset
+
+If you want to use the full dataset, please run:
 
 ```bash
 pip install kaggle
