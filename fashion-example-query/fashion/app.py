@@ -181,10 +181,6 @@ if __name__ == '__main__':
         }
     }
     download_data(targets, None)
-    import time
-
-    time.sleep(1)
-
     num_docs_index = 60000
     num_docs_query = 100
 
