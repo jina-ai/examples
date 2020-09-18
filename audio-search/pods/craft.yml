@@ -1,3 +1,0 @@
-!NdArraySegmentor
-metas:
-  py_modules: [vggish/vggish_params.py, customized_executors.py]

@@ -31,7 +31,6 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        # f.search_files('data/wav/YpqM5KgE0T44.wav', top_k=20, output_fn=print)
         f.block()
 
 
