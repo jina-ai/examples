@@ -7,6 +7,9 @@ metas:
 requests:
   on:
     IndexRequest:
+      - !Buffer2URI
+        with:
+          override: true
       - !KVIndexDriver
         with:
           granularity_range: [0, 0]
@@ -17,6 +20,15 @@ requests:
           granularity_range: [0, 0]
           adjacency_range: [1, 1]
           recur_on: ['matches',]
+      - !ExcludeQL
+        with:
+          granularity_range: [0, 2]
+          fields:
+            - embedding
+            - blob
+            - chunks
+          recur_on: ['chunks', 'matches']
+      - !LogInfoDriver {}
     ControlRequest:
       - !ControlReqDriver {}
 

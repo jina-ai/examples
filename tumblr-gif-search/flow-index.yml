@@ -12,6 +12,7 @@ pods:
     needs: chunk_seg
     parallel: $PARALLEL
     read_only: true
+    timeout_ready: 600000
   chunk_idx:
     uses: index/chunk.yml
     shards: $SHARDS

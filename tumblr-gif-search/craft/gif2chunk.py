@@ -24,7 +24,6 @@ class GifPreprocessor(BaseSegmenter):
             idx = 0
             for frame in get_frames(im):
                 try:
-
                     if idx % self.every_k_frame == 0 and (
                             (self.max_frame is not None and idx < self.max_frame) or self.max_frame is None):
                         new_frame = frame.convert('RGB').resize([self.img_shape, ] * 2)
