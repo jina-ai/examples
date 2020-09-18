@@ -470,7 +470,7 @@ Starts our Pods section, and specifies our first Pod, named `crafter` which is d
 ```yaml
   encoder:
     yaml_path: pods/encode.yml
-    replicas: $REPLICAS
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
 ```
@@ -493,7 +493,7 @@ This code specifies:
 ```yaml
   chunk_idx:
     yaml_path: pods/chunk.yml
-    replicas: $JINA_SHARDS
+    parallel: $JINA_SHARDS
     separated_workspace: true
 ```
 
@@ -563,14 +563,14 @@ with:
 pods:
   chunk_seg:
     yaml_path: pods/craft.yml
-    replicas: $REPLICAS
+    parallel: $JINA_PARALLEL
   tf_encode:
     yaml_path: pods/encode.yml
-    replicas: $REPLICAS
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
   chunk_idx:
     yaml_path: pods/chunk.yml
-    replicas: $JINA_SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     polling: all
     reducing_yaml_path: _merge_topk_chunks
@@ -650,7 +650,7 @@ pods:
 
   encoder:
     yaml_path: pods/encode.yml
-    replicas: $REPLICAS
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
 ```
