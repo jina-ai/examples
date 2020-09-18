@@ -28,7 +28,6 @@ requests:
             - blob
             - chunks
           recur_on: ['chunks', 'matches']
-      - !LogInfoDriver {}
     ControlRequest:
       - !ControlReqDriver {}
 
