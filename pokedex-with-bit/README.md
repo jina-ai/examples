@@ -50,7 +50,7 @@ The code can of course run natively on your local machine, please [read the Jina
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## TLDR;
+## TL;DR: Just Show Me the Pokemon!
 
 > *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
@@ -62,6 +62,13 @@ docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex 
 
 Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api).
 
+## Download and Extract Data
+
+We're using Pokemon sprites from generations one through five, downloaded from [veekun.com](https://veekun.com/dex/downloads). To download and extract the PNGs, simply run:
+
+```sh
+sh ./get_data.sh
+```
 
 ## Index Image Data
 
