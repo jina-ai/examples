@@ -6,7 +6,7 @@ import sys
 
 from jina.flow import Flow
 num_docs = os.environ.get('MAX_DOCS', 50000)
-image_src = 'data/*.png'
+image_src = 'data/**/*.png'
 
 
 def config():
