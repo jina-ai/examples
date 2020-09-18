@@ -38,7 +38,8 @@ The code can of course run natively on your local machine, please [read the Jina
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [TLDR;](#tldr)
+- [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
+- [Download and Extract Data](#download-and-extract-data)
 - [Index Image Data](#index-image-data)
 - [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
 - [Build Docker Image](#build-docker-image)
