@@ -15,4 +15,4 @@ wget -P ${DATA_DIR} https://veekun.com/static/pokedex/downloads/generation-5.tar
 
 cd ${DATA_DIR}
 
-tar -zxvf *.tar.gz
+for i in *.tar.gz; do tar -zxvf ${i}; rm -f ${i}; done
