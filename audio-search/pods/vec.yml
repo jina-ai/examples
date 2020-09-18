@@ -22,12 +22,6 @@ requests:
         with:
           executor: NumpyIndexer
           granularity_range: [1, 1]
-      - !KVSearchDriver
-        with:
-          executor: BinaryPbIndexer
-          granularity_range: [1, 1]
-          adjacency_range: [1, 1]
-          recur_on: ['matches', ]
       - !ExcludeQL
         with:
           granularity_range: [0, 1]
@@ -36,6 +30,12 @@ requests:
             - embedding
             - blob
           recur_on: ['matches', 'chunks']
+      - !KVSearchDriver
+        with:
+          executor: BinaryPbIndexer
+          granularity_range: [1, 1]
+          adjacency_range: [1, 1]
+          recur_on: ['matches', ]
     IndexRequest:
       - !VectorIndexDriver
         with:

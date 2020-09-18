@@ -15,6 +15,12 @@ requests:
           granularity_range: [0, 0]
           adjacency_range: [1, 1]
           recur_on: ['matches', ]
+#      - !URI2DataURI
+#        with:
+#          granularity_range: [0, 1]
+#          adjacency_range: [1, 1]
+#          recur_on: ['matches', ]
+      - !LogInfoDriver {}
       - !ExcludeQL
         with:
           granularity_range: [0, 2]
@@ -22,7 +28,11 @@ requests:
           fields:
             - embedding
             - blob
+            - buffer
     IndexRequest:
+      - !URI2DataURI
+        with:
+          override: true
       - !ExcludeQL
         with:
           granularity_range: [0, 2]

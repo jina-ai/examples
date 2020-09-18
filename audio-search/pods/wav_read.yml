@@ -5,5 +5,8 @@ requests:
   on:
     ControlRequest:
       - !ControlReqDriver {}
-    [SearchRequest, IndexRequest]:
+    IndexRequest:
+      - !CraftDriver {}
+    SearchRequest:
+      - !URI2Buffer {}
       - !CraftDriver {}

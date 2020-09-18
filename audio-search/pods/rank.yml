@@ -18,12 +18,11 @@ requests:
         with:
           fields:
             - embedding
-            - buffer
             - blob
             - text
-            - chunks
             - length
             - weight
+            - chunks
           granularity_range: [0, 2]
           adjacency_range: [0, 1]
           recur_on: ['chunks', 'matches']

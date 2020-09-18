@@ -2,11 +2,19 @@
 with:
   logserver: false
 pods:
-  crafter:
-    uses: pods/craft.yml
-    read_only: true
-  dummy_encoder:
-    uses: pods/dummy_encode.yml
+  reader:
+    uses: pods/wav_read.yml
+    parallel: $PARALLEL
+  segmenter:
+    uses: pods/wav_segment.yml
+    parallel: $PARALLEL
+  wav2mel:
+    uses: pods/wav2mel.yml
+    parallel: $PARALLEL
+  encoder:
+    uses: pods/encode.yml
+    parallel: $PARALLEL
+    timeout_ready: 600000
     read_only: true
   vec_indexer:
     uses: pods/vec.yml

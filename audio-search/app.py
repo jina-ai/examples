@@ -2,50 +2,10 @@ __version__ = '0.0.1'
 
 import os
 import sys
-import h5py
-import numpy as np
 
 from jina.flow import Flow
-from jina.proto.jina_pb2 import Document
-from jina.drivers.helper import array2pb
 
 num_docs = int(os.environ.get('MAX_DOCS', 10))
-
-
-def uint8_to_float32(x):
-    return (np.float32(x) - 128.) / 128.
-
-
-def bool_to_float32(y):
-    return np.float32(y)
-
-
-def load_hdf5_data(data_fn, wave_path, size=num_docs):
-    wav_fn_set = set()
-    for dirs, subdirs, files in os.walk(wave_path):
-        for fn in files:
-            wav_fn_set.add(fn)
-    print(f'wav files: {len(wav_fn_set)}')
-    with h5py.File(data_fn, 'r') as hf:
-        x = hf.get('x')
-        # y = hf.get('y')
-        video_id_list = hf.get('video_id_list')
-        x = np.array(x)
-        x = uint8_to_float32(x)
-        # y = list(y)
-        video_id_list = list(video_id_list)
-    for idx, (_emb, _vid) in \
-            enumerate(zip(x, video_id_list)):
-        fn = f'Y{_vid.decode()}.wav'
-        # wav_fn_set = frozenset(['Ypr6t5b2zM7Q.wav', 'YppSWMKKGZtM.wav', 'YpqM5KgE0T44.wav'])
-        if fn not in wav_fn_set:
-            continue
-        doc = Document()
-        doc.blob.CopyFrom(array2pb(_emb))
-        doc.embedding.CopyFrom(array2pb(np.mean(_emb, axis=0)))
-        doc.uri = os.path.join('data', 'wav', fn)
-        doc.id = idx + 1
-        yield doc
 
 
 def config():
@@ -63,8 +23,7 @@ def index():
     f = Flow.load_config('flows/index.yml')
 
     with f:
-        f.index(
-            load_hdf5_data('data/packed_features/bal_train.h5', 'data/wav'), batch_size=2)
+        f.index_files('data/wav/*.wav', batch_size=16, num_docs=num_docs)
 
 
 # for search
@@ -72,8 +31,8 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        f.search_files('data/wav/YpqM5KgE0T44.wav', top_k=3, output_fn=print)
-        # f.block()
+        # f.search_files('data/wav/YpqM5KgE0T44.wav', top_k=20, output_fn=print)
+        f.block()
 
 
 # for test before put into docker

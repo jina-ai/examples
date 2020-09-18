@@ -7,4 +7,3 @@ requests:
       - !ControlReqDriver {}
     [SearchRequest, IndexRequest]:
       - !SegmentDriver {}
-#      - !LogInfoDriver {}

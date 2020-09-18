@@ -1,4 +1,5 @@
 import numpy as np
+import io
 from typing import Any, List, Dict
 
 from jina.executors.encoders import BaseEncoder
@@ -44,9 +45,9 @@ class Wav2LogMelSpectrogram(BaseCrafter):
 
     def craft(self, blob, *args, **kwargs) -> Dict:
         import vggish_input
-        self.logger.info(f'blob: {blob.shape}')
+        self.logger.debug(f'blob: {blob.shape}')
         mel_spec = vggish_input.waveform_to_examples(blob, self.sample_rate)
-        self.logger.info(f'mel_spec: {mel_spec.shape}')
+        self.logger.debug(f'mel_spec: {mel_spec.shape}')
         return dict(blob=mel_spec.squeeze())
 
 
@@ -77,14 +78,23 @@ class VggishEncoder(BaseTFEncoder):
         [embedding_batch] = self.sess.run([self.embedding_tensor],
                                           feed_dict={self.feature_tensor: data})
         result = self.post_processor.postprocess(embedding_batch)
-        return result
+        return (np.float32(result) - 128.) / 128.
 
 
 class VggishAudioReader(BaseCrafter):
-    def craft(self, uri, *args, **kwargs) -> Dict:
+    def craft(self, uri, buffer, *args, **kwargs) -> Dict:
         import soundfile as sf
-        wav_data, sample_rate = sf.read(uri, dtype='int16')
-        self.logger.info(f'sample_rate: {sample_rate}')
+        wav_data = None
+        sample_rate = None
+        if buffer:
+            wav_data, sample_rate = sf.read(io.BytesIO(buffer), dtype='int16')
+        elif uri:
+            wav_data, sample_rate = sf.read(uri, dtype='int16')
+        else:
+            return dict()
+        self.logger.debug(f'sample_rate: {sample_rate}')
+        if len(wav_data.shape) > 1:
+            wav_data = np.mean(wav_data, axis=1)
         data = wav_data / 32768.0
         self.logger.info(f'blob: {data.shape}')
         return dict(weight=1., blob=data)
