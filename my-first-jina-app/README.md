@@ -119,6 +119,7 @@ We use [cookiecutter](https://github.com/cookiecutter/cookiecutter) to spin up a
 For our Star Trek example, we recommend the following settings:
 
 * `project_name`: `Star Trek` (non-default)
+* `jina_version`: 0.5.5
 * `project_slug`: `star_trek` 
 * `task_type`: `nlp` (non-default)
 * `index_type`: `strings` (non-default)
@@ -198,7 +199,7 @@ startrek_tng.csv                               100%[============================
 
 </details>
 
-⁉️  Why do we use `source`, not `sh`? This is because we're setting some environment variables. By running with `bash` or `sh` those would only be set in the sub-shell, not the shell we're working in. You can check the data path using `echo $DATA_PATH`
+⁉️  Why do we use `source`, not `sh`? This is because we're setting some environment variables. By running with `bash` or `sh` those would only be set in the sub-shell, not the shell we're working in. You can check the data path using `echo $JINA_DATA_PATH`
 
 ### Check Data
 
@@ -227,19 +228,19 @@ Note: Your character lines may be a little different. That's okay!
 
 ### Set Data Path
 
-Now we need to tell Jina where to find the data. By default, `app.py` uses the environment variable `DATA_PATH` for this. We can simply run:
+Now we need to tell Jina where to find the data. By default, `app.py` uses the environment variable `JINA_DATA_PATH` for this. We can simply run:
 
 ```sh
-export DATA_PATH='data/startrek_tng.csv'
+export JINA_DATA_PATH='data/startrek_tng.csv'
 ```
 
 You can double check it was set successfully by running:
 
 ```sh
-echo $DATA_PATH
+echo $JINA_DATA_PATH
 ```
 
-⚠️  If `DATA_PATH` is empty, `app.py` is set to index only 3 sample strings, so be sure to check this!
+⚠️  If `JINA_DATA_PATH` is empty, `app.py` is set to index only 3 sample strings, so be sure to check this!
 
 ## 🏃 Run the Flows
 
