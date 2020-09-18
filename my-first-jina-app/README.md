@@ -493,7 +493,7 @@ This code specifies:
 ```yaml
   chunk_idx:
     yaml_path: pods/chunk.yml
-    replicas: $SHARDS
+    replicas: $JINA_SHARDS
     separated_workspace: true
 ```
 
@@ -570,7 +570,7 @@ pods:
     timeout_ready: 600000
   chunk_idx:
     yaml_path: pods/chunk.yml
-    replicas: $SHARDS
+    replicas: $JINA_SHARDS
     separated_workspace: true
     polling: all
     reducing_yaml_path: _merge_topk_chunks
