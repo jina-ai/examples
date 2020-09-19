@@ -1,3 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Build Audio Search (W.I.P.)](#build-audio-search-wip)
+  - [Disclaimer](#disclaimer)
+  - [Install](#install)
+  - [Download the data](#download-the-data)
+  - [Run](#run)
+  - [Run as a Docker Container](#run-as-a-docker-container)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Build Audio Search (W.I.P.)
 
 <p align="center">
