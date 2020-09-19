@@ -13,24 +13,9 @@ import vggish_postprocess
 import librosa
 
 
-class Wav2LogMelSpectrogram(BaseCrafter):
-    required_keys = {'blob', 'meta_info'}
-
-    def __init__(self, *args, **kwargs):
-        super(Wav2LogMelSpectrogram, self).__init__()
-
-    def craft(self, blob, meta_info, *args, **kwargs) -> Dict:
-        sample_rate = int.from_bytes(meta_info, byteorder='big')
-        self.logger.debug(f'blob: {blob.shape}, sample_rate: {sample_rate}')
-        mel_spec = vggish_input.waveform_to_examples(blob, sample_rate)
-        self.logger.debug(f'mel_spec: {mel_spec.shape}')
-        return dict(blob=mel_spec.squeeze())
-
-
 class VggishEncoder(BaseTFEncoder):
     def __init__(self, model_path: str, pca_path: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.logger.info('init vggishencoder')
         self.model_path = model_path
         self.pca_path = pca_path
 
@@ -55,25 +40,6 @@ class VggishEncoder(BaseTFEncoder):
         return (np.float32(result) - 128.) / 128.
 
 
-class VggishAudioReader(BaseCrafter):
-    def craft(self, uri, buffer, *args, **kwargs) -> Dict:
-        import soundfile as sf
-        wav_data = None
-        sample_rate = None
-        if buffer:
-            wav_data, sample_rate = sf.read(io.BytesIO(buffer), dtype='int16')
-        elif uri:
-            wav_data, sample_rate = sf.read(uri, dtype='int16')
-        else:
-            return dict()
-        self.logger.debug(f'sample_rate: {sample_rate}')
-        if len(wav_data.shape) > 1:
-            wav_data = np.mean(wav_data, axis=1)
-        data = wav_data / 32768.0
-        self.logger.info(f'blob: {data.shape}')
-        return dict(weight=1., blob=data, meta_info=sample_rate.to_bytes(length=16, byteorder='big'))
-
-
 class VggishCrafter(BaseSegmenter):
     def __init__(self, window_length_secs=0.025, hop_length_secs=0.010, *args, **kwargs):
         """
@@ -87,29 +53,20 @@ class VggishCrafter(BaseSegmenter):
     def craft(self, uri, buffer, *args, **kwargs) -> List[Dict]:
         result = []
         # load the data
-        self.logger.info('loading data ...')
         data, sample_rate = self.read_wav(uri, buffer)
         if data is None:
             return result
         # slice the wav array
-        self.logger.info('segmenting data')
         mel_data = self.wav2mel(data, sample_rate)
         for idx, blob in enumerate(mel_data):
-            self.logger.info(f'blob: {blob.shape}')
+            self.logger.debug(f'blob: {blob.shape}')
             result.append(dict(offset=idx, weight=1.0, blob=blob, length=mel_data.shape[0]))
-
-        # frames = self.segment(data, sample_rate)
-        # # convert to mel
-        # self.logger.info(f'converting data into mel: {frames.shape[0]}')
-        # for idx, frame in enumerate(frames):
-        #     blob = self.wav2mel(frame, sample_rate)
-        #     result.append(dict(offset=idx, weight=1.0, blob=blob, length=frames.shape[0]))
         return result
 
     def wav2mel(self, blob, sample_rate):
         self.logger.debug(f'blob: {blob.shape}, sample_rate: {sample_rate}')
         mel_spec = vggish_input.waveform_to_examples(blob, sample_rate).squeeze()
-        self.logger.info(f'mel_spec: {mel_spec.shape}')
+        self.logger.debug(f'mel_spec: {mel_spec.shape}')
         return mel_spec
 
     def read_wav(self, uri, buffer):

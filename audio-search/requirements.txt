@@ -1,4 +1,4 @@
-jina[devel,torch,tensorflow,transformers]==0.5.4
+jina[hub,tensorflow]==0.5.5
 numpy
 resampy
 tensorflow

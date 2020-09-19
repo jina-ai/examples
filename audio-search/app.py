@@ -5,7 +5,7 @@ import sys
 
 from jina.flow import Flow
 
-num_docs = int(os.environ.get('MAX_DOCS', 2))
+num_docs = int(os.environ.get('MAX_DOCS', 100))
 
 
 def config():
