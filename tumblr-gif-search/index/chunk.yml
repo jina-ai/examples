@@ -15,3 +15,43 @@ components:
 metas:
   name: chunk_compound_indexer
   workspace: $WORKDIR
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: NumpyIndexer
+          granularity_range: [1, 1]
+      - !KVSearchDriver
+        with:
+          executor: BinaryPbIndexer
+          granularity_range: [1, 1]
+          adjacency_range: [1, 1]
+          recur_on: ['matches', ]
+      - !ExcludeQL
+        with:
+          granularity_range: [0, 1]
+          adjacency_range: [1, 1]
+          fields:
+            - embedding
+            - blob
+          recur_on: ['matches', 'chunks']
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: NumpyIndexer
+          granularity_range: [1, 1]
+      - !ExcludeQL
+        with:
+          granularity_range: [0, 1]
+          fields:
+            - embedding
+            - blob
+          recur_on: ['chunks', ]
+      - !KVIndexDriver
+        with:
+          executor: BinaryPbIndexer
+          granularity_range: [1, 1]
+          recur_on: ['chunks', ]
+    ControlRequest:
+      - !ControlReqDriver {}
