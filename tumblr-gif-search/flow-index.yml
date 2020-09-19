@@ -1,6 +1,6 @@
 !Flow
 with:
-  logserver: true
+  logserver: false
 pods:
   chunk_seg:
     uses: craft/craft.yml

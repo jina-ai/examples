@@ -1,6 +1,6 @@
 !Flow
 with:
-  logserver: true
+  logserver: false
   read_only: true  # better add this in the query time
   rest_api: true
 pods:
