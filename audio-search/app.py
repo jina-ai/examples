@@ -23,7 +23,7 @@ def index():
     f = Flow.load_config('flows/index.yml')
 
     with f:
-        f.index_files('data/wav/*.wav', batch_size=2, size=num_docs, output_fn=print)
+        f.index_files('data/*.wav', batch_size=2, size=num_docs)
 
 
 # for search

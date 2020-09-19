@@ -4,7 +4,8 @@ from typing import Any, Dict, List
 
 from jina.executors.encoders.frameworks import BaseTFEncoder
 from jina.executors.decorators import batching
-from jina.executors.crafters import BaseCrafter, BaseSegmenter
+from jina.executors.crafters import BaseSegmenter
+from jina.executors.rankers import Chunk2DocRanker
 
 import vggish_params
 import vggish_input
@@ -99,3 +100,17 @@ class VggishCrafter(BaseSegmenter):
         else:
             raise ValueError(f'audio signal must be 1D or 2D array: {signal}')
         return frames
+
+
+class MinRanker(Chunk2DocRanker):
+    """
+    :class:`MinRanker` calculates the score of the matched doc form the matched chunks. For each matched doc, the score
+        is `1 / (1 + s)`, where `s` is the minimal score from all the matched chunks belonging to this doc.
+
+    .. warning:: Here we suppose that the smaller chunk score means the more similar.
+    """
+
+    def _get_score(self, match_idx, query_chunk_meta, match_chunk_meta, *args, **kwargs):
+        _doc_id = match_idx[0, self.col_doc_id]
+        return self.get_doc_id(match_idx), 1. / (1. + match_idx[:, self.col_score].min())
+

@@ -1,7 +1,8 @@
-jina[hub,tensorflow]==0.5.5
+jina[hub,http]==0.5.5
 numpy
 resampy
-tensorflow
+tensorflow_cpu
 tf_slim
 six
 soundfile
+librosa
