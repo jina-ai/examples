@@ -4,13 +4,13 @@ components:
     with:
       index_filename: vec.gz
     metas:
-      name: vecidx  # a customized name
+      name: vec_idx  # a customized name
       workspace: $WORKDIR
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
-      name: chunkidx
+      name: chunkidx  # a customized name
       workspace: $WORKDIR
 metas:
   name: chunk_compound_indexer

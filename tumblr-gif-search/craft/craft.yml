@@ -10,11 +10,6 @@ requests:
       - !SegmentDriver
         with:
           executor: gif2chunk_preprocessor
-      - !ExcludeQL
-        with:
-          fields:
-            - buffer
-            - chunks
     SearchRequest:
       - !URI2Buffer {}
       - !SegmentDriver
@@ -24,6 +19,6 @@ requests:
         with:
           fields:
             - buffer
-            - chunks
+
     ControlRequest:
       - !ControlReqDriver {}

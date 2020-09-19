@@ -1,8 +1,10 @@
 !Flow
 with:
+  prefetch: 2
   logserver: false
   read_only: true  # better add this in the query time
   rest_api: true
+  port_expose: $JINA_PORT
 pods:
   chunk_seg:
     uses: craft/craft.yml
@@ -10,6 +12,7 @@ pods:
   tf_encode:
     uses: encode/encode.yml
     parallel: $PARALLEL
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
   chunk_idx:
     uses: index/chunk.yml
     shards: $SHARDS
@@ -18,6 +21,6 @@ pods:
     uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   ranker:
-    uses: BiMatchRanker
+    uses: index/rank.yml
   doc_idx:
     uses: index/doc.yml

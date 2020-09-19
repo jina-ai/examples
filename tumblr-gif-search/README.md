@@ -16,7 +16,7 @@
 
 </p>
 
-This tutorial shows how to use prefetching and sharding to improve the performance of your index and query flow. I assume you have already read [our entry-level tutorials](https://github.com/jina-ai/jina#getting-started). If you haven't, please do. I will go very fast on this one and  concentrate only on the prefetching and sharding. 
+This tutorial shows how to use prefetching and sharding to improve the performance of your index and query flow. We assume you have already read [our entry-level tutorials](https://github.com/jina-ai/jina#getting-started). If you haven't, please do. We will go very fast on this one and  concentrate only on the prefetching and sharding. 
 
 ![Gif Video Search Demo](video-search-demo.gif)
 
@@ -29,7 +29,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 - [Prerequirements](#prerequirements)
 - [Run Index Flow](#run-index-flow)
 - [Run Query Flow](#run-query-flow)
-- [View the result in webpage](#view-the-result-in-webpage)
+- [View the Result in a Webpage](#view-the-result-in-a-webpage)
 - [Prefetching](#prefetching)
 - [Sharding](#sharding)
 - [Documentation](#documentation)
@@ -47,16 +47,21 @@ pip install --upgrade -r requirements.txt
 
 ### Download the data
 
+The full dataset consists of 125,781 GIFs downloaded from Tumblr, with the URLs stored in [`data/tgif-v-1.0.tsv`](data/tgif-v-1.0.tsv). You may want to edit this to reduce the filecount and speed up your indexing.
+
+To download the data, just run:
+
 ```bash
 python gif_download.py
 ```
 
-There are quite some data, so you may want to modify this code or [the file list](data/tgif-v1.0.tsv) to get only part of them.
-
-
 ## Run Index Flow
 
-Index flow is defined as follows:
+```bash
+python app.py index
+```
+
+The index Flow is defined as follows:
 ```yaml
 !Flow
 with:
@@ -88,16 +93,16 @@ This breaks down into the following steps:
 2. Encode each chunk as a fixed-length vector;
 3. Store all vector representations in a vector database with *shards*.
 
-To run index:
-
-```bash
-python app.py
-```
-
 
 ## Run Query Flow
 
-Query flow is defined as follows:
+```bash
+python app.py search
+```
+
+You can then open [Jinabox](https://jina.ai/jinabox.js/) with the custom endpoint `http://localhost:45678/api/search`
+
+The query Flow is defined as follows:
 
 ```yaml
 !Flow
@@ -124,11 +129,6 @@ pods:
     uses: index/doc.yml
 ```
 
-```bash
-# change the Line 12 of app.py to 
-# RUN_MODE = 'debug-query'
-python app.py
-```
 
 The query flow breaks down into the following steps:
 1. Do steps 1,2 in the index flow for each incoming query;
@@ -136,7 +136,7 @@ The query flow breaks down into the following steps:
 3. Aggregate the chunk-level score back to document-level;
 4. Return the top-k results to users.
 
-## View the result in webpage
+## View the Result in a Webpage
 
 1. Copy `static` folder to the root of your workspace
 2. Change the `modelID` in `vue-bindings.js`
