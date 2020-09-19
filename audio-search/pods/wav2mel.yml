@@ -1,9 +1,0 @@
-!Wav2LogMelSpectrogram
-metas:
-  py_modules: [vggish/vggish_params.py, vggish/mel_features.py, vggish/vggish_input.py, customized_executors.py]
-requests:
-  on:
-    [SearchRequest, IndexRequest]:
-      - !CraftDriver
-        with:
-          granularity_range: [1, 2]

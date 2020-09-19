@@ -4,14 +4,8 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  reader:
-    uses: pods/wav_read.yml
-    parallel: $PARALLEL
-  segmenter:
-    uses: pods/wav_segment.yml
-    parallel: $PARALLEL
-  wav2mel:
-    uses: pods/wav2mel.yml
+  crafter:
+    uses: pods/craft.yml
     parallel: $PARALLEL
   encoder:
     uses: pods/encode.yml
