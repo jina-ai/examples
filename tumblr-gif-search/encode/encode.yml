@@ -10,5 +10,5 @@ requests:
     [IndexRequest, SearchRequest]:
       - !EncodeDriver
         with:
-          recur_on: ['chunks', ]
           granularity_range: [1, 1]
+          recur_on: ['chunks', ]

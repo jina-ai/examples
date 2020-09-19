@@ -4,6 +4,6 @@ requests:
     [SearchRequest, IndexRequest]:
       - !Chunk2DocRankDriver
         with:
-          recur_on: ['chunks']
           granularity_range: [1, 1]
-          adjacency_range: [1, 1]
+          adjacency_range: [0, 1]
+          recur_on: ['chunks']
