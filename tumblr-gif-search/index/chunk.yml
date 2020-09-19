@@ -22,6 +22,7 @@ requests:
         with:
           executor: NumpyIndexer
           granularity_range: [1, 1]
+          recur_on: ['chunks', ]
       - !KVSearchDriver
         with:
           executor: BinaryPbIndexer
@@ -31,7 +32,7 @@ requests:
       - !ExcludeQL
         with:
           granularity_range: [0, 1]
-          adjacency_range: [1, 1]
+          adjacency_range: [0, 1]
           fields:
             - embedding
             - blob
@@ -41,6 +42,7 @@ requests:
         with:
           executor: NumpyIndexer
           granularity_range: [1, 1]
+          recur_on: ['chunks', ]
       - !ExcludeQL
         with:
           granularity_range: [0, 1]

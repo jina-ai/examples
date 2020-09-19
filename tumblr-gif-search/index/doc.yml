@@ -18,7 +18,7 @@ requests:
       - !KVSearchDriver
         with:
           granularity_range: [0, 0]
-          adjacency_range: [1, 1]
+          adjacency_range: [0, 1]
           recur_on: ['matches',]
       - !ExcludeQL
         with:
