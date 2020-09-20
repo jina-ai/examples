@@ -4,8 +4,9 @@
 
 - [Build Audio Search (W.I.P.)](#build-audio-search-wip)
   - [Disclaimer](#disclaimer)
-  - [Install](#install)
-  - [Download the data](#download-the-data)
+  - [Install Prerequisites](#install-prerequisites)
+  - [Download Model](#download-model)
+  - [Download Data](#download-data)
   - [Run](#run)
   - [Run as a Docker Container](#run-as-a-docker-container)
   - [Documentation](#documentation)
