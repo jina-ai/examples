@@ -19,6 +19,9 @@ def config():
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
+    os.environ['ENCODER_CONF'] = 'encode/encode.yml'
+    # if you have no ImageKerasEnoder locally,
+    # set this to 'jinahub/pod.encoder.imagekerasencoder:0.0.5'
 
 
 # for index

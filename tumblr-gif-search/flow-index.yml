@@ -8,7 +8,7 @@ pods:
     parallel: $PARALLEL
     read_only: true
   tf_encode:
-    uses: encode/encode.yml
+    uses: $ENCODER_CONF
     needs: chunk_seg
     parallel: $PARALLEL
     read_only: true
