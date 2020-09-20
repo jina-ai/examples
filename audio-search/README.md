@@ -36,20 +36,20 @@ A demo of neural search for audio data based Vggish model.
 
 ## Disclaimer
 
-This is an example that is working in progress. The content will be update from time to time. If you meet any errors, please raise an issue at [https://github.com/jina-ai/examples/issues/new](https://github.com/jina-ai/examples/issues/new)
+This example is a work in progress. The content will be update from time to time. If you meet any errors, please raise an issue at [https://github.com/jina-ai/examples/issues/new](https://github.com/jina-ai/examples/issues/new)
 
 <p align="center">
   <img src=".github/demo.gif?raw=true" alt="Jina banner" width="90%">
 </p>
 
 
-## Install
+## Install Prerequisites
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Download the data
+## Download Model
 
 - In this example, we use the Vggish model to encode the sound files. You can find more details about the model at [https://github.com/tensorflow/models/tree/master/research/audioset/vggish](https://github.com/tensorflow/models/tree/master/research/audioset/vggish). Use the following cmd to download the models.
 
@@ -57,7 +57,21 @@ pip install -r requirements.txt
 bash download.sh
 ```
 
-- For downloading the audioset data, please refer to the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). Alternatively, you can also use you own `.wav` files. Make sure the files are under `data/`. After preparing the data, here is how the folder looks like
+## Download Data
+
+### Small Sample Data
+
+Our `get_data.sh` script downloads a few Beethoven symphonies from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:WAV_files). This is a small dataset so indexes quickly. Just run
+
+```sh
+sh ./get_data.sh
+```
+
+### Big Sample Data
+
+Note: Big means BIG. We're talking 1.1 terabytes here. Be sure your machine can handle it in terms of disk space and processing power!
+
+For downloading the audioset data, please refer to the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). Alternatively, you can also use you own `.wav` files. Make sure the files are under `data/`. After preparing the data, here is how the folder looks like
 
 ```
 .
@@ -90,7 +104,6 @@ bash download.sh
 │       └── vggish_slim.py
 └── requirements.txt
 ```
-
 
 ## Run
 
