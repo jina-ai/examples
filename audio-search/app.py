@@ -1,7 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-
 import os
 import random
 import string
@@ -9,8 +8,8 @@ import string
 import click
 from jina.flow import Flow
 
-
 RANDOM_SEED = 14
+
 
 def config():
     os.environ['PARALLEL'] = str(4)
@@ -18,6 +17,7 @@ def config():
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/audio_data/ESC-50-master'
     os.environ['JINA_PORT'] = str(45678)
     os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
+
 
 def get_random_ws(workspace_path, length=8):
     random.seed(RANDOM_SEED)
@@ -35,7 +35,7 @@ def main(task, num_docs):
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index_files(f'{data_path}/*.wav', size=num_docs, read_mode='rb', batch_size=2)
+            f.index_files(f'{data_path}/*.wav', size=num_docs, batch_size=2)
     elif task == 'query':
         f = Flow().load_config('flow-query.yml')
         f.use_rest_gateway()
