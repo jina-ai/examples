@@ -78,7 +78,7 @@ def dryrun():
 @click.option("--top_k", "-k", default=5)
 def main(task, num_docs, top_k):
     config()
-    workspace = os.env["JINA_WORKSPACE"]
+    workspace = os.environ["JINA_WORKSPACE"]
     if task == "index":
         if os.path.exists(workspace):
             print(f"The directory {workspace} does already exist. Please remove it before indexing again.`")
