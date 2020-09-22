@@ -6,10 +6,14 @@ metas:
 requests:
   on:
     IndexRequest:
+      - !Buffer2URI {}
+      - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: reader
     SearchRequest:
+      - !Buffer2URI {}
+      - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: reader
