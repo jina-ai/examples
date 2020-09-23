@@ -1,0 +1,5 @@
+click
+pillow
+librosa
+jina[devel]==0.4.1
+
