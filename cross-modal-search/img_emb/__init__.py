@@ -62,6 +62,7 @@ class VSEImageEncoder(BaseTorchEncoder):
     @batching
     @as_ndarray
     def encode(self, data: 'np.ndarray', *args, **kwargs) -> 'np.ndarray':
+        self.logger.info(f' data {data}')
         if self.channel_axis != self._default_channel_axis:
             data = np.moveaxis(data, self.channel_axis, self._default_channel_axis)
         import torch
@@ -72,4 +73,6 @@ class VSEImageEncoder(BaseTorchEncoder):
         if self.on_gpu:
             _feature = _feature.cpu()
         _feature = _feature.numpy()
-        return self._get_pooling(_feature)
+        out = self._get_pooling(_feature)
+        self.logger.info(f' image encoding {out}')
+        return out
