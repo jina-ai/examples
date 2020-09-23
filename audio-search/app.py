@@ -33,16 +33,16 @@ def main(task, num_docs):
     config()
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'audio')
     if task == 'index':
-        f = Flow().load_config('flow-index.yml')
+        f = Flow().load_config('./flows/flow-index.yml')
         with f:
             f.index_files(f'{data_path}/*.wav', size=num_docs, batch_size=2)
     elif task == 'query':
-        f = Flow().load_config('flow-query.yml')
+        f = Flow().load_config('./flows/flow-query.yml')
         f.use_rest_gateway()
         with f:
             f.block()
     elif task == 'dryrun':
-        f = Flow.load_config('flow-query.yml')
+        f = Flow.load_config('../flows/flow-query.yml')
         with f:
             pass
     else:
