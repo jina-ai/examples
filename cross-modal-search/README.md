@@ -52,7 +52,7 @@ To make this search system retrieve good results, we have used the models traine
 that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
 
 We use one network per modality:
-VGG16 for images, pretrained on ImageNet.
+VGG19 for images, pretrained on ImageNet.
 A Gated Recurrent Unit (GRU) for captions.
 Last layers of these networks are removed and they are used as feature extractors. A Fully Connected Layer is added on top of each one that actually maps the extracted features to the new embedding space.
 They are trained on Flickr30k dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples)
@@ -126,6 +126,13 @@ unzip flickr8k.zip
 rm flickr8k.zip
 mv Images data/f8k/images
 mv captions.txt data/f8k/captions.txt
+```
+
+make sure that your data folder has:
+
+```bash
+data/f8k/images/*jpg
+data/fyk/f8k/captions.txt
 ```
 
 ## Build the docker images
