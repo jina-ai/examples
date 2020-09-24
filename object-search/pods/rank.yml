@@ -1,0 +1,7 @@
+!MinRanker
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !Chunk2DocRankDriver {}

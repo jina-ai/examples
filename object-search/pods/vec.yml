@@ -1,0 +1,19 @@
+!NumpyIndexer
+with:
+  index_filename: vec.gz
+metas:
+  name: vec_idx  # a customized name
+  workspace: $WORKDIR
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !VectorSearchDriver {}
+    IndexRequest:
+      - !ExcludeQL
+        with:
+          fields:
+            - buffer
+            - chunks
+      - !VectorIndexDriver {}

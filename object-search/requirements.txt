@@ -1,0 +1,2 @@
+tensorflow_cpu==2.1.0
+jina[cv,http]==0.5.5
