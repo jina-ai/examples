@@ -40,9 +40,8 @@ The code can of course run natively on your local machine, please [read the Jina
 
 - [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
 - [Download and Extract Data](#download-and-extract-data)
-- [Index Image Data](#index-image-data)
-- [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
-- [Build Docker Image](#build-docker-image)
+- [Run outside of Docker](#run-outside-of-docker)
+- [Run in Docker](#run-in-docker)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
