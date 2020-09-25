@@ -2,10 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Build Audio Search (W.I.P.)](#build-audio-search-wip)
-  - [Disclaimer](#disclaimer)
-  - [Install](#install)
-  - [Download the data](#download-the-data)
+- [Build Audio Search with Vggish](#build-audio-search-with-vggish)
+  - [Install Prerequisites](#install-prerequisites)
+  - [Download Model](#download-model)
   - [Run](#run)
   - [Run as a Docker Container](#run-as-a-docker-container)
   - [Documentation](#documentation)
@@ -14,7 +13,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Build Audio Search (W.I.P.)
+# Build Audio Search with Vggish
 
 <p align="center">
  
@@ -34,30 +33,28 @@
 
 A demo of neural search for audio data based Vggish model.
 
-## Disclaimer
-
-This is an example that is working in progress. The content will be update from time to time. If you meet any errors, please raise an issue at [https://github.com/jina-ai/examples/issues/new](https://github.com/jina-ai/examples/issues/new)
 
 <p align="center">
   <img src=".github/demo.gif?raw=true" alt="Jina banner" width="90%">
 </p>
 
 
-## Install
+## Install Prerequisites
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Download the data
+## Download Model
 
-- In this example, we use the Vggish model to encode the sound files. You can find more details about the model at [https://github.com/tensorflow/models/tree/master/research/audioset/vggish](https://github.com/tensorflow/models/tree/master/research/audioset/vggish). Use the following cmd to download the models.
+- In this example, we use the Vggish model to encode the sound files. You can find more details about the model at [https://github.com/tensorflow/models/tree/master/research/audioset/vggish](https://github.com/tensorflow/models/tree/master/research/audioset/vggish). Use the following cmd to download the models. For downloading the audioset data, we adapt the codes from the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). We provide the following script, it will download 10 audio files from the audioset dataset.
 
 ```bash
 bash download.sh
 ```
 
-- For downloading the audioset data, please refer to the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). Alternatively, you can also use you own `.wav` files. Make sure the files are under `data/`. After preparing the data, here is how the folder looks like
+
+After preparing the data, here is how the folder looks like,
 
 ```
 .
@@ -91,6 +88,12 @@ bash download.sh
 └── requirements.txt
 ```
 
+
+- Alternatively, you can also use you own `.wav` files. Make sure the files are under `data/`. For example, our `get_data.sh` script downloads a few Beethoven symphonies from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:WAV_files). This is a small dataset so indexes quickly. Just run
+
+```sh
+sh ./get_data.sh
+```
 
 ## Run
 

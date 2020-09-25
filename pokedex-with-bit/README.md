@@ -40,9 +40,8 @@ The code can of course run natively on your local machine, please [read the Jina
 
 - [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
 - [Download and Extract Data](#download-and-extract-data)
-- [Index Image Data](#index-image-data)
-- [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
-- [Build Docker Image](#build-docker-image)
+- [Run outside of Docker](#run-outside-of-docker)
+- [Run in Docker](#run-in-docker)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -71,7 +70,33 @@ We're using Pokemon sprites from generations one through five, downloaded from [
 sh ./get_data.sh
 ```
 
-## Index Image Data
+## Run outside of Docker
+
+### Indexing the Data
+
+`app.py` is already configured to index all the PNG files in the `data` folder, no matter how deep the subfolder:
+
+```python
+image_src = 'data/**/*.png'
+```
+
+Just run:
+
+```sh
+python app.py index
+```
+
+### Querying the Data
+
+```python
+python app.py search
+```
+
+You can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+
+## Run in Docker
+
+### Index Image Data
 
 We use BiT `R50x1` model in this example. You can change it in [`download.sh`](./download.sh) if you want
 
@@ -84,7 +109,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 - `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts. 
 - `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
 
-### Behind the Scenes
+#### Behind the Scenes
 
 <table>
 <tr>
@@ -144,7 +169,7 @@ pods:
 </tr>
 </table>
 
-### Index Result
+#### See the Results
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
 
@@ -155,14 +180,14 @@ If it's running successfully, you should be able to see logs scrolling in the co
 
 Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_indexer-*` after indexing. This is because we set shards to 8.
 
-## Query Top-K Visually Similar Images
+### Query Top-K Visually Similar Images
 
-### Start the Jina server
+#### Start the Jina server
 ```bash
 docker run -v "$(pwd)/workspace:/workspace" -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch search
 ```
 
-#### Command args explained
+##### Command args explained
 - `$(pwd)/workspace` is where Jina previously stored our indexes and other artifacts. Now we need to load them.
 - `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port.
 
@@ -186,7 +211,7 @@ Let's test the results on Pokémon! This time we use our gRPC gateway (for bette
   <img src=".github/.README_images/f2dcf24c452f73b085c0108867f4ff33.gif?raw=true" alt="Jina banner" width="80%">
 </p>
 
-## Build Docker Image
+### Build the Docker Image Yourself
 
 After playing with it for a while, you may want to change the code and rebuild the image. Simply run:
 ```bash
