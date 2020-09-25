@@ -7,7 +7,7 @@ rm -rf runs.tar
 
 COPY . ./
 
-RUN git clone https://github.com/JoanFM/vsepp.git -b works && mv vsepp/model.py . && rm -rf vsepp && \
+RUN git clone https://github.com/JoanFM/vsepp.git -b padded_sequence_sorted && mv vsepp/model.py . && rm -rf vsepp && \
 pip install -r requirements.txt && \
 python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()"
 
