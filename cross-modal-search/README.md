@@ -190,6 +190,8 @@ ImageVectorIndexer and TextVectorIndexer map to a common Embedding Space. (To Ji
 
 ## Results
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_image2text.png "Cross Modal Search Results")
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_text2image.png "Cross Modal Search Results")
 
 ## Documentation 
 
