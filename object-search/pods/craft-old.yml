@@ -20,11 +20,11 @@ components:
       confidence_threshold: 0.1
     metas:
       name: img_detect
-  # - !ImageResizer
-  #   with:
-  #     target_size: 96
-  #   metas:
-  #     name: img_resize
+  - !ImageResizer
+    with:
+      target_size: 96
+    metas:
+      name: img_resize
 metas:
   name: compound_crafter
 requests:
@@ -39,9 +39,9 @@ requests:
       - !SegmentDriver
         with:
           executor: img_detect
-      # - !CraftDriver 
-      #   with:
-      #     executor: img_resize
+      - !CraftDriver 
+        with:
+          executor: img_resize
     SearchRequest:
       - !URI2Buffer {}
       - !CraftDriver

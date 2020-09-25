@@ -1,10 +1,10 @@
 !CompoundExecutor
 components:
-  - !ImageReader
+  - !ImageResizer
     with:
-      from_bytes: True
+      target_size: 96
     metas:
-      name: img_read
+      name: img_resize
   - !ImageNormalizer
     with:
       target_size: 96
@@ -14,15 +14,21 @@ components:
     metas:
       name: img_norm
 metas:
-  name: compound_normalizer
+  name: compound_resize
 requests:
   on:
-    [IndexRequest, SearchRequest]:
+    IndexRequest:
       - !CraftDriver
         with:
-          executor: img_read
+          executor: img_resize
+          granularity_range: [1, 2]
+          adjacency_range: [0, 0]
+      # - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: img_norm
+          granularity_range: [1, 2]
+          adjacency_range: [0, 0]
+      # - !LogInfoDriver {}
     ControlRequest:
       - !ControlReqDriver {}

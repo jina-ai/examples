@@ -8,16 +8,16 @@ pods:
     uses: pods/craft-normalize.yml
     read_only: true
     parallel: $PARALLEL
-  object:
-    uses: pods/craft-object.yml
-    read_only: true
-    parallel: $PARALLEL
+  # object:
+  #   uses: pods/craft-object.yml
+  #   read_only: true
+  #   parallel: $PARALLEL
   tf_encode:
-    uses: pods/encode.yml
+    uses: pods/encode-query.yml
     parallel: $PARALLEL
     timeout_ready: 600000
   vec_idx:
-    uses: pods/vec-new.yml
+    uses: pods/vec.yml
     shards: $SHARDS
     separated_workspace: true
     polling: all

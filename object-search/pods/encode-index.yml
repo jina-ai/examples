@@ -1,0 +1,19 @@
+!ImageKerasEncoder
+with:
+  model_name: MobileNetV2
+  pool_strategy: avg
+  channel_axis: -1
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !EncodeDriver
+        with:
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+    IndexRequest:
+      - !EncodeDriver
+        with:
+          granularity_range: [1, 1]
+          adjacency_range: [0, 0]

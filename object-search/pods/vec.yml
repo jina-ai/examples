@@ -1,14 +1,43 @@
-!NumpyIndexer
-with:
-  index_filename: vec.gz
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+    metas:
+      name: vecidx  
+      workspace: $WORKDIR
+  - !BinaryPbIndexer
+    with:
+      index_filename: chunk.gz
+    metas:
+      name: chunkidx
+      workspace: $WORKDIR
 metas:
-  name: vec_idx  # a customized name
+  name: chunk_compound_indexer
   workspace: $WORKDIR
 requests:
   on:
-    ControlRequest:
-      - !ControlReqDriver {}
-    SearchRequest:
-      - !VectorSearchDriver {}
     IndexRequest:
-      - !VectorIndexDriver {}
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+          granularity_range: [1, 2]
+          adjacency_range: [0, 0]
+      - !KVIndexDriver
+        with:
+          executor: chunkidx
+          granularity_range: [1, 2]
+          adjacency_range: [0, 0]
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+          granularity_range: [1, 1]
+          adjacency_range: [0, 0]
+          recur_on: chunks
+      - !KVSearchDriver
+        with:
+          executor: chunkidx
+          granularity_range: [1, 1]
+          adjacency_range: [1, 1]
+          recur_on: matches
