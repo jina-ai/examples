@@ -1,0 +1,15 @@
+!TorchObjectDetectionSegmenter
+with:
+  target_size: (96, 96)
+  channel_axis: -1
+  confidence_threshold: 0.1
+metas:
+  name: object_segmenter
+requests:
+  on:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          executor: object_segmenter
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -33,7 +33,7 @@ def config():
 
 
 @click.command()
-@click.option('--task', '-t')
+@click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
@@ -48,9 +48,6 @@ def main(task, data_path, num_docs, batch_size):
         f = Flow.load_config('flow-query.yml')
         with f:
             f.block()
-    else:
-        raise NotImplementedError(f'Unknown task: `{task}`. A valid task is either `index`, `query`.')
-
 
 if __name__ == '__main__':
     main()

@@ -11,9 +11,4 @@ requests:
     SearchRequest:
       - !VectorSearchDriver {}
     IndexRequest:
-      - !ExcludeQL
-        with:
-          fields:
-            - buffer
-            - chunks
       - !VectorIndexDriver {}

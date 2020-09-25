@@ -1,20 +1,18 @@
 !Flow
 with:
-  logserver: false
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
 pods:
-  normalizer:
-    uses: pods/craft-normalize.yml
-    read_only: true
-  object:
-    uses: pods/craft-object.yml
-    read_only: true
-  encoder:
+  crafter:
+    uses: pods/craft.yml
+    parallel: $PARALLEL
+  tf_encode:
     uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
-    read_only: true
   vec_idx:
-    uses: pods/vec-new.yml
+    uses: pods/vec.yml
     shards: $SHARDS
     separated_workspace: true
     polling: all
@@ -27,8 +25,5 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    needs: [gateway]
-  join_all:
-    uses: _merge
-    needs: [doc_idx, vec_idx]
-    read_only: true
+  ranker:
+    uses: pods/rank.yml
