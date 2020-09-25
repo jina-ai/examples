@@ -72,5 +72,4 @@ class VSEImageEncoder(BaseTorchEncoder):
         if self.on_gpu:
             _feature = _feature.cpu()
         _feature = _feature.numpy()
-        out = self._get_pooling(_feature)
-        return out
+        return self._get_pooling(_feature)
