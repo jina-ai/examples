@@ -55,7 +55,6 @@ class Flickr8kDataset(data.Dataset):
         image_file_name, caption = self.lines[index*5].split(',', 1)
         with open(os.path.join(self.images_root, image_file_name), 'rb') as fp:
             image_buffer = fp.read()
-        print(f'image_file_name {image_file_name} with caption {str(caption).lower()}')
         return image_buffer, str(caption).lower().rstrip()
 
     def __len__(self):

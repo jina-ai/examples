@@ -60,7 +60,6 @@ class VSETextEncoder(BaseTorchEncoder):
 
     @batching
     def encode(self, text):
-        self.logger.info(f' text {text}')
         captions = []
         for sentence in text:
             tokens = nltk.tokenize.word_tokenize(str(sentence).lower())
@@ -70,7 +69,6 @@ class VSETextEncoder(BaseTorchEncoder):
             caption.append(self.vocab('<end>'))
             target = torch.Tensor(caption)
             captions.append(target)
-        captions.sort(key=lambda x: len(x), reverse=True)
         lengths = [len(x) for x in captions]
         targets = torch.zeros(len(captions), max(lengths)).long()
         for i, cap in enumerate(captions):
@@ -80,5 +78,4 @@ class VSETextEncoder(BaseTorchEncoder):
         if torch.cuda.is_available():
             captions_tensor = captions_tensor.cuda()
         text_emb = self.model(captions_tensor, lengths=lengths)
-        self.logger.info(f' text_emb.detach().numpy() {text_emb.detach().numpy()}')
         return text_emb.detach().numpy()

@@ -10,7 +10,7 @@ rm -rf runs.tar && rm -rf vocab.tar
 
 COPY . ./
 
-RUN git clone https://github.com/JoanFM/vsepp.git -b works && mv vsepp/model.py . && mv vsepp/vocab.py . && rm -rf vsepp && \
+RUN git clone https://github.com/JoanFM/vsepp.git -b padded_sequence_sorted && mv vsepp/model.py . && mv vsepp/vocab.py . && rm -rf vsepp && \
 pip install -r requirements.txt && \
 python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()" && \
 python -c "import nltk; nltk.download('punkt')"
