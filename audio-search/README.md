@@ -2,11 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Build Audio Search (W.I.P.)](#build-audio-search-wip)
-  - [Disclaimer](#disclaimer)
+- [Build Audio Search with Vggish](#build-audio-search-with-vggish)
   - [Install Prerequisites](#install-prerequisites)
   - [Download Model](#download-model)
-  - [Download Data](#download-data)
   - [Run](#run)
   - [Run as a Docker Container](#run-as-a-docker-container)
   - [Documentation](#documentation)
