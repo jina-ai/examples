@@ -21,23 +21,22 @@ requests:
       - !VectorIndexDriver
         with:
           executor: vecidx
-          granularity_range: [1, 2]
+          granularity_range: [1, 1]
           adjacency_range: [0, 0]
       - !KVIndexDriver
         with:
           executor: chunkidx
-          granularity_range: [1, 2]
+          granularity_range: [1, 1]
           adjacency_range: [0, 0]
     SearchRequest:
+      # - !URI2Buffer {}
       - !VectorSearchDriver
         with:
           executor: vecidx
-          granularity_range: [1, 1]
-          adjacency_range: [0, 0]
-          recur_on: chunks
       - !KVSearchDriver
         with:
           executor: chunkidx
-          granularity_range: [1, 1]
+          granularity_range: [0, 1]
           adjacency_range: [1, 1]
           recur_on: matches
+      # - !LogInfoDriver {}

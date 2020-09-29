@@ -12,7 +12,7 @@ pods:
     uses: pods/craft-resize.yml
     read_only: true
   encoder:
-    uses: pods/encode-index.yml
+    uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
