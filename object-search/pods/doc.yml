@@ -6,8 +6,16 @@ metas:
   workspace: $WORKDIR
 requests:
   on:
-    ControlRequest:
-      - !ControlReqDriver {}
+    IndexRequest:
+      # - !Buffer2URI
+      #   with:
+      #     base64: True
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks  # we don't want to save nested structure
+            - buffer
+      - !KVIndexDriver {}
     SearchRequest:
       - !KVSearchDriver
         with:
@@ -21,11 +29,3 @@ requests:
           recur_on: matches
           fields:
             - embedding
-    IndexRequest:
-      - !Buffer2URI {}
-      - !ExcludeQL
-        with:
-          fields:
-            - chunks  # we don't want to save nested structure
-            - buffer
-      - !KVIndexDriver {}

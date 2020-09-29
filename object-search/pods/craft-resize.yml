@@ -23,12 +23,8 @@ requests:
           executor: img_resize
           granularity_range: [1, 2]
           adjacency_range: [0, 0]
-      # - !LogInfoDriver {}
       - !CraftDriver
         with:
           executor: img_norm
           granularity_range: [1, 2]
           adjacency_range: [0, 0]
-      # - !LogInfoDriver {}
-    ControlRequest:
-      - !ControlReqDriver {}

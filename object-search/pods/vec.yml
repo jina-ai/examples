@@ -18,6 +18,7 @@ metas:
 requests:
   on:
     IndexRequest:
+      # - !Buffer2URI {}
       - !VectorIndexDriver
         with:
           executor: vecidx
@@ -30,6 +31,7 @@ requests:
           adjacency_range: [0, 0]
     SearchRequest:
       # - !URI2Buffer {}
+      # - !Blob2PngURI {}
       - !VectorSearchDriver
         with:
           executor: vecidx
@@ -39,4 +41,4 @@ requests:
           granularity_range: [0, 1]
           adjacency_range: [1, 1]
           recur_on: matches
-      # - !LogInfoDriver {}
+      - !LogInfoDriver {}
