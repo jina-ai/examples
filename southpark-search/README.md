@@ -167,7 +167,7 @@ By default, the input of each Pod is the Pod defined right above it, and the req
 ```yaml
 doc_indexer:
   uses: pods/index-doc.yml
-  needs: gateway
+  needs: extractor
 ```
 
 As we can see, for most Pods, we only need to define the YAML file path. Given the YAML files, Jina will automatically build the Pods. Plus, `timeout_ready` is a useful argument when adding a Pod, which defines the waiting time before the Flow gives up on the Pod initializing.
