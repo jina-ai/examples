@@ -29,3 +29,5 @@ requests:
           recur_on: matches
           fields:
             - embedding
+    ControlRequest:
+      - !ControlReqDriver {}

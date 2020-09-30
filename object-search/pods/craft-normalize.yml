@@ -26,11 +26,6 @@ requests:
           executor: img_norm
     SearchRequest:
       - !URI2Buffer {} 
-      # - !ExcludeQL
-      #   with:
-      #     fields:
-      #       - chunks
-      #       - uri
       - !CraftDriver
         with:
           executor: img_read
