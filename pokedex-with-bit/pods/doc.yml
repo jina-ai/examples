@@ -3,7 +3,7 @@ with:
   index_filename: doc.gz
 metas:
   name: doc_idx
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     ControlRequest:
@@ -17,7 +17,6 @@ requests:
           traversal_paths: ['m']
           fields:
             - embedding
-      - !LogInfoDriver {}
     IndexRequest:
       - !Buffer2URI {}
       - !ExcludeQL
