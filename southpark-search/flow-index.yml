@@ -6,12 +6,5 @@ pods:
     uses: pods/encode.yml
     timeout_ready: 1200000
     read_only: true
-  chunk_indexer:
-    uses: pods/index-chunk.yml
-  doc_indexer:
-    uses: pods/index-doc.yml
-    needs: extractor
-  join_all:
-    uses: _merge
-    needs: [doc_indexer, chunk_indexer]
-    read_only: true
+  indexer:
+    uses: pods/index.yml
