@@ -2,7 +2,7 @@
 # Google's Big Transfer Model in (Poké-)Production using Jina
 
 <p align="center">
- 
+
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
@@ -17,7 +17,7 @@
 
 </p>
 
-In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results. 
+In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results.
 
 [![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
@@ -30,7 +30,7 @@ Features that come out of the box:
 - REST and gRPC gateway
 - Dashboard monitor
 
-To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install. 
+To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install.
 
 The code can of course run natively on your local machine, please [read the Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
@@ -106,7 +106,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 
 #### Command Line Arguments Explained
 - `$(pwd)/data`: the directory where all your images are stored (jpg/png are supported). You can change it to any path you like, just make sure it's an absolute path
-- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts. 
+- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts.
 - `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
 
 #### Behind the Scenes
@@ -118,7 +118,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 <td> <a href="https://github.com/jina-ai/dashboard">Flow in Dashboard</a></td>
 </tr>
 <tr>
-<td> 
+<td>
 
 ```python
 from jina.flow import Flow
@@ -143,12 +143,12 @@ pods:
     read_only: true
   encoder:
     uses: pods/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_idx:
     uses: pods/chunk.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
   doc_idx:
     uses: pods/doc.yml
@@ -242,7 +242,7 @@ Incremental indexing and entry-level deleting are yet not supported in this demo
 Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
 
 
-## Documentation 
+## Documentation
 
 <a href="https://docs.jina.ai/">
 <img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
@@ -262,7 +262,7 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
-- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 
