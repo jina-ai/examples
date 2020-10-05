@@ -9,7 +9,9 @@ requests:
     ControlRequest:
       - !ControlReqDriver {}
     SearchRequest:
-      - !VectorSearchDriver {}
+      - !VectorSearchDriver
+        with:
+          traversal_paths: ['r']
     IndexRequest:
       - !ExcludeQL
         with:
