@@ -2,7 +2,7 @@
 components:
   - !ImageResizer
     with:
-      target_size: 96
+      target_size: [96, 96]
     metas:
       name: img_resize
   - !ImageNormalizer
@@ -21,10 +21,4 @@ requests:
       - !CraftDriver
         with:
           executor: img_resize
-          granularity_range: [1, 2]
-          adjacency_range: [0, 0]
-      - !CraftDriver
-        with:
-          executor: img_norm
-          granularity_range: [1, 2]
-          adjacency_range: [0, 0]
+          traversal_paths: ['c']

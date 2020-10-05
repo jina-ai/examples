@@ -10,10 +10,8 @@ requests:
     SearchRequest:
       - !EncodeDriver
         with:
-          granularity_range: [0, 1]
-          adjacency_range: [0, 0]
+          traversal_paths: ['r']
     IndexRequest:
       - !EncodeDriver
         with:
-          granularity_range: [1, 1]
-          adjacency_range: [0, 0]
+          traversal_paths: ['c']

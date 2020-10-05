@@ -19,14 +19,10 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [1, 1]
-          recur_on: matches
+          traversal_paths: ['m']
       - !ExcludeQL
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [1, 1]
-          recur_on: matches
+          traversal_paths: ['m']
           fields:
             - embedding
     ControlRequest:

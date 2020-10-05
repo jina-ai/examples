@@ -21,24 +21,30 @@ requests:
       - !VectorIndexDriver
         with:
           executor: vecidx
-          granularity_range: [1, 1]
-          adjacency_range: [0, 0]
-      # - !Blob2PngURI {}
+          traversal_paths: ['c']
+      - !Blob2PngURI {}
       - !KVIndexDriver
         with:
           executor: chunkidx
-          granularity_range: [1, 1]
-          adjacency_range: [0, 0]
+          traversal_paths: ['c']
     SearchRequest:
+      - !ExcludeQL
+        with:
+          traversal_paths: ['r']
+          fields:
+            - uri  
+            - buffer
+            - blob
+      - !LogInfoDriver {}
       - !VectorSearchDriver
         with:
           executor: vecidx
+          traversal_paths: ['r']
+      - !LogInfoDriver {}
       - !KVSearchDriver
         with:
           executor: chunkidx
-          granularity_range: [0, 1]
-          adjacency_range: [1, 1]
-          recur_on: matches
-      # - !LogInfoDriver {}
+          traversal_paths: ['m']
+      - !LogInfoDriver {}
     ControlRequest:
       - !ControlReqDriver {}
