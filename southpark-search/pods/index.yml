@@ -9,10 +9,10 @@ components:
       workspace: $JINA_WORKSPACE
   - !BinaryPbIndexer
     with:
-      index_filename: chunk.gz
+      index_filename: doc.gz
     metas:
-      name: chunkidx  # a customized name
+      name: docidx  # a customized name
       workspace: $JINA_WORKSPACE
 metas:
-  name: chunk_indexer
+  name: indexer
   workspace: $JINA_WORKSPACE

@@ -7,9 +7,7 @@ pods:
     uses: pods/encode.yml
     timeout_ready: 60000
     read_only: true
-  chunk_indexer:
-    uses: pods/index-chunk.yml
+  indexer:
+    uses: pods/index.yml
     polling: all
     uses_reducing: _merge_all
-  doc_indexer:
-    uses: pods/index-doc.yml
