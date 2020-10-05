@@ -136,7 +136,7 @@ def query_generator(num_doc, target):
 def index(num_doc, target):
     f = Flow.load_config('flow-index.yml')
     with f:
-        f.index(index_generator(num_doc, target), batch_size=32)
+        f.index(index_generator(num_doc, target), batch_size=2048)
 
 
 def query(num_doc, target):
