@@ -5,3 +5,11 @@ with:
   max_length: 96
 #metas:
 #  on_gpu: true
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    [SearchRequest, TrainRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          traversal_paths: ['c']

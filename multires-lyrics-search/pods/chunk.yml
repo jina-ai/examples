@@ -21,19 +21,17 @@ requests:
       - !VectorIndexDriver
         with:
           executor: vecidx
+          traversal_paths: ['c']
       - !KVIndexDriver
         with:
           executor: chunkidx
+          traversal_paths: ['c']
     SearchRequest:
       - !VectorSearchDriver
         with:
           executor: vecidx
-          granularity_range: [1, 1]
-          adjacency_range: [0, 0]
-          recur_on: chunks
+          traversal_paths: ['c']
       - !KVSearchDriver
         with:
           executor: chunkidx
-          granularity_range: [1, 1]
-          adjacency_range: [1, 1]
-          recur_on: matches
+          traversal_paths: ['cm']
