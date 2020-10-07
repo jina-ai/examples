@@ -45,7 +45,7 @@ def main(task, data_path, num_docs, batch_size):
         with f:
             f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)        
     elif task == 'query':
-        f = Flow.load_config('flow-query.yml')
+        f = Flow.load_config('flow-query-object.yml')
         with f:
             f.block()
 
