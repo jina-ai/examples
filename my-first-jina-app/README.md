@@ -64,7 +64,7 @@ curl --request POST -d '{"top_k": 10, "mode": "search", "data": ["text:hey, dude
 
 You'll see the results output in JSON format. Each result looks like:
 
-```json  
+```json
 {
             "matchDoc": {
               "docId": 48,
@@ -114,16 +114,16 @@ cd examples/my-first-jina-app
 pip install -U cookiecutter && cookiecutter gh:jina-ai/cookiecutter-jina
 ```
 
-We use [cookiecutter](https://github.com/cookiecutter/cookiecutter) to spin up a basic Jina app and save you having to do a lot of typing and setup. 
+We use [cookiecutter](https://github.com/cookiecutter/cookiecutter) to spin up a basic Jina app and save you having to do a lot of typing and setup.
 
 For our Star Trek example, we recommend the following settings:
 
 * `project_name`: `Star Trek` (non-default)
 * `jina_version`: 0.5.5
-* `project_slug`: `star_trek` 
+* `project_slug`: `star_trek`
 * `task_type`: `nlp` (non-default)
 * `index_type`: `strings` (non-default)
-* `public_port`: `65481` 
+* `public_port`: `65481`
 
 Just use the defaults for all other fields.
 
@@ -194,7 +194,7 @@ HTTP request sent, awaiting response... 200 OK
 Length: 4618017 (4.4M) [text/plain]
 Saving to: ‘./star_trek/data/startrek_tng.csv’
 
-startrek_tng.csv                               100%[=================================================================================================>]   4.40M  4.47MB/s    in 1.0s    
+startrek_tng.csv                               100%[=================================================================================================>]   4.40M  4.47MB/s    in 1.0s
 ```
 
 </details>
@@ -209,19 +209,19 @@ Now that `get_data.sh` has downloaded the data, let's make sure the file has eve
 head data/startrek_tng.csv
 ```
 
-You should see output consisting of characters (like `MCCOY`), a separator, (`!`), and the lines spoken by the character (`What about my age?`):
+You should see output consisting of the lines spoken by the character (`What about my age?`):
 
 ```csv
-BAILIFF!The prisoners will all stand.
-BAILIFF!All present, stand and make respectful attention to honouredJudge.
-BAILIFF!Before this gracious court now appear these prisoners toanswer for the multiple and grievous savageries of their species. Howplead you, criminal?
-BAILIFF!Criminals keep silence!
-BAILIFF!You will answer the charges, criminals.
-BAILIFF!Criminal, you will read the charges to the court.
-BAILIFF!All present, respectfully stand. Q
-BAILIFF!This honourable court is adjourned. Stand respectfully. Q
-MCCOY!Hold it right there, boy.
-MCCOY!What about my age?
+The prisoners will all stand.
+All present, stand and make respectful attention to honouredJudge.
+Before this gracious court now appear these prisoners toanswer for the multiple and grievous savageries of their species. Howplead you, criminal?
+Criminals keep silence!
+You will answer the charges, criminals.
+Criminal, you will read the charges to the court.
+All present, respectfully stand. Q
+This honourable court is adjourned. Stand respectfully. Q
+Hold it right there, boy.
+What about my age?
 ```
 
 Note: Your character lines may be a little different. That's okay!
@@ -259,25 +259,25 @@ python app.py index
 
 ```console
 index [====                ] 📃    256 ⏱️ 52.1s 🐎 4.9/s      4      batch        encoder@273512[I]:received "control" from gateway▸crafter▸encoder-head▸encoder-2▸⚐
-        encoder@273512[I]:received "index" from gateway▸crafter▸⚐               
+        encoder@273512[I]:received "index" from gateway▸crafter▸⚐
         encoder@273516[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-2▸⚐
-        encoder@273525[I]:received "index" from gateway▸crafter▸encoder-head▸⚐    
+        encoder@273525[I]:received "index" from gateway▸crafter▸encoder-head▸⚐
       chunk_idx@273529[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-2▸encoder-tail▸⚐
       chunk_idx@273537[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-2▸encoder-tail▸chunk_idx-head▸⚐
       chunk_idx@273529[I]:received "control" from gateway▸crafter▸encoder-head▸encoder-2▸encoder-tail▸chunk_idx-head▸chunk_idx-1▸⚐
       chunk_idx@273533[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-2▸encoder-tail▸chunk_idx-head▸chunk_idx-1▸⚐
        join_all@273549[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-2▸encoder-tail▸chunk_idx-head▸chunk_idx-1▸chunk_idx-tail▸⚐
-       join_all@273549[I]:collected 2/2 parts of IndexRequest                    
+       join_all@273549[I]:collected 2/2 parts of IndexRequest
 index [=====               ] 📃    320 ⏱️ 71.2s 🐎 4.5/s      5      batch        encoder@273512[I]:received "control" from gateway▸crafter▸encoder-head▸encoder-1▸⚐
         encoder@273512[I]:received "index" from gateway▸crafter▸⚐
         encoder@273516[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸⚐
-        encoder@273520[I]:received "index" from gateway▸crafter▸encoder-head▸⚐    
-      chunk_idx@273529[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸⚐                        
+        encoder@273520[I]:received "index" from gateway▸crafter▸encoder-head▸⚐
+      chunk_idx@273529[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸⚐
       chunk_idx@273541[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸chunk_idx-head▸⚐
       chunk_idx@273529[I]:received "control" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸chunk_idx-head▸chunk_idx-2▸⚐
-      chunk_idx@273533[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸chunk_idx-head▸chunk_idx-2▸⚐                           
+      chunk_idx@273533[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸chunk_idx-head▸chunk_idx-2▸⚐
        join_all@273549[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸chunk_idx-head▸chunk_idx-2▸chunk_idx-tail▸⚐
-       join_all@273549[I]:collected 2/2 parts of IndexRequest                       
+       join_all@273549[I]:collected 2/2 parts of IndexRequest
 index [======              ] 📃    384 ⏱️ 71.4s 🐎 5.4/s      6      batch        encoder@273512[I]:received "control" from gateway▸crafter▸encoder-head▸encoder-1▸⚐
         encoder@273516[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸⚐
       chunk_idx@273529[I]:received "index" from gateway▸crafter▸encoder-head▸encoder-1▸encoder-tail▸⚐
@@ -333,7 +333,7 @@ Now that the app is running in search mode, we can search from the web browser w
 #### Jinabox
 
 ![](./images/jinabox-startrek.gif)
- 
+
 1. Go to [jinabox](https://jina.ai/jinabox.js) in your browser
 2. Ensure you have the server endpoint set to `http://localhost:65481/api/search`
 3. Type a phrase into the search bar and see which Star Trek lines come up
