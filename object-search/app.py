@@ -34,10 +34,11 @@ def config():
 
 @click.command()
 @click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
+@click.option('--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-def main(task, data_path, num_docs, batch_size):
+def main(task, return_image, data_path, num_docs, batch_size):
     config()
     if task == 'index':
         clean_workdir()
@@ -45,7 +46,7 @@ def main(task, data_path, num_docs, batch_size):
         with f:
             f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)        
     elif task == 'query':
-        f = Flow.load_config('flow-query-object.yml')
+        f = Flow.load_config(f'flow-query-{return_image}.yml')
         with f:
             f.block()
 

@@ -7,9 +7,9 @@ metas:
 requests:
   on:
     IndexRequest:
-      # - !Buffer2URI
-      #   with:
-      #     base64: True
+      - !Buffer2URI
+        with:
+          base64: True
       - !ExcludeQL
         with:
           fields:
