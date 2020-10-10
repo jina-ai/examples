@@ -17,9 +17,7 @@
 
 </p>
 
-In this example, we use `fasterrcnn_resnet50_fpn` for object detection  and then index them with `MobileNetV2`. You can use this demo system to index an image dataset and query the most similar object from it. 
-
-[![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
+In this example, we use `fasterrcnn_resnet50_fpn` for object detection and then index these cropped object images with `MobileNetV2`. You can use this demo system to index an image dataset and query the most similar object in those images. 
 
 Features that come out of the box:
 
@@ -38,11 +36,10 @@ The code can of course run natively on your local machine, please [read the Jina
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
 - [Download and Extract Data](#download-and-extract-data)
 - [Index Image Data](#index-image-data)
-- [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
-- [Build Docker Image](#build-docker-image)
+- [Start the server](#start-the-server)
+- [Query via REST API](#query-via-rest-api)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -50,25 +47,12 @@ The code can of course run natively on your local machine, please [read the Jina
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-## TL;DR: Just Show Me the Pokemon!
-
-> *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
-
-We have a pre-built Docker image ready to use:
-
-```bash
-docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex search
-```
-
-Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api).
-
 ## Download and Extract Data
 ### Use Flickr8k
 Although the model is trained on Flickr30k, you can test on Flickr8k dataset, which is a much smaller version of 
 flickr30k.
 
-To do so, instead of downloading the flickr30k from kaggle, just take its 8k counterpart
+To do so, instead of downloading the Flickr8k from Kaggle
 
 ```bash
 kaggle datasets download adityajn105/flickr8k
@@ -78,77 +62,10 @@ mv Images data/f8k/images
 ```
 
 ## Index Image Data
-
+Index 16 images
 ```bash
-docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_PROFILING=1" -p 5000:5000 jinaai/hub.app.objectsearch index
+python app.py -task index -n 16 -overwrite True
 ```
-
-#### Command Line Arguments Explained
-- `$(pwd)/data`: the directory where all your images are stored (jpg/png are supported). You can change it to any path you like, just make sure it's an absolute path
-- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts. 
-- `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
-
-### Behind the Scenes
-
-<table>
-<tr>
-<td> Python API </td>
-<td> index.yml</td>
-<td> <a href="https://github.com/jina-ai/dashboard">Flow in Dashboard</a></td>
-</tr>
-<tr>
-<td> 
-
-```python
-from jina.flow import Flow
-
-f = Flow.load_config('flow-index.yml')
-
-with f:
-    f.index(input_fn, batch_size=128)
-```
-
-</td>
-<td>
-  <sub>
-
-```yaml
-!Flow
-with:
-  logserver: true
-pods:
-  crafter:
-    uses: pods/craft.yml
-    read_only: true
-  encoder:
-    uses: pods/encode.yml
-    parallel: $PARALLEL
-    timeout_ready: 600000
-    read_only: true
-  chunk_idx:
-    uses: pods/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
-  doc_idx:
-    uses: pods/doc.yml
-    needs: crafter
-  join_all:
-    uses: _merge
-    needs: [doc_idx, chunk_idx]
-```
-
-</sub>
-
-</td>
-<td>
-
-![Flow in Dashboard](.github/.README_images/6d28795b.png?raw=true)
-
-</td>
-</tr>
-</table>
-
-### Index Result
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
 
@@ -157,69 +74,50 @@ If it's running successfully, you should be able to see logs scrolling in the co
   <img src=".github/.README_images/ed2907cd11ac26a2a3a2555f16071d13.gif?raw=true" alt="Jina banner" width="45%">
 </p>
 
-Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_indexer-*` after indexing. This is because we set shards to 8.
-
-## Query Top-K Visually Similar Images
-
-### Start the Jina server
+## Start the Server
+Start server which returns original images where objects are matched
 ```bash
-docker run -v "$(pwd)/workspace:/workspace" -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.objectsearch search
+python app.py -task query -r original
 ```
 
-#### Command args explained
-- `$(pwd)/workspace` is where Jina previously stored our indexes and other artifacts. Now we need to load them.
-- `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port.
+<p align="center">
+  <img src=".github/.README_images/dog.png?raw=true" alt="Jina banner" width="45%">
+  <img src=".github/.README_images/dog-results.png?raw=true" alt="Jina banner" width="45%">
+</p>
 
-### Query via REST API
+Start server which returns object images
+```bash
+python app.py -task query -r object
+```
 
-When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:34567/api/search`, e.g.:
+<p align="center">
+  <img src=".github/.README_images/cycle.png?raw=true" alt="Jina banner" width="45%">
+  <img src=".github/.README_images/cycle-results.png?raw=true" alt="Jina banner" width="45%">
+</p>
+
+## Query via REST API
+
+When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
 
 ```bash
-curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:34567/api/search'
+curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 
 [JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
 
 This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
-### Query Results in Batch
-
-Let's test the results on Pokémon! This time we use our gRPC gateway (for better efficiency in batch querying): Simply run `python make_html.py`
-
-<p align="center">
-  <img src=".github/.README_images/f2dcf24c452f73b085c0108867f4ff33.gif?raw=true" alt="Jina banner" width="80%">
-</p>
-
-## Build Docker Image
-
-After playing with it for a while, you may want to change the code and rebuild the image. Simply run:
-```bash
-docker build -t jinaai/hub.app.objectsearch .
-```
-
-If you want to keep up with Jina's master branch, then pull before building:
-```bash
-docker pull jinaai/jina:devel
-docker build -t jinaai/hub.app.objectsearch .
-```
 
 ## Troubleshooting
 
 ### Memory Issues
 
-BiT model seems pretty resource-hungry. If you are using Docker Desktop, make sure to assign enough memory for your Docker container, especially when you have multiple replicas. Below are my MacOS settings with two replicas:
+If you are using Docker Desktop, make sure to assign enough memory for your Docker container, especially when you have multiple replicas. Below are my MacOS settings with two replicas:
 
 
 <p align="center">
   <img src=".github/.README_images/d4165abd.png?raw=true" alt="Jina banner" width="80%">
 </p>
-
-### Incremental Indexing
-
-Incremental indexing and entry-level deleting are yet not supported in this demo. Duplicate indexing may not throw exceptions, but may produce strange results. So make sure to clean `$(pwd)/workspace` before each run.
-
-Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
-
 
 ## Documentation 
 
@@ -243,8 +141,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
-
-
 
 ## License
 

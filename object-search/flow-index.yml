@@ -2,16 +2,16 @@
 with:
   logserver: false
 pods:
-  normalizer:
-    uses: pods/craft-normalize.yml
+  read:
+    uses: pods/craft-reader.yml
     read_only: true
   object:
     uses: pods/craft-object.yml
     read_only: true
-  resize:
-    uses: pods/craft-resize.yml
+  normalize:
+    uses: pods/craft-normalize.yml
     read_only: true
-  encoder:
+  encode:
     uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
@@ -23,15 +23,23 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-  doc_idx:
-    uses: pods/doc.yml
+  chunk_idx:
+    uses: pods/chunk.yml
+    needs: [object]
     shards: $SHARDS
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
+  doc_idx:
+    uses: pods/doc.yml
     needs: [gateway]
+    shards: $SHARDS
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
   join_all:
     uses: _merge
-    needs: [doc_idx, vec_idx]
+    needs: [doc_idx, vec_idx, chunk_idx]
     read_only: true

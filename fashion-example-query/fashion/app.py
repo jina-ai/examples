@@ -165,19 +165,19 @@ if __name__ == '__main__':
         
     targets = {
         'index-labels': {
-            'url': 'https://github.com/zalandoresearch/fashion-mnist/raw/master/data/fashion/train-labels-idx1-ubyte.gz',
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
             'filename': os.path.join('./workspace', 'index-labels')
         },
         'query-labels': {
-            'url': 'https://github.com/zalandoresearch/fashion-mnist/raw/master/data/fashion/t10k-labels-idx1-ubyte.gz',
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
             'filename': os.path.join('./workspace', 'query-labels')
         },
         'index': {
-            'url': 'https://github.com/zalandoresearch/fashion-mnist/raw/master/data/fashion/train-images-idx3-ubyte.gz',
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
             'filename': os.path.join('./workspace', 'index')
         },
         'query': {
-            'url': 'https://github.com/zalandoresearch/fashion-mnist/raw/master/data/fashion/t10k-images-idx3-ubyte.gz',
+            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
             'filename': os.path.join('./workspace', 'query')
         }
     }

@@ -1,17 +1,17 @@
-!ImageKerasEncoder
+!ImageTorchEncoder # Expects 1/255 scaled image. Takes care of imagenet normalisation
 with:
-  model_name: MobileNetV2
-  pool_strategy: avg
+  model_name: mobilenet_v2 
+  pool_strategy: mean 
   channel_axis: -1
 requests:
   on:
-    ControlRequest:
-      - !ControlReqDriver {}
-    SearchRequest:
-      - !EncodeDriver
-        with:
-          traversal_paths: ['r']
     IndexRequest:
       - !EncodeDriver
         with:
           traversal_paths: ['c']
+    SearchRequest:
+      - !EncodeDriver
+        with:
+          traversal_paths: ['r']
+    ControlRequest:
+      - !ControlReqDriver {}

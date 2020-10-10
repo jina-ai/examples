@@ -13,10 +13,9 @@ from jina.logging import default_logger as logger
 num_docs = os.environ.get('MAX_DOCS', 16)
 data_path = 'data/**/*.jpg'
 batch_size = 16
-overwrite_workspace = True
 
 def clean_workdir():
-    if overwrite_workspace and os.path.exists(os.environ['WORKDIR']):
+    if os.path.exists(os.environ['WORKDIR']):
         shutil.rmtree(os.environ['WORKDIR'])
         logger.warning('Workspace deleted')
 
@@ -33,15 +32,17 @@ def config():
 
 
 @click.command()
-@click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
+@click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-def main(task, return_image, data_path, num_docs, batch_size):
+@click.option('--overwrite_workspace', '-overwrite', default=True)
+def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspace):
     config()
     if task == 'index':
-        clean_workdir()
+        if overwrite_workspace:
+            clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
             f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)        

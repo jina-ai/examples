@@ -5,7 +5,7 @@ with:
   port_expose: $JINA_PORT
 pods:
   normalizer:
-    uses: pods/craft-normalize.yml
+    uses: pods/craft-reader.yml
     read_only: true
     parallel: $PARALLEL
   tf_encode:
@@ -14,6 +14,13 @@ pods:
     timeout_ready: 600000
   vec_idx:
     uses: pods/vec.yml
+    shards: $SHARDS
+    separated_workspace: true
+    polling: all
+    uses_reducing: _merge_all
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+  chunk_idx:
+    uses: pods/chunk.yml
     shards: $SHARDS
     separated_workspace: true
     polling: all

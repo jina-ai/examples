@@ -1,31 +1,14 @@
-!CompoundIndexer
-components:
-  - !NumpyIndexer
-    with:
-      index_filename: vec.gz
-    metas:
-      name: vecidx  
-      workspace: $WORKDIR
-  - !BinaryPbIndexer
-    with:
-      index_filename: chunk.gz
-    metas:
-      name: chunkidx
-      workspace: $WORKDIR
+!NumpyIndexer
+with:
+  index_filename: vec.gz
 metas:
-  name: chunk_compound_indexer
+  name: vecidx
   workspace: $WORKDIR
 requests:
   on:
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: vecidx
-          traversal_paths: ['c']
-      - !Blob2PngURI {}
-      - !KVIndexDriver
-        with:
-          executor: chunkidx
           traversal_paths: ['c']
     SearchRequest:
       - !ExcludeQL
@@ -35,16 +18,8 @@ requests:
             - uri  
             - buffer
             - blob
-      - !LogInfoDriver {}
       - !VectorSearchDriver
         with:
-          executor: vecidx
           traversal_paths: ['r']
-      - !LogInfoDriver {}
-      - !KVSearchDriver
-        with:
-          executor: chunkidx
-          traversal_paths: ['m']
-      - !LogInfoDriver {}
     ControlRequest:
       - !ControlReqDriver {}
