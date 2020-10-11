@@ -37,6 +37,5 @@ requests:
       - !KVSearchDriver
         with:
           executor: text_kv_idx
-          granularity_range: [0, 0]
-          adjacency_range: [1, 1]
+          traversal_paths: ['m']
           recur_on: matches
