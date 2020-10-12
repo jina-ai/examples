@@ -57,8 +57,10 @@ Download the Flickr8k from Kaggle
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
-mv Images data/flickr8k/images
+mv Images data/f8k/images
 ```
+
+Note: Flickr8k is not an ideal dataset but we are using due to its small size.
 
 ## Index Image Data
 Index 1000 images. This can take some time and you can try a smaller number as well.
