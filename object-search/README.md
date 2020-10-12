@@ -17,7 +17,7 @@
 
 </p>
 
-In this example, we use `fasterrcnn_resnet50_fpn` for object detection and then index these cropped object images with `MobileNetV2`. You can use this demo system to index an image dataset and query the most similar object in those images. 
+In this example, we use `fasterrcnn_resnet50_fpn` for object detection and then index these cropped object images with `MobileNetV2`. You can use this demo system to index an image dataset and query the most similar object in those images. The query should be a cropped object image.
 
 Features that come out of the box:
 
@@ -49,22 +49,21 @@ The code can of course run natively on your local machine, please [read the Jina
 
 ## Download and Extract Data
 ### Use Flickr8k
-Although the model is trained on Flickr30k, you can test on Flickr8k dataset, which is a much smaller version of 
-flickr30k.
+You can try this example with [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k) object detection dataset. You can also use other datasets like COCO & [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview)
 
-To do so, instead of downloading the Flickr8k from Kaggle
+Download the Flickr8k from Kaggle
 
 ```bash
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
-mv Images data/f8k/images
+mv Images data/flickr8k/images
 ```
 
 ## Index Image Data
-Index 16 images
+Index 1000 images. This can take some time and you can try a smaller number as well.
 ```bash
-python app.py -task index -n 16 -overwrite True
+python app.py -task index -n 1000 -overwrite True
 ```
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
@@ -75,7 +74,7 @@ If it's running successfully, you should be able to see logs scrolling in the co
 </p>
 
 ## Start the Server
-Start server which returns original images where objects are matched
+Start server which returns `original` images. The matching of query happens with all indexed object images and returns the original parent image in which the indexed object was found.
 ```bash
 python app.py -task query -r original
 ```
@@ -85,7 +84,7 @@ python app.py -task query -r original
   <img src=".github/.README_images/dog-results.png?raw=true" alt="Jina banner" width="45%">
 </p>
 
-Start server which returns object images
+Start server which returns `object` images. The matching of query happens with all indexed object images and returns them.
 ```bash
 python app.py -task query -r object
 ```
