@@ -162,6 +162,7 @@ if __name__ == '__main__':
 
     if not os.path.exists('./workspace'):
         os.makedirs('./workspace')
+        
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
