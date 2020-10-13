@@ -38,7 +38,7 @@ The code can of course run natively on your local machine, please [read the Jina
 
 - [Download and Extract Data](#download-and-extract-data)
 - [Index Image Data](#index-image-data)
-- [Start the server](#start-the-server)
+- [Start the Server](#start-the-server)
 - [Query via REST API](#query-via-rest-api)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
