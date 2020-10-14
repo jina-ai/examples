@@ -2,12 +2,12 @@ import pytest
 
 import json
 import os
+import sys
 import shutil
+import subprocess
 from typing import List
 
 from jina.flow import Flow
-
-import requests
 
 
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..' ))
@@ -30,7 +30,8 @@ def prepare_data():
 
 
 def setup_env():
-    os.system('pip install -r requirements.txt')
+	subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+	subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "jina[http]"])
 
 
 def index_documents():
@@ -45,7 +46,8 @@ def index_documents():
 
 
 def call(method, url, payload=None, headers={'Content-Type': 'application/json'}):
-    return getattr(getattr(requests, method)(url, data=json.dumps(payload), headers=headers), 'json')()
+	import requests
+	return getattr(getattr(requests, method)(url, data=json.dumps(payload), headers=headers), 'json')()
 
 
 def get_results(query, top_k=top_k):
