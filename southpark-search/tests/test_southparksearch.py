@@ -20,7 +20,7 @@ query_flow_file_path = "flow-query.yml"
 
 
 def config():
-	os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", "test/data-index.csv")
+	os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", "tests/data-index.csv")
 	os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
 	os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
 
