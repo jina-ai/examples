@@ -1,1 +1,4 @@
-jina[cv,http]==0.6.7
+jina[http]
+torch
+torchvision
+Pillow
