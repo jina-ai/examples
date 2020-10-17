@@ -6,7 +6,6 @@ import sys
 import shutil
 import subprocess
 
-from PIL import Image
 import pytest
 
 from jina.flow import Flow
@@ -37,6 +36,8 @@ def setup_env():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "jina[http]"])
 
+setup_env()
+
 
 def index_documents():
     f = Flow().load_config(index_flow_file_path)
@@ -45,7 +46,7 @@ def index_documents():
         f.index_files(os.environ["JINA_DATA"], batch_size=1, read_mode='rb', size=num_docs)
 
 
-def image_to_byte_array(image: 'Image', format: str):
+def image_to_byte_array(image, format):
         img_byte_arr = io.BytesIO()
         image.save(img_byte_arr, format=format)
         img_byte_arr = img_byte_arr.getvalue()
@@ -53,6 +54,7 @@ def image_to_byte_array(image: 'Image', format: str):
 
 
 def read_and_convert2png(file_path):
+    from PIL import Image
     im = Image.open(file_path)
     png_bytes = image_to_byte_array(im, format='PNG')
     return 'data:image/png;base64,' + base64.b64encode(png_bytes).decode()
@@ -77,6 +79,7 @@ def set_flow():
 
 
 def buffer2png(buffer):
+    from PIL import Image
     im = Image.open(io.BytesIO(base64.b64decode(buffer)))
     png_bytes = image_to_byte_array(im, format='PNG')
     return 'data:image/png;base64,' + base64.b64encode(png_bytes).decode()
@@ -91,7 +94,6 @@ def queries():
 
 def test_query(tmpdir, queries):
     config(tmpdir)
-    setup_env()
     prepare_data()
     index_documents()
     f = set_flow()

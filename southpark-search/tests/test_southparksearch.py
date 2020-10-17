@@ -35,6 +35,7 @@ def setup_env():
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "jina[http]"])
 
+setup_env()
 
 def index_documents():
     f = Flow().load_config(index_flow_file_path)
@@ -74,7 +75,6 @@ def queries():
 
 def test_query(queries, tmpdir):
     config(tmpdir)
-    setup_env()
     prepare_data()
     index_documents()
     f = set_flow()
