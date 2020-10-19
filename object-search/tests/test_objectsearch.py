@@ -79,8 +79,7 @@ def buffer2png(buffer):
 
 @pytest.fixture
 def queries():
-    return [read_and_convert2png('tests/test-data/dog.jpg'), 
-            read_and_convert2png('tests/test-data/horse.jpg'),
+    return [read_and_convert2png('tests/test-data/horse.jpg'),
             read_and_convert2png('tests/test-data/jacket.jpg')]
 
 
