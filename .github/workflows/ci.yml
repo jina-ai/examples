@@ -27,7 +27,7 @@ jobs:
         run: |
           jina check
           export JINA_LOG_VERBOSITY="ERROR"
-          pytest --force-flaky --min-passes 1 -n 1 --timeout=0 -v */tests
+          pytest -s -v */tests
         timeout-minutes: 60
         env:
           JINAHUB_USERNAME: ${{ secrets.JINAHUB_USERNAME }}
