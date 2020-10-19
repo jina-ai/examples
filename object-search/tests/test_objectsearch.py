@@ -11,46 +11,39 @@ import pytest
 from jina.flow import Flow
 
 
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..' ))
-
-
 num_docs = 3
 top_k = 3
-index_flow_file_path = "flow-index.yml"
-query_flow_file_path = "flow-query-original.yml"
+index_flow_file_path = 'flow-index.yml'
+query_flow_file_path = 'flow-query-original.yml'
 
 
 def config(tmpdir):
-    os.environ["JINA_DATA"] = "tests/test-data/*.jpg"
-    os.environ["JINA_PORT"] = str(45678)
+    os.environ['JINA_DATA'] = 'tests/test-data/*.jpg'
+    os.environ['JINA_PORT'] = str(45678)
     os.environ['PARALLEL'] = str(1)
     os.environ['SHARDS'] = str(1)
     os.environ['WORKDIR'] = str(tmpdir)
 
 
-def prepare_data():
-    pass
-
-
+@pytest.fixture
 def setup_env():
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "jina[http]"])
-
-setup_env()
+    os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..' ))
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'requests', 'jina[http]'])
 
 
 def index_documents():
     f = Flow().load_config(index_flow_file_path)
 
     with f:
-        f.index_files(os.environ["JINA_DATA"], batch_size=1, read_mode='rb', size=num_docs)
+        f.index_files(os.environ['JINA_DATA'], batch_size=1, read_mode='rb', size=num_docs)
 
 
 def image_to_byte_array(image, format):
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format=format)
-        img_byte_arr = img_byte_arr.getvalue()
-        return img_byte_arr
+    img_byte_arr = io.BytesIO()
+    image.save(img_byte_arr, format=format)
+    img_byte_arr = img_byte_arr.getvalue()
+    return img_byte_arr
 
 
 def read_and_convert2png(file_path):
@@ -68,11 +61,10 @@ def call(method, url, payload=None, headers={'Content-Type': 'application/json'}
 def get_results(query, top_k=top_k):
     return call('post',
                 'http://0.0.0.0:45678/api/search', 
-                payload={"top_k": top_k, "mode": "search",  "data": [query]}
-                )
+                payload={'top_k': top_k, 'mode': 'search',  'data': [query]})
 
 
-def set_flow():
+def get_flow():
     f = Flow().load_config(query_flow_file_path)
     f.use_rest_gateway()
     return f
@@ -92,11 +84,10 @@ def queries():
             read_and_convert2png('tests/test-data/jacket.jpg')]
 
 
-def test_query(tmpdir, queries):
+def test_query(setup_env, tmpdir, queries):
     config(tmpdir)
-    prepare_data()
     index_documents()
-    f = set_flow()
+    f = get_flow()
     with f:
         for query in queries:
             output = get_results(query)

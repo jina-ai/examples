@@ -1,6 +1,3 @@
-__copyright__ = 'Copyright (c) 2020 Jina AI Limited. All rights reserved.'
-__license__ = 'Apache-2.0'
-
 import json
 import os
 import sys
@@ -10,7 +7,6 @@ import subprocess
 from jina.flow import Flow
 import pytest
 
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
 num_docs = 100
 top_k = 3
@@ -24,15 +20,11 @@ def config(tmpdir):
     os.environ['JINA_PORT'] = str(45678)
 
 
-def prepare_data():
-    pass
-
-
+@pytest.fixture
 def setup_env():
+    os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'requests', 'jina[http]'])
-
-setup_env()
 
 def index_documents():
     f = Flow().load_config(index_flow_file_path)
@@ -54,7 +46,7 @@ def get_results(query, top_k=top_k):
                 payload={'top_k': top_k, 'mode': 'search',  'data': [f'text:{query}']})
 
 
-def set_flow():
+def get_flow():
     f = Flow().load_config(query_flow_file_path)
     f.use_rest_gateway()
     return f
@@ -62,16 +54,15 @@ def set_flow():
 
 @pytest.fixture
 def queries():
-    return [("hey dude", ["Don't say anything\n", "Check that: I'll watch that game.\n", "Because you're a fucking fatass\n"]),
-            ("sister", ["Sorry\n", "Lame.\n", "Christ\n"]),
-            ("Ill watch that game", ["Check that: I'll watch that game.\n", "Quit it\n", "Sorry\n"])]
+    return [("Don't say anything\n", ["Don't say anything\n", "Check that: I'll watch that game.\n", "I'm trying to talk\n"]),
+            ('Sorry\n', ['Sorry\n', 'Hey\n', 'Allб\n']),
+            ("Check that: I'll watch that game.\n", ["Check that: I'll watch that game.\n", "I just think it's a fabulous app\n", 'Could you get that\n'])]
 
 
-def test_query(queries, tmpdir):
+def test_query(setup_env, tmpdir, queries):
     config(tmpdir)
-    prepare_data()
     index_documents()
-    f = set_flow()
+    f = get_flow()
     with f:
         for query, exp_result in queries:
             output = get_results(query)
