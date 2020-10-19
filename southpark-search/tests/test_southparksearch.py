@@ -1,30 +1,27 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
-__license__ = "Apache-2.0"
+__copyright__ = 'Copyright (c) 2020 Jina AI Limited. All rights reserved.'
+__license__ = 'Apache-2.0'
 
 import json
 import os
 import sys
 import shutil
 import subprocess
-from typing import List
 
 from jina.flow import Flow
 import pytest
 
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 
-os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..' ))
-
-
-num_docs = 100 
+num_docs = 100
 top_k = 3
-index_flow_file_path = "flow-index.yml"
-query_flow_file_path = "flow-query.yml"
+index_flow_file_path = 'flow-index.yml'
+query_flow_file_path = 'flow-query.yml'
 
 
 def config(tmpdir):
-    os.environ["JINA_DATA_FILE"] = "tests/data-index.csv"
-    os.environ["JINA_WORKSPACE"] = str(tmpdir)
-    os.environ["JINA_PORT"] = str(45678)
+    os.environ['JINA_DATA_FILE'] = 'tests/data-index.csv'
+    os.environ['JINA_WORKSPACE'] = str(tmpdir)
+    os.environ['JINA_PORT'] = str(45678)
 
 
 def prepare_data():
@@ -32,8 +29,8 @@ def prepare_data():
 
 
 def setup_env():
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "jina[http]"])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'requests', 'jina[http]'])
 
 setup_env()
 
@@ -41,11 +38,9 @@ def index_documents():
     f = Flow().load_config(index_flow_file_path)
 
     with f:
-        f.index_lines(
-            filepath=os.environ["JINA_DATA_FILE"],
-            batch_size=8,
-            size=num_docs,
-        )
+        f.index_lines(filepath=os.environ['JINA_DATA_FILE'],
+                      batch_size=8,
+                      size=num_docs)
 
 
 def call(method, url, payload=None, headers={'Content-Type': 'application/json'}):
@@ -56,8 +51,7 @@ def call(method, url, payload=None, headers={'Content-Type': 'application/json'}
 def get_results(query, top_k=top_k):
     return call('post', 
                 'http://0.0.0.0:45678/api/search', 
-                payload={"top_k": top_k, "mode": "search",  "data": [f"text:{query}"]}
-                )
+                payload={'top_k': top_k, 'mode': 'search',  'data': [f'text:{query}']})
 
 
 def set_flow():
@@ -68,9 +62,9 @@ def set_flow():
 
 @pytest.fixture
 def queries():
-    return [('hey dude', ["Don't say anything\n", "Check that: I'll watch that game.\n", "Because you're a fucking fatass\n"]),
-            ('sister', ['Sorry\n', 'Lame.\n', 'Christ\n']),
-            ("Ill watch that game", ["Check that: I'll watch that game.\n", 'Quit it\n', 'Sorry\n'])]
+    return [("hey dude", ["Don't say anything\n", "Check that: I'll watch that game.\n", "Because you're a fucking fatass\n"]),
+            ("sister", ["Sorry\n", "Lame.\n", "Christ\n"]),
+            ("Ill watch that game", ["Check that: I'll watch that game.\n", "Quit it\n", "Sorry\n"])]
 
 
 def test_query(queries, tmpdir):
