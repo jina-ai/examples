@@ -14,7 +14,7 @@ from jina.flow import Flow
 NUM_DOCS = 3
 TOP_K = 3
 INDEX_FLOW_FILE_PATH = 'flow-index.yml'
-QUERY_FLOW_FILE_PATH = 'flow-query-original.yml'
+QUERY_FLOW_FILE_PATH = 'flow-query-object.yml'
 
 
 def config(tmpdir):
@@ -63,26 +63,20 @@ def get_flow():
     return f
 
 
-def buffer2png(buffer):
-    from PIL import Image
-    im = Image.open(io.BytesIO(base64.b64decode(buffer)))
-    png_bytes = image_to_byte_array(im, format='PNG')
-    return 'data:image/png;base64,' + base64.b64encode(png_bytes).decode()
-
-
 @pytest.fixture
 def image_paths():
-    return ['tests/test-data/dog.jpg', 'tests/test-data/horse.jpg', 'tests/test-data/jacket.jpg']
-
+    return zip(['tests/test-data/dog.jpg', 'tests/test-data/horse.jpg', 'tests/test-data/jacket.jpg'], 
+               ['tests/test-data/dog-object.png', 'tests/test-data/horse-object.png', 'tests/test-data/jacket-object.png'])
 
 def test_query(tmpdir, image_paths):
     config(tmpdir)
     index_documents()
     f = get_flow()
     with f:
-        for image_path in image_paths:
-            query = read_and_convert2png(image_path)
-            output = get_results(query)
+        for query_image_path, object_image_path in image_paths:
+            query_image = read_and_convert2png(query_image_path)
+            object_image = read_and_convert2png(object_image_path)
+            output = get_results(query_image)
             matches = output['search']['docs'][0]['matches']
-            buffer = matches[0]['buffer'] #getting buffer of first match
-            assert query == buffer2png(buffer) #first match should be the query itself
+            uri = matches[0]['uri'] #getting uri of first match
+            assert object_image == uri #first match should be the object image itself
