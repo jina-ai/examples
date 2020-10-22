@@ -19,12 +19,6 @@ def config(tmpdir):
     os.environ['JINA_PORT'] = str(45678)
 
 
-@pytest.fixture
-def setup_env():
-    os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt'])
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'requests', 'jina[http]'])
-
 def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
@@ -59,7 +53,7 @@ def queries():
             ("Check that: I'll watch that game.\n", ["Check that: I'll watch that game.\n", "I just think it's a fabulous app\n", 'Could you get that\n'])]
 
 
-def test_query(setup_env, tmpdir, queries):
+def test_query(tmpdir, queries):
     config(tmpdir)
     index_documents()
     f = get_flow()
