@@ -10,7 +10,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        examples: [southpark-search, object-search]
+        path: [southpark-search, object-search]
 
     steps:
       - uses: actions/checkout@v2
@@ -23,15 +23,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install jina[cicd,test,http] requests --no-cache-dir
-          pip install -r ${{ matrix.examples }}/requirements.txt --no-cache-dir
+          pip install jina[test,http] requests --no-cache-dir
+          pip install -r ${{ matrix.path }}/requirements.txt --no-cache-dir
       - name: Test examples with pytest
         run: |
           jina check
           export JINA_LOG_VERBOSITY="ERROR"
-          cd ${{ matrix.examples }}
+          cd ${{ matrix.path }}
           pytest -s -v .
-        timeout-minutes: 60
+        timeout-minutes: 30
         env:
           JINAHUB_USERNAME: ${{ secrets.JINAHUB_USERNAME }}
           JINAHUB_PASSWORD: ${{ secrets.JINAHUB_PASSWORD }}
