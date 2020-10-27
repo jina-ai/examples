@@ -27,7 +27,7 @@ In this demo, we use Jina to build a semantic search system on the [BBCNewsData]
 - [Overview](#overview)
 - [Prerequirements](#prerequirements)
 - [Prepare the data](#prepare-the-data)
-- [Run the flows](#run-the-flows)
+- [Run the Flows](#run-the-flows)
 - [Wrap up](#wrap-up)
 - [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
