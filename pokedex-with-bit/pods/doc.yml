@@ -3,7 +3,7 @@ with:
   index_filename: doc.gz
 metas:
   name: doc_idx
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     ControlRequest:
@@ -11,12 +11,10 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [0, 1]
+          traversal_paths: ['m']
       - !ExcludeQL
         with:
-          granularity_range: [0, 2]
-          adjacency_range: [0, 1]
+          traversal_paths: ['m']
           fields:
             - embedding
     IndexRequest:

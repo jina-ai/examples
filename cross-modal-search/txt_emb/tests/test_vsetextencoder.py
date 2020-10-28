@@ -21,3 +21,7 @@ def test_text_embedding():
 
     assert embedding.shape == (5, 1024)
     np.testing.assert_almost_equal(embedding, expected)
+
+    for i in range(len(text)):
+        single_embedding = encoder.encode([text[i]])[0]
+        np.testing.assert_almost_equal(single_embedding, embedding[i])

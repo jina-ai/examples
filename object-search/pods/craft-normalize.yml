@@ -1,0 +1,14 @@
+!ImageNormalizer  # This does 1/255
+with:
+  target_size: [224, 224]
+  channel_axis: -1
+metas:
+  name: img_norm
+requests:
+  on:
+    IndexRequest:
+      - !CraftDriver
+        with:
+          executor: img_norm
+    ControlRequest:
+      - !ControlReqDriver {}

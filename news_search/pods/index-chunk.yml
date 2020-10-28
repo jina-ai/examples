@@ -3,7 +3,7 @@ components:
   - !NumpyIndexer
     with:
       index_filename: vec.gz
-      metric: cosine
+      metrix: cosine
     metas:
       name: vecidx  # a customized name
       workspace: $TMP_WORKSPACE

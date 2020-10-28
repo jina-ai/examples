@@ -4,3 +4,31 @@ with:
 metas:
   name: doc_indexer  # a customized name
   workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !Buffer2URI
+        with:
+          override: true
+      - !KVIndexDriver
+        with:
+          granularity_range: [0, 0]
+          recur_on: ['chunks',]
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          granularity_range: [0, 0]
+          adjacency_range: [0, 1]
+          recur_on: ['matches',]
+      - !ExcludeQL
+        with:
+          granularity_range: [0, 2]
+          fields:
+            - embedding
+            - blob
+            - chunks
+          recur_on: ['chunks', 'matches']
+    ControlRequest:
+      - !ControlReqDriver {}
+
+    

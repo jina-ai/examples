@@ -6,28 +6,28 @@ __version__ = '0.0.1'
 import csv
 import os
 import sys
+import itertools
 
 from jina.flow import Flow
 from jina.proto import jina_pb2
 
-num_docs = os.environ.get('MAX_DOCS', 50000)
-
 
 def config():
-    parallel = 6 if sys.argv[1] == 'index' else 1
-    shards = 8
+    parallel = 2 if sys.argv[1] == 'index' else 1
 
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['SHARDS'] = str(shards)
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
-    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
+    os.environ.setdefault('JINA_MAX_DOCS', '100')
+    os.environ.setdefault('JINA_PARALLEL', str(parallel))
+    os.environ.setdefault('JINA_SHARDS', str(4))
+    os.environ.setdefault('JINA_WORKSPACE', './workspace')
+    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
+    os.environ.setdefault('JINA_PORT', str(65481))
 
 
 def input_fn():
-    with open('data/lyrics-data.csv', newline='', encoding='utf-8') as f:
+    lyrics_file = os.environ.setdefault('JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv')
+    with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
-        for row in reader:
+        for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
             if row[-1] == 'ENGLISH':
                 d = jina_pb2.Document()
                 d.tags['ALink'] = row[0]

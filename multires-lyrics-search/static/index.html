@@ -74,14 +74,14 @@
                          style="height: 100%" id="my-masonry">
                         <div v-masonry-tile class="item" :key="index"
                              v-for="(item, index) in topkDocs" style="width: 16%">
-                            <div class="card" v-on:click="searchQuery=item.matchDoc.text">
+                            <div class="card" v-on:click="searchQuery=item.text">
                                 <div class="card-body">
                                     <blockquote class="blockquote mb-0">
                                         <p class="lyric-text"
-                                           v-html="topkDocsDict.get(item.matchDoc.docId)['renderHTML']"></p>
+                                           v-html="topkDocsDict.get(item['id'])['renderHTML']"></p>
                                         <footer class="blockquote-footer">
                                             <small class="text-muted">
-                                                in <cite title="Source Title">{{item.matchDoc.tags["SName"]}} </cite>
+                                                in <cite title="Source Title">{{item.tags["SName"]}} </cite>
                                             </small>
                                         </footer>
                                     </blockquote>

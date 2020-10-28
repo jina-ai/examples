@@ -7,6 +7,7 @@
   - [Prepare the data](#prepare-the-data)
   - [Build the docker images](#build-the-docker-images)
   - [Run the Flows](#run-the-flows)
+  - [Results](#results)
   - [Documentation](#documentation)
   - [Community](#community)
   - [License](#license)
@@ -31,12 +32,39 @@
 
 </p>
 
-In this example, jina is used to implement a Cross-modal search system. We encode images and its captions (any descriptive text of the image)
+In this example, jina is used to implement a Cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image)
 in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings`
 and query the `image index` using `text embeddings`. 
 
+**Motive behind Cross Modal Retrieval**
+
+Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. Example: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
+Different encoders map different modalities to a common embedding space. They need to extract semantic information from the documents. 
+In this embedding space, documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
+In the example, we expect images embeddings to be nearby their captions’ embeddings.
+
+**Research for Cross Modal Retrieval**
+
+The models used for the example are cited from this paper: 
+Improving Visual-Semantic Embeddings with Hard Negatives (https://arxiv.org/pdf/1707.05612.pdf)
 To make this search system retrieve good results, we have used the models trained in (https://github.com/fartashf/vsepp). A model has been trained
 that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
+
+We use one network per modality:
+VGG19 for images, pretrained on ImageNet.
+A Gated Recurrent Unit (GRU) for captions.
+Last layers of these networks are removed and they are used as feature extractors. A Fully Connected Layer is added on top of each one that actually maps the extracted features to the new embedding space.
+They are trained on Flickr30k dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples)
+
+**VSE Encoders in Jina for Cross Modal Search**
+
+Two encoders have been created for this example, namely VSEImageEncoder and VSETextEncoder
+Process followed is as below:
+Load the weights published by the research paper as result. Then instantiate their VSE encoder and extracts the branch interesting for the modality.
+
+A Dockerfile is provided for each encoder which takes care of all the dependencies and downloads all required files.
+
 
 **Table of Contents**
 
@@ -100,6 +128,13 @@ mv Images data/f8k/images
 mv captions.txt data/f8k/captions.txt
 ```
 
+make sure that your data folder has:
+
+```bash
+data/f8k/images/*jpg
+data/fyk/f8k/captions.txt
+```
+
 ## Build the docker images
 
 To abstract all dependencies, needed to make the model from (cite paper) work, docker images have been prepared to contain
@@ -132,6 +167,9 @@ it is recommendable to increase the number of shards and parallelization. The da
 with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
 how `data` is provided and adapt to your own data source.
 
+Jina normalizes the images need before entering them in the encoder.
+QueryLanguageDriver is used to redirect (filtering) documents based on modality.
+
 ### Query
 
 ```bash
@@ -144,6 +182,16 @@ The default port number will be `45678`
 Examples of captions in the dataset:
 
 `A man in an orange hat starring at something, A Boston terrier is running in the grass, A television with a picture of a girl on it`
+
+Note the cross for which cross modal stands.
+
+Internally, TextEncoder targets ImageVectorIndexer and ImageEncoder targets TextVectorIndexer.
+ImageVectorIndexer and TextVectorIndexer map to a common Embedding Space. (To Jina it means having common dimensionality).
+
+## Results
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_image2text.png "Cross Modal Search Results")
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_text2image.png "Cross Modal Search Results")
 
 ## Documentation 
 

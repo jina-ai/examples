@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Build an Audio Search](#build-an-audio-search)
+  - [Install Prerequisites](#install-prerequisites)
+  - [Download Data](#download-data)
+  - [Run](#run)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Build an Audio Search 
 
 A demo of neural search for audio data based on **Mel Frequency Cepstral Coefficients** 

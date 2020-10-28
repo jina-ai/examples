@@ -131,3 +131,4 @@ shell/jina-wizard.sh
 jina-profile*.json
 
 .vscode/
+*/workspace

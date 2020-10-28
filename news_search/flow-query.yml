@@ -1,0 +1,24 @@
+!Flow
+with:
+  read_only: true
+  port_expose: $JINA_PORT
+pods:
+  splittor:
+    uses: pods/craft-split.yml
+    parallel: $PARALLEL
+    read_only: true
+  encoder:
+    uses: pods/encode.yml
+    parallel: $PARALLEL
+    timeout_ready: 60000
+    read_only: true
+  chunk_indexer:
+    uses: pods/index-chunk.yml
+    shards: $SHARDS
+    separated_workspace: true
+    polling: all
+    reducing_uses: _merge_all
+  ranker:
+    uses: MinRanker
+  doc_indexer:
+    uses: pods/index-doc.yml
