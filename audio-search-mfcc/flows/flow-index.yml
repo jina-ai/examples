@@ -1,0 +1,28 @@
+!Flow
+metas:
+  prefetch: 10
+pods:
+  loader:
+    uses: pods/craft-load.yml
+    parallel: $PARALLEL
+    read_only: true
+  normalizer:
+    uses: pods/craft-normalize.yml
+    parallel: $PARALLEL
+    read_only: true
+  encoder:
+    uses: pods/encode.yml
+    parallel: $PARALLEL
+    timeout_ready: 1200000
+    read_only: true
+  chunk_indexer:
+    uses: pods/index-chunk.yml
+    shards: $SHARDS
+    separated_workspace: true
+  doc_indexer:
+    uses: pods/index-doc.yml
+    needs: loader
+  join_all:
+    uses: _merge
+    needs: [doc_indexer, chunk_indexer]
+    read_only: true

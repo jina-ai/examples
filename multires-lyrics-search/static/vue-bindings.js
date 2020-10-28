@@ -97,24 +97,25 @@ const vm = new Vue({
             vm.refreshAllCards();
         },
         refreshAllCards: function () {
-            vm.topkDocsDict = new Map(vm.topkDocs.map(i => [i.matchDoc.docId, {
-                'text': i.matchDoc.text,
+            vm.topkDocsDict = new Map(vm.topkDocs.map(i => [i.id, {
+                'text': i.text,
                 'hlchunk': [],
-                'renderHTML': i.matchDoc.text
+                'renderHTML': i.text
             }]));
             vm.queryChunks.forEach(function (item, i) {
                 if (!('isSelect' in item)) {
                     item['isSelect'] = true;
                 }
                 if (item['isSelect']) {
-                    item.topkResults.forEach(function (r) {
-                        if (vm.topkDocsDict.has(r.matchChunk.docId)) {
+                    item.matches.forEach(function (r) {
+                        if (vm.topkDocsDict.has(r.parentId)) {
                             if (r.score.value < vm.distThreshold) {
-                                vm.topkDocsDict.get(r.matchChunk.docId)['hlchunk'].push({
-                                    'range': r.matchChunk.location,
+                                // console.log(item)
+                                vm.topkDocsDict.get(r.parentId)['hlchunk'].push({
+                                    'range': r.location,
                                     'idx': i,
                                     'dist': r.score.value,
-                                    'range_str': r.matchChunk.location[0] + ',' + r.matchChunk.location[1]
+                                    'range_str': r.location[0] + ',' + r.location[1]
                                 });
                             }
                             if (r.score.value < vm.sliderOptions.min) {
@@ -124,7 +125,7 @@ const vm = new Vue({
                                 vm.sliderOptions.max = r.score.value.toFixed(2)
                             }
                         } else {
-                            console.error(r.matchChunk.docId);
+                            console.error(r.id);
                         }
                     });
                 }
@@ -169,7 +170,7 @@ const vm = new Vue({
                     console.log(errorThrown);
                 },
                 success: function (data) {
-                    vm.topkDocs = data.search.docs[0].topkResults;
+                    vm.topkDocs = data.search.docs[0].matches;
                     vm.queryChunks = data.search.docs[0].chunks;
                     vm.refreshAllCards();
                     console.log('Success');

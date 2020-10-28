@@ -69,7 +69,6 @@ class VSETextEncoder(BaseTorchEncoder):
             caption.append(self.vocab('<end>'))
             target = torch.Tensor(caption)
             captions.append(target)
-        captions.sort(key=lambda x: len(x), reverse=True)
         lengths = [len(x) for x in captions]
         targets = torch.zeros(len(captions), max(lengths)).long()
         for i, cap in enumerate(captions):

@@ -1,0 +1,27 @@
+!DataURIPbIndexer
+with:
+  index_filename: doc.gzip
+metas:
+  name: docIndexer
+  workspace: $TMP_WORKSPACE
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          level: doc
+    IndexRequest:
+      - !Buffer2URI {}
+      - !MIMEDriver
+        with:
+          target: mime_type
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks
+            - buffer
+      - !KVIndexDriver
+        with:
+          level: doc

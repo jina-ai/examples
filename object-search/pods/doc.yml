@@ -1,0 +1,29 @@
+!BinaryPbIndexer
+with:
+  index_filename: doc.gz
+metas:
+  name: docidx
+  workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !Buffer2URI
+        with:
+          base64: True
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks  
+            - buffer
+      - !KVIndexDriver {}
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          traversal_paths: ['m']
+      - !ExcludeQL
+        with:
+          traversal_paths: ['m']
+          fields:
+            - embedding
+    ControlRequest:
+      - !ControlReqDriver {}

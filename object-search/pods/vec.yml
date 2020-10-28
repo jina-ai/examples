@@ -1,0 +1,25 @@
+!NumpyIndexer
+with:
+  index_filename: vec.gz
+metas:
+  name: vecidx
+  workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          traversal_paths: ['c']
+    SearchRequest:
+      - !ExcludeQL
+        with:
+          traversal_paths: ['r']
+          fields:
+            - uri  
+            - buffer
+            - blob
+      - !VectorSearchDriver
+        with:
+          traversal_paths: ['r']
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -1,0 +1,18 @@
+!TorchObjectDetectionSegmenter  
+# Expects 1/255 scaled image. Takes care of imagenet normalisation. 
+# Returns images by multiplying with 255
+# https://github.com/pytorch/vision/blob/master/torchvision/models/detection/faster_rcnn.py
+# https://pytorch.org/docs/stable/torchvision/models.html#faster-r-cnn
+with:
+  channel_axis: -1
+  confidence_threshold: 0.6
+metas:
+  name: object_segmenter
+requests:
+  on:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          executor: object_segmenter
+    ControlRequest:
+      - !ControlReqDriver {}

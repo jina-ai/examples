@@ -5,18 +5,18 @@ import os
 import sys
 
 from jina.flow import Flow
-num_docs = os.environ.get('MAX_DOCS', 50000)
-image_src = 'data/*.png'
+num_docs = int(os.environ.get('JINA_MAX_DOCS', 50000))
+image_src = 'data/**/*.png'
 
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
     shards = 1
 
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['SHARDS'] = str(shards)
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['JINA_PARALLEL'] = str(parallel)
+    os.environ['JINA_SHARDS'] = str(shards)
+    os.environ['JINA_WORKSPACE'] = './workspace'
+    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 

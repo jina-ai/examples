@@ -5,12 +5,12 @@ pods:
     read_only: true
   encoder:
     uses: pods/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_idx:
     uses: pods/chunk.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
   doc_idx:
     uses: pods/doc.yml

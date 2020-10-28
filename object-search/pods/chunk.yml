@@ -1,0 +1,23 @@
+
+!BinaryPbIndexer
+with:
+  index_filename: chunk.gz
+metas:
+  name: chunkidx
+  workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !Blob2PngURI 
+        with:
+          height: 128
+          width: 128
+      - !KVIndexDriver
+        with:
+          traversal_paths: ['c']
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          traversal_paths: ['m']
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -2,7 +2,7 @@
 # Google's Big Transfer Model in (Poké-)Production using Jina
 
 <p align="center">
- 
+
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
@@ -17,7 +17,7 @@
 
 </p>
 
-In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results. 
+In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results.
 
 [![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
@@ -30,7 +30,7 @@ Features that come out of the box:
 - REST and gRPC gateway
 - Dashboard monitor
 
-To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install. 
+To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install.
 
 The code can of course run natively on your local machine, please [read the Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
@@ -38,10 +38,10 @@ The code can of course run natively on your local machine, please [read the Jina
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [TLDR;](#tldr)
-- [Index Image Data](#index-image-data)
-- [Query Top-K Visually Similar Images](#query-top-k-visually-similar-images)
-- [Build Docker Image](#build-docker-image)
+- [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
+- [Download and Extract Data](#download-and-extract-data)
+- [Run outside of Docker](#run-outside-of-docker)
+- [Run in Docker](#run-in-docker)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -50,7 +50,7 @@ The code can of course run natively on your local machine, please [read the Jina
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## TLDR;
+## TL;DR: Just Show Me the Pokemon!
 
 > *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
@@ -62,8 +62,41 @@ docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex 
 
 Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api).
 
+## Download and Extract Data
 
-## Index Image Data
+We're using Pokemon sprites from generations one through five, downloaded from [veekun.com](https://veekun.com/dex/downloads). To download and extract the PNGs, simply run:
+
+```sh
+sh ./get_data.sh
+```
+
+## Run outside of Docker
+
+### Indexing the Data
+
+`app.py` is already configured to index all the PNG files in the `data` folder, no matter how deep the subfolder:
+
+```python
+image_src = 'data/**/*.png'
+```
+
+Just run:
+
+```sh
+python app.py index
+```
+
+### Querying the Data
+
+```python
+python app.py search
+```
+
+You can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+
+## Run in Docker
+
+### Index Image Data
 
 We use BiT `R50x1` model in this example. You can change it in [`download.sh`](./download.sh) if you want
 
@@ -73,10 +106,10 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 
 #### Command Line Arguments Explained
 - `$(pwd)/data`: the directory where all your images are stored (jpg/png are supported). You can change it to any path you like, just make sure it's an absolute path
-- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts. 
+- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts.
 - `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
 
-### Behind the Scenes
+#### Behind the Scenes
 
 <table>
 <tr>
@@ -85,7 +118,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 <td> <a href="https://github.com/jina-ai/dashboard">Flow in Dashboard</a></td>
 </tr>
 <tr>
-<td> 
+<td>
 
 ```python
 from jina.flow import Flow
@@ -110,12 +143,12 @@ pods:
     read_only: true
   encoder:
     uses: pods/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_idx:
     uses: pods/chunk.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
   doc_idx:
     uses: pods/doc.yml
@@ -136,7 +169,7 @@ pods:
 </tr>
 </table>
 
-### Index Result
+#### See the Results
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
 
@@ -147,14 +180,14 @@ If it's running successfully, you should be able to see logs scrolling in the co
 
 Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_indexer-*` after indexing. This is because we set shards to 8.
 
-## Query Top-K Visually Similar Images
+### Query Top-K Visually Similar Images
 
-### Start the Jina server
+#### Start the Jina server
 ```bash
 docker run -v "$(pwd)/workspace:/workspace" -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch search
 ```
 
-#### Command args explained
+##### Command args explained
 - `$(pwd)/workspace` is where Jina previously stored our indexes and other artifacts. Now we need to load them.
 - `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port.
 
@@ -178,7 +211,7 @@ Let's test the results on Pokémon! This time we use our gRPC gateway (for bette
   <img src=".github/.README_images/f2dcf24c452f73b085c0108867f4ff33.gif?raw=true" alt="Jina banner" width="80%">
 </p>
 
-## Build Docker Image
+### Build the Docker Image Yourself
 
 After playing with it for a while, you may want to change the code and rebuild the image. Simply run:
 ```bash
@@ -209,7 +242,7 @@ Incremental indexing and entry-level deleting are yet not supported in this demo
 Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
 
 
-## Documentation 
+## Documentation
 
 <a href="https://docs.jina.ai/">
 <img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
@@ -229,7 +262,7 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 - [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
-- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 

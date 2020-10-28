@@ -1,5 +1,5 @@
+jina[hub,http]==0.5.5
 aiofiles
 aiohttp
-tensorflow >= 2.0
-jina[devel]==0.4.1
+tensorflow_cpu >= 2.0
 pillow

@@ -1,0 +1,8 @@
+jina[hub,http]==0.5.5
+numpy
+resampy
+tensorflow_cpu
+tf_slim
+six
+soundfile
+librosa

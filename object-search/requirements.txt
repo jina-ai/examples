@@ -1,0 +1,4 @@
+jina[http]
+torch
+torchvision
+Pillow

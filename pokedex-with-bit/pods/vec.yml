@@ -3,7 +3,7 @@ with:
   index_filename: vec.gz
 metas:
   name: vec_idx  # a customized name
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     ControlRequest:

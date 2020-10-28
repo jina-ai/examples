@@ -1,0 +1,21 @@
+!AudioReader
+with:
+  sample_rate: 22050
+metas:
+  name: reader
+requests:
+  on:
+    IndexRequest:
+      - !Buffer2URI {}
+      - !LogInfoDriver {}
+      - !CraftDriver
+        with:
+          executor: reader
+    SearchRequest:
+      - !Buffer2URI {}
+      - !LogInfoDriver {}
+      - !CraftDriver
+        with:
+          executor: reader
+    ControRequest:
+      - !ControlReqDriver {}

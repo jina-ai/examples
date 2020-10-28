@@ -1,16 +1,18 @@
 !Flow
 with:
-  logserver: true
+  prefetch: 2
+  logserver: false
 pods:
   chunk_seg:
     uses: craft/craft.yml
     parallel: $PARALLEL
     read_only: true
   tf_encode:
-    uses: encode/encode.yml
+    uses: $ENCODER_CONF
     needs: chunk_seg
     parallel: $PARALLEL
     read_only: true
+    timeout_ready: 600000
   chunk_idx:
     uses: index/chunk.yml
     shards: $SHARDS

@@ -12,9 +12,9 @@ image_src = 'data/**/*.png'
 parallel = 1
 shards = 8
 
-os.environ['PARALLEL'] = str(parallel)
-os.environ['SHARDS'] = str(shards)
-os.environ['WORKDIR'] = './workspace'
+os.environ['JINA_PARALLEL'] = str(parallel)
+os.environ['JINA_SHARDS'] = str(shards)
+os.environ['JINA_WORKSPACE'] = './workspace'
 os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 f = Flow.load_config('flow-query.yml')

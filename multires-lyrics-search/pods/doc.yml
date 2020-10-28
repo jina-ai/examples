@@ -3,4 +3,21 @@ with:
   index_filename: doc.gzip
 metas:
   name: doc_indexer  # a customized name
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !KVSearchDriver
+        with:
+          traversal_paths: ['m']
+    IndexRequest:
+      - !ExcludeQL
+        with:
+          fields:
+            - chunks  # we don't want to save nested structure
+            - buffer
+      - !KVIndexDriver
+        with:
+          traversal_paths: ['r']

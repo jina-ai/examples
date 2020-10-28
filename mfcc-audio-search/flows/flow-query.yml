@@ -1,0 +1,25 @@
+!Flow
+with:
+  read_only: true
+  port_expose: $JINA_PORT
+pods:
+  loader:
+    uses: pods/craft-load.yml
+    read_only: true
+  normalizer:
+    uses: pods/craft-normalize.yml
+    read_only: true
+  encoder:
+    uses: pods/encode.yml
+    timeout_ready: 1200000
+    read_only: true
+  chunk_indexer:
+    uses: pods/index-chunk.yml
+    separated_workspace: true
+    shards: $SHARDS
+    polling: all
+    uses_reducing: _merge_all
+  ranker:
+    uses: MinRanker
+  doc_indexer:
+    uses: pods/index-doc.yml

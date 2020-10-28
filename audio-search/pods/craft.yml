@@ -1,0 +1,15 @@
+!VggishCrafter
+with:
+  window_length_secs: 1.0
+
+metas:
+  py_modules: [vggish/vggish_params.py, vggish/mel_features.py, vggish/vggish_input.py,vggish/vggish_slim.py, vggish/vggish_postprocess.py, customized_executors.py]
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    IndexRequest:
+      - !SegmentDriver {}
+    SearchRequest:
+      - !URI2Buffer {}
+      - !SegmentDriver {}

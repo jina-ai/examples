@@ -1,0 +1,34 @@
+!CompoundExecutor
+components:
+  - !ImageReader
+    with:
+      from_bytes: True
+    metas:
+      name: img_read
+  - !ImageNormalizer  # This does 1/255
+    with:
+      target_size: [224, 224]
+      channel_axis: -1
+    metas:
+      name: img_norm
+metas:
+  name: compound_normalizer
+requests:
+  on:
+    IndexRequest:
+      - !CraftDriver
+        with:
+          executor: img_read
+      - !CraftDriver
+        with:
+          executor: img_norm
+    SearchRequest:
+      - !URI2Buffer {} 
+      - !CraftDriver
+        with:
+          executor: img_read
+      - !CraftDriver
+        with:
+          executor: img_norm
+    ControlRequest:
+      - !ControlReqDriver {}

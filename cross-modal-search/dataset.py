@@ -55,7 +55,7 @@ class Flickr8kDataset(data.Dataset):
         image_file_name, caption = self.lines[index*5].split(',', 1)
         with open(os.path.join(self.images_root, image_file_name), 'rb') as fp:
             image_buffer = fp.read()
-        return image_buffer, str(caption).lower()
+        return image_buffer, str(caption).lower().rstrip()
 
     def __len__(self):
         return int(len(self.lines)/5)
@@ -67,7 +67,7 @@ def collate_fn(data):
     return images, captions
 
 
-def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', shuffle=True,
+def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', shuffle=False,
                     num_workers=1, collate_fn=collate_fn):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
 
