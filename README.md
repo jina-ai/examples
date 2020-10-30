@@ -47,12 +47,14 @@
   </tr>
 </table>
 
+<div style="width: 100%">
+
 ### Start Here
 
 <table width=100% style='width: 100%'>
 <tr>
-<th width="90%" style='width: 90%'>Tutorials</th>
-<th width="10%" style='width: 10%'>Level</th>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
 </tr>
 
 <tr>
@@ -66,7 +68,11 @@ Use cookiecutter to kick off your first Jina app. Do a simple text search throug
 
 ### Search Text
 
-<table>
+<table width=100% style='width: 100%'>
+<tr>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
+</tr>
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a NLP Semantic Search System</a></h4>
@@ -81,8 +87,13 @@ Learn how to build a script search system for South Park and practice your knowl
 
 ### Search Images
 
-<table>
 
+
+<table width=100% style='width: 100%'>
+<tr>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
+</tr>
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/flower-search">Build a Flower Image Search System</a></h4>
@@ -103,7 +114,11 @@ Learn to how to use SOTA visual representation for searching Pokémon!
 
 ### Improve Performance and Scalability
 
-<table>
+<table width=100% style='width: 100%'>
+<tr>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
+</tr>
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Video Semantic Search in Scale with Prefetching and Sharding</a></h4>
@@ -139,8 +154,12 @@ Learn how Jina solves complex dependencies easily with Docker container
 
 ### Extend and Share Jina
 
-<table>
 
+<table width=100% style='width: 100%'>
+<tr>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
+</tr>
 <tr>
 <td>
 <h4><a href="https://docs.jina.ai/chapters/extend/executor.html">Extend Jina by Implementing Your Own Executor</a></h4>
@@ -161,7 +180,11 @@ Learn to use Jina Hub and share your extensions with engineers around the globe
 
 ### Misc
 
-<table>
+<table width=100% style='width: 100%'>
+<tr>
+<th width="90%" style="width: 90%">Tutorials</th>
+<th width="10%" style="width: 10%">Level</th>
+</tr>
 
 <tr>
 <td>
@@ -173,6 +196,7 @@ Learn how to use Jina to extract feature vector using any deep learning represen
 
 </table>
 
+</div>
 
 ## Community
 
