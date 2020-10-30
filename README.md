@@ -47,41 +47,22 @@
   </tr>
 </table>
 
+### Start Here
+
 <table>
 <tr><th width="90%">Tutorials</th><th width="10%">Level</th></tr><tr>
-
 <tr>
-<td>
-<h4><a href="https://docs.jina.ai/chapters/flow/index.html">Use Flow API to Compose Your Search Workflow</a></h4>
-Learn how to orchestrate Pods to work together: sequentially and in parallel; locally and remotely
-</td>
 <td><h3>🐣</h3></td>
-</tr>
-
-<tr>
 <td>
-<h4><a href="https://docs.jina.ai/chapters/io/index.html">Input and Output Functions in Jina</a></h4>
-Learn how the input and output functions work in Jina
+<h4><a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a></h4>
+Using cookiecutter for bootstrap a jina app
 </td>
-<td><h3>🐣</h3></td>
 </tr>
+</table>
 
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/dashboard">Use Dashboard to Get Insight of Jina Workflow</a></h4>
-Learn to use dashboard to monitor and get insight of a running workflow
-</td>
-<td><h3>🐣</h3></td>
-</tr>
+### Search Text
 
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/x-as-service">From BERT-as-Service to X-as-Service</a></h4>
-Learn how to use Jina to extract feature vector using any deep learning representation
-</td>
-<td><h3>🐣</h3></td>
-</tr>
-
+<table>
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a NLP Semantic Search System</a></h4>
@@ -89,6 +70,14 @@ Learn how to build a script search system for South Park and practice your knowl
 </td>
 <td><h3>🐣</h3></td>
 </tr>
+</table>
+
+<table>
+<tr><th width="90%">Tutorials</th><th width="10%">Level</th></tr><tr>
+
+### Search Images
+
+<table>
 
 <tr>
 <td>
@@ -98,6 +87,19 @@ Learn how to build an image search system and define you own executors and run t
 <td><h3>🐣</h3></td>
 </tr>
 
+<tr>
+<td>
+<h4><a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
+Learn to how to use SOTA visual representation for searching Pokémon!
+</td>
+<td><h3>🚀</h3></td>
+</tr>
+
+</table>
+
+### Improve Performance and Scalability
+
+<table>
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Video Semantic Search in Scale with Prefetching and Sharding</a></h4>
@@ -122,20 +124,23 @@ Learn to run Jina on remote instances and distribute your workflow
 <td><h3>🕊</h3></td>
 </tr>
 
+<tr>
+<td>
+<h4><a href="https://docs.jina.ai/chapters/hub/index.html">Run Jina Pod via Docker Container</a></h4>
+Learn how Jina solves complex dependencies easily with Docker container
+</td>
+<td><h3>🕊</h3></td>
+</tr>
+</table>
+
+### Extend and Share Jina
+
+<table>
 
 <tr>
 <td>
 <h4><a href="https://docs.jina.ai/chapters/extend/executor.html">Extend Jina by Implementing Your Own Executor</a></h4>
 Learn how to implement your own ideas into Jina's plugin
-</td>
-<td><h3>🕊</h3></td>
-</tr>
-
-
-<tr>
-<td>
-<h4><a href="https://docs.jina.ai/chapters/hub/index.html">Run Jina Pod via Docker Container</a></h4>
-Learn how Jina solves complex dependencies easily with Docker container
 </td>
 <td><h3>🕊</h3></td>
 </tr>
@@ -148,17 +153,21 @@ Learn to use Jina Hub and share your extensions with engineers around the globe
 <td><h3>🚀</h3></td>
 </tr>
 
+</table>
+
+### Misc
+
+<table>
+
 <tr>
 <td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
-Learn to how to use SOTA visual representation for searching Pokémon!
+<h4><a href="https://github.com/jina-ai/examples/tree/master/x-as-service">From BERT-as-Service to X-as-Service</a></h4>
+Learn how to use Jina to extract feature vector using any deep learning representation
 </td>
-<td><h3>🚀</h3></td>
+<td><h3>🐣</h3></td>
 </tr>
 
-
 </table>
-  
 
 
 ## Community
