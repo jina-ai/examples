@@ -1,0 +1,13 @@
+manifest_version: 1
+name: TirgImageEncoder
+kind: encoder
+type: pod
+description: '`TirgImageEncoder` encodes data from a ndarray, potentially B
+  x (Channel x Height x Width) into a ndarray of `B x D`.'
+author: Jina AI Dev-Team (dev-team@jina.ai)
+url: https://jina.ai
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/jina-hub
+version: 0.0.1
+license: apache-2.0
+keywords: [CNN, Computer Vision, TIRG]

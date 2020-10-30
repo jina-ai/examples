@@ -1,0 +1,10 @@
+!TirgImageEncoder
+with:
+  {}
+metas:
+  py_modules:
+    # - you can put more dependencies here
+    - __init__.py
+    - torch_functions.py
+    - text_model.py
+    - img_text_composition_models.py

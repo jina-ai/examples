@@ -135,3 +135,6 @@ jina-profile*.json
 workspace/
 data-all/
 model/
+*.pt
+*.pth
+*.pkl

@@ -3,10 +3,15 @@ with:
   logserver: false
 pods:
   read:
-    uses: pods/reader.yml
+    uses: ImageReader
+    read_only: true
+  normalize:
+    uses: pods/normalizer.yml
     read_only: true
   encode:
-    uses: pods/encode.yml
+    uses: jinaai/hub.executors.encoders.image.tirg
+    # uses_internal: pods/encode-tirg.yml
+    # uses: pods/encode-tirg.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
