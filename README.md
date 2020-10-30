@@ -49,14 +49,18 @@
 
 ### Start Here
 
-<table>
-<tr><th width="90%">Tutorials</th><th width="10%">Level</th></tr><tr>
+<table width=100% style='width: 100%'>
 <tr>
-<td><h3>🐣</h3></td>
-<td>
+<th width="90%" style='width: 90%'>Tutorials</th>
+<th width="10%" style='width: 10%'>Level</th>
+</tr>
+
+<tr>
+<td width="90%">
 <h4><a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a></h4>
-Using cookiecutter for bootstrap a jina app
+Use cookiecutter to kick off your first Jina app. Do a simple text search through Star Trek scripts
 </td>
+<td><h3>🐣</h3></td>
 </tr>
 </table>
 
