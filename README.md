@@ -82,8 +82,6 @@ Learn how to build a script search system for South Park and practice your knowl
 </tr>
 </table>
 
-<table>
-<tr><th width="90%">Tutorials</th><th width="10%">Level</th></tr><tr>
 
 ### Search Images
 
