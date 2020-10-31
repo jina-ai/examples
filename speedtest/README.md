@@ -1,1 +1,1 @@
-Python script to measure speed of internet connection.
+Python streamlit app to measure speed of internet connection.
