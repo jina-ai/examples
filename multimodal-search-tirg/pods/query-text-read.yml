@@ -1,0 +1,7 @@
+!FilterQL
+requests:
+  on:
+    SearchRequest:
+      with:
+        lookups: {'modality': 'text'}
+        traversal_paths: ['c']

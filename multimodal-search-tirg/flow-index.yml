@@ -6,7 +6,7 @@ pods:
     uses: ImageReader
     read_only: true
   normalize:
-    uses: pods/normalizer.yml
+    uses: pods/normalize.yml
     read_only: true
   encode:
     uses: jinaai/hub.executors.encoders.image.tirg
@@ -22,7 +22,7 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-  doc_idx:
+  image_kv:
     uses: pods/doc.yml
     needs: [gateway]
     shards: $SHARDS
@@ -32,5 +32,5 @@ pods:
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   join_all:
     uses: _merge
-    needs: [doc_idx, vec_idx]
+    needs: [image_kv, vec_idx]
     read_only: true

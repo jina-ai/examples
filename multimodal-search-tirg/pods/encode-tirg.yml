@@ -1,8 +1,0 @@
-!TirgImageEncoder
-with:
-  model_path: checkpoint_fashion200k.pth
-  texts_path: texts.pkl
-requests:
-  on:
-    IndexRequest:
-      - !EncodeDriver {}

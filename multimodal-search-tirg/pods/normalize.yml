@@ -12,5 +12,10 @@ requests:
       - !CraftDriver
         with:
           executor: img_norm
+    SearchRequest:
+      - !CraftDriver
+        with:
+          traversal_paths: ['c']
+          executor: img_norm
     ControlRequest:
       - !ControlReqDriver {}

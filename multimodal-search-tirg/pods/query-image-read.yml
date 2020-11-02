@@ -1,0 +1,21 @@
+!ImageReader
+with:
+  channel_axis: -1
+  from_bytes: true
+requests:
+  on:
+    SearchRequest:
+      - !FilterQL
+        with:
+          traversal_paths: ['c']
+          lookups: {'modality': 'image'}
+      - !URI2Buffer {}
+      - !ExcludeQL
+        with:
+          traversal_paths: ['c']
+          fields:
+            - chunks
+            - uri
+      - !CraftDriver {}
+    ControRequest:
+      - !ControlReqDriver {}

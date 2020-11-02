@@ -1,0 +1,5 @@
+!DummyTirgImageEncoder
+requests:
+  on:
+    IndexRequest:
+      - !EncodeDriver {}
