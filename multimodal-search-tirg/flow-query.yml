@@ -6,14 +6,14 @@ with:
   port_expose: $JINA_PORT
 pods:
   image_read:
-    uses: pods/query-image-read.yml #filterql image
+    uses: pods/image-read.yml
     read_only: true
     parallel: $PARALLEL
   normalize:
     uses: pods/normalize.yml
     read_only: true
   text_read:
-    uses: pods/query-text-read.yml #filterql text
+    uses: pods/query-text-filter.yml #filterql text modality
     read_only: true
     needs: [gateway]
   encode:
@@ -23,19 +23,7 @@ pods:
     needs: [normalize, text_read]
   vec_idx:
     uses: pods/vec.yml
-    # shards: $SHARDS
-    # separated_workspace: true
-    # polling: all
-    # uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   doc_idx:
     uses: pods/doc.yml
-    # shards: $SHARDS
-    # separated_workspace: true
-    # polling: all
-    # uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-  # join_all:
-  #   uses: _merge
-  #   needs: [doc_idx]
-  #   read_only: true

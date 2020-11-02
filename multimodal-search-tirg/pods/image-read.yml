@@ -1,9 +1,10 @@
 !ImageReader
 with:
   channel_axis: -1
-  from_bytes: true
 requests:
   on:
+    IndexRequest:
+      - !CraftDriver {}
     SearchRequest:
       - !FilterQL
         with:

@@ -3,7 +3,7 @@ with:
   logserver: false
 pods:
   read:
-    uses: ImageReader
+    uses: pods/image-read.yml
     read_only: true
   normalize:
     uses: pods/normalize.yml
