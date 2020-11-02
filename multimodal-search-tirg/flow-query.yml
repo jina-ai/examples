@@ -5,22 +5,24 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  image_read:
+  read_pass_image:
     uses: pods/image-read.yml
     read_only: true
     parallel: $PARALLEL
   normalize:
     uses: pods/normalize.yml
     read_only: true
-  text_read:
+  pass_text:
     uses: pods/query-text-filter.yml #filterql text modality
     read_only: true
     needs: [gateway]
   encode:
-    uses: jinaai/hub.executors.encoders.multimodal.tirg
+    # uses: jinaai/hub.executors.encoders.multimodal.tirg
+    uses: pods/encode-tirg-image.yml
     parallel: $PARALLEL
     timeout_ready: 600000
-    needs: [normalize, text_read]
+    uses_before: _merge_all
+    needs: [normalize, pass_text]
   vec_idx:
     uses: pods/vec.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data

@@ -17,6 +17,8 @@ requests:
           fields:
             - chunks
             - uri
-      - !CraftDriver {}
+      - !CraftDriver
+        with:
+          traversal_paths: ['c']
     ControRequest:
       - !ControlReqDriver {}

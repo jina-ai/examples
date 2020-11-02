@@ -9,9 +9,9 @@ pods:
     uses: pods/normalize.yml
     read_only: true
   encode:
-    uses: jinaai/hub.executors.encoders.image.tirg
+    # uses: jinaai/hub.executors.encoders.image.tirg
     # uses_internal: pods/encode-tirg.yml
-    # uses: pods/encode-tirg.yml
+    uses: pods/encode-tirg-image.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -20,7 +20,6 @@ pods:
     shards: $SHARDS
     separated_workspace: true
     polling: all
-    uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   image_kv:
     uses: pods/doc.yml
@@ -28,7 +27,6 @@ pods:
     shards: $SHARDS
     separated_workspace: true
     polling: all
-    uses_reducing: _merge_all
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   join_all:
     uses: _merge

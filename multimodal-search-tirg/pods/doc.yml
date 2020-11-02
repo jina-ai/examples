@@ -20,10 +20,5 @@ requests:
       - !KVSearchDriver
         with:
           traversal_paths: ['m']
-      - !ExcludeQL
-        with:
-          traversal_paths: ['m']
-          fields:
-            - embedding
     ControlRequest:
       - !ControlReqDriver {}
