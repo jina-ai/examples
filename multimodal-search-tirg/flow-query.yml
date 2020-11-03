@@ -2,10 +2,10 @@
 with:
   prefetch: 10
   read_only: true  # better add this in the query time
-  rest_api: true
+  # rest_api: true
   port_expose: $JINA_PORT
 pods:
-  read_pass_image:
+  image_read:
     uses: pods/image-read.yml
     read_only: true
     parallel: $PARALLEL
@@ -18,7 +18,7 @@ pods:
     needs: [gateway]
   encode:
     # uses: jinaai/hub.executors.encoders.multimodal.tirg
-    uses: pods/encode-tirg-image.yml
+    uses: pods/encode-tirg-multimodal.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     uses_before: _merge_all

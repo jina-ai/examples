@@ -10,7 +10,7 @@ requests:
         with:
           traversal_paths: ['c']
           lookups: {'modality': 'image'}
-      - !URI2Buffer {}
+      # - !URI2Buffer {}
       - !ExcludeQL
         with:
           traversal_paths: ['c']
