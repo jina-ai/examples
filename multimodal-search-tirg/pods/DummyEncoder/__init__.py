@@ -9,7 +9,7 @@ from jina.executors.encoders import BaseEncoder
 
 class DummyEncoder(BaseEncoder):
 
-    def __init__(self, emb_dim=1, *args, **kwargs):
+    def __init__(self, emb_dim=2, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.emb_dim = emb_dim
 

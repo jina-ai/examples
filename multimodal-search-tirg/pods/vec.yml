@@ -18,6 +18,7 @@ requests:
             - uri  
             - buffer
             - blob
+            - chunks
       - !VectorSearchDriver
         with:
           traversal_paths: ['r']
