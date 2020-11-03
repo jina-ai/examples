@@ -4,12 +4,12 @@ services:
     image: south
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: tests/distributed/Dockerfile
     ports:
       - "8000:8000"
       - "45678:45678"
     env_file:
-      - .env
+      - tests/distributed/.env
     links:
       - embed-pod:${JINA_ENCODER_HOST}
     expose:
@@ -22,4 +22,4 @@ services:
     environment:
       - JINAD_CONTEXT=pod
     env_file:
-      - .env
+      - tests/distributed/.env

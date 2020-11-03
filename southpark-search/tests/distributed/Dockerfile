@@ -7,11 +7,11 @@ RUN apt-get update && \
                                                curl
 
 COPY requirements.txt /
-COPY jinad/requirements.txt /jinad_requirements.txt
 
 RUN python -m pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r jinad_requirements.txt
+    git clone https://github.com/jina-ai/jinad.git && \
+    pip install --no-cache-dir -r jinad/requirements.txt
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
 
