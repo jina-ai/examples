@@ -7,7 +7,6 @@ import numpy as np
 
 from jina.executors.decorators import batching, as_ndarray
 from jina.executors.encoders.multimodal import BaseMultiModalEncoder
-from jina.proto import jina_pb2
 
 class DummyMultimodalEncoder(BaseMultiModalEncoder):
 
@@ -20,12 +19,13 @@ class DummyMultimodalEncoder(BaseMultiModalEncoder):
 
     @batching
     @as_ndarray
-    def encode(self, data: 'np.ndarray', *args, **kwargs) -> 'np.ndarray':
+    def encode(self, *data: 'np.ndarray', **kwargs) -> 'np.ndarray':
+        print(f' length data {len(data)}')
         a = data[self.positional_modality.index('image')]
         self.logger.info(f'>>> {type(a)}')
         b = data[self.positional_modality.index('text')]
         self.logger.info(f'>>> {b}')
-        assert isinstance(data[self.positional_modality.index('image')], jina_pb2.NdArray)
+        assert isinstance(data[self.positional_modality.index('image')][0], np.ndarray)
         assert isinstance(data[self.positional_modality.index('text')][0], str)
         _feature = np.random.rand(data[0].shape[0], self.emb_dim)
         return _feature
