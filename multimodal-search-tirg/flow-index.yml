@@ -10,7 +10,6 @@ pods:
     read_only: true
   encode:
     # uses: jinaai/hub.executors.encoders.image.tirg
-    # uses_internal: pods/encode-tirg.yml
     uses: pods/encode-tirg-image.yml
     parallel: $PARALLEL
     timeout_ready: 600000

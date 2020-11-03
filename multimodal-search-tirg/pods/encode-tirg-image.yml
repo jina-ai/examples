@@ -1,6 +1,6 @@
 !DummyEncoder
 metas:
-  py_modules: DummyEncoder/__init__.py
+  py_modules: dummy_image_encoder.py
 requests:
   on:
     IndexRequest:

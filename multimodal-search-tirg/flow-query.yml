@@ -18,7 +18,7 @@ pods:
     needs: [gateway]
   encode:
     # uses: jinaai/hub.executors.encoders.multimodal.tirg
-    uses: pods/encode-tirg-image.yml
+    uses: pods/encode-tirg-multimodal.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     uses_before: _merge_all
