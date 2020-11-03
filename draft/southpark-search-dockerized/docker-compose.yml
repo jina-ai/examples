@@ -8,8 +8,6 @@ services:
     ports:
       - "8000:8000"
       - "45678:45678"
-    depends_on:
-      - embed-pod
     env_file:
       - .env
     links:
