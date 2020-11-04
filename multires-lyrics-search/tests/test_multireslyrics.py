@@ -6,10 +6,9 @@ import itertools
 import json
 import os
 import sys
-import subprocess
 
-from jina.flow import Flow
 import pytest
+from jina.flow import Flow
 from jina.proto import jina_pb2
 
 TOP_K = 3
@@ -76,76 +75,7 @@ def get_flow():
 
 @pytest.fixture
 def queries_and_expected_replies():
-    return [
-        (
-            'Take me now, baby, here as I am. Hold me close, and try and understand. Desire is hunger is',
-            [
-                {
-                    'chunk': 'Take me now, baby, here as I am.',
-                    'chunk_matches': [
-                        'Take me now, baby, here as I am.',
-                        'so take me now, take me now, take me now.',
-                        'Let me be let me close my eyes.',
-                    ],
-                },
-                {
-                    'chunk': 'Hold me close, and try and understand.',
-                    'chunk_matches': [
-                        'Hold me close, and try and understand.',
-                        'Take me along to the places.',
-                        'See the signs and know their meaning.',
-                    ],
-                },
-                {
-                    'chunk': 'Desire is hunger is',
-                    'chunk_matches': [
-                        'Desire is hunger is the fire I breathe.',
-                        'and fear in life.',
-                        'and fear in life.',
-                    ],
-                },
-            ],
-        ),
-        (
-            'I could feel at the time',
-            [
-                {
-                    'chunk': 'I could feel at the time',
-                    'chunk_matches': [
-                        'I could feel at the time.',
-                        'A lie to.',
-                        'O, never mind it.',
-                    ],
-                }
-            ],
-        ),
-        (
-            'I promise.',
-            [
-                {
-                    'chunk': 'I promise.',
-                    'chunk_matches': [
-                        'Never before and never since, I promise.',
-                        'truth for life.',
-                        "I'll discuss this in the morning,.",
-                    ],
-                }
-            ],
-        ),
-        (
-            'Trudging slowly',
-            [
-                {
-                    'chunk': 'Trudging slowly',
-                    'chunk_matches': [
-                        'Trudging back over pebbles and sand.',
-                        'Trudging slowly over wet sand.',
-                        'With desire to be part of the miracles.',
-                    ],
-                }
-            ],
-        ),
-    ]
+    return json.load(open('tests/query_results.json', 'r'))
 
 
 def test_query(tmpdir, queries_and_expected_replies):
@@ -164,9 +94,16 @@ def test_query(tmpdir, queries_and_expected_replies):
                 for match in chunk['matches']:
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
-            assert exp_result == query_chunk_results
+            assert query_chunk_results == exp_result["chunk-level"]
+
+            # match-level comparison
+            matches = output['search']['docs'][0]['matches']
+            match_result = []
+            for match in matches:
+                match_text = match['text']
+                match_result.append(match_text)
+            assert match_result == exp_result["match-level"]
 
             # check the number of docs returned
-            matches = output['search']['docs'][0]['matches']
             # note. the TOP K reflects nr of matches per chunk
             assert len(matches) <= TOP_K * len(chunks)
