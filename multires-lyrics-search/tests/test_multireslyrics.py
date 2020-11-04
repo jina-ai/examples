@@ -1,5 +1,5 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
-__license__ = "Apache-2.0"
+__copyright__ = 'Copyright (c) 2020 Jina AI Limited. All rights reserved.'
+__license__ = 'Apache-2.0'
 
 import csv
 import itertools
@@ -12,38 +12,38 @@ from jina.flow import Flow
 import pytest
 from jina.proto import jina_pb2
 
-NUM_DOCS = 100
 TOP_K = 3
-INDEX_FLOW_FILE_PATH = "flows/index.yml"
-QUERY_FLOW_FILE_PATH = "flows/query.yml"
+INDEX_FLOW_FILE_PATH = 'flows/index.yml'
+QUERY_FLOW_FILE_PATH = 'flows/query.yml'
+PORT = 45678
 
 
 # TODO restructure project so we don't duplicate input_fn
 def input_fn():
-    lyrics_file = os.environ.get("JINA_DATA_FILE")
-    with open(lyrics_file, newline="", encoding="utf-8") as f:
+    lyrics_file = os.environ.get('JINA_DATA_FILE')
+    with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
-        for row in itertools.islice(reader, int(os.environ.get("JINA_MAX_DOCS"))):
-            if row[-1] == "ENGLISH":
+        for row in itertools.islice(reader, int(os.environ.get('JINA_MAX_DOCS'))):
+            if row[-1] == 'ENGLISH':
                 d = jina_pb2.Document()
-                d.tags["ALink"] = row[0]
-                d.tags["SName"] = row[1]
-                d.tags["SLink"] = row[2]
+                d.tags['ALink'] = row[0]
+                d.tags['SName'] = row[1]
+                d.tags['SLink'] = row[2]
                 d.text = row[3]
                 yield d
 
 
 def config(tmpdir):
-    parallel = 2 if sys.argv[1] == "index" else 1
+    parallel = 2 if sys.argv[1] == 'index' else 1
 
-    os.environ.setdefault("JINA_MAX_DOCS", "100")
-    os.environ.setdefault("JINA_PARALLEL", str(parallel))
-    os.environ.setdefault("JINA_SHARDS", str(1))
-    os.environ.setdefault("JINA_WORKSPACE", str(tmpdir))
-    os.environ.setdefault("JINA_DATA_FILE", "tests/data-index.csv")
-    os.environ.setdefault("JINA_PORT", str(45678))
+    os.environ.setdefault('JINA_MAX_DOCS', '100')
+    os.environ.setdefault('JINA_PARALLEL', str(parallel))
+    os.environ.setdefault('JINA_SHARDS', str(1))
+    os.environ.setdefault('JINA_WORKSPACE', str(tmpdir))
+    os.environ.setdefault('JINA_DATA_FILE', 'tests/data-index.csv')
+    os.environ.setdefault('JINA_PORT', str(PORT))
 
-    os.makedirs(os.environ["JINA_WORKSPACE"], exist_ok=True)
+    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
     return
 
 
@@ -51,12 +51,12 @@ def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index(input_fn, batch_size=8)
+        f.index(input_fn)
 
 
 def call_api(url, payload=None, headers=None):
     if headers is None:
-        headers = {"Content-Type": "application/json; charset=utf-8"}
+        headers = {'Content-Type': 'application/json; charset=utf-8'}
     import requests
 
     return requests.post(url, data=json.dumps(payload), headers=headers).json()
@@ -64,7 +64,7 @@ def call_api(url, payload=None, headers=None):
 
 def get_results(query, top_k=TOP_K):
     return call_api(
-        "http://0.0.0.0:45678/api/search", payload={"top_k": top_k, "data": [query]}
+        f'http://0.0.0.0:{PORT}/api/search', payload={'top_k': top_k, 'data': [query]}
     )
 
 
@@ -78,7 +78,7 @@ def get_flow():
 def queries_and_expected_replies():
     return [
         (
-            "Trudging slowly\n",
+            'Trudging slowly\n',
             [
                 "Trudging slowly over wet sand. Back to the bench where your clothes were "
                 "stolen. This is a coastal town. That they forgot to close down. Armagedon - "
@@ -104,7 +104,7 @@ def queries_and_expected_replies():
             ],
         ),
         (
-            "I could feel at the time\n",
+            'I could feel at the time\n',
             [
                 "I could feel at the time. There was no way of knowing. Fallen leaves in the "
                 "night. Who can say where they're blowing. As free as the wind. Hopefully "
@@ -157,7 +157,7 @@ def queries_and_expected_replies():
             ],
         ),
         (
-            "I promise.\n",
+            'I promise.\n',
             [
                 "These are. These are days you'll remember. Never before and never since, I "
                 "promise. Will the whole world be warm as this. And as you feel it,. You'll "
@@ -213,12 +213,11 @@ def test_query(tmpdir, queries_and_expected_replies):
     with f:
         for query, exp_result in queries_and_expected_replies:
             output = get_results(query)
-            matches = output["search"]["docs"][0]["matches"]
-            print(f"matches = {matches}")
+            matches = output['search']['docs'][0]['matches']
             assert len(matches) <= TOP_K  # check the number of docs returned
             result = []
             for match in matches:
                 # the lyrics text in the .csv is the fourth column
-                match_text = match["text"]
+                match_text = match['text']
                 result.append(match_text)
             assert result == exp_result
