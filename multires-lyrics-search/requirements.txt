@@ -1,4 +1,5 @@
 jina[hub,http]==0.6.4
 torch
 transformers
-
+requests~=2.24
+pytest
