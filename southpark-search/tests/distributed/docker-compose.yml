@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  encoder-pod:
+    image: south
+    build:
+      context: .
+      dockerfile: tests/distributed/Dockerfile
+    expose:
+      - 8000
+      - 10000-60000
+    environment:
+      - JINAD_CONTEXT=pod
+    env_file:
+      - tests/distributed/.env
+    links:
+      - index-pod:${JINA_INDEX_HOST}
+  index-pod:
+    image: south
+    expose:
+      - 8000
+      - 10000-60000
+    environment:
+      - JINAD_CONTEXT=pod
+    env_file:
+      - tests/distributed/.env
+  flow:
+    image: south
+    ports:
+      - "8000:8000"
+      - "45678:45678"
+    env_file:
+      - tests/distributed/.env
+    links:
+      - encoder-pod:${JINA_ENCODER_HOST}
+      - index-pod:${JINA_INDEX_HOST}
+    expose:
+      - 10000-60000
