@@ -194,7 +194,7 @@ Use prefetching and sharding to improve the performance of your index and query 
 
 </table>
 
-### Cross and Multi Modal Search
+### Cross Modality Search
 
 <table width=100% style='width: 100%'>
 <tr>
