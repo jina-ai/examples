@@ -136,13 +136,16 @@ Use SOTA visual representation for searching Pokémon!
 </tr>
 
 <tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/mnist-with-mindspore">Search MNIST with Mindspore</a></h4>
-Search handwriting examples using Mindspore
-</td>
-<td><h3>🚀</h3></td>
+  <td>
+    <h4>
+      <a href="https://github.com/jina-ai/examples/tree/master/object-search">
+        Object detection with fasterrcnn and MobileNetV2
+      </a>
+    </h4>
+    Detect, index and query similar objects
+  </td>
+  <td><h3>🚀</h3></td>
 </tr>
-
 
 </table>
 
@@ -210,9 +213,10 @@ Use one modality (text) to search another (images)
 
 </table>
 
-### Extract Features and Vectors
+### Miscellaneous
 
 <table width=100% style='width: 100%'>
+
 <tr>
 <th width="90%" style="width: 90%">Tutorials</th>
 <th width="10%" style="width: 10%">Level</th>
@@ -220,7 +224,7 @@ Use one modality (text) to search another (images)
 
 <tr>
 <td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/fashion-example-query">Search by Category Using Query Language</a></h4>
+<h4><a href="https://github.com/jina-ai/examples/tree/master/fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
 Create separate indexes and queries for different clothing in Fashion-MNIST
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </td>
@@ -228,16 +232,13 @@ Create separate indexes and queries for different clothing in Fashion-MNIST
 </tr>
 
 <tr>
-  <td>
-    <h4>
-      <a href="https://github.com/jina-ai/examples/tree/master/object-search">
-        Object detection with fasterrcnn and MobileNetV2
-      </a>
-    </h4>
-    Detect, index and query similar objects
-  </td>
-  <td><h3>🚀</h3></td>
+<td>
+<h4><a href="https://github.com/jina-ai/examples/tree/master/mnist-with-mindspore">Search MNIST with Mindspore</a></h4>
+Search handwriting examples using Mindspore
+</td>
+<td><h3>🚀</h3></td>
 </tr>
+
 
 </table>
 
