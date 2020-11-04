@@ -78,129 +78,71 @@ def get_flow():
 def queries_and_expected_replies():
     return [
         (
-            'Trudging slowly\n',
+            'Take me now, baby, here as I am. Hold me close, and try and understand. Desire is hunger is',
             [
-                "Trudging slowly over wet sand. Back to the bench where your clothes were "
-                "stolen. This is a coastal town. That they forgot to close down. Armagedon - "
-                "come armagedon come armagedon come. Everyday is like sunday. Everyday is "
-                "silent and grey. Hide on a promanade. Etch on a post card:. How I dearly "
-                "wish I was not here. In the seaside town. That they forgot to bomb. Come, "
-                "come nuclear bomb!. Everyday is like sunday. Everyday is silent and grey. "
-                "Trudging back over pebbles and sand. And a strange dust lands on your hands. "
-                "(and on your face). Everyday is like sunday. Win yourself a cheap tray. "
-                "Share some grease tea with me. Everyday is silent and grey",
-                "These are. These are days you'll remember. Never before and never since, I "
-                "promise. Will the whole world be warm as this. And as you feel it,. You'll "
-                "know it's true. That you - you are blessed and lucky. It's true - that you. "
-                "Are touched by something. That will grow and bloom in you. These are days "
-                "you'll remember. When May is rushing over you. With desire to be part of the "
-                "miracles. You see in every hour. You'll know it's true. That you are blessed "
-                "and lucky. It's true that you are touched. By something that will grow and "
-                "bloom in you. These are days. These are the days you might fill. With "
-                "laughter until you break. These days you might feel. A shaft of light. Make "
-                "its way across your face. And when you do. You'll know how it was meant to "
-                "be. See the signs and know their meaning. You'll know how it was meant to "
-                "be. Hear the signs and know they're speaking. To you, to you",
+                {
+                    'chunk': 'Take me now, baby, here as I am.',
+                    'chunk_matches': [
+                        'Take me now, baby, here as I am.',
+                        'so take me now, take me now, take me now.',
+                        'Let me be let me close my eyes.',
+                    ],
+                },
+                {
+                    'chunk': 'Hold me close, and try and understand.',
+                    'chunk_matches': [
+                        'Hold me close, and try and understand.',
+                        'Take me along to the places.',
+                        'See the signs and know their meaning.',
+                    ],
+                },
+                {
+                    'chunk': 'Desire is hunger is',
+                    'chunk_matches': [
+                        'Desire is hunger is the fire I breathe.',
+                        'and fear in life.',
+                        'and fear in life.',
+                    ],
+                },
             ],
         ),
         (
-            'I could feel at the time\n',
+            'I could feel at the time',
             [
-                "I could feel at the time. There was no way of knowing. Fallen leaves in the "
-                "night. Who can say where they're blowing. As free as the wind. Hopefully "
-                "learning. Why the sea on the tide. Has no way of turning. More than this. "
-                "You know there's nothing. More than this. Tell me one thing. More than this. "
-                "You know there's nothing. It was fun for a while. There was no way of "
-                "knowing. Like a dream in the night. Who can say where we're going. No care "
-                "in the world. Maybe I'm learning. Why the sea on the tide. Has no way of "
-                "turning. More than this. You know there's nothing. More than this. Tell me "
-                "one thing. More than this. You know there's nothing. More than this. You "
-                "know there's nothing. More than this. Tell me one thing. More than this. "
-                "There's nothing.",
-                'A lie to say, "O my mountain has coal veins and beds to dig.. 500 men with '
-                'axes and they all dig for me." A lie to ssay, "O my. river where mant fish '
-                'do swim, half of the catch is mine when you haul. your nets in." Never will '
-                "he believe that his greed is a blinding. ray. No devil or redeemer will "
-                "cheat him. He'll take his gold to. where he's lying cold.. A lie to say, "
-                '"O my mine gave a diamond as big as a fist.". But with every gem in his '
-                'pocket, the jewels he has missed. A lie to. say, "O my garden is growing '
-                'taller by the day." He only eats the. best and tosses the rest away. Never '
-                "will he be believe that his. greed is a blinding ray. No devil or redeemer "
-                "can cheat him. he'll. take his gold to where he's lying cold. Six deep in "
-                "the grave.. Something is out of reach. something he wanted. something is out "
-                "of reach. he's being taunted. something is out of reach. that he can' beg or "
-                "steal nor can he buy. his oldest pain. and fear in life. there'll not be "
-                "time. his oldest pain. and fear in life. there'll not be time. A lie to say "
-                "\"O my forest has trees that block the sun and. when I cut them down I don't "
-                'answer to anyone." No, no, never will he. believe that his greed is a '
-                "blinding ray no devil or redeemer can. cheat. him. He'll take his gold where "
-                "he's lying cold..",
-                "Don't talk, I will listen. Don't talk, you keep your distance. For I'd "
-                "rather hear some truth tonight. Than entertain your lies,. So take you "
-                "poison silently. Let me be let me close my eyes. Don't talk, I'll believe "
-                "it. Don't talk, listen to me instead,. I know that if you think of it,. Both "
-                "long enough and hard. The drink you drown your troubles. In is the trouble "
-                "you're in now. Talk talk talk about it,. If you talk as if you care. But "
-                "when your talk is over. Tilt that bottle in the air,. Tossing back more than "
-                "your share. Don't talk, I can guess it. Don't talk, well now your restless. "
-                "And you need somewhere to put the blame. For how you feel inside. You'll "
-                "look for a close. And easy mark and you'll see me as fair game. Talk talk "
-                "talk about it,. Talk as if you care. But when your talk is over tilt. That "
-                "bottle in the air. Tossing back more than your share. You talk talk talk "
-                "about it,. You talk as if you care. I'm marking every word. And can tell "
-                "this time for sure,. Your talk is the finest I have heard. So don't talk, "
-                "I'll be sleeping,. Let me go on dreaming. How your eyes they glow so "
-                "fiercely. I can tell your inspired. By the name you just chose for me. Now "
-                "what was it?. O, never mind it. We will talk talk. Talk about this when your "
-                "head is clear. I'll discuss this in the morning,. But until then you may "
-                "talk but I won't hear",
+                {
+                    'chunk': 'I could feel at the time',
+                    'chunk_matches': [
+                        'I could feel at the time.',
+                        'A lie to.',
+                        'O, never mind it.',
+                    ],
+                }
             ],
         ),
         (
-            'I promise.\n',
+            'I promise.',
             [
-                "These are. These are days you'll remember. Never before and never since, I "
-                "promise. Will the whole world be warm as this. And as you feel it,. You'll "
-                "know it's true. That you - you are blessed and lucky. It's true - that you. "
-                "Are touched by something. That will grow and bloom in you. These are days "
-                "you'll remember. When May is rushing over you. With desire to be part of the "
-                "miracles. You see in every hour. You'll know it's true. That you are blessed "
-                "and lucky. It's true that you are touched. By something that will grow and "
-                "bloom in you. These are days. These are the days you might fill. With "
-                "laughter until you break. These days you might feel. A shaft of light. Make "
-                "its way across your face. And when you do. You'll know how it was meant to "
-                "be. See the signs and know their meaning. You'll know how it was meant to "
-                "be. Hear the signs and know they're speaking. To you, to you",
-                "[ music: Dennis Drew/lyric: Natalie Merchant ]. . science. is truth for "
-                "life. watch religion fall obsolete. science. will be truth for life. "
-                "technology as nature. science. truth for life. in fortran tongue the. "
-                "answer. with wealth and prominence. man so near perfection. possession. it's "
-                "an absence of interim. secure no demurrer. defense against divine. defense "
-                "against his true. image. human conflict number five. discovery. dissolved "
-                "all illusion. mystery. destroyed with conclusion. and illusion never "
-                "restored. any modern man can see. that religion is. obsolete. piety. "
-                "obsolete. ritual. obsolete. martyrdom. obsolete. prophetic vision. obsolete. "
-                "mysticism. obsolete. commitment. obsolete. sacrament. obsolete. revelation. "
-                "obsolete.",
-                "Don't talk, I will listen. Don't talk, you keep your distance. For I'd "
-                "rather hear some truth tonight. Than entertain your lies,. So take you "
-                "poison silently. Let me be let me close my eyes. Don't talk, I'll believe "
-                "it. Don't talk, listen to me instead,. I know that if you think of it,. Both "
-                "long enough and hard. The drink you drown your troubles. In is the trouble "
-                "you're in now. Talk talk talk about it,. If you talk as if you care. But "
-                "when your talk is over. Tilt that bottle in the air,. Tossing back more than "
-                "your share. Don't talk, I can guess it. Don't talk, well now your restless. "
-                "And you need somewhere to put the blame. For how you feel inside. You'll "
-                "look for a close. And easy mark and you'll see me as fair game. Talk talk "
-                "talk about it,. Talk as if you care. But when your talk is over tilt. That "
-                "bottle in the air. Tossing back more than your share. You talk talk talk "
-                "about it,. You talk as if you care. I'm marking every word. And can tell "
-                "this time for sure,. Your talk is the finest I have heard. So don't talk, "
-                "I'll be sleeping,. Let me go on dreaming. How your eyes they glow so "
-                "fiercely. I can tell your inspired. By the name you just chose for me. Now "
-                "what was it?. O, never mind it. We will talk talk. Talk about this when your "
-                "head is clear. I'll discuss this in the morning,. But until then you may "
-                "talk but I won't hear",
+                {
+                    'chunk': 'I promise.',
+                    'chunk_matches': [
+                        'Never before and never since, I promise.',
+                        'truth for life.',
+                        "I'll discuss this in the morning,.",
+                    ],
+                }
+            ],
+        ),
+        (
+            'Trudging slowly',
+            [
+                {
+                    'chunk': 'Trudging slowly',
+                    'chunk_matches': [
+                        'Trudging back over pebbles and sand.',
+                        'Trudging slowly over wet sand.',
+                        'With desire to be part of the miracles.',
+                    ],
+                }
             ],
         ),
     ]
@@ -213,10 +155,18 @@ def test_query(tmpdir, queries_and_expected_replies):
     with f:
         for query, exp_result in queries_and_expected_replies:
             output = get_results(query)
+
+            # chunk-level comparison
+            chunks = output['search']['docs'][0]['chunks']
+            query_chunk_results = []
+            for chunk in chunks:
+                chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
+                for match in chunk['matches']:
+                    chunk_result['chunk_matches'].append(match['text'])
+                query_chunk_results.append(chunk_result)
+            assert exp_result == query_chunk_results
+
+            # check the number of docs returned
             matches = output['search']['docs'][0]['matches']
-            assert len(matches) <= TOP_K  # check the number of docs returned
-            result = []
-            for match in matches:
-                match_text = match['text']
-                result.append(match_text)
-            assert result == exp_result
+            # note. the TOP K reflects nr of matches per chunk
+            assert len(matches) <= TOP_K * len(chunks)
