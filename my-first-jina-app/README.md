@@ -5,7 +5,7 @@
 - [Build Your First Neural Search App](#build-your-first-neural-search-app)
   - [👋 Introduction](#-introduction)
   - [🗝️ Key Concepts](#-key-concepts)
-  - [🧪 Try it Out!](#%F0%9F%A7%AA-try-it-out)
+  - [🧪 Try it Out!](#-try-it-out)
   - [🐍 Install](#-install)
   - [🗃️ Work with Data](#-work-with-data)
   - [🏃 Run the Flows](#-run-the-flows)
