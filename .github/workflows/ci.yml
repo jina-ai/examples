@@ -10,7 +10,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        path: [southpark-search]
+        path: [southpark-search, multires-lyrics-search]
 
     steps:
       - uses: actions/checkout@v2
