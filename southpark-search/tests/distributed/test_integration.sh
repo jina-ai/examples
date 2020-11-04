@@ -6,6 +6,7 @@ if [ "${PWD##*/}" != "southpark-search" ]
     exit 1
 fi
 
+# Setting env variables localls for this script
 export $(grep -v '^#' tests/distributed/.env | xargs -d '\n')
 
 docker-compose -f tests/distributed/docker-compose.yml --project-directory . up  --build -d
