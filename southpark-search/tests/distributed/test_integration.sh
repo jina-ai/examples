@@ -24,10 +24,11 @@ FLOW_ID=$(curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
 
 echo "Successfully started the flow: ${FLOW_ID}"
 
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' '0.0.0.0:45678/api/search'
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' '0.0.0.0:45678/api/search' | \
+    jq ".search.docs[] | .matches[] | .text"
 
-curl --request GET "http://0.0.0.0:8000/v1/flow/${FLOW_ID}" -H "accept: application/json"
+curl --request GET "http://0.0.0.0:8000/v1/flow/${FLOW_ID}" -H "accept: application/json" | jq .
 
-curl --request DELETE "http://0.0.0.0:8000/v1/flow?flow_id=${FLOW_ID}" -H "accept: application/json"
+curl --request DELETE "http://0.0.0.0:8000/v1/flow?flow_id=${FLOW_ID}" -H "accept: application/json" | jq .
 
 docker-compose -f tests/distributed/docker-compose.yml --project-directory . down
