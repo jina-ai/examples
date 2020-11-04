@@ -217,7 +217,6 @@ def test_query(tmpdir, queries_and_expected_replies):
             assert len(matches) <= TOP_K  # check the number of docs returned
             result = []
             for match in matches:
-                # the lyrics text in the .csv is the fourth column
                 match_text = match['text']
                 result.append(match_text)
             assert result == exp_result
