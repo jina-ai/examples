@@ -126,13 +126,6 @@ Build an image search system and define your own executors and run them in Docke
 <td><h3>🐣</h3></td>
 </tr>
 
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/faiss-search">Search similar images with FAISS</a></h4>
-Build a vector search engine that finds the closest vector in the database to a query.
-</td>
-<td><h3>🚀</h3></td>
-</tr>
 
 <tr>
 <td>
@@ -287,6 +280,15 @@ Learn how Jina solves complex dependencies easily with Docker container
 </td>
 <td><h3>🕊</h3></td>
 </tr>
+
+<tr>
+<td>
+<h4><a href="https://github.com/jina-ai/examples/tree/master/faiss-search">Index and query with FAISS</a></h4>
+Build a vector search engine that finds the closest vector in the database to a query.
+</td>
+<td><h3>🚀</h3></td>
+</tr>
+
 </table>
 
 ### Extend and Share Jina
