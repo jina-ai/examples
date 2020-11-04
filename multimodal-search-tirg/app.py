@@ -31,24 +31,17 @@ def config():
     os.environ['JINA_PORT'] = '45678'
 
 def print_result(resp):
-    print('Works')
-    # for d in resp.search.docs:
-    #     vi = d.uri
-    #     result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
-    #     for kk in d.matches:
-    #         kmi = kk.uri
-    #         result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
-    #         # k['score']['explained'] = json.loads(kk.score.explained)
-    #     result_html.append('</td></tr>\n')
+    import io
+    from base64 import b64decode
+    from PIL import Image
+    image_data_uri = resp.search.docs[0].matches[0].uri
+    header, encoded = image_data_uri.split(",", 1)
+    image_data = b64decode(encoded)
+    image = Image.open(io.BytesIO(image_data))
+    image.show()
 
-
-image_path = 'data-all/fashion-200k/women/dresses/casual_and_day_dresses/51727804/51727804_0.jpeg'
-
-image_paths = [image_path]
-texts = ['change to yellow color']
-
-def query_generator(image_paths, texts):
-    for image_path, text in zip(image_paths, texts):
+def query_generator(image_paths, text_queries):
+    for image_path, text in zip(image_paths, text_queries):
         doc = jina_pb2.Document()
         chunk1 = doc.chunks.add()
         chunk2 = doc.chunks.add()
@@ -66,9 +59,13 @@ def query_generator(image_paths, texts):
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
+@click.option('--image_path', '-ip', default='data-all/fashion-200k/women/dresses/casual_and_day_dresses/51727804/51727804_0.jpeg')
+@click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
-def main(task, data_path, num_docs, batch_size, overwrite_workspace):
+def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):
     config()
+    image_paths = [image_path]
+    text_queries = [text_query]
     if task == 'index':
         if overwrite_workspace:
             clean_workdir()
@@ -78,7 +75,7 @@ def main(task, data_path, num_docs, batch_size, overwrite_workspace):
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
-            f.search(query_generator(image_paths, texts), output_fn=print_result, batch_size=1)
+            f.search(query_generator(image_paths, text_queries), output_fn=print_result, batch_size=1)
             # f.block()
 
 if __name__ == '__main__':
