@@ -15,7 +15,8 @@ TOP_K = 3
 INDEX_FLOW_FILE_PATH = 'flows/index.yml'
 QUERY_FLOW_FILE_PATH = 'flows/query.yml'
 PORT = 45678
-
+JINA_SHARDS = 2
+JINA_PARALLEL = 1
 
 # TODO restructure project so we don't duplicate input_fn
 def input_fn():
@@ -33,11 +34,9 @@ def input_fn():
 
 
 def config(tmpdir):
-    parallel = 2 if sys.argv[1] == 'index' else 1
-
     os.environ.setdefault('JINA_MAX_DOCS', '100')
-    os.environ.setdefault('JINA_PARALLEL', str(parallel))
-    os.environ.setdefault('JINA_SHARDS', str(1))
+    os.environ.setdefault('JINA_PARALLEL', str(JINA_PARALLEL))
+    os.environ.setdefault('JINA_SHARDS', str(JINA_SHARDS))
     os.environ.setdefault('JINA_WORKSPACE', str(tmpdir))
     os.environ.setdefault('JINA_DATA_FILE', 'tests/data-index.csv')
     os.environ.setdefault('JINA_PORT', str(PORT))
@@ -79,6 +78,7 @@ def queries_and_expected_replies():
 
 
 def test_query(tmpdir, queries_and_expected_replies):
+    print(f'tmpdir = {tmpdir}')
     config(tmpdir)
     index_documents()
     f = get_flow()
