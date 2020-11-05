@@ -67,7 +67,7 @@ class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
 
     @batching
     @as_ndarray
-    def encode(self, data: list, *args, **kwargs) -> 'np.ndarray':
+    def encode(self, *data: 'np.ndarray', **kwargs) -> 'np.ndarray':
         import torch
         feature = self._get_features(data).detach()
         if self.on_gpu:
