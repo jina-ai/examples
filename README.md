@@ -319,6 +319,17 @@ Use Jina Hub and share your extensions with engineers around the globe
 
 </table>
 
+## Adding test for examples
+You are highly encouraged to add a test for the example so that we know if the example is broken in the future. Steps for making test for examples
+- [x] Define your test cases
+- [x] Define your test data. This can be a few text sentences or images or audio samples
+- [x] Copy test folder from southpark example for text and object search example for image
+- [x] Put your test data in the test folder
+- [x] Add your test cases to the test file with meaningful asserts depending on example input & output
+- [x] Try using the original example function by importing them to the test. Avoid any modifications to original flow or logic.
+- [x] Use pytest tmpdir fixture for temporary directory
+- [x] Add your example folder name to `path` variable in `matrix` of .github/worflows/ci.yml. This will trigger your example test on creating pull request.
+- [x] Run the test locally to confirm before pushing
 
 ## Community
 
