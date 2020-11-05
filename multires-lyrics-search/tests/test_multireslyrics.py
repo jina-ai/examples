@@ -49,7 +49,7 @@ def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index(input_fn)
+        f.index(input_fn, batch_size=4)
 
 
 def call_api(url, payload=None, headers=None):
