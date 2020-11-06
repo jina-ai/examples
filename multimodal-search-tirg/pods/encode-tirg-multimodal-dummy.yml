@@ -1,0 +1,9 @@
+!DummyMultimodalEncoder
+with:
+  positional_modality: ['image', 'text']
+metas:
+  py_modules: dummy_multimodal_encoder.py
+requests:
+  on:
+    SearchRequest:
+      - !MultiModalDriver {}

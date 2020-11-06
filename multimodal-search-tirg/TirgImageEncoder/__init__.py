@@ -3,21 +3,20 @@ __license__ = "Apache-2.0"
 
 import os
 import sys
-import numpy as np
 import pickle
 
 from jina.executors.decorators import batching, as_ndarray
 from jina.executors.encoders.frameworks import BaseTorchEncoder
 from jina.excepts import PretrainedModelFileDoesNotExist
 
-# sys.path.append(".")
+sys.path.append(".")
 from img_text_composition_models import TIRG
 
 
 class TirgImageEncoder(BaseTorchEncoder):
 
-    def __init__(self, model_path: str,
-                 texts_path: str,
+    def __init__(self, model_path: str = 'checkpoint_fashion200k.pth',
+                 texts_path: str = 'texts.pkl',
                  channel_axis: int = -1, 
                  *args, **kwargs):
         """
@@ -50,6 +49,7 @@ class TirgImageEncoder(BaseTorchEncoder):
     @batching
     @as_ndarray
     def encode(self, data: 'np.ndarray', *args, **kwargs) -> 'np.ndarray':
+        import numpy as np
         if self.channel_axis != self._default_channel_axis:
             data = np.moveaxis(data, self.channel_axis, self._default_channel_axis)
         import torch

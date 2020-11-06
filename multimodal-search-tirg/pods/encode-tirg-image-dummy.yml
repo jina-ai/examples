@@ -1,0 +1,7 @@
+!DummyEncoder
+metas:
+  py_modules: DummyEncoder/__init__.py
+requests:
+  on:
+    IndexRequest:
+      - !EncodeDriver {}

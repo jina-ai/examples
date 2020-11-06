@@ -2,24 +2,26 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import sys
 import pickle
 from typing import List
 
-import torch
 import numpy as np
+
 from jina.executors.devices import TorchDevice
 from jina.excepts import PretrainedModelFileDoesNotExist
 from jina.executors.decorators import batching_multi_input, as_ndarray
 from jina.executors.encoders.multimodal import BaseMultiModalEncoder
 
-from .img_text_composition_models import TIRG
+sys.path.append(".")
+from img_text_composition_models import TIRG
 
 
 class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
 
-    def __init__(self, model_path: str,
-                 texts_path: str,
-                 positional_modality: List[str] = ['visual', 'textual'],
+    def __init__(self, model_path: str = 'checkpoint_fashion200k.pth',
+                 texts_path: str = 'texts.pkl',
+                 positional_modality: List[str] = ['image', 'text'],
                  channel_axis: int = -1,
                  *args, **kwargs):
         """
@@ -48,6 +50,7 @@ class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
             raise PretrainedModelFileDoesNotExist(f'model {self.model_path} does not exist')
 
     def _get_features(self, data):
+        import torch
         visual_data = data[(self.positional_modality.index('image'))]
         if self.channel_axis != self._default_channel_axis:
             visual_data = np.moveaxis(visual_data, self.channel_axis, self._default_channel_axis)
