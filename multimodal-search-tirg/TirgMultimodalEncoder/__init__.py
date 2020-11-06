@@ -56,7 +56,8 @@ class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
             visual_data = np.moveaxis(visual_data, self.channel_axis, self._default_channel_axis)
         textual_data = data[(self.positional_modality.index('text'))]
 
-        visual_data = torch.stack(visual_data).float()
+        visual_data = torch.from_numpy(np.stack(visual_data)).float()
+        textual_data = np.stack(textual_data).tolist()
 
         if self.on_gpu:
             visual_data = visual_data.cuda()
@@ -70,7 +71,7 @@ class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
     @batching_multi_input
     @as_ndarray
     def encode(self, *data: 'np.ndarray', **kwargs) -> 'np.ndarray':
-        feature = self._get_features(*data).detach()
+        feature = self._get_features(data).detach()
         if self.on_gpu:
             feature = feature.cpu()
         feature = feature.numpy()

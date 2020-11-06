@@ -42,8 +42,7 @@ def test_multimodal_embeddings(transformer):
         positional_modality=['image', 'text'],
         channel_axis=1,
     )
-    data = [imgs, img_captions]
-    embeddings = encoder.encode(data)
+    embeddings = encoder.encode(imgs, img_captions)
     import numpy as np
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
     assert len(embeddings) == 4
