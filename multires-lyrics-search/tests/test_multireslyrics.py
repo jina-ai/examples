@@ -5,7 +5,6 @@ import csv
 import itertools
 import json
 import os
-import sys
 
 import pytest
 from jina.flow import Flow
@@ -84,7 +83,7 @@ def test_query(tmpdir, queries_and_expected_replies):
     index_documents()
     f = get_flow()
     with f:
-        # TODO
+        # for debugging, we store the results in a .json file
         all_results = []
         for query, exp_result in queries_and_expected_replies:
             output = get_results(query)
@@ -94,33 +93,27 @@ def test_query(tmpdir, queries_and_expected_replies):
             query_chunk_results = []
             for chunk in chunks:
                 chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
-                for match in chunk['matches']:
-                    chunk_result['chunk_matches'].append({
-                        'text': match['text'],
-                        # TODO
-                        'score': match['score']['value']
-                    })
+                chunk_matches = chunk['matches']
+                # make sure to sort in asc. order, by score
+                chunk_matches = sorted(chunk_matches, key=lambda x: x['score']['value'], reverse=False)
+                for match in chunk_matches:
+                    chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
-            # TODO
-            # assert query_chunk_results == exp_result["chunk-level"]
+            assert query_chunk_results == exp_result["chunk-level"]
 
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
+            # make sure to sort in asc. order, by score
+            matches = sorted(matches, key=lambda x: x['score']['value'], reverse=False)
             match_result = []
             for match in matches:
                 match_text = match['text']
-                match_result.append(
-                    {
-                        'text': match_text,
-                        # TODO
-                        'score': match['score']['value']
-                    })
-            # TODO
-            # assert match_result == exp_result["match-level"]
+                match_result.append(match_text)
+            assert match_result == exp_result["match-level"]
 
             # check the number of docs returned
             # note. the TOP K reflects nr of matches per chunk
-            # assert len(matches) <= TOP_K * len(chunks)
+            assert len(matches) <= TOP_K * JINA_SHARDS
             all_results.append(
                 [
                     query,
