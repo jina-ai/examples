@@ -295,7 +295,6 @@ Build a vector search engine that finds the closest vector in the database to a 
 
 ### Extend and Share Jina
 
-
 <table width=100% style='width: 100%'>
 <tr>
 <th width="90%" style="width: 90%">Tutorials</th>
@@ -320,18 +319,20 @@ Use Jina Hub and share your extensions with engineers around the globe
 
 </table>
 
-## Adding test for examples
-You are highly encouraged to add a test for the example so that we know if the example is broken in the future. Steps for making test for examples
+## Adding Tests for Examples
 
-1. Put your test data in the `tests` folder. The test data can be a few text sentences or images or audio samples
-2. Create the `test_[your_example].py` in the `tests` folder. Add your test cases to the `tests` file with meaningful asserts depending on example input & output
+You are highly encouraged to add a test for your example so that we will be alerted if it breaks in the future:
+
+1. Put your test data in the `tests` folder. The test data can be a few text sentences, images or audio samples
+2. Create `test_[your_example].py` in the `tests` folder. Add your test cases to the `tests` file with meaningful asserts depending on example input and output
 3. Run the test locally to confirm before pushing with [pytest](https://docs.pytest.org/en/stable/contents.html)
-4. Add your example folder name to `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating pull request.
+4. Add your example folder name to the `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating a pull request.
 
 
 ### Tips
-- For references, check out `tests` folder from [southpark example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about texts and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images
-- Try using the original example function by importing them to the test. Avoid any modifications to original flow or logic.
+
+- For reference, check out the `tests` folder from [South Park example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about text and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images.
+- Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
 - Use the [pytest fixture](https://docs.pytest.org/en/stable/fixture.html) `tmpdir` for temporary directory
 
 ## Community
