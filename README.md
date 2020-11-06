@@ -321,15 +321,17 @@ Use Jina Hub and share your extensions with engineers around the globe
 
 ## Adding test for examples
 You are highly encouraged to add a test for the example so that we know if the example is broken in the future. Steps for making test for examples
-- [x] Define your test cases
-- [x] Define your test data. This can be a few text sentences or images or audio samples
-- [x] Copy test folder from southpark example for text and object search example for image
-- [x] Put your test data in the test folder
-- [x] Add your test cases to the test file with meaningful asserts depending on example input & output
-- [x] Try using the original example function by importing them to the test. Avoid any modifications to original flow or logic.
-- [x] Use pytest tmpdir fixture for temporary directory
-- [x] Add your example folder name to `path` variable in `matrix` of .github/worflows/ci.yml. This will trigger your example test on creating pull request.
-- [x] Run the test locally to confirm before pushing
+
+1. Put your test data in the `tests` folder. The test data can be a few text sentences or images or audio samples
+2. Create the `test_[your_example].py` in the `tests` folder. Add your test cases to the `tests` file with meaningful asserts depending on example input & output
+3. Run the test locally to confirm before pushing with [pytest](https://docs.pytest.org/en/stable/contents.html)
+4. Add your example folder name to `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating pull request.
+
+
+### Tips
+- For references, check out `tests` folder from [southpark example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about texts and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images
+- Try using the original example function by importing them to the test. Avoid any modifications to original flow or logic.
+- Use the [pytest fixture](https://docs.pytest.org/en/stable/fixture.html) `tmpdir` for temporary directory
 
 ## Community
 
