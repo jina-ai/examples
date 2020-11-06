@@ -3,11 +3,10 @@ __license__ = "Apache-2.0"
 
 import os
 
-import torch
 import pytest
 from PIL import Image
 import torchvision
-from .. import TirgImageEncoder
+from .. import TirgMultiModalEncoder
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -21,7 +20,7 @@ def transformer():
                                          [0.229, 0.224, 0.225])])
 
 
-def test_image_embeddings(transformer):
+def test_multimodal_embeddings(transformer):
     imgs = []
     for img_name in range(4):
         img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
@@ -30,14 +29,22 @@ def test_image_embeddings(transformer):
             img = img.convert('RGB')
             img = transformer(img)
             imgs.append(img)
-    encoder = TirgImageEncoder(
+    img_captions = [
+        'black skinny cotton twill cargo pants',
+        'gray easy cargo pants',
+        'gray micha ruched side jersey maxi skirt',
+        'white oversized cotton shirt'
+    ]
+    assert len(imgs) == len(img_captions)
+    encoder = TirgMultiModalEncoder(
         model_path='/Users/bo/Downloads/checkpoint_fashion200k.pth',
         texts_path='/Users/bo/Downloads/texts.pkl',
+        positional_modality=['image', 'text'],
         channel_axis=1,
     )
-    imgs = torch.stack(imgs).float()
-    embeddings = encoder.encode(imgs.numpy())
+    data = [imgs, img_captions]
+    embeddings = encoder.encode(data)
     import numpy as np
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
-    print(embeddings)
+    assert len(embeddings) == 4
     np.testing.assert_almost_equal(embeddings, expected)
