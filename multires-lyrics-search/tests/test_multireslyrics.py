@@ -17,6 +17,8 @@ QUERY_FLOW_FILE_PATH = 'flows/query.yml'
 PORT = 45678
 JINA_SHARDS = 2
 JINA_PARALLEL = 1
+BATCH_SIZE = 4
+
 
 # TODO restructure project so we don't duplicate input_fn
 def input_fn():
@@ -49,7 +51,7 @@ def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index(input_fn, batch_size=4)
+        f.index(input_fn, batch_size=BATCH_SIZE)
 
 
 def call_api(url, payload=None, headers=None):
@@ -78,11 +80,12 @@ def queries_and_expected_replies():
 
 
 def test_query(tmpdir, queries_and_expected_replies):
-    print(f'tmpdir = {tmpdir}')
     config(tmpdir)
     index_documents()
     f = get_flow()
     with f:
+        # TODO
+        all_results = []
         for query, exp_result in queries_and_expected_replies:
             output = get_results(query)
 
@@ -92,10 +95,13 @@ def test_query(tmpdir, queries_and_expected_replies):
             for chunk in chunks:
                 chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
                 for match in chunk['matches']:
-                    chunk_result['chunk_matches'].append(match['text'])
+                    chunk_result['chunk_matches'].append({
+                        'text': match['text'],
+                        # TODO
+                        'score': match['score']['value']
+                    })
                 query_chunk_results.append(chunk_result)
-            # TODO remove assertion because it would require re-writing the query-results.json
-            # for now we're only testing if there are any 'matches' in the results
+            # TODO
             # assert query_chunk_results == exp_result["chunk-level"]
 
             # match-level comparison
@@ -103,13 +109,26 @@ def test_query(tmpdir, queries_and_expected_replies):
             match_result = []
             for match in matches:
                 match_text = match['text']
-                match_result.append(match_text)
-            # TODO remove assertion because it would require re-writing the query-results.json
-            # for now we're only testing if there are any 'matches' in the results
+                match_result.append(
+                    {
+                        'text': match_text,
+                        # TODO
+                        'score': match['score']['value']
+                    })
+            # TODO
             # assert match_result == exp_result["match-level"]
 
             # check the number of docs returned
             # note. the TOP K reflects nr of matches per chunk
-            # TODO remove assertion because it would require re-writing the query-results.json
-            # for now we're only testing if there are any 'matches' in the results
             # assert len(matches) <= TOP_K * len(chunks)
+            all_results.append(
+                [
+                    query,
+                    {
+                        "match-level": match_result,
+                        "chunk-level": query_chunk_results
+                    }
+                ]
+            )
+    with open(f'results batch size {BATCH_SIZE}.json', 'w') as f:
+        f.write(json.dumps(all_results))
