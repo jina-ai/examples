@@ -83,8 +83,6 @@ def test_query(tmpdir, queries_and_expected_replies):
     index_documents()
     f = get_flow()
     with f:
-        # for debugging, we store the results in a .json file
-        all_results = []
         for query, exp_result in queries_and_expected_replies:
             output = get_results(query)
 
@@ -114,14 +112,3 @@ def test_query(tmpdir, queries_and_expected_replies):
             # check the number of docs returned
             # note. the TOP K reflects nr of matches per chunk
             assert len(matches) <= TOP_K * JINA_SHARDS
-            all_results.append(
-                [
-                    query,
-                    {
-                        "match-level": match_result,
-                        "chunk-level": query_chunk_results
-                    }
-                ]
-            )
-    with open(f'results batch size {BATCH_SIZE}.json', 'w') as f:
-        f.write(json.dumps(all_results))
