@@ -4,7 +4,7 @@ metas:
   name: merge
 requests:
   on:
-    [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:
+    [SearchRequest, IndexRequest]:
       - !ReduceAllDriver
         with:
           traversal_paths: ['cm']
