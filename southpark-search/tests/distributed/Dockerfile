@@ -12,7 +12,6 @@ RUN python -m pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r tests/distributed/requirements.txt
 
 RUN git clone https://github.com/jina-ai/jinad.git && \
-    cd jinad && git checkout 19e8e64e24b01532bda6e06c2b7159f90eda730f && cd .. && \
     pip install --no-cache-dir -r jinad/requirements.txt
 
 RUN python -c "from transformers import DistilBertModel, DistilBertTokenizer; x='distilbert-base-cased'; DistilBertModel.from_pretrained(x); DistilBertTokenizer.from_pretrained(x)"
