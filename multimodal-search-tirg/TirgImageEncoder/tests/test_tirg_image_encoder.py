@@ -5,8 +5,10 @@ import os
 
 import torch
 import pytest
-from PIL import Image
+import numpy as np
 import torchvision
+from PIL import Image
+
 from .. import TirgImageEncoder
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,9 +24,8 @@ def transformer():
 
 
 def test_image_embeddings(transformer):
-    import numpy as np
     imgs = []
-    for img_name in range(4):
+    for img_name in range(3):
         img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
         with open(img_path, 'rb') as f:
             img = Image.open(img_path)
@@ -39,4 +40,4 @@ def test_image_embeddings(transformer):
     imgs = torch.stack(imgs).float()
     embeddings = encoder.encode(imgs.numpy())
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
-    # np.testing.assert_almost_equal(embeddings, expected)
+    np.testing.assert_almost_equal(embeddings, expected)
