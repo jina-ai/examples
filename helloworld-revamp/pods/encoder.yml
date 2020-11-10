@@ -1,0 +1,14 @@
+!MyEncoder
+metas:
+  name: myenc  # a customized name
+  workspace: workdir
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !Blob2PngURI {}
+      - !EncodeDriver {}
+      - !ExcludeQL
+        with:
+          fields:
+            - buffer
+            - chunks

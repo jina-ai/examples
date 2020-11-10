@@ -1,0 +1,16 @@
+!Flow
+with:
+  read_only: true  # better add this in the query time
+  logserver: false
+  compress_hwm: 1024
+pods:
+  encode:
+    uses: pods/encoder.yml
+    parallel: 1
+  index:
+    uses: pods/indexer.yml
+    #shards: 1
+    separated_workspace: true
+    polling: all
+    #uses_after: pods/reduce.yml
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
