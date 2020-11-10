@@ -22,7 +22,7 @@ def transformer():
 
 def test_multimodal_embeddings(transformer):
     imgs = []
-    for img_name in range(4):
+    for img_name in range(3):
         img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
         with open(img_path, 'rb') as f:
             img = Image.open(img_path)
@@ -32,7 +32,6 @@ def test_multimodal_embeddings(transformer):
     img_captions = [
         'black skinny cotton twill cargo pants',
         'gray easy cargo pants',
-        'gray micha ruched side jersey maxi skirt',
         'white oversized cotton shirt'
     ]
     assert len(imgs) == len(img_captions)
@@ -45,5 +44,5 @@ def test_multimodal_embeddings(transformer):
     embeddings = encoder.encode(imgs, img_captions)
     import numpy as np
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
-    assert len(embeddings) == 4
-    # np.testing.assert_almost_equal(embeddings, expected, decimal=3)
+    assert len(embeddings) == 3
+    np.testing.assert_almost_equal(embeddings, expected, decimal=3)
