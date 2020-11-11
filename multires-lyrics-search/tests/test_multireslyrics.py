@@ -85,7 +85,7 @@ def extract_score(x):
     if 'value' in x['score']:
         return x['score']['value']
     else:
-        print(x)
+        print(f'failed chunk was {x}')
         return 10000
 
 
