@@ -81,6 +81,14 @@ def queries_and_expected_replies():
     return json.load(open('tests/query_results.json', 'r'))
 
 
+def extract_score(x):
+    if 'value' in x['score']:
+        return x['score']['value']
+    else:
+        print(x)
+        return 10000
+
+
 def test_query(tmpdir, queries_and_expected_replies):
     config(tmpdir)
     index_documents()
@@ -96,7 +104,7 @@ def test_query(tmpdir, queries_and_expected_replies):
                 chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
                 chunk_matches = chunk['matches']
                 # make sure to sort in asc. order, by score
-                chunk_matches = sorted(chunk_matches, key=lambda x: x['score']['value'], reverse=False)
+                chunk_matches = sorted(chunk_matches, key=extract_score, reverse=False)
                 for match in chunk_matches:
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
