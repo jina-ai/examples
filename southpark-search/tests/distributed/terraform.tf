@@ -3,17 +3,45 @@ provider "aws" {
   region  = "us-east-2"
 }
 
-#Create repo
+provider "docker" {
+  host = var.docker_host
+  registry_auth {
+    address  = "https://registry.docker.io/v2/jina-ai/jina"
+    username = var.docker_username
+    password = var.docker_password
+  }
+}
+
+#Creates AWS ECR repo for SouthPark image
 resource "aws_ecr_repository" "southpark" {
   name = "sp-repo"
   tags = {
     Name = "southpark_repo"
   }
 }
+# Create a docker container with Jina SouthPark image
+resource "docker_container" "jina_southpark" {
+  image = "${docker_image.southparkimage}"
+  name  = "jina_southpark"
+}
+
+# Find the latest southpark precise image.
+resource "docker_image" "southparkimage" {
+  name = "jinaai/hub.app.distilbert-southpark"
+}
+
+# Build and push the Docker image to aws ecr repository
+resource "null_resource" "push" {
+  provisioner "local-exec" {
+    command     = "${coalesce(var.push_script, "${path.module}/push.sh")} ${var.source_path} ${aws_ecr_repository.southpark.repository_url} ${var.tag}"
+    interpreter = ["bash", "-c"]
+  }
+}
 
 resource "aws_default_vpc" "default_vpc" {
 }
 
+# AWS Instance for Encoder
 resource "aws_instance" "encoder" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
@@ -22,6 +50,7 @@ resource "aws_instance" "encoder" {
   }
 }
 
+# AWS Instance for Indexer
 resource "aws_instance" "indexer" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
@@ -30,18 +59,43 @@ resource "aws_instance" "indexer" {
   }
 }
 
+# AWS Instance for running Flow
 resource "aws_instance" "flow" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
   tags = {
     Name = "flow"
   }
+  provisioner "remote-exec" {
+    inline = [<<EOF
+    curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
+    -H  "accept: application/json" \
+    -H  "Content-Type: multipart/form-data" \
+    -F "uses_files=@pods/encode.yml" \
+    -F "uses_files=@pods/extract.yml" \
+    -F "uses_files=@pods/index.yml" \
+    -F "pymodules_files=@pods/text_loader.py" \
+    -F "yamlspec=@tests/distributed/flow-query.yml"
+    EOF
+    ]
+  }
+}
+
+# Sets environment variables for encoder and indexer
+resource "null_resource" "environment" {
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command = ""
+    environment = {
+      JINA_ENCODER_HOST = "${aws_instance.encoder.private_ip}"
+      JINA_INDEX_HOST = "${aws_instance.indexer.private_ip}"
+    }
+  }
 }
 
 data "aws_subnet_ids" "default" {
   vpc_id = "${aws_default_vpc.default_vpc.id}"
 }
-
 
 resource "aws_ecs_cluster" "southpark_cluster" {
   name = "southpark_cluster"
@@ -69,7 +123,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-#Create task
+#Create ECS task
 resource "aws_ecs_task_definition" "southpark_task" {
   family                   = "southpark_task" 
   container_definitions    = <<DEFINITION
@@ -129,7 +183,7 @@ resource "aws_lb_target_group" "target_group" {
     protocol            = "HTTP"
     timeout             = "60"
     unhealthy_threshold = "2"
-    matcher             = "200-405"
+    matcher             = "200,301,302"
     path                = "/"
   }
 }
@@ -198,7 +252,3 @@ resource "aws_ecs_service" "southpark_service" {
 output "alb_url" {
   value = "http://${aws_alb.application_load_balancer.dns_name}"
 }
-
-
-
-
