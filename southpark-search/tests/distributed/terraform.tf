@@ -3,7 +3,7 @@ provider "aws" {
   region  = "us-east-2"
 }
 
-#Create repo
+#Creates AWS ECR repo for SouthPark image
 resource "aws_ecr_repository" "southpark" {
   name = "sp-repo"
   tags = {
@@ -11,9 +11,7 @@ resource "aws_ecr_repository" "southpark" {
   }
 }
 
-resource "aws_default_vpc" "default_vpc" {
-}
-
+# AWS Instance for Encoder
 resource "aws_instance" "encoder" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
@@ -22,6 +20,7 @@ resource "aws_instance" "encoder" {
   }
 }
 
+# AWS Instance for Indexer
 resource "aws_instance" "indexer" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
@@ -30,18 +29,43 @@ resource "aws_instance" "indexer" {
   }
 }
 
+# AWS Instance for running Flow
 resource "aws_instance" "flow" {
   ami           = "ami-07efac79022b86107"
   instance_type = "t2.micro"
   tags = {
     Name = "flow"
   }
+  provisioner "remote-exec" {
+    inline = [<<EOF
+    curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
+    -H  "accept: application/json" \
+    -H  "Content-Type: multipart/form-data" \
+    -F "uses_files=@pods/encode.yml" \
+    -F "uses_files=@pods/extract.yml" \
+    -F "uses_files=@pods/index.yml" \
+    -F "pymodules_files=@pods/text_loader.py" \
+    -F "yamlspec=@tests/distributed/flow-query.yml"
+    EOF
+    ]
+  }
+}
+
+# Sets environment variables for encoder and indexer
+resource "null_resource" "environment" {
+  provisioner "local-exec" {
+    interpreter = ["bash", "-c"]
+    command = ""
+    environment = {
+      JINA_ENCODER_HOST = "${aws_instance.encoder.private_ip}"
+      JINA_INDEX_HOST = "${aws_instance.indexer.private_ip}"
+    }
+  }
 }
 
 data "aws_subnet_ids" "default" {
   vpc_id = "${aws_default_vpc.default_vpc.id}"
 }
-
 
 resource "aws_ecs_cluster" "southpark_cluster" {
   name = "southpark_cluster"
@@ -69,7 +93,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
   }
 }
 
-#Create task
+#Create ECS task
 resource "aws_ecs_task_definition" "southpark_task" {
   family                   = "southpark_task" 
   container_definitions    = <<DEFINITION
@@ -94,64 +118,6 @@ resource "aws_ecs_task_definition" "southpark_task" {
   memory                   = 512         # Specifying the memory our container requires
   cpu                      = 256         # Specifying the CPU our container requires
   execution_role_arn       = "${aws_iam_role.ecsExecutionRole.arn}"
-}
-
-
-#create load balancer
-resource "aws_alb" "application_load_balancer" {
-  name               = "southpark-lb-tf" # Naming our load balancer
-  load_balancer_type = "application"
-  subnets            = "${data.aws_subnet_ids.default.ids}" 
-  # Referencing the security group
-  security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
-}
-
-resource "aws_lb_listener" "lsr" {
-  load_balancer_arn = "${aws_alb.application_load_balancer.arn}" # Referencing our load balancer
-  port              = "45678"
-  protocol          = "HTTP"
-  default_action {
-    type             = "forward"
-    target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our tagrte group
-  }
-}
-
-resource "aws_lb_target_group" "target_group" {
-  name        = "target-gp"
-  port        = 45678
-  protocol    = "HTTP"
-  target_type = "ip"
-  deregistration_delay = 90
-  vpc_id      = "${aws_default_vpc.default_vpc.id}" # Referencing the default VPC
-  health_check {
-    healthy_threshold   = "3"
-    interval            = "80"
-    protocol            = "HTTP"
-    timeout             = "60"
-    unhealthy_threshold = "2"
-    matcher             = "200-405"
-    path                = "/"
-  }
-}
-
-
-# Creating a security group for the load balancer:
-# This is the one that will receive traffic from internet
-resource "aws_security_group" "load_balancer_security_group" {
-  description = "control access to the ALB"
-  ingress {
-    from_port   = 45678
-    to_port     = 45678
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic in from all sources
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 #ECS will receive traffic from the ALB
@@ -198,7 +164,3 @@ resource "aws_ecs_service" "southpark_service" {
 output "alb_url" {
   value = "http://${aws_alb.application_load_balancer.dns_name}"
 }
-
-
-
-
