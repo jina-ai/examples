@@ -81,12 +81,11 @@ def main(task, num_docs, top_k):
     workspace = os.environ["JINA_WORKSPACE"]
     if task == "index":
         if os.path.exists(workspace):
-            import warnings
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory workspace already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
+            print(f'\n +----------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n +----------------------------------------------------------------------------------+')
         index(num_docs)
     if task == "query":
         if not os.path.exists(workspace):

@@ -88,9 +88,16 @@ def dryrun(num_docs):
 def main(task, num_docs, top_k):
     os.environ['DATA_DIR'] = os.environ.get('DATA_DIR', 'tmp/jina/news/')
     os.environ['DATA_FILE'] = os.environ.get('DATA_FILE', 'news_articles.csv')
-    os.environ['TMP_WORKSPACE'] = os.environ.get(
-        'TMP_WORKSPACE', get_random_ws(os.environ['DATA_DIR']))
+    os.environ['WORKDIR'] = os.environ.get(
+        'WORKDIR', get_random_ws(os.environ['DATA_DIR']))
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         index(num_docs)
     elif task == 'query':
         query(num_docs, top_k)

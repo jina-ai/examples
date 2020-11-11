@@ -22,7 +22,7 @@ def config():
     os.environ['PARALLEL'] = str(1)
     os.environ['SHARDS'] = str(1)
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/mnist'
-    os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
+    os.environ['WORKDIR'] = os.environ.get('WORKDIR', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 
 def get_random_ws(workspace_path, length=8):
@@ -39,6 +39,13 @@ def main(task, num_docs):
     config()
     data_path = './MNIST_Data/test/t10k-images-idx3-ubyte'
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         f = Flow().load_config('mnist-index.yml')
         with f:
             f.index_ndarray(load_mnist(data_path), size=num_docs, batch_size=2)
