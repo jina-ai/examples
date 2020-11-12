@@ -1,6 +1,7 @@
 !NumpyIndexer
 with:
   index_filename: vec.gz
+  metric: cosine
 metas:
   name: vecidx
   workspace: $WORKDIR

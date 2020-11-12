@@ -6,6 +6,7 @@ import shutil
 import sys
 
 import click
+import matplotlib.pyplot as plt
 
 from jina.flow import Flow
 from jina.logging import default_logger as logger
@@ -13,9 +14,10 @@ from jina.proto import jina_pb2
 from jina.proto import uid
 
 
-num_docs = 8
-data_path = 'data/*/*.jpeg'
+num_docs = 100
+data_path = '../../data/women/**/*.jpeg'
 batch_size = 8
+TOP_K = 5
 
 def clean_workdir():
     if os.path.exists(os.environ['WORKDIR']):
@@ -30,15 +32,31 @@ def config():
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = '45678'
 
-def print_result(resp):
+def plot_topk_images(images):
+    n_row = 1
+    n_col = len(images)
+    _, axs = plt.subplots(n_row, n_col, figsize=(10, 10))
+    axs = axs.flatten()
+    for img, ax in zip(images, axs):
+        ax.axis('off')
+        ax.imshow(img)
+    plt.show()
+
+def uri2image(uri):
     import io
     from base64 import b64decode
     from PIL import Image
-    image_data_uri = resp.search.docs[0].matches[0].uri
-    header, encoded = image_data_uri.split(",", 1)
+    header, encoded = uri.split(",", 1)
     image_data = b64decode(encoded)
-    image = Image.open(io.BytesIO(image_data))
-    image.show()
+    return Image.open(io.BytesIO(image_data))
+
+def print_result(resp):
+    images = []
+    for i in range(TOP_K):
+        image_data_uri = resp.search.docs[0].matches[i].uri
+        image = uri2image(image_data_uri)
+        images.append(image)
+    plot_topk_images(images)
 
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
@@ -59,7 +77,7 @@ def query_generator(image_paths, text_queries):
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='data-all/fashion-200k/women/dresses/casual_and_day_dresses/51727804/51727804_0.jpeg')
+@click.option('--image_path', '-ip', default='../../data/women-fashion200k/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):
