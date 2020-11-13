@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
-
 import requests
-import sys
-import os
-from pprint import pprint
 
 default_phrase = "hey, dude"
 default_top_k = 10
+endpoint = "http://0.0.0.0:45678/api/search"
 
 
-def get_results(query="", top_k=default_top_k):
+def get_results(query: str="", top_k: int=default_top_k) -> list:
     headers = {
         "Content-Type": "application/json",
     }
@@ -17,7 +13,7 @@ def get_results(query="", top_k=default_top_k):
     data = f'{{"top_k": {top_k}, "mode": "search", "data": ["text:{query}"]}}'
 
     response = requests.post(
-        "http://0.0.0.0:45678/api/search", headers=headers, data=data
+        endpoint, headers=headers, data=data
     )
 
     content = response.json()
