@@ -15,7 +15,7 @@ from img_text_composition_models import TIRG
 
 class TirgImageEncoder(BaseTorchEncoder):
 
-    def __init__(self, model_path: str = 'checkpoint_fashion200k.pth',
+    def __init__(self, model_path: str = 'checkpoint_css3d.pth',
                  texts_path: str = 'texts.pkl',
                  channel_axis: int = -1, 
                  *args, **kwargs):
@@ -37,7 +37,7 @@ class TirgImageEncoder(BaseTorchEncoder):
                 texts = pickle.load(fp)
             self.model = TIRG(texts, 512)
             model_sd = torch.load(self.model_path, map_location=torch.device('cpu'))
-            self.model.load_state_dict(model_sd['model_state_dict'])
+            self.model.load_state_dict(model_sd['model_state_dict'], strict=False)
             self.model.eval()
             self.to_device(self.model)
         else:
