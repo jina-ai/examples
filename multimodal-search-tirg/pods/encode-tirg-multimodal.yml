@@ -1,6 +1,6 @@
 !TirgMultiModalEncoder
 with:
-  model_path: checkpoint_fashion200k.pth
+  model_path: checkpoint_css3d.pth
   texts_path: texts.pkl
   positional_modality: ['image', 'text']
 metas:
