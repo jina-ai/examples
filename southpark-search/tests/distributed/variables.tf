@@ -39,3 +39,9 @@ variable "docker_host" {
   type        = string
   default     = "sample_docker_host"
 }
+
+variable "key_name" {
+  type        = string
+  description = "The name for ssh key, used for aws_launch_configuration"
+}
+
