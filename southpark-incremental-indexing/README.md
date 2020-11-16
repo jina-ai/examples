@@ -27,8 +27,6 @@ In this demo, we use Jina to build a semantic search system, with the additional
 
 - [Running the example](#running-the-example)
 - [Overview](#overview)
-  - [What is incremental indexing?](#what-is-incremental-indexing)
-  - [Configuration changes](#configuration-changes)
 - [Documentation](#documentation)
 - [Stay tuned](#stay-tuned)
 - [License](#license)
