@@ -27,7 +27,7 @@ def transformer():
 def test_image_embeddings(transformer):
     imgs = []
     for img_name in range(4):
-        img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
+        img_path = os.path.join(cur_dir, f'imgs/{img_name}.png')
         with open(img_path, 'rb') as f:
             img = Image.open(img_path)
             img = img.convert('RGB')
