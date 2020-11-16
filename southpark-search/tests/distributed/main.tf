@@ -1,8 +1,7 @@
 provider "aws" {
-  version = "~> 2.63"
+  version = "~> 2.6"
   region  = "us-east-2"
 }
-
 
 #Creates AWS ECR repo for SouthPark image
 resource "aws_ecr_repository" "southpark" {

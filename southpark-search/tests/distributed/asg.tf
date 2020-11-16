@@ -28,12 +28,8 @@ resource "aws_launch_configuration" "lc" {
   key_name                    = var.key_name
   security_groups             = [aws_security_group.service_security_group.id]
   associate_public_ip_address = true
-  user_data                   = <<EOF
-#! /bin/bash
-sudo apt-get update
-sudo echo "ECS_CLUSTER=${var.cluster_name}" >> /etc/ecs/ecs.config
-EOF
 }
+
 
 resource "aws_autoscaling_group" "asg" {
   name                      = "test-asg"
@@ -43,7 +39,7 @@ resource "aws_autoscaling_group" "asg" {
   desired_capacity          = 3
   health_check_type         = "ELB"
   health_check_grace_period = 300
-  vpc_zone_identifier       = aws_subnet_ids.default.vpc_id
+  vpc_zone_identifier       = aws_subnet_ids.default.public_subnets
 
   target_group_arns     = [aws_lb_target_group.target_group.arn]
   protect_from_scale_in = true

@@ -32,7 +32,7 @@ resource "aws_lb_target_group" "target_group" {
   protocol    = "HTTP"
   target_type = "ip"
   deregistration_delay = 90
-  vpc_id      = "${aws_default_vpc.default_vpc.id}" # Referencing the default VPC
+  vpc_id      = "${aws_vpc.main.id}" # Referencing the default VPC
   health_check {
     healthy_threshold   = "3"
     interval            = "80"
