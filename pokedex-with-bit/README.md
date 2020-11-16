@@ -123,7 +123,7 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 ```python
 from jina.flow import Flow
 
-f = Flow.load_config('flow-index.yml')
+f = Flow.load_config('flows/index.yml')
 
 with f:
     f.index(input_fn, batch_size=128)
