@@ -15,7 +15,7 @@ def config(task):
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['SHARDS'] = str(8)
     os.environ['PARALLEL'] = str(parallel)
-    os.makedirs(os.environ['TMP_WORKSPACE'], exist_ok=True)
+    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45692))
 
 
@@ -24,8 +24,15 @@ def config(task):
 @click.option('--num_docs', '-n', default=500)
 def main(task, num_docs):
     config(task)
+    workspace = os.environ['WORKDIR']
     image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
     if task == 'index':
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index_files(image_src, batch_size=8, read_mode='rb', size=num_docs)

@@ -16,7 +16,7 @@ def config():
     os.environ['SHARDS'] = str(2)
     os.environ['TMP_DATA_DIR'] = '/tmp/jina/audio_data/ESC-50-master'
     os.environ['JINA_PORT'] = str(45678)
-    os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
+    os.environ['WORKDIR'] = os.environ.get('WORKDIR', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 
 def get_random_ws(workspace_path, length=8):
@@ -31,7 +31,13 @@ def get_random_ws(workspace_path, length=8):
 @click.option('--num_docs', '-n', default=50)
 def main(task, num_docs):
     config()
-    data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'audio')
+    data_path = os.path.join(os.environ['WORKDIR'], 'audio')
+        if os.path.exists(data_path):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {data_path} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
     if task == 'index':
         f = Flow().load_config('./flows/flow-index.yml')
         with f:

@@ -18,8 +18,8 @@ def config():
     os.environ.setdefault('JINA_MAX_DOCS', '100')
     os.environ.setdefault('JINA_PARALLEL', str(parallel))
     os.environ.setdefault('JINA_SHARDS', str(4))
-    os.environ.setdefault('JINA_WORKSPACE', './workspace')
-    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
+    os.environ.setdefault('WORKDIR', './workspace')
+    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ.setdefault('JINA_PORT', str(65481))
 
 
@@ -67,6 +67,13 @@ if __name__ == '__main__':
         print('choose between "index/search/dryrun" mode')
         exit(1)
     if sys.argv[1] == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         config()
         index()
     elif sys.argv[1] == 'search':

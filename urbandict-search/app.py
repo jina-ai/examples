@@ -38,9 +38,16 @@ def print_topk(resp, word):
 @click.option('--top_k', '-k', default=5)
 def main(task, num_docs, top_k):
     workspace_path = '/tmp/jina/urbandict'
-    os.environ['TMP_WORKSPACE'] = get_random_ws(workspace_path)
+    os.environ['WORKDIR'] = get_random_ws(workspace_path)
     data_fn = os.environ.get('WASHED_DATA_DIR', os.path.join(workspace_path, 'urbandict-word-defs.csv'))
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index_lines(filepath=data_fn, size=num_docs, batch_size=16)

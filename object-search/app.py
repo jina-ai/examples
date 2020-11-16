@@ -41,6 +41,13 @@ def config():
 def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspace):
     config()
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         if overwrite_workspace:
             clean_workdir()
         f = Flow.load_config('flow-index.yml')

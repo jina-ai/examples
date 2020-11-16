@@ -19,7 +19,7 @@ def config():
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['JINA_PORT'] = str(45678)
     os.environ['ENCODER'] = os.environ.get('ENCODER', 'jinaai/hub.executors.encoders.image.torchvision-mobilenet_v2')
-    os.environ['TMP_WORKSPACE'] = os.environ.get('TMP_WORKSPACE', get_random_ws(os.environ['TMP_DATA_DIR']))
+    os.environ['WORKDIR'] = os.environ.get('WORKDIR', get_random_ws(os.environ['TMP_DATA_DIR']))
 
 def get_random_ws(workspace_path, length=8):
     random.seed(RANDOM_SEED)
@@ -35,6 +35,13 @@ def main(task, num_docs):
     config()
     data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'jpg')
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         f = Flow().load_config('flow-index.yml')
         with f:
             f.index_files(f'{data_path}/*.jpg', size=num_docs, read_mode='rb', batch_size=2)
