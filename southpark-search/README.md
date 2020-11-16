@@ -498,6 +498,7 @@ Let's wrap up what we've covered in this demo.
 - Scale up the indexing procedure.
 - Speed up the procedure by using `read_only`
 - Explore the `metas` field in the YAML file.
+- Add incremental indexing to this example, in [this example](../southpark-incremental-indexing/README.md)
 
 ## Documentation
 

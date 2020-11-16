@@ -1,0 +1,13 @@
+!Flow
+pods:
+  extractor:
+    uses: pods/extract.yml
+  encoder:
+    uses: pods/encode.yml
+    timeout_ready: 1200000
+    read_only: true
+  indexer:
+    shards: 1
+    separated_workspace: true
+    uses_before: pods/index_cache.yml
+    uses: pods/index.yml
