@@ -6,3 +6,4 @@ tf_slim
 six
 soundfile
 librosa
+click

@@ -1,1 +1,2 @@
 jina[devel,torch,tensorflow,transformers]==0.6.4
+click
