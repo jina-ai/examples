@@ -3,7 +3,7 @@ import os
 
 from jina.flow import Flow
 from jina.proto import jina_pb2
-from jina.proto.ndarray.generic import GenericNdArray
+from jina.types.ndarray.generic import NdArray
 
 from pods.components import MyEncoder
 from optimization.data import get_data
@@ -38,8 +38,8 @@ def run_evaluation(targets, parameters, callback):
 def index_document_generator(num_doc, target):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
-        d = jina_pb2.Document()
-        GenericNdArray(d.blob).value = target['index']['data'][j]
+        d = jina_pb2.DocumentProto()
+        NdArray(d.blob).value = target['index']['data'][j]
         d.tags.update({'label_id': str(label_int)})
         yield d
 
@@ -57,9 +57,11 @@ def run_indexing(flow_file, targets):
 
 def process_result(response):
     # pass
-    for doc in response.docs:
-        print(doc.tags['label_id'])
-        print([match.tags['label_id'] for match in doc.matches])
+    for doc in response.search.docs:
+        doc_label = doc.tags['label_id']
+        pos_results = sum(1 for match in doc.matches if match.tags['label_id'] == doc_label)
+        print(f'Query label: {doc_label} - Positive results: {pos_results}')
+        # print('Matches labels: ', [match.tags['label_id'] for match in doc.matches])
         for evaluation in doc.evaluations:
 
             print(evaluation.op_name, evaluation.value)
@@ -68,8 +70,8 @@ def process_result(response):
 def evaluation_document_generator(num_doc, target):
     for j in range(num_doc):
         label_int = target['query-labels']['data'][j][0]
-        next_doc = jina_pb2.Document()
-        GenericNdArray(next_doc.blob).value = target['query']['data'][j]
+        next_doc = jina_pb2.DocumentProto()
+        NdArray(next_doc.blob).value = target['query']['data'][j]
         next_doc.tags.update({'label_id': str(label_int)})
         yield next_doc
 
@@ -77,7 +79,7 @@ def evaluation_document_generator(num_doc, target):
 def run_querying(flow_file, targets, callback):
     with Flow().load_config(flow_file) as evaluation_flow:
         evaluation_flow.search(
-            evaluation_document_generator(10, targets),
+            evaluation_document_generator(100, targets),
             output_fn=callback,
             callback_on_body=True,
         )
