@@ -26,7 +26,7 @@ def clean_workdir():
 
 
 def config():
-    os.environ['PARALLEL'] = '1'
+    os.environ['PARALLEL'] = '2'
     os.environ['SHARDS'] = '2'
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
@@ -60,7 +60,7 @@ def print_result(resp):
 
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
-        doc = jina_pb2.Document()
+        doc = jina_pb2.DocumentProto()
         chunk1 = doc.chunks.add()
         chunk2 = doc.chunks.add()
         chunk1.modality = 'image'

@@ -5,11 +5,9 @@ pods:
   read:
     uses: pods/image-read.yml
     read_only: true
-    parallel: $PARALLEL
   normalize:
     uses: pods/normalize.yml
     read_only: true
-    parallel: $PARALLEL
   encode:
     uses: jinaai/hub.executors.encoders.image.tirg
     # uses_internal: pods/encode-tirg-image.yml
