@@ -34,7 +34,7 @@ def test_image_embeddings(transformer):
             img = transformer(img)
             imgs.append(img)
     encoder = TirgImageEncoder(
-        model_path='checkpoint_css3d.pth',
+        model_path='checkpoint.pth',
         texts_path='texts.pkl',
         channel_axis=1,
     )

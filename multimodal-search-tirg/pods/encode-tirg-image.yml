@@ -1,6 +1,6 @@
 !TirgImageEncoder
 with:
-  model_path: checkpoint_css3d.pth
+  model_path: checkpoint.pth
   texts_path: texts.pkl
 metas:
   py_modules: 

@@ -42,11 +42,11 @@ def test_multimodal_embeddings(transformer):
     ]
     assert len(imgs) == len(img_captions)
     encoder = TirgMultiModalEncoder(
-        model_path='checkpoint_css3d.pth',
+        model_path='checkpoint.pth',
         texts_path='texts.pkl',
         positional_modality=['image', 'text'],
         channel_axis=1,
     )
-    embeddings = encoder.encode([imgs, img_captions])
+    embeddings = encoder.encode(imgs, img_captions)
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
     np.testing.assert_almost_equal(embeddings, expected, decimal=3)

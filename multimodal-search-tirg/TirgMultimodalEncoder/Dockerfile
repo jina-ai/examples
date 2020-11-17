@@ -7,7 +7,7 @@ WORKDIR /workspace
 # Get model and texts file
 RUN apt-get -y update \
     && apt-get -y install wget \
-    && wget https://storage.googleapis.com/image_retrieval_css/pretrained_models/checkpoint_css3d.pth \
+    && wget -O checkpoint.pth https://storage.googleapis.com/image_retrieval_css/pretrained_models/checkpoint_css3d.pth \
     && wget https://github.com/bwanglzu/tirg-css/raw/main/texts.pkl
 
 # install the third-party requirements
