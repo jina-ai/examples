@@ -1,4 +1,6 @@
 !MyEncoder
+with:
+  target_dimension: $JINA_TARGET_DIMENSION
 metas:
   name: myenc  # a customized name
   workspace: $JINA_WORKSPACE

@@ -6,10 +6,10 @@ with:
 pods:
   encode:
     uses: pods/encoder.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
   index:
     uses: pods/indexer.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     polling: all
     uses_after: pods/reduce.yml

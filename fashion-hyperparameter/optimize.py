@@ -1,11 +1,12 @@
 import csv
 import os
 
-from pathlib import Path
-
 from jina.flow import Flow
-from jina.helloworld.helper import download_data
 from jina.proto import jina_pb2
+from jina.proto.ndarray.generic import GenericNdArray
+
+from pods.components import MyEncoder
+from optimization.data import get_data
 
 
 class Hyperoptimizer:
@@ -27,36 +28,20 @@ class Hyperoptimizer:
         pass
 
 
-TEST_PARAMETERS = {
-    'JINA_INDEX_DATA_FILE': 'tests/hyperparameter/index_data.csv',
-    'JINA_EVALUATION_DATA_FILE': 'tests/hyperparameter/query_data.csv',
-    'JINA_WORKSPACE': 'workspace_eval',
-}
-
-
 def run_evaluation(targets, parameters, callback):
     for environment_variable, value in parameters.items():
         os.environ[environment_variable] = str(value)
     run_indexing('flows/index.yml', targets)
-    run_querying('flows/query.yml', callback)
+    run_querying('flows/query.yml', targets, callback)
 
 
 def index_document_generator(num_doc, target):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
         d = jina_pb2.Document()
-        d.blob.CopyFrom((target['index']['data'][j]))
-        d.tags.update({'label_id': label_int})
+        GenericNdArray(d.blob).value = target['index']['data'][j]
+        d.tags.update({'label_id': str(label_int)})
         yield d
-
-
-def get_index_document_iterator(index_filename):
-    with open(index_filename, 'r') as index_file:
-        for doc_id, row in enumerate(index_file.readlines()):
-            next_doc = jina_pb2.Document()
-            next_doc.tags['id'] = str(doc_id)
-            next_doc.text = row
-            yield next_doc
 
 
 def run_indexing(flow_file, targets):
@@ -64,42 +49,35 @@ def run_indexing(flow_file, targets):
         print('--------------------------------------------------------')
         print('----- Workspace already exists. Skipping indexing. -----')
         print('--------------------------------------------------------')
-    else:
-        with Flow().load_config(flow_file) as f:
-            f.index(index_document_generator(4096, targets), batch_size=2048)
+        return
+
+    with Flow().load_config(flow_file) as f:
+        f.index(index_document_generator(60000, targets), batch_size=2048)
 
 
 def process_result(response):
     # pass
     for doc in response.docs:
-        print(doc.text)
-        print([(match.text, match.tags['id']) for match in doc.matches])
+        print(doc.tags['label_id'])
+        print([match.tags['label_id'] for match in doc.matches])
         for evaluation in doc.evaluations:
 
             print(evaluation.op_name, evaluation.value)
 
-    # for doc in response.docs:
-    #     print(doc.text)
-    # print(response)
+
+def evaluation_document_generator(num_doc, target):
+    for j in range(num_doc):
+        label_int = target['query-labels']['data'][j][0]
+        next_doc = jina_pb2.Document()
+        GenericNdArray(next_doc.blob).value = target['query']['data'][j]
+        next_doc.tags.update({'label_id': str(label_int)})
+        yield next_doc
 
 
-def get_evaluation_document_iterator(evaluation_filename):
-    with open(evaluation_filename, 'r') as evaluation_file:
-        evaluation_reader = csv.reader(evaluation_file)
-        for row in evaluation_reader:
-            next_doc = jina_pb2.Document()
-            next_doc.text = row[1]
-            groundtruth_doc = jina_pb2.Document()
-            for match_id in row[0].split(' '):
-                match = groundtruth_doc.matches.add()
-                match.tags['id'] = match_id
-            yield next_doc, groundtruth_doc
-
-
-def run_querying(flow_file, callback):
+def run_querying(flow_file, targets, callback):
     with Flow().load_config(flow_file) as evaluation_flow:
         evaluation_flow.search(
-            get_evaluation_document_iterator(os.environ['JINA_EVALUATION_DATA_FILE']),
+            evaluation_document_generator(10, targets),
             output_fn=callback,
             callback_on_body=True,
         )
@@ -117,37 +95,34 @@ def optimize():
 
 
 def config_environment():
-    os.environ.setdefault('JINA_WORKSPACE', 'workspace_eval')
+    os.environ.setdefault('JINA_DATA_DIRECTORY', 'data')
+    os.environ.setdefault('JINA_PARALLEL', '1')
+    os.environ.setdefault('JINA_SHARDS', '1')
+
+
+def get_run_parameters(target_dimension):
+    return {
+        'JINA_INDEX_DATA_FILE': 'tests/hyperparameter/index_data.csv',
+        'JINA_EVALUATION_DATA_FILE': 'tests/hyperparameter/query_data.csv',
+        'JINA_WORKSPACE': f'workspace_eval_{target_dimension}',
+        'JINA_TARGET_DIMENSION': f'{target_dimension}'
+    }
+
+
+def optimize_target_dimension(data):
+    for i in range(64, 65):
+        parameters = get_run_parameters(i)
+        run_evaluation(data, parameters, process_result)
 
 
 def main():
     # target = Target('localhost', 8000, 'http')
     # delete_flow(target, 'ccbe20d2-1ef3-4afe-b4cd-af2ef04ff648')
-    workspace = os.environ['JINA_WORKSPACE']
-    Path(workspace).mkdir(parents=True, exist_ok=True)
+    config_environment()
 
-    targets = {
-        'index-labels': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
-            'filename': os.path.join(workspace, 'index-labels'),
-        },
-        'query-labels': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
-            'filename': os.path.join(workspace, 'query-labels'),
-        },
-        'index': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
-            'filename': os.path.join(workspace, 'index'),
-        },
-        'query': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
-            'filename': os.path.join(workspace, 'query'),
-        },
-    }
+    data = get_data()
 
-    download_data(targets)
-
-    run_evaluation(TEST_PARAMETERS, process_result)
+    optimize_target_dimension(data)
 
 
 if __name__ == '__main__':
