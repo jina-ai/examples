@@ -8,11 +8,9 @@ pods:
   image_read:
     uses: pods/image-read.yml
     read_only: true
-    parallel: $PARALLEL
   normalize:
     uses: pods/normalize.yml
     read_only: true
-    parallel: $PARALLEL
   pass_text:
     uses: pods/query-text-filter.yml #filterql text modality
     read_only: true
