@@ -23,5 +23,3 @@ requests:
       - !VectorSearchDriver
         with:
           traversal_paths: ['r']
-    ControlRequest:
-      - !ControlReqDriver {}

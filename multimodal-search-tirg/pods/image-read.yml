@@ -20,5 +20,3 @@ requests:
       - !CraftDriver
         with:
           traversal_paths: ['c']
-    ControRequest:
-      - !ControlReqDriver {}

@@ -17,5 +17,3 @@ requests:
         with:
           traversal_paths: ['c']
           executor: img_norm
-    ControlRequest:
-      - !ControlReqDriver {}
