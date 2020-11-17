@@ -26,7 +26,7 @@ def clean_workdir():
 
 
 def config():
-    os.environ['PARALLEL'] = '2'
+    os.environ['PARALLEL'] = '1'
     os.environ['SHARDS'] = '2'
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)

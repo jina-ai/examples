@@ -20,5 +20,3 @@ requests:
       - !KVSearchDriver
         with:
           traversal_paths: ['m']
-    ControlRequest:
-      - !ControlReqDriver {}
