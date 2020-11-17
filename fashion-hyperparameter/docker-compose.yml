@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  flow:
+    image: south
+    build:
+      context: .
+      dockerfile: tests/hyperparameter/Dockerfile
+    ports:
+      - "8000:8000"
+      - "45678:45678"
+    env_file:
+      - tests/hyperparameter/.env
+    expose:
+      - 10000-60000

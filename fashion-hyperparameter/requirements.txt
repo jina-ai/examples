@@ -1,0 +1,4 @@
+click
+transformers==3.3.1
+torch
+-e git+git://github.com/jina-ai/jina.git#egg=jina[scipy]
