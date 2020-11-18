@@ -15,7 +15,7 @@ from jina.proto import uid
 
 
 num_docs = 100
-data_path = '../../data/women/**/*.jpeg'
+data_path = 'data/f8k/*.jpg'
 batch_size = 8
 TOP_K = 5
 
@@ -26,7 +26,7 @@ def clean_workdir():
 
 
 def config():
-    os.environ['PARALLEL'] = '1'
+    os.environ['PARALLEL'] = '2'
     os.environ['SHARDS'] = '2'
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
@@ -60,7 +60,8 @@ def print_result(resp):
 
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
-        doc = jina_pb2.Document()
+        doc = jina_pb2.DocumentProto()
+
         chunk1 = doc.chunks.add()
         chunk2 = doc.chunks.add()
         chunk1.modality = 'image'
@@ -77,7 +78,7 @@ def query_generator(image_paths, text_queries):
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='../../data/women-fashion200k/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
+@click.option('--image_path', '-ip', default='data/f8k/1235685934_be89b231fb.jpg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):
