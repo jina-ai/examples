@@ -15,7 +15,11 @@
 </p>
 
 # Multimodal Search With TIRG
-In this example we make a multimodal search engine using [TIRG](https://github.com/google/tirg)(Composing Text and Image for Image Retrieval). We are using the Fashion200k dataset for this. In multimodal search engines we give more than one modalities at the input. Over here we give a cloth image and text as input. At index time we encode images with TIRG's image encoder. At query time we use TIRG Multimodal encoder constructs feature embedding using both the inputs(image & text) which is used for searching over the indexed images. The query text is the modification we want to apply over the query image.
+In this example we make a multimodal search engine using [TIRG](https://github.com/google/tirg)(Composing Text and Image for Image Retrieval). We are using the Fashion200k dataset for this. In multimodal search engines we give more than one modalities at the input. Over here we give a cloth image and text as input. At index time we encode images with TIRG's image encoder. At query time we use TIRG Multimodal encoder constructs feature embedding using both the inputs(image & text) which is used for searching over the indexed images. The query text is the modification we want to apply over the query image.  
+
+TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging MultiModalEncoder's capabilities to handle any number and any type of modality.  
+
+Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1 for fashion200k dataset. Some queries might not give good results.  
 
 <p align="center">
   <img src=".readme_images/fashion200k.png?raw=true" alt="Jina banner" width="70%">
