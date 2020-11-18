@@ -51,7 +51,8 @@ Start the Docker. Go to TirgMultimodalEncoder folder and run the below command
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
 ## Index Image Data
-Index 1000 images. This can take some time and you can try a smaller number as well.
+Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images need before sending them in the encoder. If you decide to index the large datasets, it is recommendable to increase the number of shards and parallelization.  
+
 ```bash
 python app.py -task index -n 1000 -overwrite True
 ```
@@ -64,7 +65,8 @@ If it's running successfully, you should be able to see logs scrolling in the co
 </p>
 
 ## Query
-This will start the server, run your query and give result as a pop-up.
+This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We QueryLanguageDriver to redirect text and image documents based on modality.  
+
 ```bash
 python app.py -task query --image_path path_to_image --text_query 'change color to red'
 ```
