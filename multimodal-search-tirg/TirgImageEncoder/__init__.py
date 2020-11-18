@@ -37,7 +37,7 @@ class TirgImageEncoder(BaseTorchEncoder):
                 texts = pickle.load(fp)
             self.model = TIRG(texts, 512)
             model_sd = torch.load(self.model_path, map_location=torch.device('cpu'))
-            self.model.load_state_dict(model_sd['model_state_dict'], strict=False)
+            self.model.load_state_dict(model_sd['model_state_dict'])
             self.model.eval()
             self.to_device(self.model)
         else:
