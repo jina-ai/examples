@@ -1,0 +1,11 @@
+!MyEvaluator
+metas:
+  name: evaluation
+requests:
+  on:
+    [ SearchRequest ]:
+      - !FieldEvaluteDriver
+        with:
+          field: tags__label
+          executor: precision
+          traversal_paths: [ 'r' ]

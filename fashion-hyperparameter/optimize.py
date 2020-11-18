@@ -6,6 +6,7 @@ from jina.proto import jina_pb2
 from jina.types.ndarray.generic import NdArray
 
 from pods.components import MyEncoder
+from pods.evaluate import MyEvaluator
 from optimization.data import get_data
 
 
@@ -58,6 +59,9 @@ def run_indexing(flow_file, targets):
 def process_result(response):
     # pass
     for doc in response.search.docs:
+        print(doc.evaluations)
+        import sys
+        sys.exit()
         doc_label = doc.tags['label_id']
         pos_results = sum(1 for match in doc.matches if match.tags['label_id'] == doc_label)
         print(f'Query label: {doc_label} - Positive results: {pos_results}')
@@ -72,8 +76,12 @@ def evaluation_document_generator(num_doc, target):
         label_int = target['query-labels']['data'][j][0]
         next_doc = jina_pb2.DocumentProto()
         NdArray(next_doc.blob).value = target['query']['data'][j]
-        next_doc.tags.update({'label_id': str(label_int)})
-        yield next_doc
+
+        groundtruth_doc = jina_pb2.DocumentProto()
+        m1 = groundtruth_doc.matches.add()
+        m1.tags.update({'label_id': str(label_int)})
+
+        yield next_doc, groundtruth_doc
 
 
 def run_querying(flow_file, targets, callback):
@@ -112,6 +120,11 @@ def get_run_parameters(target_dimension):
 
 
 def optimize_target_dimension(data):
+
+    # optimizer = Hyperoptimizer(setup_parameters)
+    # for parameterset, callback in optimizer.get_parameters():
+    #     run_evaluation(data, parameters, callback)
+
     for i in range(64, 65):
         parameters = get_run_parameters(i)
         run_evaluation(data, parameters, process_result)
