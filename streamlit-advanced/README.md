@@ -1,6 +1,6 @@
 # Jina + Streamlit
 
-A simple front-end for [Jina](http://www.jina.ai) neural search framework, written in [Streamlit](http://www.streamlit.io), that supports querying with image, text, or drawing on a canvas.
+A more comprehensive [Streamlit](http://www.streamlit.io) front-end for [Jina](http://www.jina.ai) neural search framework.
 
 ## 1. Clone repo, install requirements
 
