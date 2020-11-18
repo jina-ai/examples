@@ -27,8 +27,7 @@ resource "aws_ecs_task_definition" "southpark_task" {
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 45678,
-          "hostPort": 45678
+          "containerPort": 45678
         }
       ],
       "memory": 512,
@@ -40,8 +39,7 @@ resource "aws_ecs_task_definition" "southpark_task" {
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 80,
-          "hostPort": 80
+          "containerPort": 49152
         }
       ],
       "memory": 512,
@@ -53,8 +51,7 @@ resource "aws_ecs_task_definition" "southpark_task" {
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 8080,
-          "hostPort": 8080
+          "containerPort": 49153
         }
       ],
       "memory": 512,
@@ -97,7 +94,8 @@ resource "aws_ecs_service" "southpark_service" {
   cluster         = "${aws_ecs_cluster.southpark_cluster.id}"
   task_definition = "${aws_ecs_task_definition.southpark_task.arn}"
   launch_type     = "FARGATE"
-  desired_count   = 3 #3 Containers
+  desired_count   = 1 
+  health_check_grace_period_seconds = 30
 
   load_balancer {
     target_group_arn = "${aws_lb_target_group.target_group.arn}" # Referencing our target group
