@@ -10,7 +10,7 @@ def get_results(query: str="", top_k: int=default_top_k) -> list:
         "Content-Type": "application/json",
     }
 
-    data = f'{{"top_k": {top_k}, "mode": "search", "data": ["text:{query}"]}}'
+    data = '{"top_k": ' + str(top_k) + ', "mode": "search", "data": ["text: ' + query + '"]}'
 
     response = requests.post(
         endpoint, headers=headers, data=data
