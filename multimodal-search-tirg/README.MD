@@ -58,7 +58,7 @@ Start the Docker. Go to TirgMultimodalEncoder folder and run the below command
 
 ## Index Image Data
 <p align="center">
-  <img src=".readme_images/index.png?raw=true" alt="Jina banner" width="90%">
+  <img src=".readme_images/index.png?raw=true" alt="Jina banner" width="100%">
 </p>
 Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images need before sending them in the encoder. If you decide to index the large datasets, it is recommendable to increase the number of shards and parallelization.  
 
@@ -75,7 +75,7 @@ If it's running successfully, you should be able to see logs scrolling in the co
 
 ## Query
 <p align="center">
-  <img src=".readme_images/query.png?raw=true" alt="Jina banner" width="90%">
+  <img src=".readme_images/query.png?raw=true" alt="Jina banner" width="100%">
 </p>
 This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We use QueryLanguageDriver to redirect text and image documents based on modality.  
 
