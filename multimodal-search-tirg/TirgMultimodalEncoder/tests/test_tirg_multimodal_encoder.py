@@ -27,11 +27,10 @@ def test_multimodal_embeddings(transformer):
     imgs = []
     for img_name in range(4):
         img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
-        with open(img_path, 'rb'):
-            img = Image.open(img_path)
-            img = img.convert('RGB')
-            img = transformer(img)
-            imgs.append(img)
+        img = Image.open(img_path)
+        img = img.convert('RGB')
+        img = transformer(img)
+        imgs.append(img)
     img_captions = [
         'blue short anorak hood',
         'blue cobalt black woven strapless metallic brocade party dress',
