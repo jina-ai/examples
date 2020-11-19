@@ -10,25 +10,6 @@ from pods.evaluate import MyEvaluator
 from optimization.data import get_data
 
 
-class Hyperoptimizer:
-    def __init__(self):
-        self.parameters = [
-            {
-                'JINA_INDEX_DATA_FILE': 'tests/hyperparameter/index_data.csv',
-                'JINA_EVALUATION_DATA_FILE': 'tests/hyperparameter/query_data.csv',
-                'JINA_WORKSPACE': 'workspace_eval',
-                'JINA_MATRIX_SIZE': size,
-            }
-            for size in range(10, 100)
-        ]
-
-    def parameters_iterator(self):
-        yield {}, self.save_results
-
-    def save_results(self, results):
-        pass
-
-
 def run_evaluation(targets, parameters, callback):
     for environment_variable, value in parameters.items():
         os.environ[environment_variable] = str(value)
@@ -41,7 +22,7 @@ def index_document_generator(num_doc, target):
         label_int = target['index-labels']['data'][j][0]
         d = jina_pb2.DocumentProto()
         NdArray(d.blob).value = target['index']['data'][j]
-        d.tags.update({'label_id': str(label_int)})
+        d.tags['label_id'] = str(label_int)
         yield d
 
 
@@ -55,21 +36,24 @@ def run_indexing(flow_file, targets):
     with Flow().load_config(flow_file) as f:
         f.index(index_document_generator(60000, targets), batch_size=2048)
 
+class Callback:
+    def __init__(self):
+        self.evaluation_values = {}
+        self.n_docs = 0
+    
+    def get_mean_evaluation(self, op_name=None):
+        if op_name:
+            return self.evaluation_values[op_name]/self.n_docs
+        return {metric:val/self.n_docs for metric, val in self.evaluation_values.items()}
 
-def process_result(response):
-    # pass
-    for doc in response.search.docs:
-        print(doc.evaluations)
-        import sys
-        sys.exit()
-        doc_label = doc.tags['label_id']
-        pos_results = sum(1 for match in doc.matches if match.tags['label_id'] == doc_label)
-        print(f'Query label: {doc_label} - Positive results: {pos_results}')
-        # print('Matches labels: ', [match.tags['label_id'] for match in doc.matches])
-        for evaluation in doc.evaluations:
-
-            print(evaluation.op_name, evaluation.value)
-
+    def process_result(self, response):
+        self.n_docs = len(response.search.docs)
+        print(f'>> Num of docs: {self.n_docs}')
+        for doc, groundtruth in zip(response.search.docs, response.search.groundtruths):
+            for evaluation in doc.evaluations: 
+                # print(evaluation.op_name, evaluation.value)
+                # print(evaluation)
+                self.evaluation_values[evaluation.op_name] = self.evaluation_values.get(evaluation.op_name, 0.0) + evaluation.value
 
 def evaluation_document_generator(num_doc, target):
     for j in range(num_doc):
@@ -79,7 +63,7 @@ def evaluation_document_generator(num_doc, target):
 
         groundtruth_doc = jina_pb2.DocumentProto()
         m1 = groundtruth_doc.matches.add()
-        m1.tags.update({'label_id': str(label_int)})
+        m1.tags['label_id'] = str(label_int)
 
         yield next_doc, groundtruth_doc
 
@@ -93,24 +77,14 @@ def run_querying(flow_file, targets, callback):
         )
 
 
-def optimize():
-    optimizer = Hyperoptimizer()
-
-    for parameters, callback in optimizer.iterate():
-        run_indexing(parameters)
-        values = run_evaluation(parameters)
-        callback(values)
-
-    return optimizer
-
-
 def config_environment():
     os.environ.setdefault('JINA_DATA_DIRECTORY', 'data')
     os.environ.setdefault('JINA_PARALLEL', '1')
     os.environ.setdefault('JINA_SHARDS', '1')
 
 
-def get_run_parameters(target_dimension):
+def get_run_parameters(trial):
+    target_dimension = trial.suggest_int('target_dimension', 32, 256, step=32)
     return {
         'JINA_INDEX_DATA_FILE': 'tests/hyperparameter/index_data.csv',
         'JINA_EVALUATION_DATA_FILE': 'tests/hyperparameter/query_data.csv',
@@ -119,82 +93,26 @@ def get_run_parameters(target_dimension):
     }
 
 
-def optimize_target_dimension(data):
+def optimize_target_dimension(data, trial):
+    parameters = get_run_parameters(trial)
+    cb = Callback()
+    run_evaluation(data, parameters, cb.process_result)
+    evaluation_values = cb.get_mean_evaluation()
+    op_name = list(evaluation_values)[0]
+    mean_eval = evaluation_values[op_name]
+    print(f'Avg {op_name}: {mean_eval}')
+    return mean_eval
 
-    # optimizer = Hyperoptimizer(setup_parameters)
-    # for parameterset, callback in optimizer.get_parameters():
-    #     run_evaluation(data, parameters, callback)
 
-    for i in range(64, 65):
-        parameters = get_run_parameters(i)
-        run_evaluation(data, parameters, process_result)
-
-
-def main():
-    # target = Target('localhost', 8000, 'http')
-    # delete_flow(target, 'ccbe20d2-1ef3-4afe-b4cd-af2ef04ff648')
+def main(trial):
     config_environment()
-
     data = get_data()
-
-    optimize_target_dimension(data)
+    return optimize_target_dimension(data, trial)
 
 
 if __name__ == '__main__':
-    main()
-
-
-# @dataclass
-# class Target:
-#     host: str = None
-#     port: int = None
-#     protocoll: str = 'http'
-
-#     @property
-#     def prefix(self):
-#         return f"{self.protocoll}://{self.host}:{self.port}"
-
-
-# def delete_flow(target, flow_id):
-#     response = requests.delete(f'{target.prefix}/v1/flow?flow_id={flow_id}')
-#     print(response.json())
-
-# def run_remote_indexing(target):
-#     flow_files = [
-#         ('uses_files', ('pods/encode.yml', open('pods/encode.yml', 'rb'))),
-#         ('uses_files', ('pods/extract.yml', open('pods/extract.yml', 'rb'))),
-#         ('uses_files', ('pods/index.yml', open('pods/index.yml', 'rb'))),
-#         ('pymodules_files', ('pods/text_loader.py', open('pods/text_loader.py', 'rb'))),
-#         (
-#             'yamlspec',
-#             (
-#                 'tests/hyperparameter/flow-index.yml',
-#                 open('tests/hyperparameter/flow-index.yml', 'rb'),
-#             ),
-#         ),
-#     ]
-
-#     response_json = requests.put(
-#         f'{target.prefix}/v1/flow/yaml', files=flow_files
-#     ).json()
-#     print(response_json)
-#     # {'status_code': 200, 'flow_id': '6203e1af-67ed-46cd-a514-eae7d2d760a3', 'host': '0.0.0.0', 'port': 45678, 'status': 'started'}
-#     if response_json['status_code'] != 200:
-#         raise Exception(f"Could not start a flow with error: {response_json}")
-#     # flow_id = response_json['flow_id']
-#     for batch in get_data_batches():
-#         requests.post('http://localhost:45678/api/index', json={'data': batch})
-
-#     delete_flow(target, response_json['flow_id'])
-
-
-# # curl --request POST -d '{"top_k": 10, "data": ["text:hey, dude"]}' -H 'Content-Type: application/json' '0.0.0.0:45678/api/search' | \
-# #     jq -e ".search.docs[] | .matches[] | .text"
-
-
-# # RUN bash get_data.sh ./data && \
-# #     python app.py -t index && \
-# #     rm -rf data
-
-# #     -H  "accept: application/json" \
-# #     -H  "Content-Type: multipart/form-data" \
+    import optuna
+    study = optuna.create_study(direction='maximize')
+    study.optimize(main, n_trials=5)
+    print('Number of finished trials:', len(study.trials))
+    print('Best trial:', study.best_trial.params)

@@ -18,7 +18,6 @@ class MyEvaluator(BaseRankingEvaluator):
         :param desired: the expected documents matches ids sorted as they are expected
         :return the evaluation metric value for the request document
         """
-        print("------------------------------")
         desired_label = desired[0]
 
         ret = 0.0

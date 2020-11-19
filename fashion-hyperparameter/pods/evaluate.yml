@@ -6,7 +6,7 @@ metas:
 requests:
   on:
     [ SearchRequest ]:
-      - !FieldEvaluateDriver
+      - !RankEvaluateDriver
         with:
           field: tags__label_id
           executor: precision
