@@ -1,3 +1,16 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Jina + Streamlit](#jina--streamlit)
+  - [1. Clone repo, install requirements](#1-clone-repo-install-requirements)
+  - [1. Run Docker image](#1-run-docker-image)
+  - [3. Start up Streamlit front end](#3-start-up-streamlit-front-end)
+  - [4. Set endpoint](#4-set-endpoint)
+  - [5. Search!](#5-search)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Jina + Streamlit
 
 A more comprehensive [Streamlit](http://www.streamlit.io) front-end for [Jina](http://www.jina.ai) neural search framework.
