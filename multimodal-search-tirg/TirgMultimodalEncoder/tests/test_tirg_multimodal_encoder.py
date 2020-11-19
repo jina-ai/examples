@@ -3,9 +3,8 @@ __license__ = "Apache-2.0"
 
 import os
 
-import torch
-import numpy as np
 import pytest
+import numpy as np
 from PIL import Image
 import torchvision
 
@@ -28,16 +27,16 @@ def test_multimodal_embeddings(transformer):
     imgs = []
     for img_name in range(4):
         img_path = os.path.join(cur_dir, f'imgs/{img_name}.jpeg')
-        with open(img_path, 'rb') as f:
+        with open(img_path, 'rb'):
             img = Image.open(img_path)
             img = img.convert('RGB')
             img = transformer(img)
             imgs.append(img)
     img_captions = [
-        'add blue circle to bottom-center',
-        'remove large brown object',
-        'remove large green circle',
-        'add small object to top-center'
+        'blue short anorak hood',
+        'blue cobalt black woven strapless metallic brocade party dress',
+        'black short sleeve classic fit pique polo shirt',
+        'gray essentials roll waist pants',
     ]
     assert len(imgs) == len(img_captions)
     encoder = TirgMultiModalEncoder(
