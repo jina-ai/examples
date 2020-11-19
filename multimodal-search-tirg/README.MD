@@ -14,12 +14,12 @@
 
 </p>
 
-# Multimodal Search With TIRG
+# Multimodal Search With TIRG & fashion200k
 In this example we make a multimodal search engine using [TIRG](https://github.com/google/tirg)(Composing Text and Image for Image Retrieval). We are using the Fashion200k dataset for this. In multimodal search engines we give more than one modalities at the input. Over here we give a cloth image and text as input. At index time we encode images with TIRG's image encoder. At query time we use TIRG Multimodal encoder constructs feature embedding using both the inputs(image & text) which is used for searching over the indexed images. The query text is the modification we want to apply over the query image.  
 
 TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging MultiModalEncoder's capabilities to handle any number and any type of modality.  
 
-The model is trained for certain types of transformation such as type of dresses, color or length. Hence it is limited in the transformations it can do.  
+The model is trained for certain types of transformation such as type of dresses, color or length. Hence it is limited in the transformations it can do. ex. replace with 3/4 length, replace with beige  
 
 Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1 for fashion200k dataset. Some queries might not give good results.  
 
@@ -58,7 +58,7 @@ Start the Docker. Go to TirgMultimodalEncoder folder and run the below command
 
 ## Index Image Data
 <p align="center">
-  <img src=".README_images/index.png?raw=true" alt="Jina banner" width="80%">
+  <img src=".readme_images/index.png?raw=true" alt="Jina banner" width="90%">
 </p>
 Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images need before sending them in the encoder. If you decide to index the large datasets, it is recommendable to increase the number of shards and parallelization.  
 
@@ -75,7 +75,7 @@ If it's running successfully, you should be able to see logs scrolling in the co
 
 ## Query
 <p align="center">
-  <img src=".README_images/query.png?raw=true" alt="Jina banner" width="80%">
+  <img src=".readme_images/query.png?raw=true" alt="Jina banner" width="90%">
 </p>
 This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We use QueryLanguageDriver to redirect text and image documents based on modality.  
 
