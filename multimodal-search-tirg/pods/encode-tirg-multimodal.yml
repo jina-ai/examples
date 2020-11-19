@@ -1,0 +1,15 @@
+!TirgMultiModalEncoder
+with:
+  model_path: checkpoint.pth
+  texts_path: texts.pkl
+  positional_modality: ['image', 'text']
+metas:
+  py_modules: 
+    - workspace/img_text_composition_models.py
+    - workspace/text_model.py
+    - workspace/torch_functions.py
+    - workspace/__init__.py
+requests:
+  on:
+    SearchRequest:
+      - !MultiModalDriver {}

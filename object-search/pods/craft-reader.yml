@@ -2,7 +2,7 @@
 components:
   - !ImageReader
     with:
-      from_bytes: True
+      channel_axis: -1
     metas:
       name: img_read
   - !ImageNormalizer  # This does 1/255
