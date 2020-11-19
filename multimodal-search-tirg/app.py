@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 from jina.flow import Flow
 from jina.logging import default_logger as logger
 from jina.proto import jina_pb2
-from jina.proto import uid
+from jina.types.document import uid
 
 
 num_docs = 100
-data_path = '../../data/women/**/*.jpeg'
+data_path = 'data/women/**/*.jpeg'
 batch_size = 8
 TOP_K = 5
 
@@ -77,7 +77,7 @@ def query_generator(image_paths, text_queries):
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='../../data/women-fashion200k/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
+@click.option('--image_path', '-ip', default='data/women-fashion200k/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):

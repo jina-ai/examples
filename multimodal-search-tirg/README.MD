@@ -19,6 +19,8 @@ In this example we make a multimodal search engine using [TIRG](https://github.c
 
 TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging MultiModalEncoder's capabilities to handle any number and any type of modality.  
 
+The model is trained for certain types of transformation such as type of dresses, color or length. Hence it is limited in the transformations it can do.  
+
 Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1 for fashion200k dataset. Some queries might not give good results.  
 
 <p align="center">
@@ -55,6 +57,9 @@ Start the Docker. Go to TirgMultimodalEncoder folder and run the below command
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
 ## Index Image Data
+<p align="center">
+  <img src=".README_images/index.png?raw=true" alt="Jina banner" width="80%">
+</p>
 Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images need before sending them in the encoder. If you decide to index the large datasets, it is recommendable to increase the number of shards and parallelization.  
 
 ```bash
@@ -69,7 +74,10 @@ If it's running successfully, you should be able to see logs scrolling in the co
 </p>
 
 ## Query
-This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We QueryLanguageDriver to redirect text and image documents based on modality.  
+<p align="center">
+  <img src=".README_images/query.png?raw=true" alt="Jina banner" width="80%">
+</p>
+This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We use QueryLanguageDriver to redirect text and image documents based on modality.  
 
 ```bash
 python app.py -task query --image_path path_to_image --text_query 'change color to red'
