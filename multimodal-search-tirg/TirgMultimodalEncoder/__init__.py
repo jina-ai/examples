@@ -19,7 +19,7 @@ from img_text_composition_models import TIRG
 
 class TirgMultiModalEncoder(TorchDevice, BaseMultiModalEncoder):
 
-    def __init__(self, model_path: str = 'checkpoint_fashion200k.pth',
+    def __init__(self, model_path: str = 'checkpoint.pth',
                  texts_path: str = 'texts.pkl',
                  positional_modality: List[str] = ['image', 'text'],
                  channel_axis: int = -1,

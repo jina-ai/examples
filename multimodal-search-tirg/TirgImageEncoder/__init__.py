@@ -15,7 +15,7 @@ from img_text_composition_models import TIRG
 
 class TirgImageEncoder(BaseTorchEncoder):
 
-    def __init__(self, model_path: str = 'checkpoint_fashion200k.pth',
+    def __init__(self, model_path: str = 'checkpoint.pth',
                  texts_path: str = 'texts.pkl',
                  channel_axis: int = -1, 
                  *args, **kwargs):

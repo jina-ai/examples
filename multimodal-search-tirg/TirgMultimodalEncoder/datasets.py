@@ -71,12 +71,12 @@ class CSSDataset(BaseDataset):
     self.img_path = path + '/images/'
     self.transform = transform
     self.split = split
-    self.data = np.load(path + '/css_toy_dataset_novel2_small.dup.npy').item()
+    self.data = np.load(path + '/css_toy_dataset_novel2_small.dup.npy', allow_pickle=True, encoding='latin1').item()
     self.mods = self.data[self.split]['mods']
     self.imgs = []
     for objects in self.data[self.split]['objects_img']:
       label = len(self.imgs)
-      if labels in self.data[self.split]:
+      if label in self.data[self.split]:
         label = self.data[self.split]['labels'][label]
       self.imgs += [{
           'objects': objects,
