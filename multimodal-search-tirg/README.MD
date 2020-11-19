@@ -29,6 +29,7 @@ Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1
 <p align="center">
   <img src="https://github.com/google/tirg/blob/master/images/newpipeline.png?raw=true" alt="Jina banner" width="70%">
 </p>
+
 **Table of Contents**
 
 - [Download and Extract Data](#download-and-extract-data)
@@ -69,8 +70,8 @@ python app.py -task index -n 1000 -overwrite True
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
 
 <p align="center">
-  <img src="https://github.com/jina-ai/jina/blob/master/.github/.README_images/0a8863abb3fcee182e1fe8fe46c47b7a.gif?raw=true" alt="Jina banner" width="45%">
-  <img src="https://github.com/jina-ai/jina/blob/master/.github/.README_images/ed2907cd11ac26a2a3a2555f16071d13.gif?raw=true" alt="Jina banner" width="45%">
+  <img src="https://github.com/jina-ai/examples/blob/master/.github/.README_images/0a8863abb3fcee182e1fe8fe46c47b7a.gif?raw=true" alt="Jina banner" width="45%">
+  <img src="https://github.com/jina-ai/examples/blob/master/.github/.README_images/ed2907cd11ac26a2a3a2555f16071d13.gif?raw=true" alt="Jina banner" width="45%">
 </p>
 
 ## Query
@@ -91,7 +92,7 @@ If you are using Docker Desktop, make sure to assign enough memory for your Dock
 
 
 <p align="center">
-  <img src="https://github.com/jina-ai/jina/blob/master/.github/.README_images/d4165abd.png?raw=true" alt="Jina banner" width="80%">
+  <img src="https://github.com/jina-ai/examples/blob/master/.github/.README_images/d4165abd.png?raw=true" alt="Jina banner" width="80%">
 </p>
 
 ## Documentation 
