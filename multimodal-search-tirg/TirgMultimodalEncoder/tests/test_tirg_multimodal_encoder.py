@@ -11,7 +11,6 @@ import torchvision
 
 from .. import TirgMultiModalEncoder
 
-torch.manual_seed(0)
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
