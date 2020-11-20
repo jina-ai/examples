@@ -28,6 +28,9 @@ The provisioning would hence be:
 The terraform script here spins up AWS resources, this is the output of running
 `terraform apply`:
 
+<details> 
+<summary>Click here to see the outputs </summary>
+
 ```
 data.aws_iam_policy_document.assume_role_policy: Refreshing state...
 
@@ -667,3 +670,5 @@ Outputs:
 
 alb_url = http://southpark-lb-tf-1792754313.us-east-2.elb.amazonaws.com
 ```
+
+</details>

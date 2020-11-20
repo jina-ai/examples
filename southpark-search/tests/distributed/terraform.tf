@@ -4,12 +4,12 @@ provider "aws" {
 }
 
 #Creates AWS ECR repo for SouthPark image
-#resource "aws_ecr_repository" "southpark" {
-#  name = "sp-repo-db"
-#  tags = {
-#    Name = "southpark_repo"
-#  }
-#}
+resource "aws_ecr_repository" "southpark" {
+  name = "sp-repo-db"
+  tags = {
+    Name = "southpark_repo"
+  }
+}
 
 #Create Cluster
 resource "aws_ecs_cluster" "southpark_cluster" {
@@ -23,46 +23,46 @@ resource "aws_ecs_task_definition" "southpark_task" {
   [
     {
       "name": "southpark_task",
-      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-repo",
+      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-db",
       "essential": true,
       "portMappings": [
         {
           "containerPort": 45678
         }
       ],
-      "memory": 512,
-      "cpu": 10
+      "memory": 1024,
+      "cpu": 128
     },
     {
       "name": "encoder",
-      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-repo",
+      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-db",
       "essential": true,
       "portMappings": [
         {
           "containerPort": 49152
         }
       ],
-      "memory": 512,
-      "cpu": 10
+      "memory": 1024,
+      "cpu": 128
     },
     {
       "name": "indexer",
-      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-repo",
+      "image": "416454113568.dkr.ecr.us-east-2.amazonaws.com/sp-db",
       "essential": true,
       "portMappings": [
         {
           "containerPort": 49153
         }
       ],
-      "memory": 512,
-      "cpu": 10
+      "memory": 1024,
+      "cpu": 128
     }
   ]
   DEFINITION
   requires_compatibilities = ["FARGATE"] # Stating that we are using ECS Fargate
   network_mode             = "awsvpc"    # Using awsvpc as our network mode as this is required for Fargate
-  memory                   = 512         # Specifying the memory our container requires
-  cpu                      = 256         # Specifying the CPU our container requires
+  memory                   = 1024         # Specifying the memory our container requires
+  cpu                      = 512         # Specifying the CPU our container requires
   execution_role_arn       = "${aws_iam_role.ecsExecutionRole.arn}"
 }
 
@@ -94,7 +94,7 @@ resource "aws_ecs_service" "southpark_service" {
   cluster         = "${aws_ecs_cluster.southpark_cluster.id}"
   task_definition = "${aws_ecs_task_definition.southpark_task.arn}"
   launch_type     = "FARGATE"
-  desired_count   = 1 
+  desired_count   = 3
   health_check_grace_period_seconds = 30
 
   load_balancer {
@@ -179,7 +179,7 @@ resource "aws_lb_target_group" "target_group" {
     protocol            = "HTTP"
     timeout             = "60"
     unhealthy_threshold = "2"
-    matcher             = "200,301,302"
+    matcher             = "200,301,302,404"
     path                = "/"
   }
 }
