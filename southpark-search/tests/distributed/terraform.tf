@@ -198,3 +198,4 @@ resource "aws_lb_listener" "lsr" {
 output "alb_url" {
   value = "http://${aws_alb.application_load_balancer.dns_name}"
 }
+

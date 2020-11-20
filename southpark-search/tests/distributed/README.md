@@ -666,9 +666,6 @@ aws_ecs_service.southpark_service: Creation complete after 8s [id=arn:aws:ecs:us
 
 Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
 
-Outputs:
-
-alb_url = http://southpark-lb-tf-1792754313.us-east-2.elb.amazonaws.com
 ```
 
 </details>
