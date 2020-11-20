@@ -3,8 +3,6 @@
 Configure AWS provider for Terraform as per README:
 https://github.com/jina-ai/cloud-ops
 
-The following infrastructure is setup using Terraform:
-
 We fetch the ip adresses of the pod-machines in the cloud VPN, putting them into JINA_ENCODER_HOST and JINA_INDEX_HOST environment variables
 Send the curl command below to the jinad on the flow machine in order to spin up the flow:
 ```

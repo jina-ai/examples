@@ -11,6 +11,27 @@ resource "aws_ecr_repository" "southpark" {
   }
 }
 
+# Sets environment variables for encoder and indexer
+resource "null_resource" "environment" {
+  provisioner "remote-exec" {
+    inline = [<<EOF
+    curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
+    -H  "accept: application/json" \
+    -H  "Content-Type: multipart/form-data" \
+    -F "uses_files=@pods/encode.yml" \
+    -F "uses_files=@pods/extract.yml" \
+    -F "uses_files=@pods/index.yml" \
+    -F "pymodules_files=@pods/text_loader.py" \
+    -F "yamlspec=@tests/distributed/flow-query.yml"
+    EOF
+    ]
+  }
+}
+
+data "aws_subnet_ids" "default" {
+  vpc_id = "${aws_default_vpc.default_vpc.id}"
+}
+
 #Create Cluster
 resource "aws_ecs_cluster" "southpark_cluster" {
   name = "southpark_cluster"
