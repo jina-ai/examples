@@ -11,31 +11,8 @@ resource "aws_ecr_repository" "southpark" {
   }
 }
 
-# AWS Instance for Encoder
-resource "aws_instance" "encoder" {
-  ami           = "ami-07efac79022b86107"
-  instance_type = "t2.micro"
-  tags = {
-    Name = "encoder"
-  }
-}
-
-# AWS Instance for Indexer
-resource "aws_instance" "indexer" {
-  ami           = "ami-07efac79022b86107"
-  instance_type = "t2.micro"
-  tags = {
-    Name = "indexer"
-  }
-}
-
-# AWS Instance for running Flow
-resource "aws_instance" "flow" {
-  ami           = "ami-07efac79022b86107"
-  instance_type = "t2.micro"
-  tags = {
-    Name = "flow"
-  }
+# Sets environment variables for encoder and indexer
+resource "null_resource" "environment" {
   provisioner "remote-exec" {
     inline = [<<EOF
     curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
@@ -48,18 +25,6 @@ resource "aws_instance" "flow" {
     -F "yamlspec=@tests/distributed/flow-query.yml"
     EOF
     ]
-  }
-}
-
-# Sets environment variables for encoder and indexer
-resource "null_resource" "environment" {
-  provisioner "local-exec" {
-    interpreter = ["bash", "-c"]
-    command = ""
-    environment = {
-      JINA_ENCODER_HOST = "${aws_instance.encoder.private_ip}"
-      JINA_INDEX_HOST = "${aws_instance.indexer.private_ip}"
-    }
   }
 }
 
