@@ -1,5 +1,7 @@
 ## Terraform for setting up cloud infrastructure
 
+<details>
+<summary>
 Configure AWS provider for Terraform as per README:
 https://github.com/jina-ai/cloud-ops
 
@@ -7,6 +9,7 @@ The following infrastructure is setup using Terraform:
 
 We fetch the ip adresses of the pod-machines in the cloud VPN, putting them into JINA_ENCODER_HOST and JINA_INDEX_HOST environment variables
 Send the curl command below to the jinad on the flow machine in order to spin up the flow:
+</summary>
 ```
 curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
     -H  "accept: application/json" \
@@ -17,7 +20,7 @@ curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
     -F "pymodules_files=@pods/text_loader.py" \
     -F "yamlspec=@tests/distributed/flow-query.yml"
 ```
-
+<summary>
 Docker image generated via `tests/distributed/Dockerfile` jinad will automatically be running on each machine brought up by Terraform.
 
 The provisioning would hence be:
@@ -25,9 +28,12 @@ The provisioning would hence be:
 - Set up `Encode` instance, make it use the Dockerfile
 - On the `Flow` instance, run the curl command. Extract the IPs of Index and Encode, make them available to Env variables
 
+</summary>
+
+<summary>
 The terraform script here spins up AWS resources, this is the output of running
 `terraform apply`:
-
+</summary>
 ```
 data.aws_iam_policy_document.assume_role_policy: Refreshing state...
 
@@ -566,104 +572,14 @@ Terraform will perform the following actions:
 Plan: 15 to add, 0 to change, 0 to destroy.
 ```
 
-Warning: Interpolation-only expressions are deprecated
-
-  on terraform.tf line 42, in data "aws_subnet_ids" "default":
-  42:   vpc_id = "${aws_default_vpc.default_vpc.id}"
-
-Terraform 0.11 and earlier required all non-constant expressions to be
-provided via interpolation syntax, but this pattern is now deprecated. To
-silence this warning, remove the "${ sequence from the start and the }"
-sequence from the end of this expression, leaving just the inner expression.
-
-Template interpolation syntax is still used to construct strings from
-expressions when the template includes multiple interpolation sequences or a
-mixture of literal strings and interpolations. This deprecation applies only
-to templates that consist entirely of a single interpolation sequence.
-
-(and 14 more similar warnings elsewhere)
-
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
-
-  Enter a value: yes
-
-
-
-
 ## Creation of resources produces log:
 
 ```
-aws_ecr_repository.southpark: Creating...
-aws_default_vpc.default_vpc: Creating...
-aws_instance.flow: Creating...
-aws_ecs_cluster.southpark_cluster: Creating...
-aws_security_group.load_balancer_security_group: Creating...
-aws_iam_role.ecsExecutionRole: Creating...
-aws_instance.indexer: Creating...
-aws_instance.encoder: Creating...
-aws_ecr_repository.southpark: Creation complete after 3s [id=sp-repo]
-aws_iam_role.ecsExecutionRole: Creation complete after 4s [id=ecsExecutionRole]
-aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy: Creating...
-aws_ecs_task_definition.southpark_task: Creating...
-aws_ecs_task_definition.southpark_task: Creation complete after 2s [id=southpark_task]
-aws_default_vpc.default_vpc: Still creating... [10s elapsed]
-aws_instance.flow: Still creating... [10s elapsed]
-aws_ecs_cluster.southpark_cluster: Still creating... [10s elapsed]
-aws_security_group.load_balancer_security_group: Still creating... [10s elapsed]
-aws_instance.indexer: Still creating... [10s elapsed]
-aws_instance.encoder: Still creating... [10s elapsed]
-aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy: Creation complete after 7s [id=ecsExecutionRole-20201111074001649600000002]
-aws_security_group.load_balancer_security_group: Creation complete after 15s [id=sg-0715058114b7a741b]
-aws_security_group.service_security_group: Creating...
-aws_default_vpc.default_vpc: Creation complete after 19s [id=vpc-aca40bc7]
-data.aws_subnet_ids.default: Reading...
-aws_lb_target_group.target_group: Creating...
-aws_ecs_cluster.southpark_cluster: Creation complete after 19s [id=arn:aws:ecs:us-east-2:416454113568:cluster/southpark_cluster]
-aws_instance.flow: Still creating... [20s elapsed]
-aws_instance.encoder: Still creating... [20s elapsed]
-aws_instance.indexer: Still creating... [20s elapsed]
-data.aws_subnet_ids.default: Read complete after 1s [id=vpc-aca40bc7]
-aws_alb.application_load_balancer: Creating...
-aws_security_group.service_security_group: Still creating... [10s elapsed]
-aws_lb_target_group.target_group: Creation complete after 6s [id=arn:aws:elasticloadbalancing:us-east-2:416454113568:targetgroup/target-gp/24febcf8aac1b7ae]
-aws_instance.flow: Still creating... [30s elapsed]
-aws_instance.indexer: Still creating... [30s elapsed]
-aws_instance.encoder: Still creating... [30s elapsed]
-aws_alb.application_load_balancer: Still creating... [10s elapsed]
-aws_security_group.service_security_group: Still creating... [20s elapsed]
-aws_instance.flow: Still creating... [40s elapsed]
-aws_instance.encoder: Still creating... [40s elapsed]
-aws_instance.indexer: Still creating... [40s elapsed]
-aws_alb.application_load_balancer: Still creating... [20s elapsed]
-aws_security_group.service_security_group: Creation complete after 27s [id=sg-0822ef672ee11a158]
-aws_instance.flow: Still creating... [50s elapsed]
-aws_instance.indexer: Still creating... [50s elapsed]
-aws_instance.encoder: Still creating... [50s elapsed]
-aws_alb.application_load_balancer: Still creating... [30s elapsed]
-aws_instance.indexer: Creation complete after 50s [id=i-04b25f4997c8b27b2]
-aws_instance.encoder: Creation complete after 51s [id=i-07ee40a8c9b273f2b]
-aws_instance.flow: Creation complete after 54s [id=i-0471e78dd6e2ae2a9]
-aws_alb.application_load_balancer: Still creating... [40s elapsed]
-aws_alb.application_load_balancer: Still creating... [50s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m0s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m10s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m20s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m30s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m40s elapsed]
-aws_alb.application_load_balancer: Still creating... [1m50s elapsed]
-aws_alb.application_load_balancer: Still creating... [2m0s elapsed]
-aws_alb.application_load_balancer: Still creating... [2m10s elapsed]
-aws_alb.application_load_balancer: Creation complete after 2m11s [id=arn:aws:elasticloadbalancing:us-east-2:416454113568:loadbalancer/app/southpark-lb-tf/0a247285d77e7b25]
-aws_lb_listener.lsr: Creating...
-aws_lb_listener.lsr: Creation complete after 2s [id=arn:aws:elasticloadbalancing:us-east-2:416454113568:listener/app/southpark-lb-tf/0a247285d77e7b25/4c9cb7d5a1788dff]
-aws_ecs_service.southpark_service: Creating...
-aws_ecs_service.southpark_service: Creation complete after 8s [id=arn:aws:ecs:us-east-2:416454113568:service/southpark_cluster/southpark_service]
-
 Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
 
 Outputs:
 
 alb_url = http://southpark-lb-tf-1792754313.us-east-2.elb.amazonaws.com
 ```
+
+</details>
