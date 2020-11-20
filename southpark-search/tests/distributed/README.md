@@ -1,3 +1,12 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Terraform for setting up cloud infrastructure](#terraform-for-setting-up-cloud-infrastructure)
+- [Creation of resources produces log:](#creation-of-resources-produces-log)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Terraform for setting up cloud infrastructure
 
 Configure AWS provider for Terraform as per README:
