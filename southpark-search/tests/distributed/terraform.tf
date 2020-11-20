@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "southpark" {
   }
 }
 
-# Sets environment variables for encoder and indexer
+# Curl command for spinning up flow
 resource "null_resource" "environment" {
   provisioner "remote-exec" {
     inline = [<<EOF
@@ -26,6 +26,9 @@ resource "null_resource" "environment" {
     EOF
     ]
   }
+}
+
+resource "aws_default_vpc" "default_vpc" {
 }
 
 data "aws_subnet_ids" "default" {
@@ -132,10 +135,6 @@ resource "aws_ecs_service" "southpark_service" {
   depends_on = [aws_lb_listener.lsr, aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy]
 }
 
-resource "aws_default_vpc" "default_vpc" {
-}
-
-
 #ECS will receive traffic from the ALB
 resource "aws_security_group" "service_security_group" {
   description = "Allow acces only from the ALB"
@@ -153,10 +152,6 @@ resource "aws_security_group" "service_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-data "aws_subnet_ids" "default" {
-  vpc_id = "${aws_default_vpc.default_vpc.id}"
 }
 
 #create load balancer
