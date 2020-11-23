@@ -14,3 +14,6 @@ pods:
     polling: all
     uses_after: pods/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data
+  evaluate_rank:
+    uses: pods/evaluate.yml
+    read_only: true
