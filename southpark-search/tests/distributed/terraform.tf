@@ -97,7 +97,7 @@ resource "aws_cloudwatch_log_group" "southpark_loggroup" {
 }
 
 resource "aws_cloudwatch_log_stream" "foo" {
-  name           = "SampleLogStream1234"
+  name           = "southpark-distributed-logs"
   log_group_name = "${aws_cloudwatch_log_group.southpark_loggroup.name}"
 }
 
