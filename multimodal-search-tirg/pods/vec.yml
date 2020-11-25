@@ -1,0 +1,25 @@
+!NumpyIndexer
+with:
+  index_filename: vec.gz
+  metric: cosine
+metas:
+  name: vecidx
+  workspace: $WORKDIR
+requests:
+  on:
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          traversal_paths: ['r']
+    SearchRequest:
+      - !ExcludeQL
+        with:
+          traversal_paths: ['r']
+          fields:
+            - uri  
+            - buffer
+            - blob
+            - chunks
+      - !VectorSearchDriver
+        with:
+          traversal_paths: ['r']

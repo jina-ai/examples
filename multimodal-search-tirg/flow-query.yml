@@ -1,0 +1,35 @@
+!Flow
+with:
+  prefetch: 10
+  read_only: true  # better add this in the query time
+  # rest_api: true
+  port_expose: $JINA_PORT
+pods:
+  image_read:
+    uses: pods/image-read.yml
+    read_only: true
+  normalize:
+    uses: pods/normalize.yml
+    read_only: true
+  pass_text:
+    uses: pods/query-text-filter.yml #filterql text modality
+    read_only: true
+    needs: [gateway]
+  encode:
+    uses: jinaai/hub.executors.encoders.multimodal.tirg
+    uses_internal: pods/encode-tirg-multimodal.yml
+    # uses: pods/encode-tirg-multimodal-dummy.yml
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    uses_before: _merge_all
+    needs: [normalize, pass_text]
+  vec_idx:
+    uses: pods/vec.yml
+    shards: $SHARDS
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+    separated_workspace: true
+  doc_idx:
+    uses: pods/doc.yml
+    shards: $SHARDS
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+    separated_workspace: true

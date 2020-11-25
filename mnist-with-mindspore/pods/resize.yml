@@ -1,4 +1,0 @@
-!ImageResizer
-with:
-  target_size: 32
-  channel_axis: 0
