@@ -96,7 +96,7 @@ resource "aws_cloudwatch_log_group" "southpark_loggroup" {
   retention_in_days = 1
 }
 
-resource "aws_cloudwatch_log_stream" "foo" {
+resource "aws_cloudwatch_log_stream" "southpark-distributed-logs" {
   name           = "southpark-distributed-logs"
   log_group_name = "${aws_cloudwatch_log_group.southpark_loggroup.name}"
 }
