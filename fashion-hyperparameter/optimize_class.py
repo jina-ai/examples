@@ -37,20 +37,19 @@ class Optimizer:
             print(colored('--------------------------------------------------------', 'red'))
             return
 
-        self.index_document_generator, self.index_document_generator_ = tee(self.index_document_generator)
+        self.index_document_generator, index_document_generator_ = tee(self.index_document_generator)
 
         with Flow().load_config(self.index_yaml) as f:
-            f.index(self.index_document_generator_, batch_size=self.index_batch_size)
+            f.index(index_document_generator_, batch_size=self.index_batch_size)
 
     def run_querying(self, callback):
-        self.evaluation_document_generator, self.evaluation_document_generator_ = tee(self.evaluation_document_generator)
+        self.evaluation_document_generator, evaluation_document_generator_ = tee(self.evaluation_document_generator)
 
-        with Flow().load_config(self.evaluate_yaml) as evaluation_flow:
-            evaluation_flow.search(
-                self.evaluation_document_generator_,
+        with Flow().load_config(self.evaluate_yaml) as f:
+            f.search(
+                evaluation_document_generator_,
                 batch_size=self.query_batch_size,
-                output_fn=callback,
-                callback_on_body=True,
+                output_fn=callback
             )
 
     @staticmethod
@@ -70,15 +69,15 @@ class Optimizer:
         evaluation_values = cb.get_mean_evaluation()
         op_name = list(evaluation_values)[0]
         mean_eval = evaluation_values[op_name]
-        logger.info(f'Avg {op_name}: {mean_eval}')
+        logger.info(colored(f'Avg {op_name}: {mean_eval}', 'green'))
         return mean_eval
 
     def export_params(self, study):
         os.makedirs(self.config_dir, exist_ok=True)
         with open(f'{self.config_dir}/{self.best_config_filename}', 'w') as f: json.dump(study.best_trial.params, f)
-        logger.info(f'Number of finished trials: {len(study.trials)}')
-        logger.info(f'Best trial: {study.best_trial.params}')
-        logger.info(f'Time to finish: {study.best_trial.duration}')
+        logger.info(colored(f'Number of finished trials: {len(study.trials)}', 'green'))
+        logger.info(colored(f'Best trial: {study.best_trial.params}', 'green'))
+        logger.info(colored(f'Time to finish: {study.best_trial.duration}', 'green'))
 
     def optimize_flow(self):
         import optuna
