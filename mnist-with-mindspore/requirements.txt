@@ -1,3 +1,0 @@
-pillow
-click
-jina[devel]==0.4.11

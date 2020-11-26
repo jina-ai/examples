@@ -3,7 +3,7 @@
 **Table of Contents**
 
 - [Build a CrossModal Search System to look for Images from Captions and viceversa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
-  - [Prerequirements](#prerequirements)
+  - [Prerequisites](#prerequisites)
   - [Prepare the data](#prepare-the-data)
   - [Build the docker images](#build-the-docker-images)
   - [Run the Flows](#run-the-flows)
@@ -32,43 +32,49 @@
 
 </p>
 
-In this example, jina is used to implement a Cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image)
-in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings`
-and query the `image index` using `text embeddings`. 
+In this example, `jina` is used to implement a Cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
 
 **Motive behind Cross Modal Retrieval**
 
 Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
-Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. Example: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
+
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. **Example**: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
+
 Different encoders map different modalities to a common embedding space. They need to extract semantic information from the documents. 
+
 In this embedding space, documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
+
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
 **Research for Cross Modal Retrieval**
 
-The models used for the example are cited from this paper: 
-Improving Visual-Semantic Embeddings with Hard Negatives (https://arxiv.org/pdf/1707.05612.pdf)
-To make this search system retrieve good results, we have used the models trained in (https://github.com/fartashf/vsepp). A model has been trained
-that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
+The models used for the example are cited from the paper _Improving Visual-Semantic Embeddings with Hard Negatives_ (https://arxiv.org/pdf/1707.05612.pdf).
+
+To make this search system retrieve good results, we have used the models trained in [https://github.com/fartashf/vsepp](https://github.com/fartashf/vsepp) . A model has been trained that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
 
 We use one network per modality:
-VGG19 for images, pretrained on ImageNet.
-A Gated Recurrent Unit (GRU) for captions.
+
+- VGG19 for images, pretrained on ImageNet.
+- A Gated Recurrent Unit (GRU) for captions.
+
 Last layers of these networks are removed and they are used as feature extractors. A Fully Connected Layer is added on top of each one that actually maps the extracted features to the new embedding space.
-They are trained on Flickr30k dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples)
+
+They are trained on `Flickr30k` dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples).
 
 **VSE Encoders in Jina for Cross Modal Search**
 
 Two encoders have been created for this example, namely VSEImageEncoder and VSETextEncoder
+
 Process followed is as below:
-Load the weights published by the research paper as result. Then instantiate their VSE encoder and extracts the branch interesting for the modality.
+
+- Load the weights published by the research paper as result
+- Instantiate their VSE encoder and extracts the branch interesting for the modality.
 
 A Dockerfile is provided for each encoder which takes care of all the dependencies and downloads all required files.
 
-
 **Table of Contents**
 
-- [Prerequirements](#prerequirements)
+- [Prerequisites](#prerequisites)
 - [Prepare the data](#prepare-the-data)
 - [Build the docker images](#build-the-docker-images)
 - [Run the Flows](#run-the-flows)
@@ -77,18 +83,15 @@ A Dockerfile is provided for each encoder which takes care of all the dependenci
 - [License](#license)
 
 
-## Prerequirements
+## Prerequisites
 
-This demo requires Python 3.7 and jina installation.
-
+This demo requires Python 3.7 and `jina` installation.
 
 ## Prepare the data
 
-The model used has been trained using `Flickr30k` and therefore we recommend using this dataset to try this system.
-But it is a good exercise to see if it works as well for other datasets or your custom ones.
+The model used has been trained using `Flickr30k` and therefore we recommend using this dataset to try this system. But it is a good exercise to see if it works as well for other datasets or your custom ones.
 
-To make this work, we need to get the image files from the kaggle dataset (https://www.kaggle.com/hsankesara/flickr-image-dataset).
-To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
+To make this work, we need to get the image files from the `kaggle` dataset (https://www.kaggle.com/hsankesara/flickr-image-dataset). To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
 
 ```bash
 pip install kaggle
@@ -110,15 +113,13 @@ rm -rf data/f30k/images
 mv flickr-image-dataset data/f30k/images
 ```
 
-Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have 
-a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of 
-`Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
+Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
 
 ### Use Flickr8k
-Although the model is trained on Flickr30k, you can test on Flickr8k dataset, which is a much smaller version of 
-flickr30k.
 
-To do so, instead of downloading the flickr30k from kaggle, just take its 8k counterpart
+Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k.
+
+To do so, instead of downloading the `flickr30k` from kaggle, just take its 8k counterpart
 
 ```bash
 kaggle datasets download adityajn105/flickr8k
@@ -137,8 +138,7 @@ data/fyk/f8k/captions.txt
 
 ## Build the docker images
 
-To abstract all dependencies, needed to make the model from (cite paper) work, docker images have been prepared to contain
-text and image encoders. This images are very big (about 5GB each (working to make them smaller)).
+To abstract all dependencies needed to make the model from _Improving Visual-Semantic Embeddings with Hard Negatives_ work, `docker` images have been prepared to contain text and image encoders. These images are very big (about `5GB` each (working to make them smaller)).
 
 In order to build them (it may take some time since a lot of data is downloaded),
 
@@ -156,18 +156,18 @@ docker build -f Dockerfile -t jinaai/hub.executors.encoders.nlp.vse .
 
 ### Index 
 
-Index is run with the following command, where batch_size can be chosen by the user. Index will index both images and captions
+Index is run with the following command, where `batch_size` can be chosen by the user. Index will process both images and captions
 
 ```bash
 python app.py -t index -n $num_docs -b $batch_size -d 'f8k'
 ```
 
-Not that num_docs should be 8k or 30k depending on the flickr dataset you use. If you decide to index the complete datasets,
+Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use. If you decide to index the complete datasets,
 it is recommendable to increase the number of shards and parallelization. The dataset is provided with the `-d` parameter
 with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
 how `data` is provided and adapt to your own data source.
 
-Jina normalizes the images need before entering them in the encoder.
+Jina normalizes the images needed before entering them in the encoder.
 QueryLanguageDriver is used to redirect (filtering) documents based on modality.
 
 ### Query
@@ -185,8 +185,8 @@ Examples of captions in the dataset:
 
 Note the cross for which cross modal stands.
 
-Internally, TextEncoder targets ImageVectorIndexer and ImageEncoder targets TextVectorIndexer.
-ImageVectorIndexer and TextVectorIndexer map to a common Embedding Space. (To Jina it means having common dimensionality).
+Internally, `TextEncoder` targets `ImageVectorIndexer` and `ImageEncoder` targets `TextVectorIndexer`.
+`ImageVectorIndexer` and `TextVectorIndexer` map to a common Embedding Space. (To Jina it means having common dimensionality).
 
 ## Results
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")

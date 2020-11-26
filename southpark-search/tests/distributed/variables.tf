@@ -16,26 +16,14 @@ variable "tag" {
   default     = "latest"
 }
 
-variable "push_script" {
-  description = "Path to script to build and push Docker image"
+variable "repository_url" {
+  description = "Tag to use for deployed Docker image"
   type        = string
   default     = ""
 }
 
-variable "docker_username" {
-  description = "Docker registry username"
+variable "region" {
+  description = "Region AWS"
   type        = string
-  default     = ""
-}
-
-variable "docker_password" {
-  description = "Docker registry password"
-  type        = string
-  default     = ""
-}
-
-variable "docker_host" {
-  description = "Docker registry host"
-  type        = string
-  default     = "sample_docker_host"
+  default     = "us-east2"
 }

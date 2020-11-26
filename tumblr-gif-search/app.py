@@ -54,6 +54,13 @@ if __name__ == '__main__':
         exit(1)
     if sys.argv[1] == 'index':
         config()
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         index()
     elif sys.argv[1] == 'search':
         config()

@@ -19,12 +19,13 @@ def config():
     os.environ.setdefault('JINA_PARALLEL', str(parallel))
     os.environ.setdefault('JINA_SHARDS', str(4))
     os.environ.setdefault('JINA_WORKSPACE', './workspace')
-    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
     os.environ.setdefault('JINA_PORT', str(65481))
 
 
 def input_fn():
-    lyrics_file = os.environ.setdefault('JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv')
+    lyrics_file = os.environ.setdefault(
+        'JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv'
+    )
     with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
@@ -40,7 +41,6 @@ def input_fn():
 # for index
 def index():
     f = Flow.load_config('flows/index.yml')
-
     with f:
         f.index(input_fn, batch_size=8)
 
@@ -62,18 +62,30 @@ def dryrun():
         pass
 
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) < 2:
         print('choose between "index/search/dryrun" mode')
         exit(1)
+
+    config()
     if sys.argv[1] == 'index':
-        config()
+        workspace = os.environ['JINA_WORKSPACE']
+        if os.path.exists(workspace):
+            print(
+                f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+'
+            )
         index()
     elif sys.argv[1] == 'search':
-        config()
         search()
     elif sys.argv[1] == 'dryrun':
-        config()
         dryrun()
     else:
         raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
+
+
+if __name__ == '__main__':
+    main()

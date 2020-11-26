@@ -63,6 +63,9 @@ mv Images data/f8k/images
 Note: Flickr8k is not an ideal dataset but we are using due to its small size.
 
 ## Index Image Data
+<p align="center">
+  <img src=".github/.README_images/index.png?raw=true" alt="Jina banner" width="90%">
+</p>
 Index 1000 images. This can take some time and you can try a smaller number as well.
 ```bash
 python app.py -task index -n 1000 -overwrite True
@@ -76,6 +79,9 @@ If it's running successfully, you should be able to see logs scrolling in the co
 </p>
 
 ## Start the Server
+<p align="center">
+  <img src=".github/.README_images/query.png?raw=true" alt="Jina banner" width="90%">
+</p>
 Start server which returns `original` images. The matching of query happens with all indexed object images and returns the original parent image in which the indexed object was found.
 ```bash
 python app.py -task query -r original

@@ -1,0 +1,32 @@
+!Flow
+with:
+  logserver: false
+pods:
+  read:
+    uses: pods/image-read.yml
+    read_only: true
+  normalize:
+    uses: pods/normalize.yml
+    read_only: true
+  encode:
+    uses: jinaai/hub.executors.encoders.image.tirg
+    # uses_internal: pods/encode-tirg-image.yml
+    # uses: pods/encode-tirg-image-dummy.yml
+    parallel: $PARALLEL
+    timeout_ready: 600000
+    read_only: true
+  vec_idx:
+    uses: pods/vec.yml
+    shards: $SHARDS
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+    separated_workspace: true
+  image_kv:
+    uses: pods/doc.yml
+    needs: [gateway]
+    shards: $SHARDS
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+    separated_workspace: true
+  join_all:
+    uses: _merge
+    needs: [image_kv, vec_idx]
+    read_only: true

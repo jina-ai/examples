@@ -47,7 +47,7 @@ def query(top_k):
             text = input("please type a sentence: ")
             if not text:
                 break
-
+ 
             def ppr(x):
                 print_topk(x, text)
             f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
@@ -81,7 +81,11 @@ def main(task, num_docs, top_k):
     workspace = os.environ["JINA_WORKSPACE"]
     if task == "index":
         if os.path.exists(workspace):
-            print(f"The directory {workspace} does already exist. Please remove it before indexing again.`")
+            print(f'\n +----------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n +----------------------------------------------------------------------------------+')
         index(num_docs)
     if task == "query":
         if not os.path.exists(workspace):

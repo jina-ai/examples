@@ -129,10 +129,6 @@ resource "aws_ecs_service" "southpark_service" {
   depends_on = [aws_lb_listener.lsr, aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy]
 }
 
-resource "aws_default_vpc" "default_vpc" {
-}
-
-
 #ECS will receive traffic from the ALB
 resource "aws_security_group" "service_security_group" {
   description = "Allow acces only from the ALB"
@@ -150,10 +146,6 @@ resource "aws_security_group" "service_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-data "aws_subnet_ids" "default" {
-  vpc_id = "${aws_default_vpc.default_vpc.id}"
 }
 
 #create load balancer

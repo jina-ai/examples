@@ -1,0 +1,11 @@
+!TextExtractor
+with: {}
+metas:
+  name: extractor
+  py_modules: text_loader.py
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !CraftDriver
+        with:
+          method: craft

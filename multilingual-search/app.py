@@ -31,7 +31,7 @@ def configure_model(data_dir = '/tmp/jina/multilingual'):
     os.environ['PATH_TO_BPE_CODES'] = data_dir + '/93langs.fcodes'
     os.environ['PATH_TO_BPE_VOCAB'] = data_dir + '/93langs.fvocab'
     os.environ['PATH_TO_ENCODER'] = data_dir + '/bilstm.93langs.2018-12-26.pt'
-    os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
+    os.environ['WORKDIR'] = get_random_ws(os.environ['TMP_DATA_DIR'])
     
 
 def print_topk(resp, word):
@@ -99,6 +99,13 @@ def main(task, num_docs, languages, years, top_k):
             all_documents.extend(f.read().splitlines())
     
     if task == 'index':
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         index(documents=all_documents,
               size=num_docs,
               batch_size=16)

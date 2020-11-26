@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import sys
+import click
 
 import urllib.request
 import gzip
@@ -37,7 +37,7 @@ label_id = {
 }
 
 
-def get_mapped_label(label_int):
+def get_mapped_label(label_int: str):
     """
     Get a label_int and return the description of that label
     label_int	Description
@@ -66,7 +66,7 @@ def print_result(resp):
         result_html.append('</td></tr>\n')
 
 
-def write_html(html_path):
+def write_html(html_path: str):
     with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
             open(html_path, 'w') as fw:
         t = fp.read()
@@ -88,17 +88,17 @@ def write_html(html_path):
         f'🤩 Intrigued? Play with "jina hello-world --help" and learn more about Jina at {colored_url}')
 
 
-def load_mnist(path):
+def load_mnist(path: str):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
 
 
-def load_labels(path):
+def load_labels(path: str):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=8).reshape([-1, 1])
 
 
-def download_data(target, download_proxy=None):
+def download_data(target: dict, download_proxy=None):
     opener = urllib.request.build_opener()
     if download_proxy:
         proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
@@ -114,7 +114,7 @@ def download_data(target, download_proxy=None):
                 v['data'] = load_mnist(v['filename'])
 
 
-def index_generator(num_doc, target):
+def index_generator(num_doc, target: dict):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
         d = jina_pb2.Document()
@@ -123,23 +123,23 @@ def index_generator(num_doc, target):
         yield d
 
 
-def query_generator(num_doc, target):
+def query_generator(num_doc, target: dict):
     for j in range(num_doc):
         n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
         d = jina_pb2.Document()
-        label_int = targets['query-labels']['data'][n][0]
+        label_int = target['query-labels']['data'][n][0]
         d.blob.CopyFrom(array2pb(target['query']['data'][n]))
         d.tags.update({'label': get_mapped_label(label_int)})
         yield d
 
 
-def index(num_doc, target):
+def index(num_doc, target: dict):
     f = Flow.load_config('flow-index.yml')
     with f:
         f.index(index_generator(num_doc, target), batch_size=2048)
 
 
-def query(num_doc, target):
+def query(num_doc, target: dict):
     f = Flow.load_config('flow-query.yml')
     with f:
         f.search(query_generator(num_doc, target), shuffle=True, size=128,
@@ -147,19 +147,20 @@ def query(num_doc, target):
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
-def config():
-    parallel = 2 if sys.argv[1] == 'index' else 1
-    shards = 1
+def config(task):
+    parallel = 2 if task == 'index' else 1
     os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['SHARDS'] = str(shards)
+    os.environ['SHARDS'] = str(1)
     os.environ['PARALLEL'] = str(parallel)
-    os.environ['HW_WORKDIR'] = './workspace'
-    os.makedirs(os.environ['HW_WORKDIR'], exist_ok=True)
+    os.environ['WORKDIR'] = './workspace'
+    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
-
-if __name__ == '__main__':
-
+@click.command()
+@click.option('--task', '-t')
+@click.option('--num_docs_query', '-n', default=100)
+@click.option('--num_docs_index', '-n', default=60000)
+def main(task, num_docs_query, num_docs_index):
     if not os.path.exists('./workspace'):
         os.makedirs('./workspace')
         
@@ -182,19 +183,25 @@ if __name__ == '__main__':
         }
     }
     download_data(targets, None)
-    num_docs_index = 60000
-    num_docs_query = 100
+    config(task)
 
-    config()
-
-    if len(sys.argv) < 2:
-        print('choose between "index" and "search" mode')
-        exit(1)
-    if sys.argv[1] == 'index':
-        config()
+    if task == 'index':
+        config(task)
+        workspace = os.environ['WORKDIR']
+        if os.path.exists(workspace):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
         index(num_docs_index, targets)
-    elif sys.argv[1] == 'query':
-        config()
+    elif task == 'query':
+        config(task)
         query(num_docs_query, targets)
     else:
-        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
+        raise NotImplementedError(
+            f'unknown task: {task}. A valid task is either `index` or `query`.')
+
+
+if __name__ == '__main__':
+    main()

@@ -77,9 +77,16 @@ def recall_at_k(results, k):
 @click.option('--batch_size', '-n', default=50)
 @click.option('--top_k', '-k', default=5)
 def main(task, batch_size, top_k):
-    os.environ['TMP_WORKSPACE'] = get_random_ws(os.environ['TMP_DATA_DIR'])
+    os.environ['WORKDIR'] = get_random_ws(os.environ['TMP_DATA_DIR'])
     if task == 'index':
         data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_base.fvecs')
+        if os.path.exists(data_path):
+            print(f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n | The directory {data_path} already exists. Please remove it before indexing again. | \
+                    \n |                                   🤖🤖🤖                                        | \
+                    \n +---------------------------------------------------------------------------------+')
+        
         flow = Flow().load_config('flow-index.yml')
         with flow.build() as fl:
             fl.index_ndarray(read_data(data_path), batch_size=batch_size)

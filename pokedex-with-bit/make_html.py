@@ -17,7 +17,7 @@ os.environ['JINA_SHARDS'] = str(shards)
 os.environ['JINA_WORKSPACE'] = './workspace'
 os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
-f = Flow.load_config('flow-query.yml')
+f = Flow.load_config('flows/query.yml')
 f.use_grpc_gateway()  # use gRPC gateway for better batch efficiency
 
 result_html = []
