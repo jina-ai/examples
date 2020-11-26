@@ -3,7 +3,7 @@
 **Table of Contents**
 
 - [Build a CrossModal Search System to look for Images from Captions and viceversa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
-  - [Prerequirements](#prerequirements)
+  - [Prerequisites](#prerequisites)
   - [Prepare the data](#prepare-the-data)
   - [Build the docker images](#build-the-docker-images)
   - [Run the Flows](#run-the-flows)
