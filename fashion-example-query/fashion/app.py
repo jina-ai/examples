@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import click
+import sys
 
 import urllib.request
 import gzip
@@ -16,7 +16,8 @@ from jina.clients.python import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
 from jina.proto import jina_pb2
-from jina.drivers.helper import array2pb
+from jina import Document
+
 
 from pkg_resources import resource_filename
 from components import *
@@ -37,7 +38,7 @@ label_id = {
 }
 
 
-def get_mapped_label(label_int: str):
+def get_mapped_label(label_int):
     """
     Get a label_int and return the description of that label
     label_int	Description
@@ -62,11 +63,10 @@ def print_result(resp):
         for kk in d.matches:
             kmi = kk.uri
             result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
-            # k['score']['explained'] = json.loads(kk.score.explained)
         result_html.append('</td></tr>\n')
 
 
-def write_html(html_path: str):
+def write_html(html_path):
     with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
             open(html_path, 'w') as fw:
         t = fp.read()
@@ -88,17 +88,17 @@ def write_html(html_path: str):
         f'🤩 Intrigued? Play with "jina hello-world --help" and learn more about Jina at {colored_url}')
 
 
-def load_mnist(path: str):
+def load_mnist(path):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
 
 
-def load_labels(path: str):
+def load_labels(path):
     with gzip.open(path, 'rb') as fp:
         return np.frombuffer(fp.read(), dtype=np.uint8, offset=8).reshape([-1, 1])
 
 
-def download_data(target: dict, download_proxy=None):
+def download_data(target, download_proxy=None):
     opener = urllib.request.build_opener()
     if download_proxy:
         proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
@@ -114,32 +114,34 @@ def download_data(target: dict, download_proxy=None):
                 v['data'] = load_mnist(v['filename'])
 
 
-def index_generator(num_doc, target: dict):
+def index_generator(num_doc, target):
     for j in range(num_doc):
+        d = Document(content=target['index']['data'][j])
+        d.update_id()
         label_int = target['index-labels']['data'][j][0]
-        d = jina_pb2.Document()
-        d.blob.CopyFrom(array2pb((target['index']['data'][j])))
-        d.tags.update({'label': get_mapped_label(label_int)})
+        category = get_mapped_label(label_int)
+        d.tags['label'] = category
         yield d
 
 
-def query_generator(num_doc, target: dict):
+def query_generator(num_doc, target):
     for j in range(num_doc):
         n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
-        d = jina_pb2.Document()
-        label_int = target['query-labels']['data'][n][0]
-        d.blob.CopyFrom(array2pb(target['query']['data'][n]))
-        d.tags.update({'label': get_mapped_label(label_int)})
-        yield d
+        label_int = targets['query-labels']['data'][n][0] 
+        category = get_mapped_label(label_int) 
+        if category == 'Dress':
+            d = Document(content=(target['query']['data'][n]))
+            d.tags['label'] = category
+            yield d
 
 
-def index(num_doc, target: dict):
+def index(num_doc, target):
     f = Flow.load_config('flow-index.yml')
     with f:
         f.index(index_generator(num_doc, target), batch_size=2048)
 
 
-def query(num_doc, target: dict):
+def query(num_doc, target):
     f = Flow.load_config('flow-query.yml')
     with f:
         f.search(query_generator(num_doc, target), shuffle=True, size=128,
@@ -147,20 +149,19 @@ def query(num_doc, target: dict):
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
-def config(task):
-    parallel = 2 if task == 'index' else 1
+def config():
+    parallel = 2 if sys.argv[1] == 'index' else 1
+    shards = 1
     os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['SHARDS'] = str(1)
+    os.environ['SHARDS'] = str(shards)
     os.environ['PARALLEL'] = str(parallel)
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['HW_WORKDIR'] = './workspace'
+    os.makedirs(os.environ['HW_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
-@click.command()
-@click.option('--task', '-t')
-@click.option('--num_docs_query', '-n', default=100)
-@click.option('--num_docs_index', '-n', default=60000)
-def main(task, num_docs_query, num_docs_index):
+
+if __name__ == '__main__':
+
     if not os.path.exists('./workspace'):
         os.makedirs('./workspace')
         
@@ -183,25 +184,19 @@ def main(task, num_docs_query, num_docs_index):
         }
     }
     download_data(targets, None)
-    config(task)
+    num_docs_index = 60000
+    num_docs_query = 100
 
-    if task == 'index':
-        config(task)
-        workspace = os.environ['WORKDIR']
-        if os.path.exists(workspace):
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
+    config()
+
+    if len(sys.argv) < 2:
+        print('choose between "index" and "search" mode')
+        exit(1)
+    if sys.argv[1] == 'index':
+        config()
         index(num_docs_index, targets)
-    elif task == 'query':
-        config(task)
+    elif sys.argv[1] == 'query':
+        config()
         query(num_docs_query, targets)
     else:
-        raise NotImplementedError(
-            f'unknown task: {task}. A valid task is either `index` or `query`.')
-
-
-if __name__ == '__main__':
-    main()
+        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
