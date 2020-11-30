@@ -4,13 +4,11 @@ __license__ = "Apache-2.0"
 import os
 import click	
 
-
 import urllib.request
 import gzip
 import numpy as np
 import webbrowser
 import random
-
 
 from jina.flow import Flow
 from jina.clients.python import ProgressBar
