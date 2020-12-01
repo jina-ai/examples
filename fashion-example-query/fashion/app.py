@@ -151,21 +151,20 @@ def query(num_doc, target: dict):
 def config(task):
     parallel = 2 if task == 'index' else 1
     shards = 1
-    os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['SHARDS'] = str(shards)
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['HW_WORKDIR'] = './workspace'
-    os.makedirs(os.environ['HW_WORKDIR'], exist_ok=True)
+    os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
+    os.environ['JINA_SHARDS'] = str(shards)
+    os.environ['JINA_PARALLEL'] = str(parallel)
+    os.environ['JINA_WORKDIR'] = './workspace'
+    os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
 
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs_query', '-n', default=100)
-@click.option('--num_docs_index', '-n', default=60000)
+@click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
-    if not os.path.exists('./workspace'):
-        os.makedirs('./workspace')
+    config(task)
         
     targets = {
         'index-labels': {
@@ -186,11 +185,9 @@ def main(task, num_docs_query, num_docs_index):
         }
     }
     download_data(targets, None)
-    config(task)
-
     if task == 'index':
         config(task)
-        workspace = os.environ['WORKDIR']
+        workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \

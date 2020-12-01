@@ -1,7 +1,7 @@
 !MyEncoder
 metas:
   name: myenc  # a customized name
-  workspace: $HW_WORKDIR
+  workspace: $JINA_WORKDIR
 requests:
   on:
     [IndexRequest, SearchRequest]:
