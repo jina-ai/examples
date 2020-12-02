@@ -1,2 +1,3 @@
-data/
+data/answer_collection.csv
 workspace/
+QAReranker/model/
