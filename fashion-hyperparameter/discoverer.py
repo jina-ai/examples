@@ -111,7 +111,7 @@ def run_parameter_discovery(flow_files, target_directory):
 
 def config_global_environment():
     os.environ.setdefault('JINA_DATA_DIRECTORY', 'data')
-    os.environ.setdefault('JINA_LOG_CONFIG', 'logging.yml')
+    os.environ.setdefault('JINA_LOG_CONFIG', 'logging.optimizer.yml')
 
 
 def main():

@@ -2,7 +2,7 @@ handlers:  # enabled handlers, order does not matter
   - StreamHandler
   - SysLogHandler
   - FluentHandler
-level: WARNING  # set verbose level
+level: ERROR
 configs:
   FileHandler:
     format: '%(asctime)s:{name:>15}@%(process)2d[%(levelname).1s]:%(message)s'

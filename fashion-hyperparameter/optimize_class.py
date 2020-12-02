@@ -2,40 +2,45 @@ import os
 from collections import defaultdict
 from itertools import tee
 import json
+import shutil
 
 from jina.flow import Flow
 from jina.helper import colored
 from jina.logging import default_logger as logger
 
 
-class Optimizer:
-    def __init__(self, index_yaml, evaluate_yaml, 
-                       index_document_generator, evaluation_document_generator,
+class FlowRunner:
+    def __init__(self, index_yaml, query_yaml, 
+                       index_document_generator, query_document_generator,
                        index_batch_size, query_batch_size,
-                       trial_parameter_sampler,
-                       n_trials,
-                       direction='maximize', seed=42,
-                       config_dir='config', best_config_filename='best_config.json'):
+                       workspace_env_name = 'JINA_WORKSPACE', overwrite_workspace=False):
+
         self.index_yaml = index_yaml
-        self.evaluate_yaml = evaluate_yaml
+        self.query_yaml = query_yaml
         self.index_document_generator = index_document_generator
-        self.evaluation_document_generator = evaluation_document_generator
+        self.query_document_generator = query_document_generator
         self.index_batch_size = index_batch_size
         self.query_batch_size = query_batch_size
-        self.trial_parameter_sampler = trial_parameter_sampler
-        self.n_trials = n_trials
-        self.direction = direction
-        self.seed = seed
-        self.config_dir = config_dir
-        self.best_config_filename = best_config_filename
+        self.workspace_env_name = workspace_env_name
+        self.overwrite_workspace = overwrite_workspace
 
+    def clean_workdir(self):
+        if os.path.exists(os.environ[self.workspace_env_name]):
+            shutil.rmtree(os.environ[self.workspace_env_name])
+            logger.warning('Workspace deleted')
 
     def run_indexing(self):
-        if os.path.exists(os.environ['JINA_WORKSPACE']):
-            print(colored('--------------------------------------------------------', 'red'))
-            print(colored('----- Workspace already exists. Skipping indexing. -----', 'cyan'))
-            print(colored('--------------------------------------------------------', 'red'))
-            return
+        if os.path.exists(os.environ[self.workspace_env_name]):
+            if self.overwrite_workspace:
+                self.clean_workdir()
+                print(colored('--------------------------------------------------------', 'red'))
+                print(colored('-------------- Existing workspace deleted --------------', 'red'))
+                print(colored('--------------------------------------------------------', 'red'))
+            else:
+                print(colored('--------------------------------------------------------', 'cyan'))
+                print(colored('----- Workspace already exists. Skipping indexing. -----', 'cyan'))
+                print(colored('--------------------------------------------------------', 'cyan'))
+                return
 
         self.index_document_generator, index_document_generator_ = tee(self.index_document_generator)
 
@@ -43,9 +48,9 @@ class Optimizer:
             f.index(index_document_generator_, batch_size=self.index_batch_size)
 
     def run_querying(self, callback):
-        self.evaluation_document_generator, evaluation_document_generator_ = tee(self.evaluation_document_generator)
+        self.query_document_generator, evaluation_document_generator_ = tee(self.query_document_generator)
 
-        with Flow().load_config(self.evaluate_yaml) as f:
+        with Flow().load_config(self.query_yaml) as f:
             f.search(
                 evaluation_document_generator_,
                 batch_size=self.query_batch_size,
@@ -58,14 +63,29 @@ class Optimizer:
             os.environ[environment_variable] = str(value)
 
     def run_evaluation(self, parameters, evaluation_callback):
-        Optimizer.parameters_to_env(parameters)
+        FlowRunner.parameters_to_env(parameters)
         self.run_indexing()
         self.run_querying(evaluation_callback)
+
+
+class Optimizer:
+    def __init__(self, flow_runner,
+                       trial_parameter_sampler,
+                       n_trials,
+                       direction='maximize', seed=42,
+                       config_dir='config', best_config_filename='best_config.json'):
+        self.flow_runner = flow_runner
+        self.trial_parameter_sampler = trial_parameter_sampler
+        self.n_trials = n_trials
+        self.direction = direction
+        self.seed = seed
+        self.config_dir = config_dir
+        self.best_config_filename = best_config_filename
 
     def objective(self, trial):
         parameters = self.trial_parameter_sampler(trial)
         cb = OptimizerCallback()
-        self.run_evaluation(parameters, cb.process_result)
+        self.flow_runner.run_evaluation(parameters, cb.process_result)
         evaluation_values = cb.get_mean_evaluation()
         op_name = list(evaluation_values)[0]
         mean_eval = evaluation_values[op_name]
