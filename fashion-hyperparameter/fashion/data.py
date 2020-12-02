@@ -34,8 +34,7 @@ def download_data(target, download_proxy=None):
                 v['data'] = load_mnist(v['filename'])
 
 
-def get_data():
-    data_directory = os.environ['JINA_DATA_DIRECTORY']
+def get_data(data_directory):
     Path(data_directory).mkdir(parents=True, exist_ok=True)
     targets = {
         'index-labels': {

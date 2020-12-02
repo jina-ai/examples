@@ -5,6 +5,8 @@ from fashion.data import get_data
 from fashion.evaluation import run_evaluation
 
 
+DATA_DIRECTORY = 'data'
+
 class Callback:
     def __init__(self):
         self.evaluation_values = {}
@@ -45,7 +47,7 @@ def optimize_target_dimension(data, trial):
 
 
 def execute_trial(trial):
-    data = get_data()
+    data = get_data(DATA_DIRECTORY)
     return optimize_target_dimension(data, trial)
 
 
