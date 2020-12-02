@@ -3,6 +3,7 @@ with:
   eval_at: 1
 metas:
   name: evaluation
+  py_modules: evaluate.py
 requests:
   on:
     [ SearchRequest ]:

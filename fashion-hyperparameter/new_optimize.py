@@ -8,9 +8,9 @@ from fashion.evaluation import index_document_generator, evaluation_document_gen
 from optimize_class import Optimizer
 
 
-
 def config_environment():
     os.environ.setdefault('JINA_DATA_DIRECTORY', 'data')
+    os.environ.setdefault('JINA_LOG_CONFIG', 'logging.yml')
 
 
 def sample_run_parameters(trial):
@@ -24,7 +24,7 @@ def main():
     opt = Optimizer('flows/index.yml', 'flows/evaluate.yml',
                     index_document_generator(1000, data), evaluation_document_generator(1000, data),
                     500, 500,
-                    sample_run_parameters, 
+                    sample_run_parameters,
                     5)
     opt.optimize_flow()
 
