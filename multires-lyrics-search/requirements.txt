@@ -1,5 +1,5 @@
 jina[hub,http]==0.7.4
-torch
-transformers
+torch==1.7.0
+transformers==3.5.1
 requests~=2.24
-pytest
+pytest==6.1.2
