@@ -5,13 +5,9 @@ import torch
 from torch.nn.functional import softmax
 from transformers import BertTokenizer, BertForSequenceClassification
 
-from jina.executors.rankers import BaseRanker
+from jina.executors.rankers import Match2DocRanker
 
 from .. import QAReranker
-
-# Setting device on GPU if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 
 def test_qareranker():
     """here is my test code
@@ -48,7 +44,7 @@ def test_qareranker():
         new_scores,
         np.array(
             [(1, 0.760756), (2, 0.00014822294)],
-            dtype=[(BaseRanker.COL_MATCH_HASH, np.int64), (BaseRanker.COL_SCORE, np.float64)],
+            dtype=[(Match2DocRanker.COL_MATCH_HASH, np.int64), (Match2DocRanker.COL_SCORE, np.float64)],
         )
     )
     # Guarantee no side-effects happen

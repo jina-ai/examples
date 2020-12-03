@@ -3,12 +3,11 @@ import numpy as np
 import torch
 from torch.nn.functional import softmax
 from transformers import BertTokenizer, BertForSequenceClassification
-from jina.executors.rankers import BaseRanker
+from jina.executors.rankers import Match2DocRanker
 
-# Setting device on GPU if available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cpu")
 
-class QAReranker(BaseRanker):
+class QAReranker(Match2DocRanker):
     """
     :class:`QAReranker` Compute QA relevancy scores using a fine-tuned BERT model.
     """
@@ -20,7 +19,7 @@ class QAReranker(BaseRanker):
         print('\nLoading BERT tokenizer...')
         tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
         model = BertForSequenceClassification.from_pretrained('bert-base-uncased', cache_dir=None, num_labels=2)
-        model.load_state_dict(torch.load('model/2_finbert-qa-50_512_16_3e6.pt'), strict=False)
+        model.load_state_dict(torch.load('model/2_finbert-qa-50_512_16_3e6.pt', map_location=torch.device('cpu')), strict=False)
         model.to(device)
         model.eval()
 
