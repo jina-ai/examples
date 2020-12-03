@@ -15,30 +15,32 @@ from jina.logging import default_logger as logger
 class FlowRunner:
     def __init__(self, index_document_generator, query_document_generator,
                        index_batch_size, query_batch_size,
-                       workspace_env_name = 'JINA_WORKSPACE', 
+                       workspace_name = 'JINA_WORKSPACE', 
                        workspace=None, overwrite_workspace=False):
 
         self.index_document_generator = index_document_generator
         self.query_document_generator = query_document_generator
         self.index_batch_size = index_batch_size
         self.query_batch_size = query_batch_size
-        self.workspace_env_name = workspace_env_name
+        self.workspace_name = workspace_name
         self.overwrite_workspace = overwrite_workspace
 
-    def clean_workdir(self, workspace):
-        if Path(workspace).exists():
+    @staticmethod
+    def clean_workdir(workspace):
+        if workspace.exists():
             shutil.rmtree(workspace)
-            logger.warning('Workspace deleted')
+            print(colored('--------------------------------------------------------', 'red'))
+            print(colored('-------------- Existing workspace deleted --------------', 'red'))
+            print(colored('--------------------------------------------------------', 'red'))
+            print(colored('WORKSPACE: ' + str(workspace), 'red'))
 
     def run_indexing(self, index_yaml, workspace=None):
-        workspace = os.environ.get(self.workspace_env_name, workspace)
+        workspace = Path(os.environ.get(self.workspace_name, workspace))
 
-        if Path(workspace).exists():
+        if workspace.exists():
             if self.overwrite_workspace:
-                self.clean_workdir(workspace)
-                print(colored('--------------------------------------------------------', 'red'))
-                print(colored('-------------- Existing workspace deleted --------------', 'red'))
-                print(colored('--------------------------------------------------------', 'red'))
+                FlowRunner.clean_workdir(workspace)
+                print(colored('change overwrite_workspace to change this', 'red'))
             else:
                 print(colored('--------------------------------------------------------', 'cyan'))
                 print(colored('----- Workspace already exists. Skipping indexing. -----', 'cyan'))
@@ -75,7 +77,7 @@ class Optimizer:
                        index_yaml, query_yaml, parameter_yaml,
                        n_trials, direction='maximize', seed=42,
                        config_dir='config', best_config_filename='best_config.json',
-                       overwrite_trial_workspace=True):
+                       overwrite_trial_workspace=True, workspace='JINA_WORKSPACE'):
         self.flow_runner = flow_runner
         self.pod_dir = Path(pod_dir)
         self.index_yaml = Path(index_yaml)
@@ -87,11 +89,12 @@ class Optimizer:
         self.config_dir = config_dir
         self.best_config_filename = best_config_filename
         self.overwrite_trial_workspace = overwrite_trial_workspace
+        self.workspace = workspace.lstrip('$')
 
     def _trial_parameter_sampler(self, trial):
         """ https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial
         """
-        param_dict = {}
+        trial_parameters = {}
         yaml = YAML(typ='safe')
         parameters = yaml.load(open(self.parameter_yaml))
         for param, param_values in parameters.items():
@@ -100,8 +103,11 @@ class Optimizer:
                 kwargs = {**kwargs, **kwarg}
             param_type = 'suggest_' + kwargs['type']
             del kwargs['type']
-            param_dict[param] = getattr(trial, param_type)(param, **kwargs)
-        return param_dict
+            trial_parameters[param] = getattr(trial, param_type)(param, **kwargs)
+        trial_workspace = Path('JINA_WORKSPACE_' + '_'.join([str(v) for v in trial_parameters.values()]))
+        trial_parameters[self.workspace] = str(trial_workspace)
+        trial.workspace = trial_workspace
+        return trial_parameters
 
     @staticmethod
     def _replace_param(parameters, trial_parameters):
@@ -133,7 +139,7 @@ class Optimizer:
         for file_path in [self.index_yaml, self.query_yaml]:
             parameters = yaml.load(file_path)
             for pod, val in parameters['pods'].items():
-                for pod_param, pod_arg in parameters['pods'][pod].items():
+                for pod_param in parameters['pods'][pod].keys():
                     if pod_param.startswith('uses'):
                         parameters['pods'][pod][pod_param] = str(trial_dir/self.pod_dir/Path(val[pod_param]).name)
             trial_flow_file_path = trial_flow_dir/file_path.name
@@ -141,20 +147,16 @@ class Optimizer:
 
     def _objective(self, trial):
         trial_parameters = self._trial_parameter_sampler(trial)
-        trial_workspace = Path('JINA_WORKSPACE_' + '_'.join([str(v) for v in trial_parameters.values()]))
-        trial_parameters['JINA_WORKSPACE'] = str(trial_workspace)
-        trial_index_workspace = trial_workspace/'index'
-        trial_index_yaml = trial_workspace/'flows'/self.index_yaml.name
-        trial_query_yaml = trial_workspace/'flows'/self.query_yaml.name
+        trial_index_workspace = trial.workspace/'index'
+        trial_index_yaml = trial.workspace/'flows'/self.index_yaml.name
+        trial_query_yaml = trial.workspace/'flows'/self.query_yaml.name
 
-        if trial_workspace.exists() and self.overwrite_trial_workspace:
-            shutil.rmtree(trial_workspace)
-            print(colored('--------------------------------------------------------', 'red'))
-            print(colored('---------- Existing trial workspace deleted ------------', 'red'))
-            print(colored('--------------------------------------------------------', 'red'))
-            print(colored('WORKSPACE: ' + str(trial_workspace), 'red'))
-        self._create_trial_pods(trial_workspace, trial_parameters)
-        self._create_trial_flows(trial_workspace)
+        if self.overwrite_trial_workspace:
+            self.flow_runner.clean_workdir(trial.workspace)
+            print(colored('change overwrite_trial_workspace to change this', 'red'))
+
+        self._create_trial_pods(trial.workspace, trial_parameters)
+        self._create_trial_flows(trial.workspace)
         cb = OptimizerCallback()
         self.flow_runner.run_evaluation(trial_index_yaml, trial_query_yaml, trial_index_workspace, cb.process_result)
 
