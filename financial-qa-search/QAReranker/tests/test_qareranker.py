@@ -17,7 +17,7 @@ def test_qareranker():
     query_meta = {"text": "Why are big companies like Apple or Google not included in the Dow Jones Industrial "
                           "Average (DJIA) index?"}
     query_meta_json = json.dumps(query_meta, sort_keys=True)
-    old_match_scores = {1: 5, 2: 4}
+    old_match_scores = {1: 5, 2: 7}
     old_match_scores_json = json.dumps(old_match_scores, sort_keys=True)
     match_meta = {1: {"text": "That is a pretty exclusive club and for the most part they are not interested in "
                               "highly volatile companies like Apple and Google. Sure, IBM is part of the DJIA, "
@@ -33,7 +33,11 @@ def test_qareranker():
                               "EIN."}}
     match_meta_json = json.dumps(match_meta, sort_keys=True)
 
-    ranker = QAReranker()
+    pretrained_model = '../model/bert-qa'
+    model_path = "../model/2_finbert-qa-50_512_16_3e6.pt"
+
+    ranker = QAReranker(pretrained_model_name_or_path=pretrained_model, model_path=model_path)
+
     new_scores = ranker.score(
         copy.deepcopy(query_meta),
         copy.deepcopy(old_match_scores),
@@ -43,10 +47,11 @@ def test_qareranker():
     np.testing.assert_array_equal(
         new_scores,
         np.array(
-            [(1, 0.760756), (2, 0.00014822294)],
+            [(1, 0.7607551217079163), (2, 0.0001482228108216077)],
             dtype=[(Match2DocRanker.COL_MATCH_HASH, np.int64), (Match2DocRanker.COL_SCORE, np.float64)],
         )
     )
+
     # Guarantee no side-effects happen
     assert query_meta_json == json.dumps(query_meta, sort_keys=True)
     assert old_match_scores_json == json.dumps(old_match_scores, sort_keys=True)
