@@ -1,0 +1,5 @@
+JINA_MYENCODER_TARGET_DIMENSION:
+  - type: int
+  - low: 32
+  - high: 256
+  - step: 32

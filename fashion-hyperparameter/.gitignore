@@ -133,3 +133,4 @@ jina-profile*.json
 .vscode/
 
 workspace_*/
+JINA_WORKSPACE*/
