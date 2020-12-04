@@ -15,14 +15,16 @@ from jina.logging import default_logger as logger
 class FlowRunner:
     def __init__(self, index_document_generator, query_document_generator,
                        index_batch_size, query_batch_size,
-                       workspace_name = 'JINA_WORKSPACE', 
-                       workspace=None, overwrite_workspace=False):
+                       env_yaml = None,
+                       workspace_env = 'JINA_WORKSPACE',
+                       overwrite_workspace=False):
 
         self.index_document_generator = index_document_generator
         self.query_document_generator = query_document_generator
         self.index_batch_size = index_batch_size
         self.query_batch_size = query_batch_size
-        self.workspace_name = workspace_name
+        self.env_yaml = env_yaml
+        self.workspace_env = workspace_env
         self.overwrite_workspace = overwrite_workspace
 
     @staticmethod
@@ -34,13 +36,23 @@ class FlowRunner:
             print(colored('--------------------------------------------------------', 'red'))
             print(colored('WORKSPACE: ' + str(workspace), 'red'))
 
+    def _load_env(self):
+        if self.env_yaml:
+            yaml = YAML(typ='safe')
+            self.env_parameters = yaml.load(open(self.env_yaml))
+            for environment_variable, value in self.env_parameters.items():
+                os.environ[environment_variable] = str(value)
+            logger.info('Environment variables loaded')
+        else:
+            logger.info('Cannot load environment variables as no env_yaml passed')
+
     def run_indexing(self, index_yaml, workspace=None):
-        workspace = Path(os.environ.get(self.workspace_name, workspace))
+        self._load_env()
+        workspace = Path(os.environ.get(self.workspace_env, workspace))
 
         if workspace.exists():
             if self.overwrite_workspace:
                 FlowRunner.clean_workdir(workspace)
-                print(colored('change overwrite_workspace to change this', 'red'))
             else:
                 print(colored('--------------------------------------------------------', 'cyan'))
                 print(colored('----- Workspace already exists. Skipping indexing. -----', 'cyan'))
@@ -52,7 +64,8 @@ class FlowRunner:
         with Flow().load_config(index_yaml) as f:
             f.index(index_document_generator, batch_size=self.index_batch_size)
 
-    def run_querying(self, query_yaml, callback, workspace=None):
+    def run_querying(self, query_yaml, callback):
+        self._load_env()
         self.query_document_generator, query_document_generator = tee(self.query_document_generator)
 
         with Flow().load_config(query_yaml) as f:
@@ -62,34 +75,46 @@ class FlowRunner:
                 output_fn=callback
             )
 
-    @staticmethod
-    def parameters_to_env(parameters):
-        for environment_variable, value in parameters.items():
-            os.environ[environment_variable] = str(value)
-
     def run_evaluation(self, index_yaml, query_yaml, workspace, evaluation_callback):
+        self._load_env()
         self.run_indexing(index_yaml, workspace)
-        self.run_querying(query_yaml, evaluation_callback, workspace)
+        self.run_querying(query_yaml, evaluation_callback)
 
+
+class OptimizerCallback:
+    def __init__(self, op_name=None):
+        self.op_name = op_name
+        self.evaluation_values = {}
+        self.n_docs = 0
+
+    def get_mean_evaluation(self):
+        if self.op_name:
+            return self.evaluation_values[self.op_name] / self.n_docs
+        return {metric: val / self.n_docs for metric, val in self.evaluation_values.items()}
+
+    def process_result(self, response):
+        self.n_docs += len(response.search.docs)
+        logger.info(f'>> Num of docs: {self.n_docs}')
+        for doc in response.search.docs:
+            for evaluation in doc.evaluations:
+                self.evaluation_values[evaluation.op_name] = self.evaluation_values.get(evaluation.op_name, 0.0) + evaluation.value
+                
 
 class Optimizer:
     def __init__(self, flow_runner, pod_dir,
                        index_yaml, query_yaml, parameter_yaml,
-                       n_trials, direction='maximize', seed=42,
-                       config_dir='config', best_config_filename='best_config.json',
-                       overwrite_trial_workspace=True, workspace='JINA_WORKSPACE'):
+                       callback = OptimizerCallback(),
+                       best_config_filepath='config/best_config.yml',
+                       overwrite_trial_workspace=True, workspace_env='JINA_WORKSPACE'):
         self.flow_runner = flow_runner
         self.pod_dir = Path(pod_dir)
         self.index_yaml = Path(index_yaml)
         self.query_yaml = Path(query_yaml)
         self.parameter_yaml = parameter_yaml
-        self.n_trials = n_trials
-        self.direction = direction
-        self.seed = seed
-        self.config_dir = config_dir
-        self.best_config_filename = best_config_filename
+        self.callback = callback
+        self.best_config_filepath = Path(best_config_filepath)
         self.overwrite_trial_workspace = overwrite_trial_workspace
-        self.workspace = workspace.lstrip('$')
+        self.workspace_env = workspace_env.lstrip('$')
 
     def _trial_parameter_sampler(self, trial):
         """ https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html#optuna.trial.Trial
@@ -98,14 +123,11 @@ class Optimizer:
         yaml = YAML(typ='safe')
         parameters = yaml.load(open(self.parameter_yaml))
         for param, param_values in parameters.items():
-            kwargs = {}
-            for kwarg in param_values: 
-                kwargs = {**kwargs, **kwarg}
-            param_type = 'suggest_' + kwargs['type']
-            del kwargs['type']
-            trial_parameters[param] = getattr(trial, param_type)(param, **kwargs)
+            param_type = 'suggest_' + param_values['type']
+            del param_values['type']
+            trial_parameters[param] = getattr(trial, param_type)(param, **param_values)
         trial_workspace = Path('JINA_WORKSPACE_' + '_'.join([str(v) for v in trial_parameters.values()]))
-        trial_parameters[self.workspace] = str(trial_workspace)
+        trial_parameters[self.workspace_env] = str(trial_workspace)
         trial.workspace = trial_workspace
         return trial_parameters
 
@@ -153,48 +175,30 @@ class Optimizer:
 
         if self.overwrite_trial_workspace:
             self.flow_runner.clean_workdir(trial.workspace)
-            print(colored('change overwrite_trial_workspace to change this', 'red'))
 
         self._create_trial_pods(trial.workspace, trial_parameters)
         self._create_trial_flows(trial.workspace)
-        cb = OptimizerCallback()
-        self.flow_runner.run_evaluation(trial_index_yaml, trial_query_yaml, trial_index_workspace, cb.process_result)
+        self.flow_runner.run_evaluation(trial_index_yaml, trial_query_yaml, 
+                                        trial_index_workspace, self.callback.process_result)
 
-        evaluation_values = cb.get_mean_evaluation()
+        evaluation_values = self.callback.get_mean_evaluation()
         op_name = list(evaluation_values)[0]
         mean_eval = evaluation_values[op_name]
         logger.info(colored(f'Avg {op_name}: {mean_eval}', 'green'))
         return mean_eval
 
     def _export_params(self, study):
-        Path(self.config_dir).mkdir(exist_ok=True)
-        with open(f'{self.config_dir}/{self.best_config_filename}', 'w') as f: json.dump(study.best_trial.params, f)
+        self.best_config_filepath.parent.mkdir(exist_ok=True)
+        yaml=YAML(typ='rt')
+        all_params = {**self.flow_runner.env_parameters, **study.best_trial.params}
+        yaml.dump(all_params, open(self.best_config_filepath, 'w'))
         logger.info(colored(f'Number of finished trials: {len(study.trials)}', 'green'))
         logger.info(colored(f'Best trial: {study.best_trial.params}', 'green'))
         logger.info(colored(f'Time to finish: {study.best_trial.duration}', 'green'))
 
-    def optimize_flow(self):
+    def optimize_flow(self, n_trials, direction='maximize', seed=42):
         import optuna
-        sampler = optuna.samplers.TPESampler(seed=self.seed)
-        study = optuna.create_study(direction=self.direction, sampler=sampler)
-        study.optimize(self._objective, n_trials=self.n_trials)
+        sampler = optuna.samplers.TPESampler(seed=seed)
+        study = optuna.create_study(direction=direction, sampler=sampler)
+        study.optimize(self._objective, n_trials=n_trials)
         self._export_params(study)
-
-
-class OptimizerCallback:
-    def __init__(self):
-        self.evaluation_values = {}
-        self.n_docs = 0
-
-    def get_mean_evaluation(self, op_name=None):
-        if op_name:
-            return self.evaluation_values[op_name] / self.n_docs
-        return {metric: val / self.n_docs for metric, val in self.evaluation_values.items()}
-
-    def process_result(self, response):
-        self.n_docs += len(response.search.docs)
-        logger.info(f'>> Num of docs: {self.n_docs}')
-        for doc in response.search.docs:
-            for evaluation in doc.evaluations:
-                self.evaluation_values[evaluation.op_name] = self.evaluation_values.get(evaluation.op_name, 0.0) + evaluation.value
-                
