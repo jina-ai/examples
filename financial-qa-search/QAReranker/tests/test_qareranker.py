@@ -33,8 +33,8 @@ def test_qareranker():
                               "EIN."}}
     match_meta_json = json.dumps(match_meta, sort_keys=True)
 
-    pretrained_model = '../model/bert-qa'
-    model_path = "../model/2_finbert-qa-50_512_16_3e6.pt"
+    pretrained_model = '../models/bert-qa'
+    model_path = "../models/2_finbert-qa-50_512_16_3e6.pt"
 
     ranker = QAReranker(pretrained_model_name_or_path=pretrained_model, model_path=model_path)
 

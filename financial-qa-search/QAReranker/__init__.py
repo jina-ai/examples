@@ -38,7 +38,7 @@ class QAReranker(Match2DocRanker):
     def post_init(self):
         super().post_init()
         self.device = torch.device("cpu")
-        self.tokenizer = BertTokenizer.from_pretrained(self.pretrained_model_name_or_path, do_lower_case=True)
+        self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
         self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None, num_labels=2)
         self.model.load_state_dict(torch.load(self.model_path, map_location=self.device), strict=False)
         self.model.to(self.device)
