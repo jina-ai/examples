@@ -1,0 +1,14 @@
+manifest_version: 1
+name: QAReranker
+kind: ranker
+description:
+  |
+  Compute QA relevancy scores using a fine-tuned BERT model
+author: Jina AI Dev-Team (dev-team@jina.ai)
+url: https://jina.ai
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/jina-hub
+version: 0.0.1
+license: apache-2.0
+keywords: [keywords to describe the executor, separated by commas]
+type: pod
