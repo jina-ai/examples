@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import click
+import click	
 
 import urllib.request
 import gzip
@@ -10,13 +10,13 @@ import numpy as np
 import webbrowser
 import random
 
-
 from jina.flow import Flow
 from jina.clients.python import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
 from jina.proto import jina_pb2
-from jina.drivers.helper import array2pb
+from jina import Document
+
 
 from pkg_resources import resource_filename
 from components import *
@@ -62,7 +62,6 @@ def print_result(resp):
         for kk in d.matches:
             kmi = kk.uri
             result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
-            # k['score']['explained'] = json.loads(kk.score.explained)
         result_html.append('</td></tr>\n')
 
 
@@ -114,23 +113,25 @@ def download_data(target: dict, download_proxy=None):
                 v['data'] = load_mnist(v['filename'])
 
 
-def index_generator(num_doc, target: dict):
+def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
+        d = Document(content=target['index']['data'][j])
+        d.update_id()
         label_int = target['index-labels']['data'][j][0]
-        d = jina_pb2.Document()
-        d.blob.CopyFrom(array2pb((target['index']['data'][j])))
-        d.tags.update({'label': get_mapped_label(label_int)})
+        category = get_mapped_label(label_int)
+        d.tags['label'] = category
         yield d
 
 
-def query_generator(num_doc, target: dict):
+def query_generator(num_doc: int, target: dict):
     for j in range(num_doc):
         n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
-        d = jina_pb2.Document()
-        label_int = target['query-labels']['data'][n][0]
-        d.blob.CopyFrom(array2pb(target['query']['data'][n]))
-        d.tags.update({'label': get_mapped_label(label_int)})
-        yield d
+        label_int = target['query-labels']['data'][n][0] 
+        category = get_mapped_label(label_int) 
+        if category == 'Bag':
+            d = Document(content=(target['query']['data'][n]))
+            d.tags['label'] = category
+            yield d
 
 
 def index(num_doc, target: dict):
@@ -149,20 +150,21 @@ def query(num_doc, target: dict):
 
 def config(task):
     parallel = 2 if task == 'index' else 1
-    os.environ['RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['SHARDS'] = str(1)
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    shards = 1
+    os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
+    os.environ['JINA_SHARDS'] = str(shards)
+    os.environ['JINA_PARALLEL'] = str(parallel)
+    os.environ['JINA_WORKDIR'] = './workspace'
+    os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
+
 
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs_query', '-n', default=100)
-@click.option('--num_docs_index', '-n', default=60000)
+@click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
-    if not os.path.exists('./workspace'):
-        os.makedirs('./workspace')
+    config(task)
         
     targets = {
         'index-labels': {
@@ -183,11 +185,9 @@ def main(task, num_docs_query, num_docs_index):
         }
     }
     download_data(targets, None)
-    config(task)
-
     if task == 'index':
         config(task)
-        workspace = os.environ['WORKDIR']
+        workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \

@@ -5,56 +5,56 @@ with:
 pods:
   encode:
     uses: encode/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
   indexer_tshirt:
     uses: index/indexer-tshirt.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_trouser:
     uses: index/indexer-trouser.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_pullover:
     uses: index/indexer-pullover.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_dress:
     uses: index/indexer-dress.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_coat:
     uses: index/indexer-coat.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_sandal:
     uses: index/indexer-sandal.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_shirt:
     uses: index/indexer-shirt.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_sneaker:
     uses: index/indexer-sneaker.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_bag:
     uses: index/indexer-bag.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_ankleboot:
     uses: index/indexer-ankleboot.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   join_all:
