@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 import numpy as np
 
 from jina.executors.encoders import BaseImageEncoder
-from jina.optimizer.type import IntegerParameter
+from type import IntegerParameter
 
 
 class MyEncoder(BaseImageEncoder):
@@ -16,10 +16,10 @@ class MyEncoder(BaseImageEncoder):
         IntegerParameter(
             executor_name='MyEncoder',
             parameter_name='target_dimension',
-            min_=32,
-            max_=256,
+            low=32,
+            high=256,
             step_size=32
-        )
+        ),
     ]
 
     def __init__(self, target_dimension=64, *args, **kwargs):
@@ -34,3 +34,4 @@ class MyEncoder(BaseImageEncoder):
     def encode(self, data: 'np.ndarray', *args, **kwargs):
         # reduce dimension to 50 by random orthogonal projection
         return (data.reshape([-1, 784]) / 255) @ self.oth_mat
+#

@@ -1,5 +1,3 @@
-import os
-
 from fashion.data import get_data
 from fashion.evaluation import index_document_generator, evaluation_document_generator
 

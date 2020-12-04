@@ -16,3 +16,6 @@ requests:
           fields:
             - buffer
             - chunks
+
+with:
+  target_dimension: $JINA_MYENCODER_TARGET_DIMENSION
