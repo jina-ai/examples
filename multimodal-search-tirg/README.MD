@@ -54,9 +54,11 @@ You can try this example with [Fashion200k](https://github.com/xthan/fashion-200
 This will download the TIRG model + code and build the image
 ### TIRG image encoder
 Start the Docker image. Go to the TirgImageEncoder folder and run the command below: 
+
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.image.tirg .`
 ### TIRG multimodal encoder
 Start the Docker image. Go to the TirgMultimodalEncoder folder and run the command below: 
+
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
 ## Index Image Data
