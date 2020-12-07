@@ -29,6 +29,7 @@ def index():
         else:
             f.index_lines(lines=['abc', 'cde', 'efg'], batch_size=16, read_mode='r', size=num_docs)
 
+
 # for search
 def search():
     f = Flow.load_config('flows/query.yml')

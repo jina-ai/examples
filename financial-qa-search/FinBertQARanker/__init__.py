@@ -1,8 +1,11 @@
+import os
 from typing import Dict
 import numpy as np
 
 from jina.executors.devices import TorchDevice
 from jina.executors.rankers import Match2DocRanker
+
+cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 class FinBertQARanker(TorchDevice, Match2DocRanker):
     """
@@ -13,8 +16,8 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
 
     def __init__(
             self,
-            pretrained_model_name_or_path: str = "models/bert-qa",
-            model_path: str = "models/2_finbert-qa-50_512_16_3e6.pt",
+            pretrained_model_name_or_path: str = os.path.join(cur_dir, "models/bert-qa"),
+            model_path: str = os.path.join(cur_dir, "models/2_finbert-qa-50_512_16_3e6.pt"),
             max_length: int = 512,
             *args, **kwargs):
         """

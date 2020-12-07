@@ -18,4 +18,5 @@ pods:
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   ranker:
     uses: jinaai/hub.executors.rankers.finbertqaranker
+    uses_internal: pods/rank.yml
     parallel: $JINA_PARALLEL
