@@ -1,7 +1,0 @@
-!QAReranker
-with:
-  {}
-metas:
-  py_modules: 
-    - __init__.py
-    # - You can put more dependencies here
