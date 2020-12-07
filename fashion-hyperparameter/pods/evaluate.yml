@@ -3,7 +3,7 @@ with:
   eval_at: 1
 metas:
   name: evaluation
-  py_modules: /home/maximilian/workspace/examples/fashion-hyperparameter/evaluate.py
+  py_modules: evaluate.py
 requests:
   on:
     [ SearchRequest ]:

@@ -81,13 +81,8 @@ class FlowRunner:
                 output_fn=callback,
             )
 
-    def run_evaluation(self, index_yaml, query_yaml, workspace, evaluation_callback):
-        self._load_env()
-        self.run_indexing(index_yaml, workspace)
-        self.run_querying(query_yaml, evaluation_callback)
 
-
-class OptimizerCallback:
+class EvaluationCallback:
     def __init__(self, op_name=None):
         self.op_name = op_name
         self.evaluation_values = {}
@@ -109,7 +104,7 @@ class OptimizerCallback:
 class Optimizer:
     def __init__(self, flow_runner, pod_dir,
                        index_yaml, query_yaml, parameter_yaml,
-                       callback = OptimizerCallback(),
+                       callback = EvaluationCallback(),
                        best_config_filepath='config/best_config.yml',
                        overwrite_trial_workspace=True, workspace_env='JINA_WORKSPACE'):
         self.flow_runner = flow_runner
@@ -192,8 +187,8 @@ class Optimizer:
 
         self._create_trial_pods(trial.workspace, trial_parameters)
         self._create_trial_flows(trial.workspace)
-        self.flow_runner.run_evaluation(trial_index_yaml, trial_query_yaml,
-                                        trial_index_workspace, self.callback.process_result)
+        self.flow_runner.run_indexing(trial_index_yaml, trial_index_workspace)
+        self.flow_runner.run_querying(trial_query_yaml, self.callback.process_result)
 
         evaluation_values = self.callback.get_mean_evaluation()
         op_name = list(evaluation_values)[0]
