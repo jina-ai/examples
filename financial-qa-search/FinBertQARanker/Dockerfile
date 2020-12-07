@@ -16,11 +16,13 @@ RUN wget https://www.dropbox.com/s/12uiuumz4vbqvhk/2_finbert-qa-50_512_16_3e6.pt
 COPY  . /workspace
 WORKDIR /workspace
 
-RUN mkdir models/ && cd models/ && \
+RUN if [ ! -d models ]; then \
+    mkdir models/ && cd models/ && \
     mv /bert-qa.zip                   . && \
     mv /2_finbert-qa-50_512_16_3e6.pt . && \
     mkdir bert-qa && \
-    unzip bert-qa.zip -d bert-qa/
+    unzip bert-qa.zip -d bert-qa/; \
+fi
 
 RUN pytest
 

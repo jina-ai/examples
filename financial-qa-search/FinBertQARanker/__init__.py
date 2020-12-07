@@ -1,11 +1,10 @@
 from typing import Dict
 import numpy as np
-import torch
-from torch.nn.functional import softmax
-from transformers import BertTokenizer, BertForSequenceClassification
+
+from jina.executors.devices import TorchDevice
 from jina.executors.rankers import Match2DocRanker
 
-class FinBertQARanker(Match2DocRanker):
+class FinBertQARanker(TorchDevice, Match2DocRanker):
     """
     :class:`FinBertQARanker` Compute QA relevancy scores using a fine-tuned BERT model.
     """
@@ -14,19 +13,13 @@ class FinBertQARanker(Match2DocRanker):
 
     def __init__(
             self,
-            pretrained_model_name_or_path: str,
-            model_path: str,
+            pretrained_model_name_or_path: str = "models/bert-qa",
+            model_path: str = "models/2_finbert-qa-50_512_16_3e6.pt",
             max_length: int = 512,
             *args, **kwargs):
         """
-        :param pretrained_model_name_or_path: Either:
-            - a string with the `shortcut name` of a pre-trained model to load from cache or download, e.g.: ``bert-base-uncased``.
-            - a string with the `identifier name` of a pre-trained model that was user-uploaded to Hugging Face S3, e.g.: ``dbmdz/bert-base-german-cased``.
-            - a path to a `directory` containing model weights saved using :func:`~transformers.PreTrainedModel.save_pretrained`, e.g.: ``./my_model_directory/``.
-            - a path or url to a `tensorflow index checkpoint file` (e.g. `./tf_model/model.ckpt.index`). In this case, ``from_tf`` should be set to True and a configuration object should be provided as ``config`` argument.
-            This loading path is slower than converting the TensorFlow
-            checkpoint in a PyTorch model using the provided conversion scripts and loading the PyTorch model afterwards.
-        :param model_name: the path where the model is stored
+        :param pretrained_model_name_or_path: the name of the pre-trained model.
+        :param model_path: the path of the fine-tuned model.
         :param max_length: the max length to truncate the tokenized sequences to.
         """
 
@@ -37,14 +30,19 @@ class FinBertQARanker(Match2DocRanker):
 
     def post_init(self):
         super().post_init()
+        import torch
+        from transformers import BertForSequenceClassification, AutoTokenizer
+
         self.device = torch.device("cpu")
-        self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name_or_path, do_lower_case=True)
         self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None, num_labels=2)
         self.model.load_state_dict(torch.load(self.model_path, map_location=self.device), strict=False)
         self.model.to(self.device)
         self.model.eval()
 
     def _get_score(self, query, answer):
+        import torch
+        from torch.nn.functional import softmax
 
         # Create inputs for the model
         encoded_seq = self.tokenizer.encode_plus(query, answer,
