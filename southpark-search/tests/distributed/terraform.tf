@@ -11,30 +11,6 @@ resource "aws_ecr_repository" "southpark" {
   }
 }
 
-# Curl command for spinning up flow
-resource "null_resource" "environment" {
-  provisioner "remote-exec" {
-    inline = [<<EOF
-    curl -s --request PUT "http://localhost:8000/v1/flow/yaml" \
-    -H  "accept: application/json" \
-    -H  "Content-Type: multipart/form-data" \
-    -F "uses_files=@pods/encode.yml" \
-    -F "uses_files=@pods/extract.yml" \
-    -F "uses_files=@pods/index.yml" \
-    -F "pymodules_files=@pods/text_loader.py" \
-    -F "yamlspec=@tests/distributed/flow-query.yml"
-    EOF
-    ]
-  }
-}
-
-resource "aws_default_vpc" "default_vpc" {
-}
-
-data "aws_subnet_ids" "default" {
-  vpc_id = "${aws_default_vpc.default_vpc.id}"
-}
-
 #Create Cluster
 resource "aws_ecs_cluster" "southpark_cluster" {
   name = "southpark_cluster"
@@ -54,6 +30,14 @@ resource "aws_ecs_task_definition" "southpark_task" {
           "containerPort": 45678
         }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${aws_cloudwatch_log_group.southpark_loggroup.name}",  
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "streaming"
+        }
+      },
       "memory": 1024,
       "cpu": 128
     },
@@ -105,6 +89,16 @@ data "aws_iam_policy_document" "assume_role_policy" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
+}
+
+resource "aws_cloudwatch_log_group" "southpark_loggroup" {
+  name              = "southpark-log"
+  retention_in_days = 1
+}
+
+resource "aws_cloudwatch_log_stream" "southpark-distributed-logs" {
+  name           = "southpark-distributed-logs"
+  log_group_name = "${aws_cloudwatch_log_group.southpark_loggroup.name}"
 }
 
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
@@ -214,4 +208,3 @@ resource "aws_lb_listener" "lsr" {
 output "alb_url" {
   value = "http://${aws_alb.application_load_balancer.dns_name}"
 }
-

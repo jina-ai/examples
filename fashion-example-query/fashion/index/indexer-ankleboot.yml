@@ -5,16 +5,16 @@ components:
       index_filename: vec.gz
     metas:
       name: vecidx  # a customized name
-      workspace: $HW_WORKDIR/AnkleBoot
+      workspace: $JINA_WORKDIR/AnkleBoot
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx
-      workspace: $HW_WORKDIR/AnkleBoot
+      workspace: $JINA_WORKDIR/AnkleBoot
 metas:
   name: chunk_indexer_ankleboot
-  workspace: $HW_WORKDIR/AnkleBoot
+  workspace: $JINA_WORKDIR/AnkleBoot
 requests:
   on:
     IndexRequest:

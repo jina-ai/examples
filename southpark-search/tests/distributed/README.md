@@ -402,3 +402,17 @@ Apply complete! Resources: 13 added, 0 changed, 0 destroyed.
 ```
 
 </details>
+
+You can see the logs on the AWS console under:
+
+CloudWatch -> LogGroups
+
+<p align="center">
+  <img src="logs.png" alt="Jina banner" width="90%">
+</p>
+
+Click on the desired one and you'll see the details 
+
+<p align="center">
+  <img src="logs2.png" alt="Jina banner" width="90%">
+</p>
