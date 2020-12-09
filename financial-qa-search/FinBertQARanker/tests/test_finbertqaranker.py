@@ -5,7 +5,6 @@ import torch
 from torch.nn.functional import softmax
 from transformers import BertTokenizer, BertForSequenceClassification
 
-from jina.executors.devices import TorchDevice
 from jina.executors.rankers import Match2DocRanker
 
 from .. import FinBertQARanker

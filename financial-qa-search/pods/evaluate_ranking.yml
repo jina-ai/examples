@@ -1,0 +1,34 @@
+!CompoundExecutor
+components:
+  - !PrecisionEvaluator
+    with:
+      eval_at: 10
+    metas:
+      name: ranking-precision-10
+  - !MeanRecipricalREvaluator
+    with:
+      eval_at: 10
+    metas:
+      name: ranking-mrr-10
+  - !NDCGEvalutator
+    with:
+      eval_at: 10
+    metas:
+      name: ranking-ndcg-10
+metas:
+  name: evaluation
+requests:
+  on:
+    [ SearchRequest ]:
+      - !RankEvaluateDriver
+        with:
+          executor: ranking-precision-10
+          traversal_paths: [ 'r' ]
+      - !RankEvaluateDriver
+        with:
+          executor: ranking-mrr-10
+          traversal_paths: [ 'r' ]
+      - !RankEvaluateDriver
+        with:
+          executor: ranking-ndcg-10
+          traversal_paths: [ 'r' ]
