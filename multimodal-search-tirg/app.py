@@ -59,14 +59,9 @@ def print_result(resp):
 
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
-        with Document() as chunk1:
-            chunk1.modality = 'image'
-            with open(image_path, 'rb') as fp:
-                chunk1.buffer = fp.read()
-        with Document() as chunk2:
-            chunk2.modality = 'text'
-            chunk2.text = text
-        yield MultimodalDocument(chunks=[chunk1, chunk2])
+        with open(image_path, 'rb') as fp:
+            buffer = fp.read()
+        yield MultimodalDocument(modality_content_map={'image': buffer, 'text': text})
 
 @click.command()
 @click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
