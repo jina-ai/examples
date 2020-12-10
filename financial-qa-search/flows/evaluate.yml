@@ -1,17 +1,15 @@
 !Flow
 with:
   read_only: true  # better add this in the query time
-  rest_api: true
-#  port_expose: $JINA_PORT
 pods:
   encoder:
     uses: pods/encode.yml
-#    parallel: $JINA_PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   doc_indexer:
     uses: pods/doc.yml
-#    shards: $JINA_SHARDS
+    shards: $JINA_SHARDS
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
@@ -21,6 +19,7 @@ pods:
   ranker:
     uses: jinaai/hub.executors.rankers.finbertqaranker
     uses_internal: pods/rank.yml
-#    parallel: $JINA_PARALLEL
+    parallel: $JINA_PARALLEL
+    timeout_ready: 600000
   evaluate_ranking:
     uses: pods/evaluate_ranking.yml

@@ -1,3 +1,4 @@
-data/answer_collection.csv
+sample-workspace/
 workspace/
 FinBertQARanker/models/
+.ipynb_checkpoints/

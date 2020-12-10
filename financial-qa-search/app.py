@@ -19,14 +19,14 @@ def config():
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
 
 
-    data_loader = torch.utils.data.DataLoader(dataset=dataset,
-                                              batch_size=batch_size,
-                                              shuffle=shuffle,
-                                              pin_memory=True,
-                                              num_workers=num_workers,
-                                              collate_fn=collate_fn)
-
-    return data_loader
+    # data_loader = torch.utils.data.DataLoader(dataset=dataset,
+    #                                           batch_size=batch_size,
+    #                                           shuffle=shuffle,
+    #                                           pin_memory=True,
+    #                                           num_workers=num_workers,
+    #                                           collate_fn=collate_fn)
+    #
+    # return data_loader
 
 def index_generator():
     import csv
@@ -42,16 +42,38 @@ def index_generator():
             d.update_id()
             yield d
 
+
+
+def load_pickle(path):
+    """Load pickle file.
+    ----------
+    Arguments:
+        path: str file path
+    """
+    import pickle
+    with open(path, 'rb') as f:
+        return pickle.load(f)
+
+
 def evaluate_generator():
-    qid2text = Dict()
-    test_set = load_pickle('whatever')
-    for q_id, matches_doc_id in test_set:
+    import numpy as np
+    test_set = load_pickle('data/test_set_50.pickle')
+    t = np.array(test_set)
+    t = t[:, :2]
+    t = t.tolist()
+
+    docid2text = load_pickle('data/docid_to_text.pickle')
+    qid2text = load_pickle('data/qid_to_text.pickle')
+
+    for q_id, matches_doc_id in t:
         query = Document()
         query.text = qid2text[q_id]
         groundtruth = Document()
         for match_doc_id in match_doc_id:
             match = groundtruth.matches.add()
             match.tags['id'] = match_doc_id
+            match.text = docid2text[match_doc_id]
+        yield (query, groundtruth)
 
 
 def print_result(resp):
@@ -83,7 +105,7 @@ def evaluate():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index/search/dryrun" mode')
+        print('choose between "index/search/evaluate" mode')
         exit(1)
     if sys.argv[1] == 'index':
         config()
@@ -93,6 +115,6 @@ if __name__ == '__main__':
         search()
     elif sys.argv[1] == 'evaluate':
         config()
-        dryrun()
+        evaluate()
     else:
         raise NotImplementedError(f'unsupported mode {sys.argv[1]}')

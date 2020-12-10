@@ -5,12 +5,12 @@ components:
       eval_at: 10
     metas:
       name: matching-precision-10
-  - !MeanRecipricalREvaluator
+  - !MeanReciprocalRankEvaluator
     with:
       eval_at: 10
     metas:
       name: matching-mrr-10
-  - !NDCGEvalutator
+  - !NDCGEvaluator
     with:
       eval_at: 10
     metas:
