@@ -18,16 +18,7 @@ def config():
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
     os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
-
-
-    # data_loader = torch.utils.data.DataLoader(dataset=dataset,
-    #                                           batch_size=batch_size,
-    #                                           shuffle=shuffle,
-    #                                           pin_memory=True,
-    #                                           num_workers=num_workers,
-    #                                           collate_fn=collate_fn)
-    #
-    # return data_loader
+    
 
 def index_generator():
     import csv
