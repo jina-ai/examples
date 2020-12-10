@@ -17,6 +17,7 @@ def config():
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
+    os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
 
 
     # data_loader = torch.utils.data.DataLoader(dataset=dataset,
@@ -30,7 +31,7 @@ def config():
 
 def index_generator():
     import csv
-    data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_PATH', None))
+    data_path = os.path.join(os.path.dirname(__file__), os.environ['JINA_DATA_PATH'])
 
     # Get Document and ID
     with open(data_path) as f:
@@ -57,13 +58,13 @@ def load_pickle(path):
 
 def evaluate_generator():
     import numpy as np
-    test_set = load_pickle('data/test_set_50.pickle')
+    test_set = load_pickle('dataset/test_set_50.pickle')
     t = np.array(test_set)
     t = t[:, :2]
     t = t.tolist()
 
-    docid2text = load_pickle('data/docid_to_text.pickle')
-    qid2text = load_pickle('data/qid_to_text.pickle')
+    docid2text = load_pickle('dataset/docid_to_text.pickle')
+    qid2text = load_pickle('dataset/qid_to_text.pickle')
 
     for q_id, matches_doc_id in t:
         query = Document()
