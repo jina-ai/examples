@@ -3,15 +3,14 @@ __license__ = "Apache-2.0"
 
 import os
 import shutil
-import sys
 
 import click
 import matplotlib.pyplot as plt
 
 from jina.flow import Flow
 from jina.logging import default_logger as logger
-from jina.proto import jina_pb2
-from jina.types.document import uid
+from jina.types.document import uid, Document
+from jina.types.document.multimodal import MultimodalDocument
 
 
 num_docs = 100
@@ -60,17 +59,14 @@ def print_result(resp):
 
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
-        doc = jina_pb2.DocumentProto()
-        chunk1 = doc.chunks.add()
-        chunk2 = doc.chunks.add()
-        chunk1.modality = 'image'
-        chunk2.modality = 'text'
-        chunk1.id = uid.new_doc_id(chunk1)
-        chunk2.id = uid.new_doc_id(chunk2)
-        with open(image_path, 'rb') as fp:
-            chunk1.buffer = fp.read()
-        chunk2.text = text
-        yield doc
+        with Document() as chunk1:
+            chunk1.modality = 'image'
+            with open(image_path, 'rb') as fp:
+                chunk1.buffer = fp.read()
+        with Document() as chunk2:
+            chunk2.modality = 'text'
+            chunk2.text = text
+        yield MultimodalDocument(chunks=[chunk1, chunk2])
 
 @click.command()
 @click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
