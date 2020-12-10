@@ -18,7 +18,7 @@ def config():
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
     os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
-    
+
 
 def index_generator():
     import csv
