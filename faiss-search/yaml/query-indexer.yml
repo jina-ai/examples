@@ -4,6 +4,7 @@ components:
     with:
       index_key: 'IVF10,PQ4'
       train_filepath: 'train.tgz'
+      index_filename: 'faiss_index.tgz'
       ref_indexer:
         !NumpyIndexer
         metas:
