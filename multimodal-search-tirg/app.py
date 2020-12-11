@@ -3,19 +3,19 @@ __license__ = "Apache-2.0"
 
 import os
 import shutil
-import sys
 
 import click
 import matplotlib.pyplot as plt
 
+from jina import Document
 from jina.flow import Flow
 from jina.logging import default_logger as logger
-from jina.proto import jina_pb2
-from jina.types.document import uid
+from jina.types.document.multimodal import MultimodalDocument
+from jina.clients.python.io import input_files
 
 
 num_docs = 100
-data_path = 'data/women/**/*.jpeg'
+data_path = 'data/**/*.jpeg'
 batch_size = 8
 TOP_K = 5
 
@@ -58,26 +58,25 @@ def print_result(resp):
         images.append(image)
     plot_topk_images(images)
 
+def index_generator(data_path, num_docs):
+    for buffer in input_files(data_path, True, num_docs, None, 'rb'):
+        with Document() as doc:
+            doc.buffer = buffer
+            doc.mime_type = 'image/jpeg'
+        yield doc
+
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
-        doc = jina_pb2.DocumentProto()
-        chunk1 = doc.chunks.add()
-        chunk2 = doc.chunks.add()
-        chunk1.modality = 'image'
-        chunk2.modality = 'text'
-        chunk1.id = uid.new_doc_id(chunk1)
-        chunk2.id = uid.new_doc_id(chunk2)
         with open(image_path, 'rb') as fp:
-            chunk1.buffer = fp.read()
-        chunk2.text = text
-        yield doc
+            buffer = fp.read()
+        yield MultimodalDocument(modality_content_map={'image': buffer, 'text': text})
 
 @click.command()
 @click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='data/women-fashion200k/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
+@click.option('--image_path', '-ip', default='data/women/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):
@@ -89,12 +88,11 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
             clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
-            f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)        
+            f.index(index_generator(data_path, num_docs), batch_size=batch_size)
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
             f.search(query_generator(image_paths, text_queries), output_fn=print_result, batch_size=1)
-            # f.block()
 
 if __name__ == '__main__':
     main()
