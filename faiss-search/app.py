@@ -1,8 +1,6 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-from typing import Generator, Any
-
 import click
 import os
 import string
@@ -87,15 +85,14 @@ def main(task, batch_size, top_k):
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
         
-        flow = Flow().load_config('flow-index.yml')
+        flow = Flow.load_config('flow-index.yml')
         with flow.build() as fl:
             fl.index_ndarray(read_data(data_path), batch_size=batch_size)
     elif task == 'query':
         data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_query.fvecs')
-        flow = Flow().load_config('flow-query.yml')
-        with flow.build() as fl:
+        with Flow.load_config('flow-query.yml') as flow:
             ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.txt'), top_k)
-            fl.search_ndarray(read_data(data_path), output_fn=ppr, top_k=top_k)
+            flow.search_ndarray(read_data(data_path), output_fn=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')

@@ -4,17 +4,17 @@ components:
     with:
       index_filename: 'faiss_index.tgz'
     metas:
-      workspace: './workspace'
+      workspace: './index_workspace'
       name: wrapidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './workspace'
+      workspace: './index_workspace'
 metas:
   name: indexer
-  workspace: './workspace'
+  workspace: './index_workspace'
 requests:
   on:
     SearchRequest:
@@ -24,8 +24,7 @@ requests:
       - !KVSearchDriver
         with:
           executor: docidx
-          traverse_on: matches
-          depth_range: [0, 0]
+          traversal_paths: ['m']
     IndexRequest:
       - !VectorIndexDriver
         with:
