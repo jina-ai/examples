@@ -4,17 +4,17 @@ components:
     with:
       index_filename: 'faiss_index.tgz'
     metas:
-      workspace: './index_workspace'
+      workspace: './workspace'
       name: wrapidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './index_workspace'
+      workspace: './workspace'
 metas:
   name: indexer
-  workspace: './index_workspace'
+  workspace: './workspace'
 requests:
   on:
     SearchRequest:

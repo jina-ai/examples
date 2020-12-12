@@ -6,10 +6,10 @@ pods:
     uses: _forward
   encoder:
     uses: yaml/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
   indexer:
-    uses: jinahub/pod.indexers.faiss_joan # jinahub/pod.indexer.faissindexer:0.0.8-0.8.3
-    uses_internal: yaml/query-indexer.yml
-    parallel: $PARALLEL
+    uses: jinahub/pod.indexer.faissindexer:0.0.8-0.8.3
+    uses_internal: yaml/faiss-indexer.yml
+    parallel: $JINA_PARALLEL
     timeout_ready: 600000
-    volumes: './index_workspace'
+    volumes: './workspace/index_workspace'

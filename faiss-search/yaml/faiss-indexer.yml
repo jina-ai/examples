@@ -5,16 +5,9 @@ components:
       index_key: 'IVF10,PQ4'
       train_filepath: 'train.tgz'
       index_filename: 'faiss_index.tgz'
-      ref_indexer:
-        !NumpyIndexer
-        metas:
-          workspace: './index_workspace'
-          name: wrapidx
-        with:
-          index_filename: 'faiss_index.tgz'
     metas:
       workspace: './index_workspace'
-      name: faissidx
+      name: wrapidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
@@ -23,18 +16,25 @@ components:
       workspace: './index_workspace'
 metas:
   name: indexer
+  workspace: './index_workspace'
   py_modules:
     - workspace/__init__.py
-  workspace: './index_workspace'
 requests:
   on:
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: faissidx
+          executor: wrapidx
       - !KVSearchDriver
         with:
           executor: docidx
           traversal_paths: ['m']
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: wrapidx
+      - !KVIndexDriver
+        with:
+          executor: docidx
     ControlRequest:
       - !ControlReqDriver {}

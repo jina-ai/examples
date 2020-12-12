@@ -3,24 +3,16 @@ __license__ = "Apache-2.0"
 
 import click
 import os
-import string
-import random
-import numpy as np
 
-from read_vectors_files import fvecs_read, ivecs_read
+import numpy as np
 from jina.flow import Flow
 
+from read_vectors_files import fvecs_read, ivecs_read
+
 RANDOM_SEED = 14
-os.environ['PARALLEL'] = str(1)
-os.environ['SHARDS'] = str(1)
-os.environ['TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
-
-
-def get_random_ws(workspace_path, length=8):
-    random.seed(RANDOM_SEED)
-    letters = string.ascii_lowercase
-    dn = ''.join(random.choice(letters) for i in range(length))
-    return os.path.join(workspace_path, dn)
+os.environ['JINA_PARALLEL'] = str(1)
+os.environ['JINA_SHARDS'] = str(1)
+os.environ['JINA_TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
 
 
 def read_data(db_file_path: str):
@@ -64,7 +56,7 @@ def recall_at_k(results, k):
 
     Taken from https://gist.github.com/mdouze/046c1960bc82801e6b40ed8ee677d33e
     """
-    groundtruth_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
+    groundtruth_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
     groundtruth = ivecs_read(groundtruth_path)
     eval = (results[:, :k] == groundtruth[:, :1]).sum() / float(results.shape[0])
     return eval
@@ -75,23 +67,14 @@ def recall_at_k(results, k):
 @click.option('--batch_size', '-n', default=50)
 @click.option('--top_k', '-k', default=5)
 def main(task, batch_size, top_k):
-    os.environ['WORKDIR'] = get_random_ws(os.environ['TMP_DATA_DIR'])
     if task == 'index':
-        data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_base.fvecs')
-        if os.path.exists(data_path):
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {data_path} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
-        
-        flow = Flow.load_config('flow-index.yml')
-        with flow.build() as fl:
-            fl.index_ndarray(read_data(data_path), batch_size=batch_size)
+        data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_base.fvecs')
+        with Flow.load_config('flow-index.yml') as flow:
+            flow.index_ndarray(read_data(data_path), batch_size=batch_size)
     elif task == 'query':
-        data_path = os.path.join(os.environ['TMP_DATA_DIR'], 'siftsmall_query.fvecs')
+        data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_query.fvecs')
         with Flow.load_config('flow-query.yml') as flow:
-            ppr = lambda x: save_topk(x, os.path.join(os.environ['TMP_DATA_DIR'], 'query_results.txt'), top_k)
+            ppr = lambda x: save_topk(x, os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'query_results.txt'), top_k)
             flow.search_ndarray(read_data(data_path), output_fn=ppr, top_k=top_k)
     else:
         raise NotImplementedError(
