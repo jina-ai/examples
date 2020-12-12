@@ -8,24 +8,24 @@ components:
       ref_indexer:
         !NumpyIndexer
         metas:
-          workspace: './index_workspace'
+          workspace: './../index_workspace'
           name: wrapidx
         with:
           index_filename: 'faiss_index.tgz'
     metas:
-      workspace: './index_workspace'
+      workspace: './../index_workspace'
       name: faissidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './index_workspace'
+      workspace: './../index_workspace'
 metas:
   name: indexer
   py_modules:
     - workspace/__init__.py
-  workspace: './index_workspace'
+  workspace: './../index_workspace'
 requests:
   on:
     SearchRequest:

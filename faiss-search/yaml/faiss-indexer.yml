@@ -3,20 +3,20 @@ components:
   - !FaissIndexer
     with:
       index_key: 'IVF10,PQ4'
-      train_filepath: 'train.tgz'
+      train_filepath: './../index_workspace/train.tgz'
       index_filename: 'faiss_index.tgz'
     metas:
-      workspace: './index_workspace'
+      workspace: './../index_workspace'
       name: wrapidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './index_workspace'
+      workspace: './../index_workspace'
 metas:
   name: indexer
-  workspace: './index_workspace'
+  workspace: './../index_workspace'
   py_modules:
     - workspace/__init__.py
 requests:

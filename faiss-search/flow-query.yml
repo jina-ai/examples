@@ -12,4 +12,4 @@ pods:
     uses_internal: yaml/faiss-indexer.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
-    volumes: './workspace/index_workspace'
+    volumes: './index_workspace'
