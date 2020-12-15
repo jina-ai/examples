@@ -19,7 +19,7 @@
 
 Since `v0.8.6` Jina can run smoothly inside Jupyter notebook/Jupyter lab. Jina also implements some magic interface (e.g. visualization) for better integrating with Jupyter.
 
-Please check [`app.ipynb`] for the example of running `jina hello-world` inside Jupyter.
+Please check [`app.ipynb`](app.ipynb) for the example of running `jina hello-world` inside Jupyter.
 
 ## Documentation 
 
