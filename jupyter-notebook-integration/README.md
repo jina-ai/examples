@@ -1,3 +1,14 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Use Jina inside Jupyter Notebook](#use-jina-inside-jupyter-notebook)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Use Jina inside Jupyter Notebook
 
 <p align="center">
