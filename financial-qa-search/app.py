@@ -38,6 +38,18 @@ def index_generator():
                 yield d
 
 
+def print_topk(resp, sentence):
+    for d in resp.search.docs:
+        print(f"Ta-Dah🔮, here are what we found for: {sentence}")
+        # for idx, match in enumerate(d.matches):
+        #
+        #     score = match.score.value
+        #     if score < 0.0:
+        #         continue
+        #     character = match.meta_info.decode()
+        #     dialog = match.text.strip()
+        #     print(f'> {idx:>2d}({score:.2f}). {character.upper()} said, "{dialog}"')
+
 def print_result(resp):
     print("*****it's working!!!!!!************")
     # print(resp)
@@ -57,8 +69,12 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        text = input("please type a sentence: ")
-        f.search_lines(lines=[text, ], output_fn=print_result, top_k=5)
+        text = input("please type a question: ")
+
+        def ppr(x):
+            print_topk(x, text)
+
+        f.search_lines(lines=[text, ], output_fn=ppr, top_k=5)
 
     # with f:
     #     f.block()
@@ -72,7 +88,7 @@ def dryrun():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index/search/evaluate" mode')
+        print('choose between "index/search/dryrun" mode')
         exit(1)
     if sys.argv[1] == 'index':
         config()
