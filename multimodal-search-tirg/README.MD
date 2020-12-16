@@ -15,13 +15,15 @@
 </p>
 
 # Multimodal Search With TIRG & fashion200k
-In this example we make a multimodal search engine using [TIRG](https://github.com/google/tirg)(Composing Text and Image for Image Retrieval). We are using the Fashion200k dataset for this. In multimodal search engines we give more than one modalities at the input. Over here we give a cloth image and text as input. At index time we encode images with TIRG's image encoder. At query time we use TIRG Multimodal encoder constructs feature embedding using both the inputs(image & text) which is used for searching over the indexed images. The query text is the modification we want to apply over the query image.  
+In this example we build a multimodal search engine for image retrieval using [TIRG](https://github.com/google/tirg) (Composing Text and Image for Image Retrieval). We use the [Fashion200k](https://github.com/xthan/fashion-200k) dataset, where the input query is in the form of a clothing image plus some text that describes the desired modifications to the image.
 
-TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging MultiModalEncoder's capabilities to handle any number and any type of modality.  
+At index time we encode the images with TIRG's image encoder. At query time we use the feature embeddings constructed by TIRG's multimodal encoder based on both the input image and text to search over the indexed images. The query text is the modification we want to apply over the query image.  
 
-The model is trained for certain types of transformation such as type of dresses, color or length. Hence it is limited in the transformations it can do. ex. replace with 3/4 length, replace with beige  
+TIRG's multimodal encoder requires both image and text to create the final encoding. This is made possible by leveraging the capabilities of Jina's MultiModalEncoder to handle any type of modality.  
 
-Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1 for fashion200k dataset. Some queries might not give good results.  
+The Fashion200k model was only trained for certain types of image modifications, such as types of dresses, colors or lengths. Hence, it is limited in the types of modifications it can do, e.g. replace with 3/4 length, replace with beige.  
+
+Note: The [TIRG paper](https://arxiv.org/pdf/1812.07119.pdf) reports a Recall@1 of 14.1 for the Fashion200k dataset and some queries might not have good results.  
 
 <p align="center">
   <img src=".readme_images/fashion200k.png?raw=true" alt="Jina banner" width="70%">
@@ -46,28 +48,30 @@ Note: The [paper](https://arxiv.org/pdf/1812.07119.pdf) reports Recall@1 of 14.1
 ## Download and Extract Data
 You can try this example with [Fashion200k](https://github.com/xthan/fashion-200k) dataset.
 
-[Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract it in data folder in this example folder.
+[Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract it in the data folder of this example folder.
 
 ## Build encoder images
 This will download the TIRG model + code and build the image
 ### TIRG image encoder
-Start the Docker. Go to TirgImageEncoder folder and run the below command  
+Start the Docker image. Go to the TirgImageEncoder folder and run the command below: 
+
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.image.tirg .`
 ### TIRG multimodal encoder
-Start the Docker. Go to TirgMultimodalEncoder folder and run the below command  
+Start the Docker image. Go to the TirgMultimodalEncoder folder and run the command below: 
+
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
 ## Index Image Data
 <p align="center">
   <img src=".readme_images/index.png?raw=true" alt="Jina banner" width="100%">
 </p>
-Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images need before sending them in the encoder. If you decide to index the large datasets, it is recommendable to increase the number of shards and parallelization.  
+Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images before sending them to the encoder. If you decide to index large datasets, it is recommended to increase the number of shards and parallelization.  
 
 ```bash
 python app.py -task index -n 1000 -overwrite True
 ```
 
-If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
+If it's running successfully, you should be able to see and scroll through the logs in the console and in the dashboard:
 
 <p align="center">
   <img src="https://github.com/jina-ai/examples/blob/master/.github/.README_images/0a8863abb3fcee182e1fe8fe46c47b7a.gif?raw=true" alt="Jina banner" width="45%">
@@ -78,7 +82,7 @@ If it's running successfully, you should be able to see logs scrolling in the co
 <p align="center">
   <img src=".readme_images/query.png?raw=true" alt="Jina banner" width="100%">
 </p>
-This will start the server, run your query and give result as a pop-up. TIRG Multimodal encoder requires both image and text to create final encoding. This is possible by leveraging our MultiModalEncoder capabilities. We use QueryLanguageDriver to redirect text and image documents based on modality.  
+This will start the server, where you can then run your query and see the results as a pop-up. TIRG's multimodal encoder requires both input image and text to create the final encoding. This is made possible by leveraging our MultiModalEncoder capabilities. We use our QueryLanguageDriver to redirect text and image documents based on modality.  
 
 ```bash
 python app.py -task query --image_path path_to_image --text_query 'change color to red'
