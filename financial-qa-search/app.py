@@ -6,11 +6,12 @@ import sys
 from jina.flow import Flow
 from jina import Document
 
-num_docs = int(os.environ.get('MAX_DOCS', 57650))
+num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 def config():
-    parallel = 1 if sys.argv[1] == 'index' else 1
-    shards = 1
+    # parallel = 1 if sys.argv[1] == 'index' else 1
+    parallel = 2
+    shards = 2
 
     os.environ['JINA_PARALLEL'] = str(parallel)
     os.environ['JINA_SHARDS'] = str(shards)
@@ -28,6 +29,7 @@ def index_generator():
     with open(data_path) as f:
         reader = csv.reader(f, delimiter='\t')
         for i, data in enumerate(reader):
+            if i > 10:
             d = Document()
             d.tags['id'] = int(data[0])
             d.text = data[1]
@@ -46,7 +48,7 @@ def print_resp(resp, question):
                 continue
             # character = match.meta_info.decode()
             dialog = match.text.strip()
-            print(f'> {idx:>2d}. "{dialog}"\n Score: ({score:.2f})')
+            print(f'> {idx+1:>2d}. "{dialog}"\n Score: ({score:.2f})')
 
 
 # for index
@@ -63,12 +65,15 @@ def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
-        text = input("please type a question: ")
+        while True:
+            text = input("please type a question: ")
+            if not text:
+                break
 
-        def ppr(x):
-            print_resp(x, text)
+            def ppr(x):
+                print_resp(x, text)
 
-        f.search_lines(lines=[text, ], output_fn=ppr, top_k=5)
+            f.search_lines(lines=[text, ], output_fn=ppr, top_k=50)
 
 
 def dryrun():
