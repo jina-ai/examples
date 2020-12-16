@@ -6,7 +6,7 @@ import sys
 from jina.flow import Flow
 from jina import Document
 
-num_docs = int(os.environ.get('MAX_DOCS', 100))
+num_docs = int(os.environ.get('MAX_DOCS', 57650))
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
@@ -17,7 +17,7 @@ def config():
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
-    os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
+    os.environ['JINA_DATA_PATH'] = 'dataset/collection_cleaned.tsv'
 
 
 def index_generator():
@@ -26,42 +26,36 @@ def index_generator():
 
     # Get Document and ID
     with open(data_path) as f:
-        reader = csv.DictReader((line for line in f), delimiter="\t")
+        reader = csv.reader(f, delimiter='\t')
         for i, data in enumerate(reader):
-            if i > 10:
-                break
-            else:
-                d = Document()
-                d.tags['id'] = int(data['docid'])
-                d.text = data['doc']
-                d.update_id()
-                yield d
+            d = Document()
+            d.tags['id'] = int(data[0])
+            d.text = data[1]
+            d.update_id()
+            yield d
 
 
-def print_topk(resp, sentence):
+def print_resp(resp, question):
     for d in resp.search.docs:
-        print(f"Ta-Dah🔮, here are what we found for: {sentence}")
-        # for idx, match in enumerate(d.matches):
-        #
-        #     score = match.score.value
-        #     if score < 0.0:
-        #         continue
-        #     character = match.meta_info.decode()
-        #     dialog = match.text.strip()
-        #     print(f'> {idx:>2d}({score:.2f}). {character.upper()} said, "{dialog}"')
+        print(f"Ta-Dah🔮, here are what we found for the question: {question}: \n")
 
-def print_result(resp):
-    print("*****it's working!!!!!!************")
-    # print(resp)
-    # for d in resp.search.docs:
-    #     print(d.evaluations)
+        for idx, match in enumerate(d.matches):
+
+            score = match.score.value
+            if score < 0.0:
+                continue
+            # character = match.meta_info.decode()
+            dialog = match.text.strip()
+            print(f'> {idx:>2d}. "{dialog}"\n Score: ({score:.2f})')
+
 
 # for index
 def index():
     f = Flow.load_config('flows/index.yml')
 
+    print(next(index_generator()))
     with f:
-        f.index(input_fn=index_generator)
+        f.index(input_fn=index_generator, batch_size=16)
 
 
 # for search
@@ -72,12 +66,9 @@ def search():
         text = input("please type a question: ")
 
         def ppr(x):
-            print_topk(x, text)
+            print_resp(x, text)
 
         f.search_lines(lines=[text, ], output_fn=ppr, top_k=5)
-
-    # with f:
-    #     f.block()
 
 
 def dryrun():
