@@ -46,9 +46,16 @@ Note: The [TIRG paper](https://arxiv.org/pdf/1812.07119.pdf) reports a Recall@1 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Download and Extract Data
-You can try this example with [Fashion200k](https://github.com/xthan/fashion-200k) dataset.
 
-[Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract it in the data folder of this example folder.
+Run the following script to download the data from [Kaggle](https://www.kaggle.com/mayukh18/fashion200k-dataset).
+
+*Note: the size of the dataset is 6GB.*
+
+```bash
+bash ./get_data.sh data/
+```
+
+Alternatively, You can [Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract the data from google drive.
 
 ## Build encoder images
 This will download the TIRG model + code and build the image
