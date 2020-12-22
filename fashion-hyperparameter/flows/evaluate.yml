@@ -1,19 +1,19 @@
 !Flow
+version: '1'
+env:
+  JINA_WORKSPACE: $JINA_WORKSPACE
+  JINA_MYENCODER_TARGET_DIMENSION: $JINA_MYENCODER_TARGET_DIMENSION
 with:
   read_only: true  # better add this in the query time
-  logserver: $WITH_LOGSERVER
   compress_hwm: 1024
 pods:
-  encode:
-    uses: pods/encoder.yml
-    parallel: $JINA_PARALLEL
-  index:
-    uses: pods/indexer.yml
-    shards: $JINA_SHARDS
+  - uses: pods/encoder.yml
+    parallel: 1
+  - uses: pods/indexer.yml
+    shards: 1
     separated_workspace: true
     polling: all
     uses_after: pods/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-  evaluate_rank:
-    uses: pods/evaluate.yml
+  - uses: pods/evaluate.yml
     read_only: true
