@@ -1,0 +1,19 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vecidx_index.gzip
+      metric: cosine
+    metas:
+      name: vecidx_index
+      workspace: $TMP_WORKSPACE
+
+  - !BinaryPbIndexer
+    with:
+      index_filename: chunk_index.gzip
+    metas:
+      name: chunk_index
+      workspace: $TMP_WORKSPACE
+metas:
+  name: chunk_indexer
+  workspace: $TMP_WORKSPACE

@@ -1,0 +1,10 @@
+!BM25Ranker
+
+requests:
+  on:
+    SearchRequest:
+      - !Chunk2DocRankDriver
+        with:
+          method: score
+
+

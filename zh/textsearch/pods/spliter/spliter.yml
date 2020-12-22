@@ -1,0 +1,3 @@
+!Sent2Chunk
+metas:
+  py_modules: sent_chunkspliter.py

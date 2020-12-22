@@ -1,0 +1,26 @@
+!Flow
+pods:
+  doc_indexer:
+    uses: pods/doc_indexer/doc_indexer.yml
+
+  extractor:
+    uses: pods/extractor/extractor.yml
+    needs: gateway
+    read_only: True
+
+  spliter:
+    uses: pods/spliter/spliter.yml
+
+  encoder:
+    uses: pods/encoder/encoder2.yml
+    timeout_ready: 60000
+#    parallel: 3
+    read_only: True
+
+  chunk_indexer:
+    uses: pods/chunk_indexer/chunk_indexer.yml
+
+  join:
+    uses: _merge
+    needs: [chunk_indexer, doc_indexer]
+    read_only: True

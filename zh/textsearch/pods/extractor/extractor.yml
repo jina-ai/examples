@@ -1,0 +1,10 @@
+!SubtitleExtractor
+metas:
+  py_modules: extractor.py
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !CraftDriver
+#      - !SegmentDriver
+        with:
+          method: craft

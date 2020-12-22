@@ -1,0 +1,9 @@
+!RBertEncoder
+metas:
+  py_modules: rbert_encoder.py
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          method: encode
