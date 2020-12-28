@@ -2,23 +2,22 @@ __version__ = '0.0.1'
 
 import os
 import sys
-
 from jina.flow import Flow
 from jina import Document
 
 num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 def config():
-    # parallel = 1 if sys.argv[1] == 'index' else 1
-    parallel = 2
-    shards = 2
+    parallel = 1 if sys.argv[1] == 'index' else 1
+    # parallel = 2
+    shards = 1
 
     os.environ['JINA_PARALLEL'] = str(parallel)
     os.environ['JINA_SHARDS'] = str(shards)
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
-    os.environ['JINA_DATA_PATH'] = 'dataset/collection_cleaned.tsv'
+    os.environ['JINA_DATA_PATH'] = 'dataset/answer_collection.tsv'
 
 
 def index_generator():
@@ -29,7 +28,6 @@ def index_generator():
     with open(data_path) as f:
         reader = csv.reader(f, delimiter='\t')
         for i, data in enumerate(reader):
-            if i > 10:
             d = Document()
             d.tags['id'] = int(data[0])
             d.text = data[1]
@@ -55,7 +53,6 @@ def print_resp(resp, question):
 def index():
     f = Flow.load_config('flows/index.yml')
 
-    print(next(index_generator()))
     with f:
         f.index(input_fn=index_generator, batch_size=16)
 
