@@ -5,8 +5,6 @@ import sys
 from jina.flow import Flow
 from jina import Document
 
-num_docs = int(os.environ.get('MAX_DOCS', 10))
-
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
     # parallel = 2
@@ -17,7 +15,7 @@ def config():
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
-    os.environ['JINA_DATA_PATH'] = 'dataset/answer_collection.tsv'
+    os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
 
 
 def index_generator():
@@ -31,22 +29,20 @@ def index_generator():
             d = Document()
             d.tags['id'] = int(data[0])
             d.text = data[1]
-            d.update_id()
             yield d
 
 
 def print_resp(resp, question):
     for d in resp.search.docs:
-        print(f"Ta-Dah🔮, here are what we found for the question: {question}: \n")
+        print(f"🔮 Ranked list of answers to the question: {question}: \n")
 
         for idx, match in enumerate(d.matches):
 
             score = match.score.value
             if score < 0.0:
                 continue
-            # character = match.meta_info.decode()
-            dialog = match.text.strip()
-            print(f'> {idx+1:>2d}. "{dialog}"\n Score: ({score:.2f})')
+            answer = match.text.strip()
+            print(f'> {idx+1:>2d}. "{answer}"\n Score: ({score:.2f})')
 
 
 # for index
@@ -63,7 +59,7 @@ def search():
 
     with f:
         while True:
-            text = input("please type a question: ")
+            text = input("Please type a question: ")
             if not text:
                 break
 
