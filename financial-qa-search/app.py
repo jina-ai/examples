@@ -60,16 +60,21 @@ def load_pickle(path):
 def evaluate_generator():
     import numpy as np
     test_set = load_pickle('dataset/test_set_50.pickle')
+
     t = np.array(test_set)
     t = t[:, :2]
-    t = t.tolist()
+    # t = array([[14, list([398960])],
+    #        [68, list([19183])],
+    #        [70, list([327002])],
+    #        [81, list([451207])],
+    #        [458, list([263485, 218858])],
 
-    test = t[:10]
+    t = t.tolist()
 
     docid2text = load_pickle('dataset/docid_to_text.pickle')
     qid2text = load_pickle('dataset/qid_to_text.pickle')
 
-    for q_id, matches_doc_id in test:
+    for q_id, matches_doc_id in t:
         query = Document()
         query.tags['id'] = q_id
         query.text = qid2text[q_id]
