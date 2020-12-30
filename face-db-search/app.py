@@ -24,7 +24,7 @@ def config(task):
 @click.option('--num_docs', '-n', default=500)
 def main(task, num_docs):
     config(task)
-    workspace = os.environ['WORKDIR']
+    workspace = os.environ.get('WORKDIR', 'workspace')
     image_src = '/tmp/jina/celeb/lfw/**/*.jpg'
     if task == 'index':
         if os.path.exists(workspace):
