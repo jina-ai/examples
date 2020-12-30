@@ -7,6 +7,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y curl libsndfile
     pip install -r requirements.txt
 
 RUN bash download.sh
-RUN python app.py dryrun
+RUN python app.py -t dryrun
 
 ENTRYPOINT ["python", "app.py"]
