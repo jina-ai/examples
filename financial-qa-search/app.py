@@ -7,7 +7,6 @@ from jina import Document
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
-    # parallel = 2
     shards = 1
 
     os.environ['JINA_PARALLEL'] = str(parallel)
@@ -19,6 +18,9 @@ def config():
 
 
 def index_generator():
+    """
+    Define data as Document to be indexed.
+    """
     import csv
     data_path = os.path.join(os.path.dirname(__file__), os.environ['JINA_DATA_PATH'])
 
@@ -27,14 +29,28 @@ def index_generator():
         reader = csv.reader(f, delimiter='\t')
         for i, data in enumerate(reader):
             d = Document()
+            # docid
             d.tags['id'] = int(data[0])
+            # doc
             d.text = data[1]
             yield d
 
 
+def index():
+    """
+    Index data using Index Flow.
+    """
+    f = Flow.load_config('flows/index.yml')
+
+    with f:
+        f.index(input_fn=index_generator, batch_size=16)
+
 def print_resp(resp, question):
+    """
+    Print response.
+    """
     for d in resp.search.docs:
-        print(f"🔮 Ranked list of answers to the question: {question}: \n")
+        print(f"🔮 Ranked list of answers to the question: {question} \n")
 
         for idx, match in enumerate(d.matches):
 
@@ -43,15 +59,6 @@ def print_resp(resp, question):
                 continue
             answer = match.text.strip()
             print(f'> {idx+1:>2d}. "{answer}"\n Score: ({score:.2f})')
-
-
-# for index
-def index():
-    f = Flow.load_config('flows/index.yml')
-
-    with f:
-        f.index(input_fn=index_generator, batch_size=16)
-
 
 # for search
 def search():
