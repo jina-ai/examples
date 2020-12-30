@@ -9,7 +9,7 @@ components:
     with:
       eval_at: 10
     metas:
-      name: matching-mrr-10
+      name: matching-rr-10
   - !NDCGEvaluator
     with:
       eval_at: 10
@@ -26,7 +26,7 @@ requests:
           traversal_paths: [ 'r' ]
       - !RankEvaluateDriver
         with:
-          executor: matching-mrr-10
+          executor: matching-rr-10
           traversal_paths: [ 'r' ]
       - !RankEvaluateDriver
         with:

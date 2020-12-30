@@ -5,11 +5,11 @@ components:
       eval_at: 10
     metas:
       name: ranking-precision-10
-  - !MeanReciprocalRankEvaluator
+  - !ReciprocalRankEvaluator
     with:
       eval_at: 10
     metas:
-      name: ranking-mrr-10
+      name: ranking-rr-10
   - !NDCGEvaluator
     with:
       eval_at: 10
@@ -26,7 +26,7 @@ requests:
           traversal_paths: [ 'r' ]
       - !RankEvaluateDriver
         with:
-          executor: ranking-mrr-10
+          executor: ranking-rr-10
           traversal_paths: [ 'r' ]
       - !RankEvaluateDriver
         with:

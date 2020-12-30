@@ -7,6 +7,7 @@ from jina.executors.rankers import Match2DocRanker
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 class FinBertQARanker(TorchDevice, Match2DocRanker):
     """
     :class:`FinBertQARanker` Compute QA relevancy scores using a fine-tuned BERT model.
@@ -38,21 +39,22 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
 
         self.device = torch.device("cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name_or_path, do_lower_case=True)
-        self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None, num_labels=2)
+        self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None,
+                                                                   num_labels=2)
         self.model.load_state_dict(torch.load(self.model_path, map_location=self.device), strict=False)
         self.to_device(self.model)
         self.model.eval()
 
-    def _get_score(self, query, answer):
+    def _get_score(self, query: str, answer: str):
         import torch
         from torch.nn.functional import softmax
 
         # Create inputs for the model
         encoded_seq = self.tokenizer.encode_plus(query, answer,
-                                            max_length=self.max_length,
-                                            pad_to_max_length=True,
-                                            return_token_type_ids=True,
-                                            return_attention_mask=True)
+                                                 max_length=self.max_length,
+                                                 pad_to_max_length=True,
+                                                 return_token_type_ids=True,
+                                                 return_attention_mask=True)
         # Numericalized, padded, clipped seq with special tokens
         input_ids = torch.tensor([encoded_seq['input_ids']]).to(self.device)
         # Specify question seq and answer seq
@@ -76,12 +78,11 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
     def score(
             self, query_meta: Dict, old_match_scores: Dict, match_meta: Dict
     ) -> "np.ndarray":
-
         new_scores = [
             (
                 match_id,
                 self._get_score(query_meta['text'], match_meta[match_id]['text']),
-             )
+            )
             for match_id, old_score in old_match_scores.items()
         ]
         return np.array(

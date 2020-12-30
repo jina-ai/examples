@@ -2,10 +2,14 @@ __version__ = '0.0.1'
 
 import os
 import sys
+from collections import defaultdict
+
 from jina.flow import Flow
 from jina import Document
 from jina.types.score import NamedScore
 
+evaluation_value = defaultdict(float)
+num_evaluation_docs = 0
 num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 
@@ -29,11 +33,12 @@ def index_generator():
     # Get Document and ID
     with open(data_path) as f:
         reader = csv.reader(f, delimiter='\t')
-        for i, data in enumerate(reader):
+        # skip first one
+        next(reader)
+        for data in reader:
             d = Document()
             d.tags['id'] = int(data[0])
             d.text = data[1]
-            d.update_id()
             yield d
 
 
@@ -62,6 +67,7 @@ def evaluate_generator():
 
     for q_id, matches_doc_id in test:
         query = Document()
+        query.tags['id'] = q_id
         query.text = qid2text[q_id]
         groundtruth = Document()
         for match_doc_id in matches_doc_id:
@@ -70,6 +76,7 @@ def evaluate_generator():
             match.score = NamedScore(value=1.0)
             match.text = docid2text[match_doc_id]
             groundtruth.matches.add(match)
+
         yield query, groundtruth
 
 
@@ -87,12 +94,33 @@ def print_resp(resp, question):
             print(f'> {idx + 1:>2d}. "{dialog}"\n Score: ({score:.2f})')
 
 
+def print_average_evaluations():
+    print(f' Average Evaluation Results')
+    print('\n'.join(f'      {name}: {value/num_evaluation_docs}' for name, value in evaluation_value.items()))
+
+
 def print_evaluation_results(resp):
-    print("*****it's working!!!!!!************")
-    # print(resp)
-    # for d in resp.search.docs:
-    #     print(d)
-    # print(resp.as_pb_object)
+    global evaluation_value
+    global num_evaluation_docs
+    for d in resp.search.docs:
+        print(f'\n'
+              f'Evaluations for QID:{d.tags["id"]} [{d.text}]')
+        evaluations = d.evaluations
+        for i in range(0, 3):
+            evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
+        for i in range(3, 6):
+            evaluation_value[f'Ranking-{evaluations[i].op_name}'] += evaluations[i].value
+
+        num_evaluation_docs += 1
+
+        print(f''
+              f'    Matching-{evaluations[0].op_name}: {evaluations[0].value} \n'
+              f'    Matching-{evaluations[1].op_name}: {evaluations[1].value} \n'
+              f'    Matching-{evaluations[2].op_name}: {evaluations[2].value} \n'
+              f''
+              f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value} \n'
+              f'    Ranking-{evaluations[4].op_name}: {evaluations[4].value} \n'
+              f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
 
 
 # for index
@@ -123,10 +151,8 @@ def search():
 def evaluate():
     f = Flow.load_config('flows/evaluate.yml')
 
-    print(next(evaluate_generator()))
-
     with f:
-        f.search(input_fn=evaluate_generator, output_fn=print_evaluation_results)
+        f.search(input_fn=evaluate_generator, output_fn=print_evaluation_results, top_k=10, batch_size=8)
 
 
 if __name__ == '__main__':
@@ -142,5 +168,6 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'evaluate':
         config()
         evaluate()
+        print_average_evaluations()
     else:
         raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
