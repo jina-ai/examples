@@ -15,7 +15,6 @@ num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
-    # parallel = 2
     shards = 1
 
     os.environ['JINA_PARALLEL'] = str(parallel)
@@ -23,10 +22,13 @@ def config():
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
-    os.environ['JINA_DATA_PATH'] = 'dataset/answer_collection.tsv'
+    os.environ['JINA_DATA_PATH'] = 'dataset/test_answers.csv'
 
 
 def index_generator():
+    """
+    Define data as Document to be indexed.
+    """
     import csv
     data_path = os.path.join(os.path.dirname(__file__), os.environ['JINA_DATA_PATH'])
 
@@ -37,7 +39,9 @@ def index_generator():
         next(reader)
         for data in reader:
             d = Document()
+            # docid
             d.tags['id'] = int(data[0])
+            # doc
             d.text = data[1]
             yield d
 
@@ -80,23 +84,35 @@ def evaluate_generator():
         yield query, groundtruth
 
 
+def index():
+    """
+    Index data using Index Flow.
+    """
+    f = Flow.load_config('flows/index.yml')
+
+    with f:
+        f.index(input_fn=index_generator, batch_size=8)
+
+
 def print_resp(resp, question):
+    """
+    Print response.
+    """
     for d in resp.search.docs:
-        print(f"Ta-Dah🔮, here are what we found for the question: {question}: \n")
+        print(f"🔮 Ranked list of answers to the question: {question} \n")
 
         for idx, match in enumerate(d.matches):
 
             score = match.score.value
             if score < 0.0:
                 continue
-            # character = match.meta_info.decode()
-            dialog = match.text.strip()
-            print(f'> {idx + 1:>2d}. "{dialog}"\n Score: ({score:.2f})')
+            answer = match.text.strip()
+            print(f'> {idx + 1:>2d}. "{answer}"\n Score: ({score:.2f})')
 
 
 def print_average_evaluations():
     print(f' Average Evaluation Results')
-    print('\n'.join(f'      {name}: {value/num_evaluation_docs}' for name, value in evaluation_value.items()))
+    print('\n'.join(f'      {name}: {value / num_evaluation_docs}' for name, value in evaluation_value.items()))
 
 
 def print_evaluation_results(resp):
@@ -123,21 +139,13 @@ def print_evaluation_results(resp):
               f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
 
 
-# for index
-def index():
-    f = Flow.load_config('flows/index.yml')
-
-    with f:
-        f.index(input_fn=index_generator, batch_size=16)
-
-
 # for search
 def search():
     f = Flow.load_config('flows/query.yml')
 
     with f:
         while True:
-            text = input("please type a question: ")
+            text = input("Please type a question: ")
             if not text:
                 break
 

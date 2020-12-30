@@ -82,7 +82,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         # Get the predictions
         logits = outputs[0]
         # Apply activation function
-        rel_score = softmax(logits)
+        rel_score = softmax(logits, dim=1)
         rel_score = rel_score.numpy()
         # Probability that the QA pair is relevant
         rel_score = rel_score[:, 1]

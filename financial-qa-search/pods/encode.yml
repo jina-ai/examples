@@ -1,5 +1,5 @@
 !TransformerTorchEncoder
 with:
   pool_strategy: auto
-  pretrained_model_name_or_path: nboost/pt-tinybert-msmarco
+  pretrained_model_name_or_path: ProsusAI/finbert
   max_length: 512
