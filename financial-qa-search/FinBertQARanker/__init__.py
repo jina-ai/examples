@@ -4,6 +4,7 @@ import numpy as np
 
 from jina.executors.devices import TorchDevice
 from jina.executors.rankers import Match2DocRanker
+from jina.executors.decorators import batching_multi_input
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -12,6 +13,8 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
     """
     :class:`FinBertQARanker` Compute QA relevancy scores using a fine-tuned BERT model.
     """
+
+    batch_size = 64
 
     required_keys = {"text"}
 
@@ -37,7 +40,6 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         import torch
         from transformers import BertForSequenceClassification, AutoTokenizer
 
-        self.device = torch.device("cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name_or_path, do_lower_case=True)
         self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None,
                                                                    num_labels=2)
@@ -45,16 +47,19 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         self.to_device(self.model)
         self.model.eval()
 
-    def _get_score(self, query: List[str], answer: List[str]):
+    @batching_multi_input(num_data=2)
+    def _get_score(self, *data: List[str]):
         import torch
         from torch.nn.functional import softmax
 
         # Create inputs for the model
+        queries = data[0]
+        answers = data[1]
         ids = []
         tokens = []
-        atts = []
-        for q, a in zip(query, answer):
-            encoded_seq = self.tokenizer.encode_plus(q, a,
+        masks = []
+        for query, answer in zip(queries, answers):
+            encoded_seq = self.tokenizer.encode_plus(query, answer,
                                                      max_length=self.max_length,
                                                      pad_to_max_length=True,
                                                      return_token_type_ids=True,
@@ -62,14 +67,14 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
 
             ids.append(encoded_seq['input_ids'])
             tokens.append(encoded_seq['token_type_ids'])
-            atts.append(encoded_seq['attention_mask'])
+            masks.append(encoded_seq['attention_mask'])
 
         # Numericalized, padded, clipped seq with special tokens
         input_ids = torch.tensor(ids).to(self.device)
         # Specify question seq and answer seq
         token_type_ids = torch.tensor(tokens).to(self.device)
         # Specify which position is part of the seq which is padded
-        att_mask = torch.tensor(atts).to(self.device)
+        att_mask = torch.tensor(masks).to(self.device)
         # Don't calculate gradients
         with torch.no_grad():
             # Forward pass, calculate logit predictions for each QA pair
@@ -101,6 +106,5 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
             for i, match_id in enumerate(old_match_scores.keys())
         ]
         return np.array(
-            new_scores
-            , dtype=[(self.COL_MATCH_HASH, np.int64), (self.COL_SCORE, np.float64)],
+            new_scores, dtype=[(self.COL_MATCH_HASH, np.int64), (self.COL_SCORE, np.float64)]
         )

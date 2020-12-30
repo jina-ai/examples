@@ -24,6 +24,6 @@ RUN if [ ! -d models ]; then \
     unzip bert-qa.zip -d bert-qa/; \
 fi
 
-RUN pytest
+RUN pytest -v -s
 
 ENTRYPOINT ["jina", "pod", "--uses", "config.yml"]
