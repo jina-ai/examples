@@ -32,12 +32,12 @@ def get_random_ws(workspace_path, length=8):
 def main(task, num_docs):
     config()
     data_path = os.path.join(os.environ['WORKDIR'], 'audio')
-        if os.path.exists(data_path):
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {data_path} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
+    if os.path.exists(data_path):
+        print(f'\n +---------------------------------------------------------------------------------+ \
+                \n |                                   🤖🤖🤖                                        | \
+                \n | The directory {data_path} already exists. Please remove it before indexing again. | \
+                \n |                                   🤖🤖🤖                                        | \
+                \n +---------------------------------------------------------------------------------+')
     if task == 'index':
         f = Flow().load_config('./flows/flow-index.yml')
         with f:
