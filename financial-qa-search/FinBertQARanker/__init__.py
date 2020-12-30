@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, List
 import numpy as np
 
 from jina.executors.devices import TorchDevice
@@ -45,22 +45,31 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         self.to_device(self.model)
         self.model.eval()
 
-    def _get_score(self, query: str, answer: str):
+    def _get_score(self, query: List[str], answer: List[str]):
         import torch
         from torch.nn.functional import softmax
 
         # Create inputs for the model
-        encoded_seq = self.tokenizer.encode_plus(query, answer,
-                                                 max_length=self.max_length,
-                                                 pad_to_max_length=True,
-                                                 return_token_type_ids=True,
-                                                 return_attention_mask=True)
+        ids = []
+        tokens = []
+        atts = []
+        for q, a in zip(query, answer):
+            encoded_seq = self.tokenizer.encode_plus(q, a,
+                                                     max_length=self.max_length,
+                                                     pad_to_max_length=True,
+                                                     return_token_type_ids=True,
+                                                     return_attention_mask=True)
+
+            ids.append(encoded_seq['input_ids'])
+            tokens.append(encoded_seq['token_type_ids'])
+            atts.append(encoded_seq['attention_mask'])
+
         # Numericalized, padded, clipped seq with special tokens
-        input_ids = torch.tensor([encoded_seq['input_ids']]).to(self.device)
+        input_ids = torch.tensor(ids).to(self.device)
         # Specify question seq and answer seq
-        token_type_ids = torch.tensor([encoded_seq['token_type_ids']]).to(self.device)
+        token_type_ids = torch.tensor(tokens).to(self.device)
         # Specify which position is part of the seq which is padded
-        att_mask = torch.tensor([encoded_seq['attention_mask']]).to(self.device)
+        att_mask = torch.tensor(atts).to(self.device)
         # Don't calculate gradients
         with torch.no_grad():
             # Forward pass, calculate logit predictions for each QA pair
@@ -68,25 +77,30 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         # Get the predictions
         logits = outputs[0]
         # Apply activation function
-        rel_score = softmax(logits, dim=1)
+        rel_score = softmax(logits)
         rel_score = rel_score.numpy()
         # Probability that the QA pair is relevant
-        rel_score = rel_score[:, 1][0]
+        rel_score = rel_score[:, 1]
 
         return rel_score
 
     def score(
             self, query_meta: Dict, old_match_scores: Dict, match_meta: Dict
     ) -> "np.ndarray":
+
+        queries = [query_meta['text'] for _ in range(0, len(old_match_scores))]
+        matches = [match_meta[match_id]['text'] for match_id in old_match_scores.keys()]
+
+        scores = self._get_score(queries, matches)
+
         new_scores = [
             (
                 match_id,
-                self._get_score(query_meta['text'], match_meta[match_id]['text']),
+                scores[i]
             )
-            for match_id, old_score in old_match_scores.items()
+            for i, match_id in enumerate(old_match_scores.keys())
         ]
         return np.array(
             new_scores
-            ,
-            dtype=[(self.COL_MATCH_HASH, np.int64), (self.COL_SCORE, np.float64)],
+            , dtype=[(self.COL_MATCH_HASH, np.int64), (self.COL_SCORE, np.float64)],
         )
