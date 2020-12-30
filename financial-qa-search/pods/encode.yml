@@ -1,4 +1,3 @@
-
 !TransformerTorchEncoder
 with:
   pool_strategy: auto
