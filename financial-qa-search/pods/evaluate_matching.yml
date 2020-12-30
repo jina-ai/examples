@@ -5,16 +5,16 @@ components:
       eval_at: 10
     metas:
       name: matching-precision-10
-#  - !ReciprocalRankEvaluator
-#    with:
-#      eval_at: 10
-#    metas:
-#      name: matching-mrr-10
-#  - !NDCGEvaluator
-#    with:
-#      eval_at: 10
-#    metas:
-#      name: matching-ndcg-10
+  - !ReciprocalRankEvaluator
+    with:
+      eval_at: 10
+    metas:
+      name: matching-mrr-10
+  - !NDCGEvaluator
+    with:
+      eval_at: 10
+    metas:
+      name: matching-ndcg-10
 metas:
   name: evaluation
 requests:
@@ -24,11 +24,12 @@ requests:
         with:
           executor: matching-precision-10
           traversal_paths: [ 'r' ]
-#      - !RankEvaluateDriver
-#        with:
-#          executor: matching-mrr-10
-#          traversal_paths: [ 'r' ]
-#      - !RankEvaluateDriver
-#        with:
-#          executor: matching-ndcg-10
-#          traversal_paths: [ 'r' ]
+      - !RankEvaluateDriver
+        with:
+          executor: matching-mrr-10
+          traversal_paths: [ 'r' ]
+      - !RankEvaluateDriver
+        with:
+          field: score__value
+          executor: matching-ndcg-10
+          traversal_paths: [ 'r' ]

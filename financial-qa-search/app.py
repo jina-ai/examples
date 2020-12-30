@@ -5,8 +5,10 @@ import sys
 
 from jina.flow import Flow
 from jina import Document
+from jina.types.score import NamedScore
 
 num_docs = int(os.environ.get('MAX_DOCS', 100))
+
 
 def config():
     parallel = 1 if sys.argv[1] == 'index' else 1
@@ -38,7 +40,6 @@ def index_generator():
                 d.update_id()
                 yield d
 
-
         # for data in reader[:10]:
         #     d = Document()
         #
@@ -46,7 +47,6 @@ def index_generator():
         #     d.text = data['doc']
         #     d.update_id()
         #     yield d
-
 
 
 def load_pickle(path):
@@ -79,6 +79,7 @@ def evaluate_generator():
         for match_doc_id in matches_doc_id:
             match = Document()
             match.tags['id'] = match_doc_id
+            match.score = NamedScore(value=1.0)
             match.text = docid2text[match_doc_id]
             groundtruth.matches.add(match)
         yield query, groundtruth
@@ -90,6 +91,7 @@ def print_result(resp):
     # for d in resp.search.docs:
     #     print(d)
     # print(resp.as_pb_object)
+
 
 # for index
 def index():
@@ -106,6 +108,7 @@ def search():
     with f:
         f.block()
 
+
 # for evaluate
 def evaluate():
     f = Flow.load_config('flows/evaluate.yml')
@@ -114,7 +117,6 @@ def evaluate():
 
     with f:
         f.search(input_fn=evaluate_generator, output_fn=print_result)
-
 
 
 if __name__ == '__main__':
