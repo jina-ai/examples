@@ -1,0 +1,2 @@
+jina[devel,torch,tensorflow]==0.8.2
+transformers==3.5.1
