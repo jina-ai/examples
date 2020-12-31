@@ -1,7 +1,6 @@
 !Flow
 with:
   read_only: true  # better add this in the query time
-  rest_api: true
   port_expose: $JINA_PORT
 pods:
   crafter:
