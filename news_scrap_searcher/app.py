@@ -3,6 +3,8 @@ __version__ = '0.0.1'
 import os
 import sys
 
+from urllib.parse import urlparse
+from newspaper import Article
 from jina.flow import Flow
 
 num_docs = int(os.environ.get('MAX_DOCS', 500))
@@ -22,7 +24,6 @@ def config():
 # for index
 def index():
     f = Flow.load_config('flows/index.yml')
-
     with f:
         data_path = os.path.join(os.path.dirname(
             __file__), os.environ.get('JINA_DATA_PATH', None))
@@ -33,7 +34,18 @@ def index():
             f.index_lines(lines=['abc', 'cde', 'efg'],
                           batch_size=16, read_mode='r', size=num_docs)
 
-# for search
+
+def index_by_link(url: str):
+    article = Article(url)
+    article.download()
+    article.parse()
+    title = article.title
+    print(f"title:{title}")
+    f = Flow.load_config('flows/index.yml')
+    with f:
+        f.index_lines(lines=[title], batch_size=16,
+                      read_mode='r', size=num_docs)
+    # for search
 
 
 def search():
@@ -92,11 +104,22 @@ def dryrun():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index/search/dryrun" mode')
+        print('choose between "index/index_by_link/rest/search/query/dryrun" mode')
         exit(1)
     if sys.argv[1] == 'index':
         config()
         index()
+    elif sys.argv[1] == 'index_by_link':
+        config()
+        # TODO verify urls
+        index_by_link(sys.argv[2])
+    elif sys.argv[1] == 'query':
+        config()
+        # TODO verify urls
+        query(10)
+    elif sys.argv[1] == 'rest':
+        config()
+        query_restful()
     elif sys.argv[1] == 'search':
         config()
         search()
