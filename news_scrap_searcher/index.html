@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reader news</title>
+    <!-- bootstrap for styling -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <!-- see the two script tags right before </body> for Vue and our app code, vue.js -->
+</head>
+<body>
+    <div id="app" style="width:50%;" class="container">
+        <h2 class="text-center">Text to search</h2>
+        <form   v-on:submit.prevent="submitForm" action="">
+            <div class="form-group">
+                <label for="search_to_word">Text:</label>
+                <input v-model="search_to_word" class="form-control" name="search_to_word" type="text" />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+	
+	<table  class="table table-condensed">
+		<thead>
+				<th>Score</th>
+				<th>Title</th>
+		</thead>
+		<tbody  id="get-data" > 
+			<tr v-for="(item, index) in items">
+				<td>{{ item.score }}</td>
+				<td>{{ item.title }}</td>
+			</tr> 
+
+		</tbody>
+	</table>
+
+    </div>
+
+
+    <!-- Vue.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.3/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.3.2/vue-resource.min.js"></script>
+
+    <!-- project javascript -->
+    <script src="vue.js"></script>
+
+</body>
+</html>
