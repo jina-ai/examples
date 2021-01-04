@@ -48,13 +48,11 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         self.model.eval()
 
     @batching_multi_input(num_data=2)
-    def _get_score(self, *data: List[str]):
+    def _get_score(self, queries: List[str], answers: List[str]):
         import torch
         from torch.nn.functional import softmax
 
         # Create inputs for the model
-        queries = data[0]
-        answers = data[1]
         ids = []
         tokens = []
         masks = []

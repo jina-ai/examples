@@ -6,7 +6,6 @@ from collections import defaultdict
 
 from jina.flow import Flow
 from jina import Document
-from jina.types.score import NamedScore
 
 evaluation_value = defaultdict(float)
 num_evaluation_docs = 0
@@ -82,7 +81,6 @@ def evaluate_generator():
         for match_doc_id in matches_doc_id:
             match = Document()
             match.tags['id'] = match_doc_id
-            match.score = NamedScore(value=1.0)
             match.text = docid2text[match_doc_id]
             groundtruth.matches.add(match)
 
