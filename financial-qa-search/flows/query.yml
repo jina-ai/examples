@@ -15,7 +15,8 @@ pods:
     uses_reducing: _merge_all
     timeout_ready: 100000
   ranker:
-    uses: jinahub/pod.ranker.finbertqaranker:0.0.1-0.8.17
+#    uses: jinahub/pod.ranker.finbertqaranker:0.0.1-0.8.23
+    uses: docker://jinaai/hub.executors.rankers.finbertqaranker
     uses_internal: pods/rank.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000

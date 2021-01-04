@@ -22,7 +22,7 @@ pods:
     uses: pods/evaluate_matching.yml
   - name: ranker
     method: add
-    uses: jinahub/pod.ranker.finbertqaranker:0.0.1-0.8.17
+    uses: docker://jinaai/hub.executors.rankers.finbertqaranker
     uses_internal: pods/rank.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
