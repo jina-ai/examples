@@ -125,9 +125,9 @@ def print_evaluation_results(resp):
         print(f'\n'
               f'Evaluations for QID:{d.tags["id"]} [{d.text}]')
         evaluations = d.evaluations
-        for i in range(0, 3):
+        for i in range(0, 2):
             evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
-        for i in range(3, 6):
+        for i in range(2, 4):
             evaluation_value[f'Ranking-{evaluations[i].op_name}'] += evaluations[i].value
 
         num_evaluation_docs += 1
@@ -135,11 +135,9 @@ def print_evaluation_results(resp):
         print(f''
               f'    Matching-{evaluations[0].op_name}: {evaluations[0].value} \n'
               f'    Matching-{evaluations[1].op_name}: {evaluations[1].value} \n'
-              f'    Matching-{evaluations[2].op_name}: {evaluations[2].value} \n'
               f''
-              f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value} \n'
-              f'    Ranking-{evaluations[4].op_name}: {evaluations[4].value} \n'
-              f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
+              f'    Ranking-{evaluations[2].op_name}: {evaluations[2].value} \n'
+              f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value}')
 
 
 # for search
