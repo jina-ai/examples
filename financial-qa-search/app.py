@@ -13,6 +13,9 @@ num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 
 def config():
+    """
+    Configure environment variables.
+    """
     parallel = 1 if sys.argv[1] == 'index' else 1
     shards = 1
 
@@ -97,6 +100,7 @@ def index():
         f.index(input_fn=index_generator, batch_size=8)
 
 
+
 def print_resp(resp, question):
     """
     Print response.
@@ -140,8 +144,11 @@ def print_evaluation_results(resp):
               f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value}')
 
 
-# for search
+
 def search():
+    """
+    Search results using Query Flow.
+    """
     f = Flow.load_config('flows/query.yml')
 
     with f:
