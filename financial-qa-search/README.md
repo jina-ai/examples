@@ -14,7 +14,7 @@
 
 </p>
 
-# Build a BERT-based Financial Question Answering System
+# BERT-based Financial Question Answering System
 
 In this example, we use Jina, PyTorch, and [Hugging Face transformers](https://github.com/huggingface/transformers) to build a production-ready
 BERT-based Financial Question Answering System.
@@ -42,7 +42,7 @@ truth answer from the [FiQA](https://sites.google.com/view/fiqa/home) dataset:
 
 ## Set up
 
-**Clone the examples repository**:
+### Clone:
 
 ```
 git clone https://github.com/jina-ai/examples.git
@@ -50,11 +50,11 @@ git clone https://github.com/jina-ai/examples.git
 
 We will use ```financial-qa-search/``` as our working directory. 
 
-**Install the requirements**
+### Install:
 
 ```pip install -r requirements.txt```
 
-**Download data and model**
+### Download data and model:
 
 ```bash get_data.sh```
 
@@ -73,6 +73,8 @@ You can change the path to ```answer_collection.tsv``` to index with the full da
 ```
 python app.py index
 ```
+
+[![asciicast](https://asciinema.org/a/RDQvKPeibRRURYtpQWqmkCUsH.svg)](https://asciinema.org/a/RDQvKPeibRRURYtpQWqmkCUsH)
 
 At the end you will see the following:
 
