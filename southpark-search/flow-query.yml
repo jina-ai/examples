@@ -10,3 +10,4 @@ pods:
   indexer:
     uses: pods/index.yml
     polling: all
+    uses_after: _merge_matches
