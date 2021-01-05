@@ -11,6 +11,7 @@ import itertools
 from jina.flow import Flow
 from jina import Document
 
+
 def config():
     parallel = 2 if sys.argv[1] == 'index' else 1
 
@@ -29,11 +30,11 @@ def input_fn():
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
             if row[-1] == 'ENGLISH':
-                d = Document()
-                d.tags['ALink'] = row[0]
-                d.tags['SName'] = row[1]
-                d.tags['SLink'] = row[2]
-                d.text = row[3]
+                with Document() as d:
+                    d.tags['ALink'] = row[0]
+                    d.tags['SName'] = row[1]
+                    d.tags['SLink'] = row[2]
+                    d.text = row[3]
                 yield d
 
 
@@ -43,9 +44,8 @@ def index():
     with f:
         f.index(input_fn, batch_size=8)
 
-    # for search
 
-
+# for search
 def search():
     f = Flow.load_config('flows/query.yml')
 
@@ -71,12 +71,13 @@ def main():
         workspace = os.environ['JINA_WORKSPACE']
         if os.path.exists(workspace):
             print(
-                f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
+                f'\n +-----------------------------------------------------------------------------------+   \
+                    \n |                                   🤖🤖🤖                                        |         \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
+                    \n |                                   🤖🤖🤖                                        |         \
                     \n +---------------------------------------------------------------------------------+'
             )
+            sys.exit(1)
         index()
     elif sys.argv[1] == 'search':
         search()

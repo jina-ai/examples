@@ -11,7 +11,7 @@ import os
 
 import pytest
 from jina.flow import Flow
-from jina.proto import jina_pb2
+from jina import Document
 
 TOP_K = 3
 INDEX_FLOW_FILE_PATH = 'flows/index.yml'
@@ -29,11 +29,11 @@ def input_fn():
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ.get('JINA_MAX_DOCS'))):
             if row[-1] == 'ENGLISH':
-                d = jina_pb2.Document()
-                d.tags['ALink'] = row[0]
-                d.tags['SName'] = row[1]
-                d.tags['SLink'] = row[2]
-                d.text = row[3]
+                with Document() as d:
+                    d.tags['ALink'] = row[0]
+                    d.tags['SName'] = row[1]
+                    d.tags['SLink'] = row[2]
+                    d.text = row[3]
                 yield d
 
 
