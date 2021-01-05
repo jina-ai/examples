@@ -36,6 +36,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         import torch
         from transformers import BertForSequenceClassification, AutoTokenizer
 
+        # Initialize device, tokenizer, and model
         self.device = torch.device("cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(self.pretrained_model_name_or_path, do_lower_case=True)
         self.model = BertForSequenceClassification.from_pretrained(self.pretrained_model_name_or_path, cache_dir=None, num_labels=2)
@@ -44,10 +45,14 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
         self.model.eval()
 
     def _get_score(self, query, answer):
+        """
+        :param query: question string
+        :param answer: answer string
+        """
         import torch
         from torch.nn.functional import softmax
 
-        # Create inputs for the model
+        # Create input embeddings for the model
         encoded_seq = self.tokenizer.encode_plus(query, answer,
                                             max_length=self.max_length,
                                             pad_to_max_length=True,
@@ -55,9 +60,9 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
                                             return_attention_mask=True)
         # Numericalized, padded, clipped seq with special tokens
         input_ids = torch.tensor([encoded_seq['input_ids']]).to(self.device)
-        # Specify question seq and answer seq
+        # Specify which position of the embedding is the question or answer
         token_type_ids = torch.tensor([encoded_seq['token_type_ids']]).to(self.device)
-        # Specify which position is part of the seq which is padded
+        # Specify which position of the embedding is padded
         att_mask = torch.tensor([encoded_seq['attention_mask']]).to(self.device)
         # Don't calculate gradients
         with torch.no_grad():
@@ -65,7 +70,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
             outputs = self.model(input_ids, token_type_ids=token_type_ids, attention_mask=att_mask)
         # Get the predictions
         logits = outputs[0]
-        # Apply activation function
+        # Apply activation function to get the relevancy score
         rel_score = softmax(logits, dim=1)
         rel_score = rel_score.numpy()
         # Probability that the QA pair is relevant
@@ -77,6 +82,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
             self, query_meta: Dict, old_match_scores: Dict, match_meta: Dict
     ) -> "np.ndarray":
 
+        # Compute new matching scores using a fine-tuned model.
         new_scores = [
             (
                 match_id,

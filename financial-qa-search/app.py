@@ -5,7 +5,11 @@ import sys
 from jina.flow import Flow
 from jina import Document
 
+
 def config():
+    """
+    Configure environment variables.
+    """
     parallel = 1 if sys.argv[1] == 'index' else 1
     shards = 1
 
@@ -45,6 +49,7 @@ def index():
     with f:
         f.index(input_fn=index_generator, batch_size=16)
 
+
 def print_resp(resp, question):
     """
     Print response.
@@ -60,8 +65,11 @@ def print_resp(resp, question):
             answer = match.text.strip()
             print(f'> {idx+1:>2d}. "{answer}"\n Score: ({score:.2f})')
 
-# for search
+
 def search():
+    """
+    Search results using Query Flow.
+    """
     f = Flow.load_config('flows/query.yml')
 
     with f:
@@ -77,6 +85,9 @@ def search():
 
 
 def dryrun():
+    """
+    Dry run.
+    """
     f = Flow().load_config("flows/index.yml")
     with f:
         f.dry_run()
