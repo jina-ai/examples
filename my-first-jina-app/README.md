@@ -305,7 +305,7 @@ To speed things along, by default Jina is set to index a maximum of 500 [Documen
 Once we've verified everything works, we can set it to `50000` (or any number less than `62605`) to index many more lines of the dataset:
 
 ```sh
-export $MAX_DOCS=50000
+export MAX_DOCS=50000
 ```
 
 ### Search Flow
