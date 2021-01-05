@@ -82,6 +82,9 @@ def queries_and_expected_replies():
 
 
 def test_query(tmpdir, queries_and_expected_replies):
+    def extract_score_value(x):
+        return x['value'] if 'value' in x else 0.0
+
     config(tmpdir)
     index_documents()
     f = get_flow()
@@ -96,7 +99,7 @@ def test_query(tmpdir, queries_and_expected_replies):
                 chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
                 chunk_matches = chunk['matches']
                 # make sure to sort in asc. order, by score
-                chunk_matches = sorted(chunk_matches, key=lambda x: x['score']['value'], reverse=False)
+                chunk_matches = sorted(chunk_matches, key=lambda x: extract_score_value(x['score']), reverse=False)
                 for match in chunk_matches:
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
@@ -105,7 +108,7 @@ def test_query(tmpdir, queries_and_expected_replies):
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
             # make sure to sort in asc. order, by score
-            matches = sorted(matches, key=lambda x: x['score']['value'], reverse=False)
+            matches = sorted(matches, key=lambda x: extract_score_value(x['score']), reverse=False)
             match_result = []
             for match in matches:
                 match_text = match['text']

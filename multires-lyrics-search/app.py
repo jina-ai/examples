@@ -71,10 +71,10 @@ def main():
         workspace = os.environ['JINA_WORKSPACE']
         if os.path.exists(workspace):
             print(
-                f'\n +-----------------------------------------------------------------------------------+   \
-                    \n |                                   🤖🤖🤖                                        |         \
+                f'\n +---------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        |         \
+                    \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+'
             )
             sys.exit(1)
