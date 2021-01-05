@@ -9,8 +9,7 @@ import sys
 import itertools
 
 from jina.flow import Flow
-from jina.proto import jina_pb2
-
+from jina import Document
 
 def config():
     parallel = 2 if sys.argv[1] == 'index' else 1
@@ -30,7 +29,7 @@ def input_fn():
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
             if row[-1] == 'ENGLISH':
-                d = jina_pb2.Document()
+                d = Document()
                 d.tags['ALink'] = row[0]
                 d.tags['SName'] = row[1]
                 d.tags['SLink'] = row[2]
