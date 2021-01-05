@@ -11,7 +11,7 @@ import os
 
 import pytest
 from jina.flow import Flow
-from jina.proto import jina_pb2
+from jina import Document
 
 TOP_K = 3
 INDEX_FLOW_FILE_PATH = 'flows/index.yml'
@@ -29,11 +29,11 @@ def input_fn():
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ.get('JINA_MAX_DOCS'))):
             if row[-1] == 'ENGLISH':
-                d = jina_pb2.Document()
-                d.tags['ALink'] = row[0]
-                d.tags['SName'] = row[1]
-                d.tags['SLink'] = row[2]
-                d.text = row[3]
+                with Document() as d:
+                    d.tags['ALink'] = row[0]
+                    d.tags['SName'] = row[1]
+                    d.tags['SLink'] = row[2]
+                    d.text = row[3]
                 yield d
 
 
@@ -82,6 +82,9 @@ def queries_and_expected_replies():
 
 
 def test_query(tmpdir, queries_and_expected_replies):
+    def extract_score_value(x):
+        return x['value'] if 'value' in x else 0.0
+
     config(tmpdir)
     index_documents()
     f = get_flow()
@@ -96,7 +99,7 @@ def test_query(tmpdir, queries_and_expected_replies):
                 chunk_result = {'chunk': chunk['text'], 'chunk_matches': []}
                 chunk_matches = chunk['matches']
                 # make sure to sort in asc. order, by score
-                chunk_matches = sorted(chunk_matches, key=lambda x: x['score']['value'], reverse=False)
+                chunk_matches = sorted(chunk_matches, key=lambda x: extract_score_value(x['score']), reverse=False)
                 for match in chunk_matches:
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
@@ -105,7 +108,7 @@ def test_query(tmpdir, queries_and_expected_replies):
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
             # make sure to sort in asc. order, by score
-            matches = sorted(matches, key=lambda x: x['score']['value'], reverse=False)
+            matches = sorted(matches, key=lambda x: extract_score_value(x['score']), reverse=False)
             match_result = []
             for match in matches:
                 match_text = match['text']
