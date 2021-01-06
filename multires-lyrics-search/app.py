@@ -9,7 +9,7 @@ import sys
 import itertools
 
 from jina.flow import Flow
-from jina.proto import jina_pb2
+from jina import Document
 
 
 def config():
@@ -30,11 +30,11 @@ def input_fn():
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
             if row[-1] == 'ENGLISH':
-                d = jina_pb2.Document()
-                d.tags['ALink'] = row[0]
-                d.tags['SName'] = row[1]
-                d.tags['SLink'] = row[2]
-                d.text = row[3]
+                with Document() as d:
+                    d.tags['ALink'] = row[0]
+                    d.tags['SName'] = row[1]
+                    d.tags['SLink'] = row[2]
+                    d.text = row[3]
                 yield d
 
 
@@ -44,9 +44,8 @@ def index():
     with f:
         f.index(input_fn, batch_size=8)
 
-    # for search
 
-
+# for search
 def search():
     f = Flow.load_config('flows/query.yml')
 
@@ -78,6 +77,7 @@ def main():
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+'
             )
+            sys.exit(1)
         index()
     elif sys.argv[1] == 'search':
         search()

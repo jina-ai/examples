@@ -1,7 +1,5 @@
 !Flow
 pods:
-  extractor:
-    uses: pods/extract.yml
   encoder:
     uses: pods/encode.yml
     timeout_ready: 1200000
