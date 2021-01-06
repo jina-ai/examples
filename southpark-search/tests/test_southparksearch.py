@@ -1,14 +1,14 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import json
 import os
-import sys
-import subprocess
+import itertools as it
+
+import pytest
+import json
 
 from jina.flow import Flow
-import pytest
-
+from jina import Document
 
 NUM_DOCS = 100
 TOP_K = 3
@@ -22,13 +22,27 @@ def config(tmpdir):
     os.environ['JINA_PORT'] = str(45678)
 
 
+def index_generator(filepath: str, num_docs: int):
+    def sample(iterable):
+        for i in iterable:
+            yield i
+
+    with open(filepath, 'r') as f:
+        for line in it.islice(sample(f), num_docs):
+            character, sentence = line.split('[SEP]')
+            document = Document()
+            document.text = sentence
+            document.tags['character'] = character
+            yield document
+
+
 def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index_lines(filepath=os.environ['JINA_DATA_FILE'],
-                      batch_size=8,
-                      size=NUM_DOCS)
+        f.index(input_fn=index_generator(filepath=os.environ["JINA_DATA_FILE"], num_docs=100),
+                batch_size=8,
+                size=NUM_DOCS)
 
 
 def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
@@ -51,9 +65,11 @@ def get_flow():
 
 @pytest.fixture
 def queries():
-    return [("Don't say anything\n", ["Don't say anything\n", "Check that: I'll watch that game.\n", "I'm trying to talk\n"]),
+    return [("Don't say anything\n",
+             ["Don't say anything\n", "Check that: I'll watch that game.\n", "I'm trying to talk\n"]),
             ('Sorry\n', ['Sorry\n', 'Hey\n', 'Allб\n']),
-            ("Check that: I'll watch that game.\n", ["Check that: I'll watch that game.\n", "I just think it's a fabulous app\n", 'Could you get that\n'])]
+            ("Check that: I'll watch that game.\n",
+             ["Check that: I'll watch that game.\n", "I just think it's a fabulous app\n", 'Could you get that\n'])]
 
 
 def test_query(tmpdir, queries):
@@ -68,4 +84,5 @@ def test_query(tmpdir, queries):
             result = []
             for match in matches:
                 result.append(match['text'])
+
             assert result == exp_result

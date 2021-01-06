@@ -2,9 +2,11 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import itertools as it
 
 import click
 from jina.flow import Flow
+from jina import Document
 
 
 def config():
@@ -24,20 +26,31 @@ def print_topk(resp, sentence):
             score = match.score.value
             if score < 0.0:
                 continue
-            character = match.meta_info.decode()
+            character = match.tags['character']
             dialog = match.text.strip()
             print(f'> {idx:>2d}({score:.2f}). {character.upper()} said, "{dialog}"')
+
+
+def index_generator(filepath: str, num_docs: int):
+    def sample(iterable):
+        for i in iterable:
+            yield i
+
+    with open(filepath, 'r') as f:
+        for line in it.islice(sample(f), num_docs):
+            character, sentence = line.split('[SEP]')
+            document = Document()
+            document.text = sentence
+            document.tags['character'] = character
+            yield document
 
 
 def index(num_docs):
     f = Flow().load_config("flow-index.yml")
 
     with f:
-        f.index_lines(
-            filepath=os.environ["JINA_DATA_FILE"],
-            batch_size=8,
-            size=num_docs,
-        )
+        f.index(input_fn=index_generator(filepath=os.environ["JINA_DATA_FILE"], num_docs=num_docs),
+                batch_size=8)
 
 
 def query(top_k):
@@ -47,9 +60,10 @@ def query(top_k):
             text = input("please type a sentence: ")
             if not text:
                 break
- 
+
             def ppr(x):
                 print_topk(x, text)
+
             f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
 
 
