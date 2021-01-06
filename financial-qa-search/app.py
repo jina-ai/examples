@@ -12,6 +12,9 @@ num_evaluation_docs = 0
 
 
 def config():
+    """
+    Configure environment variables.
+    """
     parallel = 1 if sys.argv[1] == 'index' else 1
     shards = 1
 
@@ -139,6 +142,9 @@ def print_average_evaluations():
 
 
 def print_evaluation_results(resp):
+    """
+    Print evaluation results before and after reranking.
+    """
     global evaluation_value
     global num_evaluation_docs
     for d in resp.search.docs:
@@ -154,7 +160,6 @@ def print_evaluation_results(resp):
 
         evaluation_value[f'Matching-Precision@10'] += evaluations[0].value
         evaluation_value[f'Matching-ReciprocalRank@10'] += evaluations[1].value
-
         evaluation_value[f'Ranking-Precision@10'] += evaluations[2].value
         evaluation_value[f'Ranking-ReciprocalRank@10'] += evaluations[3].value
 
@@ -164,8 +169,8 @@ def print_evaluation_results(resp):
               f'    Matching-Precision@10: {evaluations[0].value} \n'
               f'    Matching-ReciprocalRank@10: {evaluations[1].value} \n'
               f''
-              f'    Ranking-Precision@10: {evaluations[2].value} \n'
-              f'    ReciprocalRank@10: {evaluations[3].value} \n')
+              f'    Ranking-Ranking-Precision@10: {evaluations[2].value} \n'
+              f'    Ranking-ReciprocalRank@10: {evaluations[3].value} \n')
 
         # for i in range(0, 3):
         #     evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
@@ -184,7 +189,6 @@ def print_evaluation_results(resp):
         #       f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
 
 
-# for evaluate
 def evaluate():
     """
     Evaluate results using Evaluate Flow.

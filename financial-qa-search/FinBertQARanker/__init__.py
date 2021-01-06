@@ -79,7 +79,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
             outputs = self.model(input_ids, token_type_ids=token_type_ids, attention_mask=att_mask)
         # Get the predictions
         logits = outputs[0]
-        # Apply activation function
+        # Apply activation function to get the relevancy score
         rel_score = softmax(logits, dim=1)
         rel_score = rel_score.numpy()
         # Probability that the QA pair is relevant
@@ -96,6 +96,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
 
         scores = self._get_score(queries, matches)
 
+        # Compute new matching scores using a fine-tuned model.
         new_scores = [
             (
                 match_id,
