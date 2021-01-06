@@ -14,7 +14,7 @@ class FinBertQARanker(TorchDevice, Match2DocRanker):
     :class:`FinBertQARanker` Compute QA relevancy scores using a fine-tuned BERT model.
     """
 
-    batch_size = 64
+    batch_size = 16
 
     required_keys = {"text"}
 

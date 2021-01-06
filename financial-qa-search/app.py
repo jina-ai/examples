@@ -9,7 +9,6 @@ from jina import Document
 
 evaluation_value = defaultdict(float)
 num_evaluation_docs = 0
-num_docs = int(os.environ.get('MAX_DOCS', 10))
 
 
 def config():
@@ -45,48 +44,6 @@ def index_generator():
             yield d
 
 
-def load_pickle(path):
-    """Load pickle file.
-    ----------
-    Arguments:
-        path: str file path
-    """
-    import pickle
-    with open(path, 'rb') as f:
-        return pickle.load(f)
-
-
-def evaluate_generator():
-    import numpy as np
-    test_set = load_pickle('dataset/test_set_50.pickle')
-
-    t = np.array(test_set)
-    t = t[:, :2]
-    # t = array([[14, list([398960])],
-    #        [68, list([19183])],
-    #        [70, list([327002])],
-    #        [81, list([451207])],
-    #        [458, list([263485, 218858])],
-
-    t = t.tolist()
-
-    docid2text = load_pickle('dataset/docid_to_text.pickle')
-    qid2text = load_pickle('dataset/qid_to_text.pickle')
-
-    for q_id, matches_doc_id in t:
-        query = Document()
-        query.tags['id'] = q_id
-        query.text = qid2text[q_id]
-        groundtruth = Document()
-        for match_doc_id in matches_doc_id:
-            match = Document()
-            match.tags['id'] = match_doc_id
-            match.text = docid2text[match_doc_id]
-            groundtruth.matches.add(match)
-
-        yield query, groundtruth
-
-
 def index():
     """
     Index data using Index Flow.
@@ -113,37 +70,10 @@ def print_resp(resp, question):
             print(f'> {idx + 1:>2d}. "{answer}"\n Score: ({score:.2f})')
 
 
-def print_average_evaluations():
-    print(f' Average Evaluation Results')
-    print('\n'.join(f'      {name}: {value / num_evaluation_docs}' for name, value in evaluation_value.items()))
-
-
-def print_evaluation_results(resp):
-    global evaluation_value
-    global num_evaluation_docs
-    for d in resp.search.docs:
-        print(f'\n'
-              f'Evaluations for QID:{d.tags["id"]} [{d.text}]')
-        evaluations = d.evaluations
-        for i in range(0, 3):
-            evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
-        for i in range(3, 6):
-            evaluation_value[f'Ranking-{evaluations[i].op_name}'] += evaluations[i].value
-
-        num_evaluation_docs += 1
-
-        print(f''
-              f'    Matching-{evaluations[0].op_name}: {evaluations[0].value} \n'
-              f'    Matching-{evaluations[1].op_name}: {evaluations[1].value} \n'
-              f'    Matching-{evaluations[2].op_name}: {evaluations[2].value} \n'
-              f''
-              f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value} \n'
-              f'    Ranking-{evaluations[4].op_name}: {evaluations[4].value} \n'
-              f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
-
-
-# for search
 def search():
+    """
+    Search results using Query Flow.
+    """
     f = Flow.load_config('flows/query.yml')
 
     with f:
@@ -158,17 +88,116 @@ def search():
             f.search_lines(lines=[text, ], output_fn=ppr, top_k=50)
 
 
+def load_pickle(path):
+    """Load pickle file.
+    ----------
+    Arguments:
+        path: str file path
+    """
+    import pickle
+    with open(path, 'rb') as f:
+        return pickle.load(f)
+
+
+def evaluate_generator():
+    """
+    Create two Documents - query and groundtruth to store question id and text and groundtruth answer id and text.
+    """
+    test_set = load_pickle('dataset/test_set.pickle')
+    t = test_set[:5]
+
+    # Convert docid to answer text
+    docid2text = load_pickle('dataset/docid_to_text.pickle')
+    # Convert qid to question text
+    qid2text = load_pickle('dataset/qid_to_text.pickle')
+
+    for q_id, matches_doc_id in t:
+        # Create query Document
+        query = Document()
+        # Store question id and text in Document
+        query.tags['id'] = q_id
+        query.text = qid2text[q_id]
+
+        # Create groundtruth Document
+        groundtruth = Document()
+        for match_doc_id in matches_doc_id:
+            match = Document()
+            # Store groundtruth answer id and text in Document
+            match.tags['id'] = match_doc_id
+            match.text = docid2text[match_doc_id]
+            groundtruth.matches.add(match)
+
+        yield query, groundtruth
+
+
+def print_average_evaluations():
+    """
+    Compute average precision and reciprocal rank.
+    """
+    print(f' Average Evaluation Results')
+    print('\n'.join(f'      {name}: {value / num_evaluation_docs}' for name, value in evaluation_value.items()))
+
+
+def print_evaluation_results(resp):
+    global evaluation_value
+    global num_evaluation_docs
+    for d in resp.search.docs:
+        print(f'\n'
+              f'Evaluations for QID:{d.tags["id"]} [{d.text}]')
+        evaluations = d.evaluations
+
+        # for i in range(len(evaluations)):
+        #     print(evaluations[i].op_name)
+        #     print("***")
+        #     print(evaluations[i].value)
+        #     print("\n")
+
+        evaluation_value[f'Matching-Precision@10'] += evaluations[0].value
+        evaluation_value[f'Matching-ReciprocalRank@10'] += evaluations[1].value
+
+        evaluation_value[f'Ranking-Precision@10'] += evaluations[2].value
+        evaluation_value[f'Ranking-ReciprocalRank@10'] += evaluations[3].value
+
+        num_evaluation_docs += 1
+
+        print(f''
+              f'    Matching-Precision@10: {evaluations[0].value} \n'
+              f'    Matching-ReciprocalRank@10: {evaluations[1].value} \n'
+              f''
+              f'    Ranking-Precision@10: {evaluations[2].value} \n'
+              f'    ReciprocalRank@10: {evaluations[3].value} \n')
+
+        # for i in range(0, 3):
+        #     evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
+        # for i in range(3, 6):
+        #     evaluation_value[f'Ranking-{evaluations[i].op_name}'] += evaluations[i].value
+        #
+        # num_evaluation_docs += 1
+        #
+        # print(f''
+        #       f'    Matching-{evaluations[0].op_name}: {evaluations[0].value} \n'
+        #       f'    Matching-{evaluations[1].op_name}: {evaluations[1].value} \n'
+        #       f'    Matching-{evaluations[2].op_name}: {evaluations[2].value} \n'
+        #       f''
+        #       f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value} \n'
+        #       f'    Ranking-{evaluations[4].op_name}: {evaluations[4].value} \n'
+        #       f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
+
+
 # for evaluate
 def evaluate():
+    """
+    Evaluate results using Evaluate Flow.
+    """
     f = Flow.load_config('flows/evaluate.yml')
 
     with f:
-        f.search(input_fn=evaluate_generator, output_fn=print_evaluation_results, top_k=10, batch_size=8)
+        f.search(input_fn=evaluate_generator, output_fn=print_evaluation_results, top_k=10, batch_size=1)
 
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index/search/dryrun" mode')
+        print('choose between "index/search/evaluate" mode')
         exit(1)
     if sys.argv[1] == 'index':
         config()

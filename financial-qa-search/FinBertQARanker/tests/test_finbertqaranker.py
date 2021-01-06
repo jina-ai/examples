@@ -6,7 +6,7 @@ import numpy as np
 from .. import FinBertQARanker
 
 
-# @pytest.mark.parametrize('batch_size', [1, 2, 3, 100])
+@pytest.mark.parametrize('batch_size', [1, 2, 3, 100])
 def test_finbertqaranker(batch_size):
     query_meta = {"text": "Why are big companies like Apple or Google not included in the Dow Jones Industrial "
                           "Average (DJIA) index?"}
