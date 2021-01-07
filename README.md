@@ -354,6 +354,6 @@ You are highly encouraged to add a test for your example so that we will be aler
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.
