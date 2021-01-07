@@ -21,7 +21,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### Start Here
+## Start Here
 
 First a little light background reading, and then let's jump in and build our first app!
 
@@ -76,7 +76,7 @@ Brand new to neural search? Not for long! Use cookiecutter to search through Sta
 </tr>
 </table>
 
-### Search Text
+## Search Text
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -111,7 +111,7 @@ Get a better understanding of chunks by searching a lyrics database. Now with sh
 </table>
 
 
-### Search Images
+## Search Images
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -142,7 +142,7 @@ Use SOTA visual representation for searching Pokémon!
 
 </table>
 
-### Search Audio
+## Search Audio
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -168,7 +168,7 @@ A demo of neural search for audio data based Vggish model.
 
 </table>
 
-### Search Video
+## Search Video
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -187,7 +187,7 @@ Use prefetching and sharding to improve the performance of your index and query 
 
 </table>
 
-### Cross Modal Search
+## Cross Modal Search
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -206,7 +206,7 @@ Use one modality (text) to search another (images)
 
 </table>
 
-### Multi Modal Search
+## Multi Modal Search
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -225,7 +225,7 @@ Use more than one modality (image+text) to search images
 
 </table>
 
-### Miscellaneous
+## Miscellaneous
 
 <table width=100% style='width: 100%'>
 
@@ -245,7 +245,7 @@ Create separate indexes and queries for different clothing in Fashion-MNIST
 
 </table>
 
-### Improve Performance and Scalability
+## Improve Performance and Scalability
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -287,7 +287,7 @@ Build a vector search engine that finds the closest vector in the database to a 
 
 </table>
 
-### Extend and Share Jina
+## Extend and Share Jina
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -323,7 +323,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 4. Add your example folder name to the `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating a pull request.
 
 
-### Tips
+## Tips
 
 - For reference, check out the `tests` folder from [South Park example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about text and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
