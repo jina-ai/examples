@@ -118,12 +118,6 @@ Get a better understanding of chunks by searching a lyrics database. Now with sh
 <th width="90%" style="width: 90%">Tutorials</th>
 <th width="10%" style="width: 10%">Level</th>
 </tr>
-<tr>
-<td>
-</td>
-<td><h3>🐣</h3></td>
-</tr>
-
 
 <tr>
 <td>
