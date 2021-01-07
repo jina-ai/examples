@@ -106,15 +106,13 @@ def evaluate_generator():
     """
     Create two Documents - query and groundtruth to store question id and text and groundtruth answer id and text.
     """
-    test_set = load_pickle('dataset/test_set.pickle')
-    t = test_set[:5]
-
+    test_set = load_pickle('dataset/sample_test_set.pickle')
     # Convert docid to answer text
     docid2text = load_pickle('dataset/docid_to_text.pickle')
     # Convert qid to question text
     qid2text = load_pickle('dataset/qid_to_text.pickle')
 
-    for q_id, matches_doc_id in t:
+    for q_id, matches_doc_id in test_set:
         # Create query Document
         query = Document()
         # Store question id and text in Document
@@ -152,12 +150,6 @@ def print_evaluation_results(resp):
               f'Evaluations for QID:{d.tags["id"]} [{d.text}]')
         evaluations = d.evaluations
 
-        # for i in range(len(evaluations)):
-        #     print(evaluations[i].op_name)
-        #     print("***")
-        #     print(evaluations[i].value)
-        #     print("\n")
-
         evaluation_value[f'Matching-Precision@10'] += evaluations[0].value
         evaluation_value[f'Matching-ReciprocalRank@10'] += evaluations[1].value
         evaluation_value[f'Ranking-Precision@10'] += evaluations[2].value
@@ -169,24 +161,8 @@ def print_evaluation_results(resp):
               f'    Matching-Precision@10: {evaluations[0].value} \n'
               f'    Matching-ReciprocalRank@10: {evaluations[1].value} \n'
               f''
-              f'    Ranking-Ranking-Precision@10: {evaluations[2].value} \n'
+              f'    Ranking-Precision@10: {evaluations[2].value} \n'
               f'    Ranking-ReciprocalRank@10: {evaluations[3].value} \n')
-
-        # for i in range(0, 3):
-        #     evaluation_value[f'Matching-{evaluations[i].op_name}'] += evaluations[i].value
-        # for i in range(3, 6):
-        #     evaluation_value[f'Ranking-{evaluations[i].op_name}'] += evaluations[i].value
-        #
-        # num_evaluation_docs += 1
-        #
-        # print(f''
-        #       f'    Matching-{evaluations[0].op_name}: {evaluations[0].value} \n'
-        #       f'    Matching-{evaluations[1].op_name}: {evaluations[1].value} \n'
-        #       f'    Matching-{evaluations[2].op_name}: {evaluations[2].value} \n'
-        #       f''
-        #       f'    Ranking-{evaluations[3].op_name}: {evaluations[3].value} \n'
-        #       f'    Ranking-{evaluations[4].op_name}: {evaluations[4].value} \n'
-        #       f'    Ranking-{evaluations[5].op_name}: {evaluations[5].value}')
 
 
 def evaluate():
