@@ -76,9 +76,7 @@ def run(task, batch_size, top_k, indexer_query_type):
         with Flow.load_config('flow-query.yml') as flow:
             flow.search(evaluate_generator(data_path, groundtruth_path), output_fn=get_evaluation_results,
                         top_k=top_k)
-        print(f' RESULTS {evaluation_results}')
-        evaluation = evaluation_results['RecallEvaluator']
-        print(f' Recall@{top_k} => {100*evaluation}%')
+        evaluation = evaluation_results[list(evaluation_results.keys())[0]]
         # return for test
         return 100*evaluation
     else:

@@ -2,8 +2,6 @@
 metas:
   prefetch: 10
 pods:
-  crafter:
-    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL

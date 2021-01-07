@@ -1,10 +1,9 @@
 import os
 import sys
 
-sys.path.append('..')
-
 import pytest
 
+sys.path.append('..')
 from app import run
 
 
@@ -17,17 +16,24 @@ def siftsmall_data():
 
 @pytest.fixture(scope='session')
 def docker_images():
-    import jina
-    jina_root = os.path.dirname(os.path.abspath(jina.__file__))
-    faiss_indexer_root = os.path.join(jina_root, 'hub/indexers/vector/FaissIndexer')
+    if 'GITHUB_WORKFLOW' in os.environ:
+        jina_hub_root = os.path.join('/home/runner/work/examples/examples/jinahub')
+    else:
+        import jina
+        jina_root = os.path.dirname(os.path.abspath(jina.__file__))
+        jina_hub_root = os.path.join(jina_root, 'hub')
+
+    faiss_indexer_root = os.path.join(jina_hub_root, 'indexers/vector/FaissIndexer')
     os.system(
         f'docker build -f {faiss_indexer_root}/Dockerfile {faiss_indexer_root} -t faiss_indexer_image:test')
     os.environ['JINA_USES_FAISS'] = 'docker://faiss_indexer_image:test'
-    annoy_indexer_root = os.path.join(jina_root, 'hub/indexers/vector/AnnoyIndexer')
+    annoy_indexer_root = os.path.join(jina_hub_root, 'indexers/vector/AnnoyIndexer')
     os.system(
         f'docker build -f {annoy_indexer_root}/Dockerfile {annoy_indexer_root} -t annoy_indexer_image:test')
     os.environ['JINA_USES_ANNOY'] = 'docker://annoy_indexer_image:test'
     yield
+    del os.environ['JINA_USES_FAISS']
+    del os.environ['JINA_USES_ANNOY']
 
 
 @pytest.fixture(scope='session')

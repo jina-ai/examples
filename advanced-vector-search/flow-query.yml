@@ -2,8 +2,6 @@
 with:
   read_only: true
 pods:
-  crafter:
-    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL

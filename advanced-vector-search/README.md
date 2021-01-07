@@ -109,8 +109,6 @@ However, we have another Pod working in silence. Actually, the input to the very
 metas:
   prefetch: 10
 pods:
-  crafter:
-    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL
@@ -142,8 +140,6 @@ to the index flow but with an extra pod used to evaluate results.
 with:
   read_only: true
 pods:
-  crafter:
-    uses: _forward
   encoder:
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL
