@@ -1,4 +1,0 @@
-click
-transformers
-torch
-jina[scipy]==0.4.1
