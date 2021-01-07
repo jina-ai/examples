@@ -22,7 +22,7 @@ We adapt a [passage reranking](https://arxiv.org/pdf/1901.04085.pdf) approach by
 then reranking the candidate answers using [FinBERT-QA](https://github.com/yuanbit/FinBERT-QA), a BERT-based model fine-tuned on
 the [FiQA](https://sites.google.com/view/fiqa/home) dataset that achieved the state-of-the-art results.
 
-**🦉 Please refer to this [tutorial](https://github.com/jina-ai/_homepage/blob/posts-financial-qa-tutorial/_posts/2020-12-14-financial-qa-tutorial.md)
+**🦉 Please refer to this [tutorial](https://jina.ai/2021/01/07/financial-qa-tutorial.html)
 for a step-by-step guide and detailed explanations.**
 
 <p align="center">
