@@ -14,3 +14,5 @@ pods:
     timeout_ready: 600000
     pull_latest: False
     volumes: './workspace:/workspace/workspace'
+  evaluate:
+    uses: RecallEvaluator

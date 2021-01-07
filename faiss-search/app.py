@@ -4,8 +4,8 @@ __license__ = "Apache-2.0"
 import click
 import os
 
-import numpy as np
 from jina.flow import Flow
+from jina import Document
 
 from read_vectors_files import fvecs_read, ivecs_read
 
@@ -14,68 +14,65 @@ os.environ['JINA_PARALLEL'] = str(1)
 os.environ['JINA_SHARDS'] = str(1)
 os.environ['JINA_TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
 
-
-def read_data(db_file_path: str):
-    return fvecs_read(db_file_path)
-
-
-def save_topk(resp, output_file, top_k):
-    results = []
-    with open(output_file, 'w') as fw:
-        query_id = 0
-        for d in resp.search.docs:
-            result = []
-            fw.write('-' * 20)
-            fw.write('\n')
-
-            fw.write('query id {}:'.format(query_id))
-            fw.write('\n')
-            fw.write('matched vectors' + "*" * 10)
-            fw.write('\n')
-            for idx, match in enumerate(d.matches):
-                result.append(match.id)
-                score = match.score.value
-                if score < 0.0:
-                    continue
-                m_fn = np.frombuffer(match.blob.buffer, match.blob.dtype)
-                fw.write('\n')
-                fw.write('Idx: {:>2d}:(DocId {}, Ranking score: {:f}): \n{}'.
-                         format(idx, match.id, score, m_fn))
-                fw.write('\n')
-            fw.write('\n')
-            results.append(result)
-            query_id += 1
-        fw.write(f'recall@{top_k}: {recall_at_k(np.array(results), top_k)}')
-
-    print(open(output_file, 'r').read())
+num_evaluated_docs = 0
+sum_evaluation_value = 0.0
 
 
-def recall_at_k(results, k):
-    """
-    Computes how many times the true nearest neighbour is returned as one of the k closest vectors from a query.
+def index_generator(db_file_path: str):
+    documents = fvecs_read(db_file_path)
+    for id, data in enumerate(documents):
+        with Document() as doc:
+            doc.content = data
+            doc.tags['id'] = id
+        yield doc
 
-    Taken from https://gist.github.com/mdouze/046c1960bc82801e6b40ed8ee677d33e
-    """
-    groundtruth_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
-    groundtruth = ivecs_read(groundtruth_path)
-    eval = (results[:, :k] == groundtruth[:, :1]).sum() / float(results.shape[0])
-    return eval
+
+def evaluate_generator(db_file_path: str = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_query.fvecs'),
+                       groundtruth_path: str = os.path.join(os.environ['JINA_TMP_DATA_DIR'],
+                                                            'siftsmall_groundtruth.ivecs')):
+    documents = fvecs_read(db_file_path)
+    groundtruths = ivecs_read(groundtruth_path)
+
+    for data_doc, gt_indexes in zip(documents, groundtruths):
+        with Document() as doc:
+            doc.content = data_doc
+        with Document() as groundtruth:
+            for index in gt_indexes:
+                with Document() as match:
+                    match.tags['id'] = int(index.item())
+                groundtruth.matches.add(match)
+
+        yield doc, groundtruth
+
+
+def accumulate_evaluation_results(resp):
+    global num_evaluated_docs
+    global sum_evaluation_value
+    for d in resp.search.docs:
+        num_evaluated_docs += 1
+        sum_evaluation_value += d.evaluations[0].value
+
+
+def print_evaluations(top_k):
+    print(f' Recall@{top_k} => {sum_evaluation_value / num_evaluated_docs}')
 
 
 @click.command()
 @click.option('--task', '-t')
 @click.option('--batch_size', '-n', default=50)
-@click.option('--top_k', '-k', default=5)
+@click.option('--top_k', '-k', default=100)
 def main(task, batch_size, top_k):
     if task == 'index':
         data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_base.fvecs')
         with Flow.load_config('flow-index.yml') as flow:
-            flow.index_ndarray(read_data(data_path), batch_size=batch_size)
+            flow.index(index_generator(data_path), batch_size=batch_size)
     elif task == 'query':
         data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_query.fvecs')
+        groundtruth_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
         with Flow.load_config('flow-query.yml') as flow:
-            ppr = lambda x: save_topk(x, os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'query_results.txt'), top_k)
-            flow.search_ndarray(read_data(data_path), output_fn=ppr, top_k=top_k)
+            flow.search(evaluate_generator(data_path, groundtruth_path), output_fn=accumulate_evaluation_results,
+                        top_k=top_k)
+        print_evaluations(top_k)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
