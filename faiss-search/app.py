@@ -15,11 +15,13 @@ def config(indexer_query_type: str):
     os.environ['JINA_SHARDS'] = str(1)
     os.environ['JINA_TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
     if indexer_query_type == 'faiss':
-        os.environ['JINA_DOCKER_IMAGE'] = 'docker://jinahub/pod.indexer.faissindexer:0.0.12-0.9.3'
+        os.environ['JINA_USES'] = 'docker://jinahub/pod.indexer.faissindexer:0.0.12-0.9.3'
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
     elif indexer_query_type == 'annoy':
-        os.environ['JINA_DOCKER_IMAGE'] = 'docker://jinahub/pod.indexer.annoyindexer:0.0.13-0.9.3'
+        os.environ['JINA_USES'] = 'docker://jinahub/pod.indexer.annoyindexer:0.0.13-0.9.3'
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
+    elif indexer_query_type == 'numpy':
+        os.environ['JINA_USES'] = 'yaml/indexer.yml'
 
 
 def index_generator(db_file_path: str):
@@ -60,14 +62,14 @@ def accumulate_evaluation_results(resp):
 
 
 def print_evaluations(top_k):
-    print(f' Recall@{top_k} => {sum_evaluation_value / num_evaluated_docs}')
+    print(f' Recall@{top_k} => {100*(sum_evaluation_value / num_evaluated_docs)}%')
 
 
 @click.command()
 @click.option('--task', '-t')
 @click.option('--batch_size', '-n', default=50)
 @click.option('--top_k', '-k', default=100)
-@click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy'], case_sensitive=False),
+@click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy', 'numpy'], case_sensitive=False),
               default='faiss')
 def main(task, batch_size, top_k, indexer_query_type):
     config(indexer_query_type)

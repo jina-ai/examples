@@ -8,7 +8,7 @@ pods:
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL
   indexer:
-    uses: $JINA_DOCKER_IMAGE
+    uses: $JINA_USES
     uses_internal: $JINA_USES_INTERNAL
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
