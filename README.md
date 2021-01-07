@@ -243,15 +243,6 @@ Create separate indexes and queries for different clothing in Fashion-MNIST
 <td><h3>🐣</h3></td>
 </tr>
 
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/mnist-with-mindspore">Search MNIST with Mindspore</a></h4>
-Search handwriting examples using Mindspore
-</td>
-<td><h3>🚀</h3></td>
-</tr>
-
-
 </table>
 
 ### Improve Performance and Scalability
