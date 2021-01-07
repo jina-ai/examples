@@ -152,10 +152,10 @@ pods:
     uses_internal: $JINA_USES_INTERNAL
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
-    uses_after: merge_matches
+    #uses_after: _merge_matches  # uncomment this if you want to increase parallelization
     volumes: './workspace:/workspace/workspace'
   evaluate:
-    uses: RecallEvaluator
+    uses: yaml/evaluate.yml
 ```
 
 </sub>
