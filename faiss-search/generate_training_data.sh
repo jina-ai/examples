@@ -1,3 +1,3 @@
 #!/bin/sh
-mkdir index_workspace || true
+mkdir workspace || true
 python generate_training_data.py

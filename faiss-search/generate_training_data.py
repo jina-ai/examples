@@ -6,7 +6,7 @@ import os
 from read_vectors_files import fvecs_read
 
 os.environ['JINA_TMP_DATA_DIR'] = '/tmp/jina/faiss/siftsmall'
-train_filepath = 'index_workspace/train.tgz'
+train_filepath = 'workspace/train.tgz'
 train_fvecs_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_learn.fvecs')
 train_data = fvecs_read(train_fvecs_path)
 with gzip.open(train_filepath, 'wb', compresslevel=1) as f:

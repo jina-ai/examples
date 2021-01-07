@@ -1,2 +1,2 @@
 click
-jina[devel]==0.4.1
+jina==0.9.3
