@@ -69,9 +69,7 @@ In order to get the data needed to run the example, we have prepared a small scr
 ./get_siftsmall.sh
 ```
 
-Moreover, 
-
-FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index.
+Moreover, FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index.
 
 Running these scripts will set you up the rest of the way for this example by:
 
@@ -207,7 +205,7 @@ It can be good to look for different parameters to guarantee the best results
 
 ## Wrap up
 
-In this example we have seen how to ude different indexers as vector databases and how to use a `ref_indexer` as a base indexer.
+In this example we have seen how to use different indexers as vector databases and how to use a `ref_indexer` as a base indexer.
  We also have seen how to use a pod inside a docker container inside our index and query flows, and how to use evaluators to assess the quality 
  of our search system.
 
