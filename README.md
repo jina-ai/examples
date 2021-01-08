@@ -67,8 +67,9 @@ First a little light background reading, and then let's jump in and build our fi
     <td>
       <h1>📄</h1>
     </td>
-      <a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a>
     <td>
+      <a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a>
+    </td>
     <td>
       Brand new to neural search? Not for long! Use cookiecutter to search through Star Trek scripts using Jina
     </td>
