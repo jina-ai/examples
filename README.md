@@ -21,44 +21,9 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 🏁 Start Here
+These examples showcase Jina in action and provide sample code for you to work from. We suggest you read [Jina 101](http://101.jina.ai) and <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">What is Neural Search?</a> to get a conceptual overview.
 
-First a little light background reading, and then let's jump in and build our first app!
-
-<table>
-  <tr>
-    <td>
-      <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">
-        <img src="https://miro.medium.com/max/1000/1*czKD1E9fL1ndRGzwjv9Kvg.png", title="What is Neural Search?" alt="What is Neural search?">
-      </a>
-    </td>
-    <td>
-      <h3>
-      <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">
-        What is Neural Search?
-      </a>
-      </h3>
-      <p>AI-powered search with less effort, more flexibility</p>
-    </td>
-  </tr>
-  <tr>
-      <td width="30%">
-    <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">
-      <img src="https://github.com/jina-ai/jina/blob/master/docs/chapters/101/img/ILLUS12.png?raw=true" alt="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited" title="Jina 101 Concept Illustration Book, Copyright by Jina AI Limited"/>
-    </a>
-    </td>
-    <td width="70%">
-&nbsp;&nbsp;<h3><a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">Jina 101: First Thing to Learn About Jina</a></h3>
-&nbsp;&nbsp;<a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101">English</a> •
-  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.ja.md">日本語</a> •
-  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.fr.md">français</a> •
-  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.de.md">Deutsch</a> •
-  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.ru.md">Русский язык</a> •
-  <a href="https://github.com/jina-ai/jina/tree/master/docs/chapters/101/README.zh.md">中文</a>
-    </td>
-
-  </tr>
-</table>
+To learn more about how to use Jina, please refer to [our docs](http://www.jina.ai).
 
 ## 🐣 Simple Examples
 
@@ -169,29 +134,6 @@ First a little light background reading, and then let's jump in and build our fi
   </tr>
 </table>
 
-## Useful Docs
-
-<table>
-<tr>
-<td>
-<h5>Performance and Scalability</h5>
-</td>
-<td>
-<li><a href="https://docs.jina.ai/chapters/remote/index.html">Distribute Your Workflow Remotely</a></li>
-<li><a href="https://docs.jina.ai/chapters/hub/index.html">Run Jina Pod in Docker Containers</a></li>
-</td>
-</tr>
-<tr>
-<td>
-<h5>Extend and Share Jina</h5>
-</td>
-<td>
-<li><a href="https://docs.jina.ai/chapters/extend/executor.html">Extend Jina by Implementing Your Own Executor</a></li>
-<li><a href="https://github.com/jina-ai/jina-hub#publish-your-pod-image-to-jina-hub">Share Your Extension with the World</a></li>
-</td>
-</tr>
-</table>
-
 ## Adding Tests for Examples
 
 You are highly encouraged to add a test for your example so that we will be alerted if it breaks in the future:
@@ -202,7 +144,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 4. Add your example folder name to the `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating a pull request.
 
 
-## Tips
+### Testing Tips
 
 - For reference, check out the `tests` folder from [South Park example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about text and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
