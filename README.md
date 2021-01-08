@@ -81,15 +81,52 @@ First a little light background reading, and then let's jump in and build our fi
       Upgrade from plain search to sentence search and practice your Flows and Pods by searching South Park scripts
     </td>
   </tr>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a></h4>
+      Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h1>🖼️</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
+      Use SOTA visual representation for searching Pokémon!
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h1>🖼️</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/object-search">Object detection with fasterrcnn and MobileNetV2</a></h4>
+      Detect, index and query similar objects
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h1>🎧</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/audio-search">Search YouTube audio data with Vggish</a></h4>
+      A demo of neural search for audio data based Vggish model.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h1>🎞️ </h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a></h4>
+      Use prefetching and sharding to improve the performance of your index and query flow when searching animated GIFs.
+    </td>
+  </tr>
 </table>
-
-- 📄  - 
-- 📄  - 
-- 📄 <a href="https://github.com/jina-ai/examples/tree/master/multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a> - Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
-- 🖼️  <a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a> - Use SOTA visual representation for searching Pokémon!
-- 🖼️  <a href="https://github.com/jina-ai/examples/tree/master/object-search">Object detection with fasterrcnn and MobileNetV2</a> - Detect, index and query similar objects
-- 🎧 <a href="https://github.com/jina-ai/examples/tree/master/audio-search">Search YouTube audio data with Vggish</a> - A demo of neural search for audio data based Vggish model.
-- 🎞️ <a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a> - Use prefetching and sharding to improve the performance of your index and query flow when searching animated GIFs.
 
 ## Cross Modal Search
 
