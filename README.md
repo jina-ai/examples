@@ -21,7 +21,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Start Here
+## 🏁 Start Here
 
 First a little light background reading, and then let's jump in and build our first app!
 
@@ -128,9 +128,18 @@ First a little light background reading, and then let's jump in and build our fi
   </tr>
 </table>
 
-## 🕊️ /Advanced Examples
+## 🕊️  Advanced Examples
 
 <table>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/jina-ai/examples/tree/master/faiss-search">Index and query with FAISS</a></h4>
+      Build a vector search engine that finds the closest vector in the database to a query.
+    </td>
+  </tr>
   <tr>
     <td>
       <h1>🖼️📄</h1>
@@ -151,20 +160,11 @@ First a little light background reading, and then let's jump in and build our fi
   </tr>
   <tr>
     <td>
-      <h1>🖼️</h1>
+      <h1>🗂️</h1>
     </td>
     <td>
       <h4><a href="https://github.com/jina-ai/examples/tree/master/fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
       Create separate indexes and queries for different clothing in Fashion-MNIST
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>🖼️</h1>
-    </td>
-    <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/faiss-search">Index and query with FAISS</a></h4>
-      Build a vector search engine that finds the closest vector in the database to a query.
     </td>
   </tr>
 </table>
@@ -177,8 +177,8 @@ First a little light background reading, and then let's jump in and build our fi
 <h5>Performance and Scalability</h5>
 </td>
 <td>
-- <a href="https://docs.jina.ai/chapters/remote/index.html">Distribute Your Workflow Remotely</a>
-- <a href="https://docs.jina.ai/chapters/hub/index.html">Run Jina Pod in Docker Containers</a>
+<li><a href="https://docs.jina.ai/chapters/remote/index.html">Distribute Your Workflow Remotely</a></li>
+<li><a href="https://docs.jina.ai/chapters/hub/index.html">Run Jina Pod in Docker Containers</a></li>
 </td>
 </tr>
 <tr>
@@ -186,8 +186,8 @@ First a little light background reading, and then let's jump in and build our fi
 <h5>Extend and Share Jina</h5>
 </td>
 <td>
-- <a href="https://docs.jina.ai/chapters/extend/executor.html">Extend Jina by Implementing Your Own Executor</a>
-- <a href="https://github.com/jina-ai/jina-hub#publish-your-pod-image-to-jina-hub">Share Your Extension with the World</a>
+<li><a href="https://docs.jina.ai/chapters/extend/executor.html">Extend Jina by Implementing Your Own Executor</a></li>
+<li><a href="https://github.com/jina-ai/jina-hub#publish-your-pod-image-to-jina-hub">Share Your Extension with the World</a></li>
 </td>
 </tr>
 </table>
