@@ -62,7 +62,20 @@ First a little light background reading, and then let's jump in and build our fi
 
 ## 🐣 Simple Examples
 
-- 📄 <a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a> - Brand new to neural search? Not for long! Use cookiecutter to search through Star Trek scripts using Jina
+<table>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+      <a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a>
+    <td>
+    <td>
+      Brand new to neural search? Not for long! Use cookiecutter to search through Star Trek scripts using Jina
+    </td>
+  </tr>
+</table>
+
+- 📄  - 
 - 📄 <a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a NLP Semantic Search System with Transformers</a> - Upgrade from plain search to sentence search and practice your Flows and Pods by searching South Park scripts
 - 📄 <a href="https://github.com/jina-ai/examples/tree/master/multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a> - Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
 - 🖼️  <a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a> - Use SOTA visual representation for searching Pokémon!
