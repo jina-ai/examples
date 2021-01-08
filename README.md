@@ -21,7 +21,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-### Start Here
+## Start Here
 
 First a little light background reading, and then let's jump in and build our first app!
 
@@ -76,7 +76,7 @@ Brand new to neural search? Not for long! Use cookiecutter to search through Sta
 </tr>
 </table>
 
-### Search Text
+## Search Text
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -111,27 +111,19 @@ Get a better understanding of chunks by searching a lyrics database. Now with sh
 </table>
 
 
-### Search Images
+## Search Images
 
 <table width=100% style='width: 100%'>
 <tr>
 <th width="90%" style="width: 90%">Tutorials</th>
 <th width="10%" style="width: 10%">Level</th>
 </tr>
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/flower-search">Search Flowers with TorchVision</a></h4>
-Build an image search system and define your own executors and run them in Docker
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</td>
-<td><h3>🐣</h3></td>
-</tr>
-
 
 <tr>
 <td>
 <h4><a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
 Use SOTA visual representation for searching Pokémon!
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </td>
 <td><h3>🚀</h3></td>
 </tr>
@@ -150,7 +142,7 @@ Use SOTA visual representation for searching Pokémon!
 
 </table>
 
-### Search Audio
+## Search Audio
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -176,7 +168,7 @@ A demo of neural search for audio data based Vggish model.
 
 </table>
 
-### Search Video
+## Search Video
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -195,7 +187,7 @@ Use prefetching and sharding to improve the performance of your index and query 
 
 </table>
 
-### Cross Modal Search
+## Cross Modal Search
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -214,7 +206,7 @@ Use one modality (text) to search another (images)
 
 </table>
 
-### Multi Modal Search
+## Multi Modal Search
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -233,7 +225,7 @@ Use more than one modality (image+text) to search images
 
 </table>
 
-### Miscellaneous
+## Miscellaneous
 
 <table width=100% style='width: 100%'>
 
@@ -251,18 +243,9 @@ Create separate indexes and queries for different clothing in Fashion-MNIST
 <td><h3>🐣</h3></td>
 </tr>
 
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/mnist-with-mindspore">Search MNIST with Mindspore</a></h4>
-Search handwriting examples using Mindspore
-</td>
-<td><h3>🚀</h3></td>
-</tr>
-
-
 </table>
 
-### Improve Performance and Scalability
+## Improve Performance and Scalability
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -274,14 +257,6 @@ Search handwriting examples using Mindspore
 <h4><a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Video Semantic Search in Scale with Prefetching and Sharding</a></h4>
 Increase performance by using prefetching and sharding
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</td>
-<td><h3>🕊</h3></td>
-</tr>
-
-<tr>
-<td>
-<h4><a href="https://github.com/jina-ai/examples/tree/master/helloworld-in-cs">Revisit "Hello, World!" in a Client-Server Architecture</a></h4>
-Run a Flow remotely and use a local client to connect to it
 </td>
 <td><h3>🕊</h3></td>
 </tr>
@@ -312,7 +287,7 @@ Build a vector search engine that finds the closest vector in the database to a 
 
 </table>
 
-### Extend and Share Jina
+## Extend and Share Jina
 
 <table width=100% style='width: 100%'>
 <tr>
@@ -348,7 +323,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 4. Add your example folder name to the `path` variable in `matrix` of `.github/worflows/ci.yml`. This will trigger your example test on creating a pull request.
 
 
-### Tips
+## Tips
 
 - For reference, check out the `tests` folder from [South Park example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about text and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
@@ -364,6 +339,6 @@ You are highly encouraged to add a test for your example so that we will be aler
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

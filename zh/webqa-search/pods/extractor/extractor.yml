@@ -1,9 +1,0 @@
-!WebQATitleExtractor
-metas:
-  py_modules: extractor.py
-requests:
-  on:
-    [IndexRequest, SearchRequest]:
-      - !SegmentDriver
-        with:
-          method: craft
