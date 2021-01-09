@@ -132,3 +132,6 @@ jina-profile*.json
 
 .vscode/
 */workspace
+
+models
+result.html # genreated in pokedex example
