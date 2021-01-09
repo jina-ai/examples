@@ -11,6 +11,7 @@ num_docs = int(os.environ.get('MAX_DOCS', 500))
 
 
 def config():
+    """Set up configuration via environment variables."""
     parallel = 2 if sys.argv[1] == 'index' else 1
     shards = 2
 
@@ -22,6 +23,7 @@ def config():
 
 
 def index_by_link(url: str):
+    """Index new via scrapping. It downloads the link and extrats the title."""
     article = Article(url)
     article.download()
     article.parse()
@@ -34,54 +36,17 @@ def index_by_link(url: str):
     # for search
 
 
-def search():
-    f = Flow.load_config('flows/query.yml')
-
-    with f:
-        f.block()
-
-
 def query_restful():
+    """Set up REST endpoint."""
     f = Flow().load_config('flows/query.yml')
     f.use_rest_gateway()
     with f:
         f.block()
 
 
-def query(top_k):
-    f = Flow().load_config('flows/query.yml')
-    with f:
-        while True:
-            text = input('please type a sentence: ')
-            if not text:
-                break
-
-            def ppr(x):
-                print_topk(x, text)
-
-            f.search_lines(
-                lines=[
-                    text,
-                ],
-                output_fn=ppr,
-                top_k=top_k,
-            )
-
-
-def print_topk(resp, sentence):
-    for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
-        for idx, match in enumerate(d.matches):
-
-            score = match.score.value
-            if score < 0.0:
-                continue
-            # dialog = match.text.strip()
-            print(f'> {idx:>2d}({score:.2f}). {match}"')
-
-
 # for test before put into docker
 def dryrun():
+    """Dry run for testing."""
     f = Flow.load_config('flows/query.yml')
 
     with f:
@@ -90,22 +55,14 @@ def dryrun():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index_by_link/rest/search/query/dryrun" mode')
+        print('choose between "index_by_link/rest/dryrun" mode')
         exit(1)
     elif sys.argv[1] == 'index_by_link':
         config()
-        # TODO verify urls
         index_by_link(sys.argv[2])
-    elif sys.argv[1] == 'query':
-        config()
-        # TODO verify urls
-        query(10)
     elif sys.argv[1] == 'rest':
         config()
         query_restful()
-    elif sys.argv[1] == 'search':
-        config()
-        search()
     elif sys.argv[1] == 'dryrun':
         config()
         dryrun()
