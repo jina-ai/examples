@@ -1,0 +1,2 @@
+jina[devel,torch,tensorflow,transformers]==0.7.12
+click

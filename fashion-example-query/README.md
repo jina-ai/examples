@@ -59,7 +59,7 @@ There are 10 categories in the fashion-mnist-data
 What we are doing here is create a separate index per each category, so each category will have its own pod yml file. 
 This will be done during index time so they all will be under the /index folder
 
-![alt text](index_categories.png "Results")
+![alt text](.github/images/index_categories.png "Results")
 
 We index the data updating updating the label
 
@@ -69,7 +69,7 @@ d.tags.update({'label': get_mapped_label(label_int)})
 This is where you could tweak the code if you would like to see only one category.
 For example if you would like to see only dresses, you could do something like this
 
-![alt text](filter.png "Results")
+![alt text](.github/images/filter.png "Results")
 
 Then we have ready all the indexes!
 
@@ -86,7 +86,7 @@ python app.py query
 
 This is an example of the results after the query using all categories
 
-![alt text](results.png "Results")
+![alt text](.github/images/results.png "Results")
 
 
 ## QueryLanguage
