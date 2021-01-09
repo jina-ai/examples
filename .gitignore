@@ -134,3 +134,4 @@ jina-profile*.json
 */workspace
 
 models
+result.html # genreated in pokedex example
