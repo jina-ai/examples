@@ -21,20 +21,6 @@ def config():
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
 
 
-# for index
-def index():
-    f = Flow.load_config('flows/index.yml')
-    with f:
-        data_path = os.path.join(os.path.dirname(
-            __file__), os.environ.get('JINA_DATA_PATH', None))
-        if data_path:
-            f.index_lines(filepath=data_path, batch_size=16,
-                          read_mode='r', size=num_docs)
-        else:
-            f.index_lines(lines=['abc', 'cde', 'efg'],
-                          batch_size=16, read_mode='r', size=num_docs)
-
-
 def index_by_link(url: str):
     article = Article(url)
     article.download()
@@ -104,11 +90,8 @@ def dryrun():
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('choose between "index/index_by_link/rest/search/query/dryrun" mode')
+        print('choose between "index_by_link/rest/search/query/dryrun" mode')
         exit(1)
-    if sys.argv[1] == 'index':
-        config()
-        index()
     elif sys.argv[1] == 'index_by_link':
         config()
         # TODO verify urls
