@@ -1,37 +1,40 @@
 !CompoundIndexer
 components:
-  - !FaissIndexer
+  - !AnnoyIndexer
     with:
-      index_key: 'IVF10,PQ4'
-      train_filepath: './workspace/train.tgz'
+      index_filename: 'index.gz'
+      n_trees: 10
+      search_k: -1
       ref_indexer:
         !NumpyIndexer
         metas:
-          workspace: './workspace'
+          workspace: '/workspace/workspace'
           name: wrapidx
         with:
-          index_filename: 'faiss_index.tgz'
+          index_filename: 'index.gz'
     metas:
-      name: faissidx
+      workspace: '/workspace/workspace'
+      name: annoyidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './workspace'
+      workspace: '/workspace/workspace'
 metas:
   name: indexer
-  workspace: './workspace'
+  py_modules:
+    - workspace/__init__.py
+  workspace: '/workspace/workspace'
 requests:
   on:
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: faissidx
+          executor: annoyidx
       - !KVSearchDriver
         with:
           executor: docidx
-          traverse_on: matches
-          depth_range: [0, 0]
+          traversal_paths: ['m']
     ControlRequest:
       - !ControlReqDriver {}

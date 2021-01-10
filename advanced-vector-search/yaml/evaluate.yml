@@ -1,0 +1,11 @@
+!RecallEvaluator
+with:
+  {}
+requests:
+  on:
+    SearchRequest:
+      - !RankEvaluateDriver
+        with:
+          field: tags__id
+          running_avg: true
+          traversal_paths: [ 'r' ]

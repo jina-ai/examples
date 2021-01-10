@@ -2,13 +2,10 @@
 metas:
   prefetch: 10
 pods:
-  crafter:
-    uses: _forward
   encoder:
     uses: yaml/encode.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
   indexer:
     uses: yaml/indexer.yml
-    parallel: $PARALLEL
+    parallel: $JINA_PARALLEL
     timeout_ready: 10000
-    volumes: './workspace'
