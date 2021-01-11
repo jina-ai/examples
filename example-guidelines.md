@@ -43,6 +43,8 @@ We're more easy-going on these
 
 ### One Example Per Repo
 
+To make code more maintainable and easier for end users, please include one example per repo.
+
 ### Tests
 
 Please include tests to ensure your app or Pod works correctly.
