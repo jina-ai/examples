@@ -82,7 +82,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
   </tr>
 </table>
 
-## 🕊️  Advanced Examples
+## 🚀  Advanced Examples
 
 <table>
   <tr>
@@ -119,6 +119,22 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
     <td>
       <h4><a href="https://github.com/jina-ai/examples/tree/master/fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
       Create separate indexes and queries for different clothing in Fashion-MNIST
+    </td>
+  </tr>
+</table>
+
+## Community Examples
+
+Want to add your own example? Please check our [guidelines](example-guidelines.md)!
+
+<table>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/alexcg1/jina-wikipedia-sentences">Simple Wikipedia Sentence Search</a></h4>
+      Simple Jina app to search sentences from Wikipedia using Transformers
     </td>
   </tr>
 </table>
