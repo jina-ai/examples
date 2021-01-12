@@ -78,6 +78,7 @@ def run(task, batch_size, top_k, indexer_query_type):
                         top_k=top_k)
         evaluation = evaluation_results[list(evaluation_results.keys())[0]]
         # return for test
+        print(f'Recall@{top_k} ==> {100*evaluation}')
         return 100*evaluation
     else:
         raise NotImplementedError(
