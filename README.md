@@ -22,7 +22,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/my-first-jina-app">My First Jina App</a></h4>
+      <h4><a href="./my-first-jina-app">My First Jina App</a></h4>
       Brand new to neural search? Not for long! Use cookiecutter to search through Star Trek scripts using Jina
     </td>
   </tr>
@@ -31,7 +31,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/southpark-search">Build a NLP Semantic Search System with Transformers</a></h4>
+      <h4><a href="./southpark-search">Build a NLP Semantic Search System with Transformers</a></h4>
       Upgrade from plain search to sentence search and practice your Flows and Pods by searching South Park scripts
     </td>
   </tr>
@@ -40,7 +40,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a></h4>
+      <h4><a href="./multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a></h4>
       Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
     </td>
   </tr>
@@ -49,7 +49,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
+      <h4><a href="./pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
       Use SOTA visual representation for searching Pokémon!
     </td>
   </tr>
@@ -58,7 +58,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/object-search">Object detection with fasterrcnn and MobileNetV2</a></h4>
+      <h4><a href="./object-search">Object detection with fasterrcnn and MobileNetV2</a></h4>
       Detect, index and query similar objects
     </td>
   </tr>
@@ -67,7 +67,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🎧</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/audio-search">Search YouTube audio data with Vggish</a></h4>
+      <h4><a href="./audio-search">Search YouTube audio data with Vggish</a></h4>
       A demo of neural search for audio data based Vggish model.
     </td>
   </tr>
@@ -76,7 +76,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🎞️ </h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a></h4>
+      <h4><a href="./tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a></h4>
       Use prefetching and sharding to improve the performance of your index and query flow when searching animated GIFs.
     </td>
   </tr>
@@ -99,7 +99,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/cross-modal-search">Cross Modal: Search images from captions and vice-versa</a></h4>
+      <h4><a href="./cross-modal-search">Cross Modal: Search images from captions and vice-versa</a></h4>
       Use one modality (text) to search another (images)
     </td>
   </tr>
@@ -108,7 +108,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/multimodal-search-tirg">Multi-Modal: Search images with 2 modalities in the query</a></h4>
+      <h4><a href="./multimodal-search-tirg">Multi-Modal: Search images with 2 modalities in the query</a></h4>
       Use more than one modality (image+text) to search images
     </td>
   </tr>
@@ -117,7 +117,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🗂️</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
+      <h4><a href="./fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
       Create separate indexes and queries for different clothing in Fashion-MNIST
     </td>
   </tr>
@@ -151,7 +151,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 
 ### Testing Tips
 
-- For reference, check out the `tests` folder from [South Park example](https://github.com/jina-ai/examples/tree/master/southpark-search/tests) if your data is about text and [object search example](https://github.com/jina-ai/examples/tree/master/object-search/tests) for images.
+- For reference, check out the `tests` folder from [South Park example](./southpark-search/tests) if your data is about text and [object search example](./object-search/tests) for images.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
 - Use the [pytest fixture](https://docs.pytest.org/en/stable/fixture.html) `tmpdir` for temporary directory
 
