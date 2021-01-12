@@ -1,0 +1,24 @@
+!Flow
+version: '1.0'
+
+with:
+  read_only: true
+  compress_hwm: 1024
+
+pods:
+
+  - name: encode
+    uses: helloworld.encoder.yml
+    host: $JINA_ENCODER_HOST
+    port_expose: 8000
+    parallel: 2
+
+  - name: index
+    uses: helloworld.indexer.yml
+    host: $JINA_ENCODER_HOST
+    port_expose: 8000
+    shards: 2
+    separated_workspace: true
+    polling: all
+    uses_after: helloworld.reduce.yml
+    timeout_ready: 100000

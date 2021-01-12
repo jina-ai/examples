@@ -1,0 +1,15 @@
+!Flow
+version: 1
+with:
+  compress_hwm: 1024
+  port_expose: $JINA_GATEWAY_PORT
+pods:
+  - name: encode
+    uses: helloworld.encoder.yml
+    host: $JINA_ENCODER_HOST
+    port_expose: 8000
+  - name: index
+    uses: helloworld.indexer.yml
+    host: $JINA_INDEXER_HOST
+    port_expose: 8000
+    separated_workspace: true
