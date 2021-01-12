@@ -90,7 +90,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="https://github.com/jina-ai/examples/tree/master/faiss-search">Index and query with FAISS</a></h4>
+      <h4><a href="./advanced-vector-search">Index and query with FAISS</a></h4>
       Build a vector search engine that finds the closest vector in the database to a query.
     </td>
   </tr>
