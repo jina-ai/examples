@@ -137,6 +137,15 @@ Want to add your own example? Please check our [guidelines](example-guidelines.m
       Simple Jina app to search sentences from Wikipedia using Transformers
     </td>
   </tr>
+    <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/yuanbit/jina-financial-qa-search">Financial Question Answering Search</a></h4>
+      Opinionated QA passage retrieval with BERT-based reranker
+    </td>
+  </tr>
 </table>
 
 ## Adding Tests for Examples
