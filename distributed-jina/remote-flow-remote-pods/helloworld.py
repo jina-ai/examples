@@ -1,6 +1,6 @@
-import pkg_resources
-from contextlib import ExitStack
+import os
 from typing import List
+from contextlib import ExitStack
 
 import requests
 from jina.parsers import set_client_cli_parser
@@ -33,17 +33,37 @@ def create_flow(flow_url: str, yamlspec: str, uses_files: List, pymodules_files:
             print(f'something wrong on remote: {ex!r}')
 
 
-def send_requests():
+def download_partial_data():
+    _url = 'https://raw.githubusercontent.com/jina-ai/latency-tracking/main/original'
+    for _type in ['index', 'query']:
+        response = requests.get(f'{_url}/{_type}')
+        with open(_type, 'wb') as f:
+            f.write(response.content)
+
+
+def erase_partial_data():
+    for _type in ['index', 'query']:
+        if os.path.isfile(_type):
+            os.remove(_type)
+
+
+def send_index_requests():
     args = set_client_cli_parser().parse_args(['--host', '0.0.0.0', '--port-expose', '45678'])
     grpc_client = Client(args)
-    grpc_client.index(_input_ndarray('original/index'), batch_size=512)
+    grpc_client.index(_input_ndarray('index'), batch_size=512)
+
+
+def send_query_requests():
+    args = set_client_cli_parser().parse_args(['--host', '0.0.0.0', '--port-expose', '45678'])
+    grpc_client = Client(args)
+    grpc_client.search(_input_ndarray('query'), batch_size=512)
 
 
 def delete_flow(flow_url):
     try:
         r = requests.delete(url=flow_url)
         if r.status_code == requests.codes.ok:
-            print(f'\nSuccessfully terminated remote Flow!')
+            print(f'Successfully terminated remote Flow!\n')
     except requests.exceptions.RequestException as ex:
         print(f'something wrong on remote: {ex!r}')
 
@@ -56,7 +76,18 @@ def main():
                           pymodules_files=['components.py'])
     if flow_id:
         print(f'Flow successfully created with id {flow_id}\n\n')
-    send_requests()
+    print('Downloading (partial) fashion-mnist data\n')
+    download_partial_data()
+
+    print('\n\nSending index requests')
+    send_index_requests()
+
+    print('\n\nSending query requests')
+    send_query_requests()
+
+    erase_partial_data()
+
+    print('\n\nSending Flow termination request')
     delete_flow(flow_url=f'http://localhost:8000/flow?flow_id={flow_id}')
 
 

@@ -19,6 +19,7 @@
     - Flow creates a remote Pod for encoder in docker image `remote-flow-remote-pods_encoder_1`
     - Flow creates another remote Pod for indexer in docker image `remote-flow-remote-pods_indexer_1`
     - Jina client indexes helloworld documents on the remote Flow.
+    - Jina client queries helloworld documents on the remote Flow.
     - Finally Flow gets terminated on the remote host.
 
 
