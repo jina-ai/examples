@@ -70,7 +70,7 @@ Process followed is as below:
 - Load the weights published by the research paper as result
 - Instantiate their VSE encoder and extracts the branch interesting for the modality.
 
-A Dockerfile is provided for each encoder which takes care of all the dependencies and downloads all required files.
+The 2 models exist in our jinahub [VSEImageEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vseimageencoder) and [VSETextEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vsetextencoder)
 
 **Table of Contents**
 
@@ -89,9 +89,33 @@ This demo requires Python 3.7 and `jina` installation.
 
 ## Prepare the data
 
+
+### Use Flickr8k
+
+Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example
+
+To make this work, we need to get the image files from the `kaggle` [dataset](https://www.kaggle.com/adityajn105/flickr8k). To get it, once you have your Kaggle Token in your system as described [here](https://www.kaggle.com/docs/api), run:
+
+```bash
+kaggle datasets download adityajn105/flickr8k
+unzip flickr8k.zip 
+rm flickr8k.zip
+mv Images data/f8k/images
+mv captions.txt data/f8k/captions.txt
+```
+
+make sure that your data folder has:
+
+```bash
+data/f8k/images/*jpg
+data/f8k/captions.txt
+```
+
+### Use Flickr30k
+
 The model used has been trained using `Flickr30k` and therefore we recommend using this dataset to try this system. But it is a good exercise to see if it works as well for other datasets or your custom ones.
 
-To make this work, we need to get the image files from the `kaggle` dataset (https://www.kaggle.com/hsankesara/flickr-image-dataset). To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
+To do so, instead of downloading the `flickr8k` from kaggle, just take its 30k counterpart
 
 ```bash
 pip install kaggle
@@ -115,51 +139,14 @@ mv flickr-image-dataset data/f30k/images
 
 Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
 
-### Use Flickr8k
-
-Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k.
-
-To do so, instead of downloading the `flickr30k` from kaggle, just take its 8k counterpart
-
-```bash
-kaggle datasets download adityajn105/flickr8k
-unzip flickr8k.zip 
-rm flickr8k.zip
-mv Images data/f8k/images
-mv captions.txt data/f8k/captions.txt
-```
-
-make sure that your data folder has:
-
-```bash
-data/f8k/images/*jpg
-data/fyk/f8k/captions.txt
-```
-
-## Build the docker images
-
-To abstract all dependencies needed to make the model from _Improving Visual-Semantic Embeddings with Hard Negatives_ work, `docker` images have been prepared to contain text and image encoders. These images are very big (about `5GB` each (working to make them smaller)).
-
-In order to build them (it may take some time since a lot of data is downloaded),
-
-under `img_emb` run:
-```bash
-docker build -f Dockerfile -t jinaai/hub.executors.encoders.image.vse .
-```
-
-under `txt_emb` run:
-```bash
-docker build -f Dockerfile -t jinaai/hub.executors.encoders.nlp.vse .
-```
-
 ## Run the Flows
 
 ### Index 
 
-Index is run with the following command, where `batch_size` can be chosen by the user. Index will process both images and captions
+Index is run with the following command, where `request_size` can be chosen by the user. Index will process both images and captions
 
 ```bash
-python app.py -t index -n $num_docs -b $batch_size -d 'f8k'
+python app.py -t index -n $num_docs -s request_size -d 'f8k'
 ```
 
 Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use. If you decide to index the complete datasets,
@@ -219,6 +206,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2020-2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

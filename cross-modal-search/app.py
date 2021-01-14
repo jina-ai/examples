@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 import click
 import os
 from jina.flow import Flow
-from jina.proto import jina_pb2
+from jina import Document
 
 RANDOM_SEED = 14
 
@@ -26,19 +26,21 @@ def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
                                   split='test',
                                   batch_size=batch_size,
                                   dataset_type=dataset)
+
     for i, (images, captions) in enumerate(data_loader):
+        print(f' images {len(images)}, captions {len(captions)}')
         for image in images:
-            document = jina_pb2.Document()
-            document.buffer = image
-            document.modality = 'image'
-            document.mime_type = 'image/jpeg'
+            with Document() as document:
+                document.buffer = image
+                document.modality = 'image'
+                document.mime_type = 'image/jpeg'
             yield document
 
         for caption in captions:
-            document = jina_pb2.Document()
-            document.text = caption
-            document.modality = 'text'
-            document.mime_type = 'plain/text'
+            with Document() as document:
+                document.text = caption
+                document.modality = 'text'
+                document.mime_type = 'text/plain'
             yield document
 
         if num_docs and (i + 1) * batch_size >= num_docs:
@@ -46,33 +48,34 @@ def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
 
 
 def input_search_text_data(text):
-    document = jina_pb2.Document()
+    document = Document()
     document.text = text
     document.modality = 'text'
-    document.mime_type = 'plain/text'
+    document.mime_type = 'text/plain'
     return [document]
 
 
 def input_search_image_file(image_file_path):
     with open(image_file_path, 'rb') as fp:
         image_buffer = fp.read()
-    document = jina_pb2.Document()
+    document = Document()
     document.buffer = image_buffer
     document.modality = 'image'
     document.mime_type = 'image/jpeg'
     return [document]
 
+
 @click.command()
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=50)
-@click.option('--batch_size', '-b', default=16)
-@click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f30k')
-def main(task, num_docs, batch_size, data_set):
+@click.option('--request_size', '-s', default=16)
+@click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
+def main(task, num_docs, request_size, data_set):
     config()
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index(input_fn=input_index_data(num_docs, batch_size, data_set), batch_size=batch_size)
+            f.index(input_fn=input_index_data(num_docs, request_size, data_set), batch_size=request_size)
     elif task == 'query-restful':
         # not working, missing a way to send modality via REST API
         f = Flow().load_config('flow-query.yml')
