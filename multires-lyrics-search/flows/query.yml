@@ -5,7 +5,7 @@ with:
   port_expose: $JINA_PORT
 pods:
   chunk_seg:
-    uses: pods/craft.yml
+    uses: pods/segment.yml
     parallel: $JINA_PARALLEL
   tf_encode:
     uses: pods/encode.yml

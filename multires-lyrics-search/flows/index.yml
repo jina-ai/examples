@@ -1,7 +1,7 @@
 !Flow
 pods:
-  crafter:
-    uses: pods/craft.yml
+  segmenter:
+    uses: pods/segment.yml
     read_only: true
   encoder:
     uses: pods/encode.yml

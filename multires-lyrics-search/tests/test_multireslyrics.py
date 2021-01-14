@@ -19,7 +19,7 @@ QUERY_FLOW_FILE_PATH = 'flows/query.yml'
 PORT = 45678
 JINA_SHARDS = 2
 JINA_PARALLEL = 1
-BATCH_SIZE = 4
+REQUEST_SIZE = 4
 
 
 # TODO restructure project so we don't duplicate input_fn
@@ -53,7 +53,7 @@ def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index(input_fn, batch_size=BATCH_SIZE)
+        f.index(input_fn, request_size=REQUEST_SIZE)
 
 
 def call_api(url, payload=None, headers=None):
