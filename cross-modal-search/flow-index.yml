@@ -11,7 +11,7 @@ pods:
     parallel: $PARALLEL
     read_only: true
   image_encoder:
-    uses: docker://jinahub/pod.encoder.vseimageencoder:0.0.4-0.9.13
+    uses: docker://jinahub/pod.encoder.vseimageencoder:0.0.4-0.9.17
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -21,7 +21,7 @@ pods:
     uses: yaml/index-image-kv.yml
     needs: [gateway]
   text_encoder:
-    uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.13
+    uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.17
     uses_internal: yaml/text_encoder.yml
     parallel: $PARALLEL
     timeout_ready: 600000

@@ -48,20 +48,20 @@ def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
 
 
 def input_search_text_data(text):
-    document = Document()
-    document.text = text
-    document.modality = 'text'
-    document.mime_type = 'text/plain'
+    with Document() as document:
+        document.text = text
+        document.modality = 'text'
+        document.mime_type = 'text/plain'
     return [document]
 
 
 def input_search_image_file(image_file_path):
     with open(image_file_path, 'rb') as fp:
         image_buffer = fp.read()
-    document = Document()
-    document.buffer = image_buffer
-    document.modality = 'image'
-    document.mime_type = 'image/jpeg'
+    with Document() as document:
+        document.buffer = image_buffer
+        document.modality = 'image'
+        document.mime_type = 'image/jpeg'
     return [document]
 
 
@@ -75,7 +75,7 @@ def main(task, num_docs, request_size, data_set):
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index(input_fn=input_index_data(num_docs, request_size, data_set), batch_size=request_size)
+            f.index(input_fn=input_index_data(num_docs, request_size, data_set), request_size=request_size)
     elif task == 'query-restful':
         # not working, missing a way to send modality via REST API
         f = Flow().load_config('flow-query.yml')
