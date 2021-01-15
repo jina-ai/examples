@@ -13,7 +13,7 @@ cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 def config():
     os.environ['PARALLEL'] = str(1)
-    os.environ['SHARDS'] = str(1)
+    os.environ['SHARDS'] = str(2)
     os.environ['COLOR_CHANNEL_AXIS'] = str(0)
     os.environ['JINA_PORT'] = str(45678)
 

@@ -19,6 +19,10 @@ pods:
     read_only: true
   text_indexer:
     uses: yaml/index-text.yml
+    polling: ALL
+    shards: $SHARDS
+    separated_workspace: true
+    uses_after: _merge_matches_topk
   text_encoder:
     uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.13
     uses_internal: yaml/text_encoder.yml
@@ -28,8 +32,16 @@ pods:
     needs: [gateway]
   image_vector_indexer:
     uses: yaml/index-image-vector.yml
+    polling: ALL
+    shards: $SHARDS
+    separated_workspace: true
+    uses_after: _merge_matches
   image_kv_indexer:
     uses: yaml/index-image-kv.yml
+    polling: ALL
+    shards: $SHARDS
+    separated_workspace: true
+    uses_after: _merge_matches_topk
   join_all:
     uses: _merge
     needs: [text_indexer, image_kv_indexer]
