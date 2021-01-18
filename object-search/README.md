@@ -53,7 +53,7 @@ You can try this example with [Flickr8k](https://www.kaggle.com/adityajn105/flic
 
 Download the Flickr8k from Kaggle
 
-```bash
+``` bash
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
@@ -67,7 +67,8 @@ Note: Flickr8k is not an ideal dataset but we are using due to its small size.
   <img src=".github/.README_images/index.png?raw=true" alt="Jina banner" width="90%">
 </p>
 Index 1000 images. This can take some time and you can try a smaller number as well.
-```bash
+
+``` bash
 python app.py -task index -n 1000 -overwrite True
 ```
 
@@ -83,7 +84,8 @@ If it's running successfully, you should be able to see logs scrolling in the co
   <img src=".github/.README_images/query.png?raw=true" alt="Jina banner" width="90%">
 </p>
 Start server which returns `original` images. The matching of query happens with all indexed object images and returns the original parent image in which the indexed object was found.
-```bash
+
+``` bash
 python app.py -task query -r original
 ```
 
@@ -93,7 +95,8 @@ python app.py -task query -r original
 </p>
 
 Start server which returns `object` images. The matching of query happens with all indexed object images and returns them.
-```bash
+
+``` bash
 python app.py -task query -r object
 ```
 
@@ -106,7 +109,7 @@ python app.py -task query -r object
 
 When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
 
-```bash
+``` bash
 curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 

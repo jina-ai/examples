@@ -50,7 +50,7 @@ def index(num_docs):
 
     with f:
         f.index(input_fn=index_generator(filepath=os.environ["JINA_DATA_FILE"], num_docs=num_docs),
-                batch_size=8)
+                request_size=8)
 
 
 def query(top_k):

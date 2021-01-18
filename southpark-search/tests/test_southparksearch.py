@@ -41,7 +41,7 @@ def index_documents():
 
     with f:
         f.index(input_fn=index_generator(filepath=os.environ["JINA_DATA_FILE"], num_docs=100),
-                batch_size=8,
+                request_size=8,
                 size=NUM_DOCS)
 
 
