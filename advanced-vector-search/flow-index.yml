@@ -1,11 +1,10 @@
 !Flow
-metas:
-  prefetch: 10
+version: '1'
 pods:
-  encoder:
+  - name: encoder
     uses: yaml/encode.yml
     parallel: $JINA_PARALLEL
-  indexer:
+  - name: indexer
     uses: yaml/indexer.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 10000
