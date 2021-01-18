@@ -1,3 +1,4 @@
 docker==4.0.1
 click
 jina[hub]==0.9.17
+
