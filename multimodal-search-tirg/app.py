@@ -2,6 +2,7 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import glob
 import shutil
 
 import click
@@ -11,7 +12,6 @@ from jina import Document
 from jina.flow import Flow
 from jina.logging import default_logger as logger
 from jina.types.document.multimodal import MultimodalDocument
-from jina.clients.python.io import input_files
 
 
 num_docs = 100
@@ -59,10 +59,12 @@ def print_result(resp):
     plot_topk_images(images)
 
 def index_generator(data_path, num_docs):
-    for buffer in input_files(data_path, True, num_docs, None, 'rb'):
-        with Document() as doc:
-            doc.buffer = buffer
-            doc.mime_type = 'image/jpeg'
+    image_paths = glob.glob(data_path)
+    for image_path in image_paths:
+        with open(image_path, 'rb') as fp:
+            with Document() as doc:
+                doc.buffer = fp.read()
+                doc.mime_type = 'image/jpeg'
         yield doc
 
 def query_generator(image_paths, text_queries):
