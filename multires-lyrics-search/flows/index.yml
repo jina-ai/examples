@@ -1,18 +1,22 @@
 !Flow
 pods:
   segmenter:
+    show_exc_info: true
     uses: pods/segment.yml
     read_only: true
   encoder:
+    show_exc_info: true
     uses: pods/encode.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   chunk_idx:
+    show_exc_info: true
     uses: pods/chunk.yml
     shards: $JINA_SHARDS
     separated_workspace: true
   doc_idx:
+    show_exc_info: true
     uses: pods/doc.yml
     needs: gateway
   join_all:

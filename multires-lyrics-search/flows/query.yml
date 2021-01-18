@@ -5,13 +5,16 @@ with:
   port_expose: $JINA_PORT
 pods:
   chunk_seg:
+    show_exc_info: true
     uses: pods/segment.yml
     parallel: $JINA_PARALLEL
   tf_encode:
+    show_exc_info: true
     uses: pods/encode.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
   chunk_idx:
+    show_exc_info: true
     uses: pods/chunk.yml
     shards: $JINA_SHARDS
     separated_workspace: true
@@ -19,6 +22,8 @@ pods:
     uses_after: pods/chunk_merger.yml
     timeout_ready: -1 # larger timeout as in query time will read all the data
   ranker:
+    show_exc_info: true
     uses: pods/ranker.yml
   doc_idx:
+    show_exc_info: true
     uses: pods/doc.yml

@@ -8,7 +8,3 @@ requests:
       - !ReduceAllDriver
         with:
           traversal_paths: ['cm']
-      - !SliceQL
-        with:
-          start: 0
-          end: 10

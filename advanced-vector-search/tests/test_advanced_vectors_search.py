@@ -38,11 +38,11 @@ def docker_images():
 
 @pytest.fixture(scope='session')
 def index():
-    run(task='index', batch_size=50, top_k=100, indexer_query_type='numpy')
+    run(task='index', request_size=50, top_k=100, indexer_query_type='numpy')
     yield
 
 
 @pytest.mark.parametrize('index_type, expected', [('numpy', 99), ('annoy', 77), ('faiss', 47)])
 def test_advanced_search_example(siftsmall_data, docker_images, index, index_type, expected):
-    evaluation = run(task='query', batch_size=50, top_k=100, indexer_query_type=index_type)
+    evaluation = run(task='query', request_size=50, top_k=100, indexer_query_type=index_type)
     assert int(evaluation) == expected
