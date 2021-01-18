@@ -2,7 +2,8 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import click	
+import click
+import sys
 
 import urllib.request
 import gzip
@@ -11,7 +12,7 @@ import webbrowser
 import random
 
 from jina.flow import Flow
-from jina.clients.python import ProgressBar
+from jina.logging.profile import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
 from jina.proto import jina_pb2
@@ -26,14 +27,7 @@ result_html = []
 label_id = {
     0: 'T-shirt/top',
     1: 'Trouser',
-    2: 'Pullover',
-    3: 'Dress',
-    4: 'Coat',
-    5: 'Sandal',
-    6: 'Shirt',
-    7: 'Sneaker',
-    8: 'Bag',
-    9: 'Ankle boot'
+    2: 'Pullover'
 }
 
 
@@ -44,13 +38,6 @@ def get_mapped_label(label_int: str):
     0	        T-shirt/top
     1	        Trouser
     2	        Pullover
-    3	        Dress
-    4	        Coat
-    5	        Sandal
-    6	        Shirt
-    7	        Sneaker
-    8	        Bag
-    9	        Ankle boot
     """
     return label_id.get(label_int, "Invalid tag")
 
@@ -116,7 +103,6 @@ def download_data(target: dict, download_proxy=None):
 def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
         d = Document(content=target['index']['data'][j])
-        d.update_id()
         label_int = target['index-labels']['data'][j][0]
         category = get_mapped_label(label_int)
         d.tags['label'] = category
@@ -128,7 +114,7 @@ def query_generator(num_doc: int, target: dict):
         n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
         label_int = target['query-labels']['data'][n][0] 
         category = get_mapped_label(label_int) 
-        if category == 'Bag':
+        if category == 'Pullover':
             d = Document(content=(target['query']['data'][n]))
             d.tags['label'] = category
             yield d
@@ -194,6 +180,7 @@ def main(task, num_docs_query, num_docs_index):
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
+            sys.exit()
         index(num_docs_index, targets)
     elif task == 'query':
         config(task)

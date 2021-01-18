@@ -1,2 +1,6 @@
-jina[devel,torch,tensorflow,transformers]==0.7.12
 click
+jina==0.9.17
+torch==1.7.1
+transformers==4.1.1
+requests~=2.24
+pytest==6.1.2
