@@ -13,14 +13,14 @@ pods:
     parallel: $PARALLEL
     read_only: true
   image_encoder:
-    uses: jinaai/hub.executors.encoders.image.vse
+    uses: docker://jinahub/pod.encoder.vseimageencoder:0.0.4-0.9.17
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
   text_indexer:
     uses: yaml/index-text.yml
   text_encoder:
-    uses: jinaai/hub.executors.encoders.nlp.vse
+    uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.17
     uses_internal: yaml/text_encoder.yml
     parallel: $PARALLEL
     timeout_ready: 600000

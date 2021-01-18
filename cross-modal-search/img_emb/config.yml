@@ -1,5 +1,0 @@
-!VSEImageEncoder
-metas:
-  py_modules:
-    - model.py
-    - __init__.py
