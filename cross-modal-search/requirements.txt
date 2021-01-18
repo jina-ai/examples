@@ -1,1 +1,5 @@
 jina==0.9.17
+torch==1.7.0
+nltk==3.5
+pycocotools==2.0.2
+torchvision==0.7.0
