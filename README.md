@@ -12,6 +12,8 @@
 
 These examples showcase Jina in action and provide sample code for you to work from. We suggest you read [Jina 101](http://101.jina.ai) and <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">What is Neural Search?</a> to get a conceptual overview.
 
+❗If you'd like to run our examples on Windows, please follow [this instruction](https://docs.jina.ai/chapters/install/os/on-wsl.html).
+
 To learn more about how to use Jina, please refer to [our docs](http://www.jina.ai).
 
 ## 🐣 Simple Examples
