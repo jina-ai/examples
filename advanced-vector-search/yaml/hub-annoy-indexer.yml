@@ -1,0 +1,38 @@
+!CompoundIndexer
+components:
+  - !AnnoyIndexer
+    with:
+      index_filename: 'index.gz'
+      n_trees: 10
+      search_k: -1
+      ref_indexer:
+        !NumpyIndexer
+        metas:
+          workspace: './workspace'
+          name: wrapidx
+        with:
+          index_filename: 'index.gz'
+    metas:
+      workspace: './workspace'
+      name: annoyidx
+  - !BinaryPbIndexer
+    with:
+      index_filename: doc.gz
+    metas:
+      name: docidx
+      workspace: './workspace'
+metas:
+  name: indexer
+  workspace: './workspace'
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: annoyidx
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          traversal_paths: ['m']
+    ControlRequest:
+      - !ControlReqDriver {}
