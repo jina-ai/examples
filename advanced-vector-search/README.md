@@ -203,6 +203,21 @@ Recall@100 => 77.69999986886978%
 
 It can be good to look for different parameters to guarantee the best results
 
+## Use Docker image from the jina hub
+
+To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) with the indexed documents.
+You can retrieve the docker image using:
+
+```bash
+docker pull jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17
+```
+So you can pull from its latest tags. And you can run it. By default it runs the search with `faiss` indexer. 
+If you want to run the image with `annoy` as a search library, you can override the entrypoint doing:
+
+```bash
+docker run -it --entrypoint=/bin/bash {DOCKER_IMAGE_TAG} entrypoint.sh annoy
+```
+
 ## Wrap up
 
 In this example we have seen how to use different indexers as vector databases and how to use a `ref_indexer` as a base indexer.

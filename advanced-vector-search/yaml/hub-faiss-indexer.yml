@@ -1,0 +1,38 @@
+!CompoundIndexer
+components:
+  - !FaissIndexer
+    with:
+      index_key: 'IVF10,PQ4'
+      train_filepath: './workspace/train.tgz'
+      index_filename: 'index.gz'
+      ref_indexer:
+        !NumpyIndexer
+        metas:
+          workspace: './workspace'
+          name: wrapidx
+        with:
+          index_filename: 'index.gz'
+    metas:
+      workspace: './workspace'
+      name: faissidx
+  - !BinaryPbIndexer
+    with:
+      index_filename: doc.gz
+    metas:
+      name: docidx
+      workspace: './workspace'
+metas:
+  name: indexer
+  workspace: './workspace'
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: faissidx
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          traversal_paths: ['m']
+    ControlRequest:
+      - !ControlReqDriver {}

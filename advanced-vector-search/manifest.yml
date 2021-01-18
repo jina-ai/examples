@@ -1,0 +1,12 @@
+manifest_version: 1
+name: advanced_vector_search
+kind: example
+type: app
+description: Example App using Faiss and Annoy to search in SIFT_128_ANN dataset preindexed with jina
+version: 0.0.1
+license: apache-2.0
+keywords: [examples, faiss, annoy, ANN]
+author: Jina AI Dev-Team (dev-team@jina.ai)
+url: https://jina.ai
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/jina-hub
