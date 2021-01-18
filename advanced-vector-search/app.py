@@ -19,11 +19,11 @@ def config(indexer_query_type: str):
     os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './siftsmall')
     if indexer_query_type == 'faiss':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_FAISS',
-                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.12-0.9.14')
+                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.14-0.9.17')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
     elif indexer_query_type == 'annoy':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_ANNOY',
-                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.13-0.9.14')
+                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.14-0.9.17')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
     elif indexer_query_type == 'numpy':
         os.environ['JINA_USES'] = 'yaml/indexer.yml'

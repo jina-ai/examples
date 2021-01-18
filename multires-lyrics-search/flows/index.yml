@@ -1,24 +1,25 @@
 !Flow
+version: '1'
 pods:
-  segmenter:
+  - name: segmenter
     show_exc_info: true
     uses: pods/segment.yml
     read_only: true
-  encoder:
+  - name: encoder
     show_exc_info: true
     uses: pods/encode.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
-  chunk_idx:
+  - name: chunk_idx
     show_exc_info: true
     uses: pods/chunk.yml
     shards: $JINA_SHARDS
     separated_workspace: true
-  doc_idx:
+  - name: doc_idx
     show_exc_info: true
     uses: pods/doc.yml
     needs: gateway
-  join_all:
+  - name: join_all
     uses: _merge
     needs: [doc_idx, chunk_idx]
