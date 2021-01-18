@@ -12,6 +12,15 @@ requests:
       - !KVSearchDriver
         with:
           traversal_paths: ['m']
+      - !SortQL
+        with:
+          traversal_paths: ['m']
+          field: 'score__value'
+      - !SliceQL
+        with:
+          traversal_paths: ['m']
+          start: 0
+          end: 10
     IndexRequest:
       - !ExcludeQL
         with:

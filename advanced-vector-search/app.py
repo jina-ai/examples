@@ -19,11 +19,11 @@ def config(indexer_query_type: str):
     os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './siftsmall')
     if indexer_query_type == 'faiss':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_FAISS',
-                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.12-0.9.3')
+                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.12-0.9.14')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
     elif indexer_query_type == 'annoy':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_ANNOY',
-                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.13-0.9.3')
+                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.13-0.9.14')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
     elif indexer_query_type == 'numpy':
         os.environ['JINA_USES'] = 'yaml/indexer.yml'
@@ -54,13 +54,13 @@ def evaluate_generator(db_file_path: str, groundtruth_path: str):
         yield doc, groundtruth
 
 
-def run(task, batch_size, top_k, indexer_query_type):
+def run(task, request_size, top_k, indexer_query_type):
     config(indexer_query_type)
 
     if task == 'index':
         data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_base.fvecs')
         with Flow.load_config('flow-index.yml') as flow:
-            flow.index(index_generator(data_path), batch_size=batch_size)
+            flow.index(index_generator(data_path), request_size=request_size)
     elif task == 'query':
         evaluation_results = defaultdict(float)
 
@@ -87,12 +87,12 @@ def run(task, batch_size, top_k, indexer_query_type):
 
 @click.command()
 @click.option('--task', '-t')
-@click.option('--batch_size', '-n', default=50)
+@click.option('--request-size', '-s', default=50)
 @click.option('--top_k', '-k', default=100)
 @click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy', 'numpy'], case_sensitive=False),
               default='faiss')
-def main(task, batch_size, top_k, indexer_query_type):
-    run(task, batch_size, top_k, indexer_query_type)
+def main(task, request_size, top_k, indexer_query_type):
+    run(task, request_size, top_k, indexer_query_type)
 
 
 if __name__ == '__main__':

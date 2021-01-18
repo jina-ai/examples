@@ -19,7 +19,7 @@ QUERY_FLOW_FILE_PATH = 'flows/query.yml'
 PORT = 45678
 JINA_SHARDS = 2
 JINA_PARALLEL = 1
-BATCH_SIZE = 4
+REQUEST_SIZE = 4
 
 
 # TODO restructure project so we don't duplicate input_fn
@@ -53,7 +53,7 @@ def index_documents():
     f = Flow().load_config(INDEX_FLOW_FILE_PATH)
 
     with f:
-        f.index(input_fn, batch_size=BATCH_SIZE)
+        f.index(input_fn, request_size=REQUEST_SIZE)
 
 
 def call_api(url, payload=None, headers=None):
@@ -103,7 +103,7 @@ def test_query(tmpdir, queries_and_expected_replies):
                 for match in chunk_matches:
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
-            assert query_chunk_results == exp_result["chunk-level"]
+            assert query_chunk_results == exp_result['chunk-level']
 
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
@@ -113,8 +113,7 @@ def test_query(tmpdir, queries_and_expected_replies):
             for match in matches:
                 match_text = match['text']
                 match_result.append(match_text)
-            assert match_result == exp_result["match-level"]
 
-            # check the number of docs returned
-            # note. the TOP K reflects nr of matches per chunk
-            assert len(matches) <= TOP_K * JINA_SHARDS
+            assert match_result == exp_result['match-level']
+
+            assert len(matches) == TOP_K
