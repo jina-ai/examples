@@ -175,6 +175,34 @@ Note the cross for which cross modal stands.
 Internally, `TextEncoder` targets `ImageVectorIndexer` and `ImageEncoder` targets `TextVectorIndexer`.
 `ImageVectorIndexer` and `TextVectorIndexer` map to a common Embedding Space. (To Jina it means having common dimensionality).
 
+## Use Docker image from the jina hub
+
+To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.crossmodalsearch) with the indexed documents.
+Just be aware that the image weights 11 GB. Make sure that your docker lets you allocate a sufficient amount of memory. 
+
+You can retrieve the docker image using:
+
+```bash
+docker pull jinahub/app.example.crossmodalsearch:0.0.1-0.9.17
+```
+So you can pull from its latest tags. 
+
+To run the application with the pre-indexed documents and ready to be used from jina-box, run
+
+```bash
+docker run -p 45678:45678 {DOCKER_IMAGE_TAG}
+```
+
+### Build the docker image yourself
+
+In order to buld the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
+
+And then just simply run:
+
+```bash
+docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
+```
+
 ## Results
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_image2text.png "Cross Modal Search Results")

@@ -1,5 +1,6 @@
-jina[hub]==0.9.17
-torch==1.7.0
+jina[hub, http]==0.9.17
 nltk==3.5
 pycocotools==2.0.2
 torchvision==0.7.0
+python-magic==0.4.20
+torch==1.7.0
