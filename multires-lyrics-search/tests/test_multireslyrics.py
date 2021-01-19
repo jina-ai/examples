@@ -112,7 +112,6 @@ def test_query(tmpdir, queries_and_expected_replies):
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
             # make sure to sort in desc. order, by score
-            matches = sorted(matches, key=lambda x: extract_score_value(x['score']), reverse=True)
             match_result = []
             current_score = None
             for match in matches:
