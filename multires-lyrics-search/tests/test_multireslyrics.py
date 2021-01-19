@@ -120,7 +120,7 @@ def test_query(tmpdir, queries_and_expected_replies):
                     assert extract_score_value(match['score']) <= current_score
                 current_score = extract_score_value(match['score'])
                 match_result.append(match_text)
-
+                
             assert match_result == exp_result['match-level']
 
             assert len(matches) == TOP_K

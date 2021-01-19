@@ -52,24 +52,6 @@ pip install -r requirements.txt
 | ``python app.py search`` | To run query on the index |
 | ``python app.py dryrun`` | Sanity check on the topology |
 
-<!--
-## Run as a Docker Container
-
-To build the docker image
-```bash
-docker build -t jinaai/hub.app.multires_lyrics_search:0.0.1 .
-```
-
-To mount local directory and run:
-```bash
-docker run -v "$(pwd)/j:/workspace" jinaai/hub.app.multires_lyrics_search:0.0.1
-```
-
-To query
-```bash
-docker run -p 65481:65481 -e "JINA_PORT=65481" jinaai/hub.app.multires_lyrics_search:0.0.1 search
-``` -->
-
 ## View in Browser
 
 ```bash
@@ -79,9 +61,25 @@ python -m http.server
 
 Open `http://0.0.0.0:8000/` in your browser.
 
+## Use Docker image from the jina hub
+
+To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.multireslyricssearch) with 10000 indexed songs (more than the toy example, but just a small part of the huge dataset).
+You can retrieve the docker image using:
+
+```bash
+docker pull jinahub/app.example.multireslyricssearch:0.0.1-0.9.17
+```
+So you can pull from its latest tags.
+
+Then you can run it, and you can proceed to see the results in the browser as explained before
+
+```bash
+docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.1-0.9.17
+```
+
 
 ## License
 
-Copyright (c) 2020 Han Xiao. All rights reserved.
+Copyright (c) 2020-2021 Han Xiao. All rights reserved.
 
 
