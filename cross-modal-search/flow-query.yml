@@ -1,36 +1,37 @@
 !Flow
+version: '1'
 with:
   prefetch: 10
   rest_api: true
   port_expose: 45678
 pods:
-  loader:
-    uses: yaml/image_load.yml
+  - name: loader
+    uses: yaml/image-load.yml
     parallel: $PARALLEL
     read_only: true
-  normalizer:
-    uses: yaml/image_normalize.yml
+  - name: normalizer
+    uses: yaml/image-normalize.yml
     parallel: $PARALLEL
     read_only: true
-  image_encoder:
-    uses: docker://jinahub/pod.encoder.vseimageencoder:0.0.4-0.9.17
+  - name: image_encoder
+    uses: $JINA_USES_VSE_IMAGE_ENCODER
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
-  text_indexer:
+  - name: text_indexer
     uses: yaml/index-text.yml
-  text_encoder:
-    uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.17
-    uses_internal: yaml/text_encoder.yml
+  - name: text_encoder
+    uses: $JINA_USES_VSE_TEXT_ENCODER
+    uses_internal: yaml/text-encoder.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
     needs: [gateway]
-  image_vector_indexer:
+  - name: image_vector_indexer
     uses: yaml/index-image-vector.yml
-  image_kv_indexer:
+  - name: image_kv_indexer
     uses: yaml/index-image-kv.yml
-  join_all:
+  - name: join_all
     uses: _merge
     needs: [text_indexer, image_kv_indexer]
     read_only: true
