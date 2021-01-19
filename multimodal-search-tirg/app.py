@@ -63,11 +63,11 @@ def query_generator(image_paths, text_queries):
         yield MultimodalDocument(modality_content_map={'image': buffer, 'text': text})
 
 @click.command()
-@click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
+@click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='data/women/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
+@click.option('--image_path', '-ip', default='data/images/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):

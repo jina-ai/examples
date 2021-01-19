@@ -2,7 +2,6 @@
 with:
   prefetch: 10
   read_only: true  # better add this in the query time
-  # rest_api: true
   port_expose: $JINA_PORT
 pods:
   image_read:
@@ -16,12 +15,12 @@ pods:
     read_only: true
     needs: [gateway]
   encode:
-    uses: jinaai/hub.executors.encoders.multimodal.tirg
+    uses: docker://jinaai/hub.executors.encoders.multimodal.tirg
     uses_internal: pods/encode-tirg-multimodal.yml
     # uses: pods/encode-tirg-multimodal-dummy.yml
     parallel: $PARALLEL
     timeout_ready: 600000
-    uses_before: _merge_all
+    uses_before: _merge_chunks
     needs: [normalize, pass_text]
   vec_idx:
     uses: pods/vec.yml

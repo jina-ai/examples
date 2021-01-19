@@ -1,3 +1,4 @@
 click
 jina
 matplotlib
+pillow
