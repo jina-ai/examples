@@ -28,7 +28,6 @@ def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
                                   dataset_type=dataset)
 
     for i, (images, captions) in enumerate(data_loader):
-        print(f' images {len(images)}, captions {len(captions)}')
         for image in images:
             with Document() as document:
                 document.buffer = image
