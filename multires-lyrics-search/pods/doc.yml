@@ -16,6 +16,7 @@ requests:
         with:
           traversal_paths: ['m']
           field: 'score__value'
+          reverse: True
       - !SliceQL
         with:
           traversal_paths: ['m']
