@@ -58,13 +58,13 @@ bash ./get_data.sh data/
 Alternatively, You can [Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract the data from google drive.
 
 ## Build encoder images
-This will download the TIRG model + code and build the image
+This will download the TIRG model + code and build the image from [Jina-hub](https://github.com/jina-ai/jina-hub).
 ### TIRG image encoder
-Start the Docker image. Go to the TirgImageEncoder folder and run the command below: 
+Start the Docker image. Go to the [TirgImageEncoder](https://github.com/jina-ai/jina-hub/tree/master/encoders/image/TirgImageEncoder) folder and run the command below: 
 
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.image.tirg .`
 ### TIRG multimodal encoder
-Start the Docker image. Go to the TirgMultimodalEncoder folder and run the command below: 
+Start the Docker image. Go to the [TirgMultimodalEncoder](https://github.com/jina-ai/jina-hub/tree/master/encoders/multimodal/TirgMultimodalEncoder) folder and run the command below: 
 
 `docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
