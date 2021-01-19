@@ -2,13 +2,11 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import glob
 import shutil
 
 import click
 import matplotlib.pyplot as plt
 
-from jina import Document
 from jina.flow import Flow
 from jina.logging import default_logger as logger
 from jina.types.document.multimodal import MultimodalDocument
@@ -58,15 +56,6 @@ def print_result(resp):
         images.append(image)
     plot_topk_images(images)
 
-def index_generator(data_path, num_docs):
-    image_paths = glob.glob(data_path)
-    for image_path in image_paths:
-        with open(image_path, 'rb') as fp:
-            with Document() as doc:
-                doc.buffer = fp.read()
-                doc.mime_type = 'image/jpeg'
-        yield doc
-
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
         with open(image_path, 'rb') as fp:
@@ -90,7 +79,7 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
             clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
-            f.index(index_generator(data_path, num_docs), batch_size=batch_size)
+            f.index_files(data_path, recursive=True, batch_size=batch_size, size=num_docs)
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
