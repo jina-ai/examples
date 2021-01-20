@@ -14,3 +14,4 @@ kaggle datasets download -d ${DATASET}
 unzip wikipedia-sentences.zip
 shuf wikisent2.txt > input.txt
 rm -f wikisent2.txt
+rm -f wikipedia-sentences.zip
