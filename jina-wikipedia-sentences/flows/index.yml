@@ -1,0 +1,11 @@
+!Flow
+pods:
+  encoder:
+    uses: pods/encode.yml
+    parallel: $JINA_PARALLEL
+    timeout_ready: 600000
+    read_only: true
+  doc_indexer:
+    uses: pods/doc.yml
+    shards: $JINA_SHARDS
+    separated_workspace: true
