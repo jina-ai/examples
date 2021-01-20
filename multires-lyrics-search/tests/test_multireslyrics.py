@@ -100,20 +100,27 @@ def test_query(tmpdir, queries_and_expected_replies):
                 chunk_matches = chunk['matches']
                 # make sure to sort in asc. order, by score
                 chunk_matches = sorted(chunk_matches, key=lambda x: extract_score_value(x['score']), reverse=False)
+                current_score = None
                 for match in chunk_matches:
+                    if current_score:
+                        assert extract_score_value(match['score']) >= current_score
+                    current_score = extract_score_value(match['score'])
                     chunk_result['chunk_matches'].append(match['text'])
                 query_chunk_results.append(chunk_result)
             assert query_chunk_results == exp_result['chunk-level']
 
             # match-level comparison
             matches = output['search']['docs'][0]['matches']
-            # make sure to sort in asc. order, by score
-            matches = sorted(matches, key=lambda x: extract_score_value(x['score']), reverse=False)
+            # make sure to sort in desc. order, by score
             match_result = []
+            current_score = None
             for match in matches:
                 match_text = match['text']
+                if current_score:
+                    assert extract_score_value(match['score']) <= current_score
+                current_score = extract_score_value(match['score'])
                 match_result.append(match_text)
-
+                
             assert match_result == exp_result['match-level']
 
             assert len(matches) == TOP_K

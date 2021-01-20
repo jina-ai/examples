@@ -212,10 +212,16 @@ You can retrieve the docker image using:
 docker pull jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17
 ```
 So you can pull from its latest tags. And you can run it. By default it runs the search with `faiss` indexer. 
+
+To simply run it, please do:
+```bash
+docker run jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17
+```
+
 If you want to run the image with `annoy` as a search library, you can override the entrypoint doing:
 
 ```bash
-docker run -it --entrypoint=/bin/bash {DOCKER_IMAGE_TAG} entrypoint.sh annoy
+docker run -it --entrypoint=/bin/bash jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17 entrypoint.sh annoy
 ```
 
 ## Wrap up
