@@ -11,10 +11,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y curl gcc build-
     && pip uninstall -y jina \
     && pip install -r requirements.txt && pip install -r faiss-requirements.txt && pip install -r annoy-requirements.txt
 
+RUN ./get_siftsmall.sh && ./get_sift1M.sh && ./generate_training_data.sh
+
 ENV JINA_USES_FAISS='yaml/hub-faiss-indexer.yml'
 ENV JINA_USES_ANNOY='yaml/hub-annoy-indexer.yml'
-
-RUN ./get_siftsmall.sh && ./generate_training_data.sh
+ENV JINA_SHARDS=4
+ENV JINA_TMP_DATA_DIR='./sift1M'
 
 RUN python app.py -t index
 
@@ -33,4 +35,4 @@ LABEL platform="linux/amd64"
 LABEL update="None"
 LABEL url="https://github.com/jina-ai/examples/tree/master/advanced-vector-search"
 LABEL vendor="Jina AI Limited"
-LABEL version="0.0.1"
+LABEL version="0.0.2"

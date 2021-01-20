@@ -11,10 +11,12 @@ pods:
     show_exc_info: true
     uses: $JINA_USES
     uses_internal: $JINA_USES_INTERNAL
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: -1
-    #uses_after: _merge_matches  # uncomment this if you want to increase parallelization
-    volumes: './workspace:/workspace/workspace'
+    uses_after: _merge_matches  # uncomment this if you want to increase parallelization
+    volumes: './workspace:/docker-workspace'
+    remove-uses-ba: true
+    polling: all
   - name: evaluate
     show_exc_info: true
     uses: yaml/evaluate.yml

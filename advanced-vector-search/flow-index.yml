@@ -6,5 +6,6 @@ pods:
     parallel: $JINA_PARALLEL
   - name: indexer
     uses: yaml/indexer.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: 10000
+    polling: any

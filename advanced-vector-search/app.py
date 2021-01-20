@@ -14,7 +14,6 @@ from read_vectors_files import fvecs_read, ivecs_read
 
 
 def config(indexer_query_type: str):
-    os.environ['JINA_PARALLEL'] = str(1)
     os.environ['JINA_SHARDS'] = str(1)
     os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './siftsmall')
     if indexer_query_type == 'faiss':
