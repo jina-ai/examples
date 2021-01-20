@@ -26,16 +26,13 @@ This data is ready to use with this example.
 
 ## [Optional] Download full lyrics dataset
 
+**NOTE**: This is what is used in the Docker image and is **required** if you want to build it (the Docker image) yourself. 
+
 If you want to use the full dataset, you can download it from kaggle (https://www.kaggle.com/neisse/scrapped-lyrics-from-6-genres).
 To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
 
 ```bash
-pip install kaggle
-mkdir data
-kaggle datasets download -d neisse/scrapped-lyrics-from-6-genres
-unzip scrapped-lyrics-from-6-genres.zip
-mv lyrics-data data
-export JINA_DATA_PATH=data/lyrics-data.csv
+bash get_data.sh
 ```
 
 ## Install
