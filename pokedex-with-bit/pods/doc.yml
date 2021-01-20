@@ -18,10 +18,15 @@ requests:
           fields:
             - embedding
     IndexRequest:
-      - !Buffer2URI {}
+      - !Buffer2URI
+        with:
+          traversal_paths: ['r']
       - !ExcludeQL
         with:
+          traversal_paths: ['r']
           fields:
             - chunks  # we don't want to save nested structure
             - buffer
-      - !KVIndexDriver {}
+      - !KVIndexDriver
+        with:
+          traversal_paths: ['r']

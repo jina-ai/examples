@@ -1,12 +1,12 @@
-FROM jinaai/jina:0.5.4
+FROM jinaai/jina
 
-ADD requirements.txt .
+# setup the workspace
+COPY . /workspace
+WORKDIR /workspace
 
-RUN apt-get update && apt-get install --no-install-recommends -y git curl libmagic1 && \
-    pip install -r requirements.txt
+RUN apt-get update && apt-get install --no-install-recommends -y git curl libmagic1 wget tar \
+    && pip install -r requirements.txt
 
-COPY . /
+RUN bash get_data.sh && bash download.sh && python app.py index
 
-RUN bash download.sh && python app.py dryrun
-
-ENTRYPOINT ["python", "app.py"]
+ENTRYPOINT ["python", "app.py", "search"]
