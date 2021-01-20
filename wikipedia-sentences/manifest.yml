@@ -7,7 +7,7 @@ vendor: Jina AI Limited
 documentation: https://github.com/alexcg1/jina-wikipedia-sentences
 version: 0.2.4
 license: apache-2.0
-keywords: [NLP, wikipedia, text, distilbert]
+keywords: [NLP, wikipedia, text, distilbert, example, transformers]
 type: app
 kind: app
 avatar: None
