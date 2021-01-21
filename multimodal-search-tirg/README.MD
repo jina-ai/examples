@@ -57,16 +57,6 @@ bash ./get_data.sh data/
 
 Alternatively, You can [Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract the data from google drive.
 
-## Build encoder images
-This will download the TIRG model + code and build the image
-### TIRG image encoder
-Start the Docker image. Go to the TirgImageEncoder folder and run the command below: 
-
-`docker build -f Dockerfile -t jinaai/hub.executors.encoders.image.tirg .`
-### TIRG multimodal encoder
-Start the Docker image. Go to the TirgMultimodalEncoder folder and run the command below: 
-
-`docker build -f Dockerfile -t jinaai/hub.executors.encoders.multimodal.tirg .`
 
 ## Index Image Data
 <p align="center">
@@ -75,7 +65,7 @@ Start the Docker image. Go to the TirgMultimodalEncoder folder and run the comma
 Index 1000 images. This can take some time and you can try a smaller number as well. We use a custom TirgImageEncoder for encoding the images. Jina normalizes the images before sending them to the encoder. If you decide to index large datasets, it is recommended to increase the number of shards and parallelization.  
 
 ```bash
-python app.py -task index -n 1000 -overwrite True
+python app.py --task index -n 1000 -overwrite True
 ```
 
 If it's running successfully, you should be able to see and scroll through the logs in the console and in the dashboard:
@@ -92,7 +82,7 @@ If it's running successfully, you should be able to see and scroll through the l
 This will start the server, where you can then run your query and see the results as a pop-up. TIRG's multimodal encoder requires both input image and text to create the final encoding. This is made possible by leveraging our MultiModalEncoder capabilities. We use our QueryLanguageDriver to redirect text and image documents based on modality.  
 
 ```bash
-python app.py -task query --image_path path_to_image --text_query 'change color to red'
+python app.py --task query --image_path path_to_image --text_query 'change color to red'
 ```
 
 ## Troubleshooting
@@ -131,6 +121,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.
