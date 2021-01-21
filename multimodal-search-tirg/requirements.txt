@@ -1,4 +1,4 @@
-click
-jina>=0.9.17
-matplotlib
-pillow
+click==7.1.2
+jina==0.9.17
+matplotlib==3.3.3
+pillow==8.1.0
