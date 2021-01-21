@@ -89,7 +89,6 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
         f = Flow.load_config('flow-index.yml')
         with f:
             f.index(index_generator(data_path, num_docs), batch_size=batch_size)
-            # f.index_files(data_path, recursive=True, batch_size=batch_size, size=num_docs, mime_type='image/jpeg')
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
