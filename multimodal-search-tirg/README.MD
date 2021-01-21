@@ -63,16 +63,16 @@ To make it easier for the user, we have built and published the encoder Docker i
 Pull & To start the `TirgImageEncoder` Docker image, run the command below: 
 
 ```bash
-docker pull jinaai/hub.executors.encoders.image.tirg:latest
-docker run jinaai/hub.executors.encoders.image.tirg
+docker pull jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.17
+docker run jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.17
 ```
 
 ### TIRG multimodal encoder
 Pull & To start the `TirgMultimodalEncoder` Docker image, run the command below: 
 
 ```bash
-docker pull jinaai/hub.executors.encoders.multimodal.tirg:latest
-docker run jinaai/hub.executors.encoders.multimodal.tirg
+docker pull jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
+docker run jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
 ```
 
 ## Index Image Data

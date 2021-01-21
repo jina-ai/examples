@@ -16,7 +16,7 @@ pods:
     read_only: true
     needs: [gateway]
   - name: encode
-    uses: docker://jinaai/hub.executors.encoders.multimodal.tirg
+    uses: docker://jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
     uses_internal: pods/encode-tirg-multimodal.yml
     # uses: pods/encode-tirg-multimodal-dummy.yml
     parallel: $PARALLEL
