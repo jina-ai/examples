@@ -25,11 +25,13 @@ pods:
     needs: [normalize, pass_text]
   - name: vec_idx
     uses: pods/vec.yml
+    polling: all
     shards: $SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
     separated_workspace: true
   - name: doc_idx
     uses: pods/doc.yml
+    polling: all
     shards: $SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
     separated_workspace: true
