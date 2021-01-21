@@ -57,23 +57,6 @@ bash ./get_data.sh data/
 
 Alternatively, You can [Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract the data from google drive.
 
-## Build encoder images from Jina hub
-To make it easier for the user, we have built and published the encoder Docker images. You can retrieve the docker image using:
-### TIRG image encoder
-Pull & To start the `TirgImageEncoder` Docker image, run the command below: 
-
-```bash
-docker pull jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.17
-docker run jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.17
-```
-
-### TIRG multimodal encoder
-Pull & To start the `TirgMultimodalEncoder` Docker image, run the command below: 
-
-```bash
-docker pull jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
-docker run jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
-```
 
 ## Index Image Data
 <p align="center">
