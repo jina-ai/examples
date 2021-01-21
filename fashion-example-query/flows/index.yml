@@ -4,21 +4,21 @@ with:
   compress_hwm: 1024
 pods:
   encode:
-    uses: encode/encode.yml
+    uses: pods/encode.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
   indexer_tshirt:
-    uses: index/indexer-tshirt.yml
+    uses: pods/indexer-tshirt.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_trouser:
-    uses: index/indexer-trouser.yml
+    uses: pods/indexer-trouser.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
   indexer_pullover:
-    uses: index/indexer-pullover.yml
+    uses: pods/indexer-pullover.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]

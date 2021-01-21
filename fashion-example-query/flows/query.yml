@@ -5,31 +5,31 @@ with:
   compress_hwm: 1024
 pods:
   encode:
-    uses: encode/encode.yml
+    uses: pods/encode.yml
     parallel: $JINA_PARALLEL
   indexer_tshirt:
-    uses: index/indexer-tshirt.yml
+    uses: pods/indexer-tshirt.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
     polling: all
-    uses_after: index/reduce.yml
+    uses_after: pods/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   indexer_trouser:
-    uses: index/indexer-trouser.yml
+    uses: pods/indexer-trouser.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
     polling: all
-    uses_after: index/reduce.yml
+    uses_after: pods/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   indexer_pullover:
-    uses: index/indexer-pullover.yml
+    uses: pods/indexer-pullover.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
     polling: all
-    uses_after: index/reduce.yml
+    uses_after: pods/reduce.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data # larger timeout as in query time will read all the data# larger timeout as in query time will read all the data
   join_all:
     uses: _merge

@@ -43,31 +43,19 @@ python app.py index
 First up we need to build up an index and then we'll search through this index when we use the query Flow later.
 So what is happening here?
 
-There are 10 categories in the fashion-mnist-data
+There are 10 categories in the fashion-mnist-data, but to simplify this example we will only use 3 categories:
 
     0	        T-shirt/top
     1	        Trouser
     2	        Pullover
-    3	        Dress
-    4	        Coat
-    5	        Sandal
-    6	        Shirt
-    7	        Sneaker
-    8	        Bag
-    9	        Ankle boot
     
-What we are doing here is create a separate index per each category, so each category will have its own pod yml file. 
-This will be done during index time so they all will be under the /index folder
-
-![alt text](.github/images/index_categories.png "Results")
-
-We index the data updating updating the label
+We will create a separate index per category, so each category will have its own yml file and then we index the data updating updating the label
 
 ```
 d.tags.update({'label': get_mapped_label(label_int)})
 ```
 This is where you could tweak the code if you would like to see only one category.
-For example if you would like to see only dresses, you could do something like this
+For example if you would like to see only Pullovers, you could do something like this
 
 ![alt text](.github/images/filter.png "Results")
 
@@ -84,7 +72,7 @@ python app.py query
 
 ## Results
 
-This is an example of the results after the query using all categories
+So if we run this as it is, we will see our results filtered by Pullovers like this:
 
 ![alt text](.github/images/results.png "Results")
 
@@ -92,13 +80,13 @@ This is an example of the results after the query using all categories
 ## QueryLanguage
 
 So the real magic here, if you compare it with the original HelloWorld, is that we are using QueryLanguage.
-This is happening in the index and query flow of each category, for example, for the ```indexer-dress.yml``` we have
+This is happening in the index and query flow of each category, for example, for the ```indexer-Pullover.yml``` we have
 
 ```
 IndexRequest:
       - !FilterQL
         with:
-          lookups: {'tags__label': 'Dress'}
+          lookups: {'tags__label': 'Pullover'}
 ```
 
-The key is the ```!FilterQL```, here we are filtering with some specific label, like Dress in this example.
+The key is the ```!FilterQL```, here we are filtering with some specific label, like Pullover in this example.

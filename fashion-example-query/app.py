@@ -23,6 +23,7 @@ from pkg_resources import resource_filename
 from components import *
 
 result_html = []
+TOP_K = 10
 
 label_id = {
     0: 'T-shirt/top',
@@ -48,7 +49,7 @@ def print_result(resp):
         result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
         for kk in d.matches:
             kmi = kk.uri
-            result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
+            result_html.append(f'<img src="{kmi}"/>')
         result_html.append('</td></tr>\n')
 
 
@@ -102,16 +103,18 @@ def download_data(target: dict, download_proxy=None):
 
 def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        d = Document(content=target['index']['data'][j])
         label_int = target['index-labels']['data'][j][0]
-        category = get_mapped_label(label_int)
-        d.tags['label'] = category
-        yield d
+        if label_int < 3: #We are using only 3 categories, no need to index the rest
+            with Document() as d:
+                d.content = target['index']['data'][j]
+                category = get_mapped_label(label_int)
+                d.tags['label'] = category
+            yield d
 
 
 def query_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
+        n = random.randint(0, 9999) #there are 10000 query examples, so that's the limit
         label_int = target['query-labels']['data'][n][0] 
         category = get_mapped_label(label_int) 
         if category == 'Pullover':
@@ -121,16 +124,16 @@ def query_generator(num_doc: int, target: dict):
 
 
 def index(num_doc, target: dict):
-    f = Flow.load_config('flow-index.yml')
+    f = Flow.load_config('flows/index.yml')
     with f:
-        f.index(index_generator(num_doc, target), batch_size=2048)
+        f.index(index_generator(num_doc, target), request_size=2048)
 
 
 def query(num_doc, target: dict):
-    f = Flow.load_config('flow-query.yml')
+    f = Flow.load_config('flows/query.yml')
     with f:
         f.search(query_generator(num_doc, target), shuffle=True, size=128,
-                 output_fn=print_result, batch_size=32)
+                 output_fn=print_result, request_size=32, top_k=TOP_K)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
@@ -180,7 +183,6 @@ def main(task, num_docs_query, num_docs_index):
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
-            sys.exit()
         index(num_docs_index, targets)
     elif task == 'query':
         config(task)
