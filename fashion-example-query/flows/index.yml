@@ -1,28 +1,29 @@
 !Flow
+version: '1'
 with:
   logserver: False
   compress_hwm: 1024
 pods:
-  encode:
+  - name: encode
     uses: pods/encode.yml
     parallel: $JINA_PARALLEL
     timeout_ready: 600000
-  indexer_tshirt:
+  - name: indexer_tshirt
     uses: pods/indexer-tshirt.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
-  indexer_trouser:
+  - name: indexer_trouser
     uses: pods/indexer-trouser.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
-  indexer_pullover:
+  - name: indexer_pullover
     uses: pods/indexer-pullover.yml
     shards: $JINA_SHARDS
     separated_workspace: true
     needs: [encode]
-  join_all:
+  - name: join_all
     uses: _merge
     needs: [indexer_tshirt, indexer_trouser, indexer_pullover]
     read_only: true
