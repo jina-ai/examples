@@ -1,4 +1,4 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
@@ -8,6 +8,8 @@ import click
 import matplotlib.pyplot as plt
 
 from jina.flow import Flow
+from jina import Document
+from jina.clients.sugary_io import _input_files
 from jina.logging import default_logger as logger
 from jina.types.document.multimodal import MultimodalDocument
 
@@ -39,6 +41,13 @@ def plot_topk_images(images):
         ax.axis('off')
         ax.imshow(img)
     plt.show()
+
+def index_generator(data_path, num_docs):
+    for buffer in _input_files(data_path, True, num_docs, None, 'rb'):
+        with Document() as doc:
+            doc.buffer = buffer
+            doc.mime_type = 'image/jpeg'
+        yield doc
 
 def uri2image(uri):
     import io
@@ -79,7 +88,8 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
             clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
-            f.index_files(data_path, recursive=True, batch_size=batch_size, size=num_docs)
+            f.index(index_generator(data_path, num_docs), batch_size=batch_size)
+            # f.index_files(data_path, recursive=True, batch_size=batch_size, size=num_docs, mime_type='image/jpeg')
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
