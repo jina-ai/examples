@@ -58,7 +58,7 @@ bash ./get_data.sh data/
 Alternatively, You can [Download](https://drive.google.com/drive/folders/0B4Eo9mft9jwoamlYWFZBSHFzV3c) and extract the data from google drive.
 
 ## Build encoder images from Jina hub
-To make it easier for the user, we have built and published the Docker image with the indexed documents. You can retrieve the docker image using:
+To make it easier for the user, we have built and published the encoder Docker images. You can retrieve the docker image using:
 ### TIRG image encoder
 Pull & To start the `TirgImageEncoder` Docker image, run the command below: 
 
