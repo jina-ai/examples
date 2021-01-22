@@ -9,7 +9,7 @@ version: 0.2.4
 license: apache-2.0
 keywords: [NLP, wikipedia, text, distilbert, example, transformers]
 type: app
-kind: app
+kind: example
 avatar: None
 platform: "linux/amd64"
 update: "None"
