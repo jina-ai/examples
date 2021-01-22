@@ -80,13 +80,13 @@ So if we run this as it is, we will see our results filtered by Pullovers like t
 ## QueryLanguage
 
 So the real magic here, if you compare it with the original HelloWorld, is that we are using QueryLanguage.
-This is happening in the index and query flow of each category, for example, for the ```indexer-Pullover.yml``` we have
+This is happening in the index and query flow of each category, for example, for the ```indexer-pullover.yml``` we have
 
 ```
 IndexRequest:
       - !FilterQL
         with:
-          lookups: {'tags__label': 'Pullover'}
+          lookups: {'tags__label': 'pullover'}
 ```
 
-The key is the ```!FilterQL```, here we are filtering with some specific label, like Pullover in this example.
+The key is the ```!FilterQL```, here we are filtering with some specific label, like pullover in this example.
