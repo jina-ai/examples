@@ -145,7 +145,7 @@ def query(num_doc, target: dict):
 
     with f:
         f.search(query_generator(num_doc, target), shuffle=False, size=128,
-                 output_fn=print_result, request_size=32, top_k=TOP_K)
+                 on_done=print_result, request_size=32, top_k=TOP_K)
 
 
 def test_query():
