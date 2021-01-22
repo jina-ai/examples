@@ -3,29 +3,28 @@ components:
   - !AnnoyIndexer
     with:
       index_filename: 'index.gz'
-      n_trees: 10
-      search_k: -1
+      metric: $JINA_ANNOY_METRIC
+      n_trees: $JINA_ANNOY_NTREES
+      search_k: $JINA_ANNOY_SEARCH_K
       ref_indexer:
         !NumpyIndexer
         metas:
-          workspace: '/workspace/workspace'
+          workspace: '/docker-workspace'
           name: wrapidx
         with:
           index_filename: 'index.gz'
     metas:
-      workspace: '/workspace/workspace'
       name: annoyidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: '/workspace/workspace'
 metas:
   name: indexer
   py_modules:
     - workspace/__init__.py
-  workspace: '/workspace/workspace'
+  workspace: '/docker-workspace'
 requests:
   on:
     SearchRequest:

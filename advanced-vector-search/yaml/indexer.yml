@@ -4,14 +4,12 @@ components:
     with:
       index_filename: 'index.gz'
     metas:
-      workspace: './workspace'
       name: wrapidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './workspace'
 metas:
   name: indexer
   workspace: './workspace'
