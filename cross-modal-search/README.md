@@ -183,14 +183,14 @@ Just be aware that the image weights 11 GB. Make sure that your docker lets you 
 You can retrieve the docker image using:
 
 ```bash
-docker pull jinahub/app.example.crossmodalsearch:0.0.1-0.9.17
+docker pull jinahub/app.example.crossmodalsearch:0.0.2-0.9.20
 ```
 So you can pull from its latest tags. 
 
 To run the application with the pre-indexed documents and ready to be used from jina-box, run
 
 ```bash
-docker run -p 45678:45678 {DOCKER_IMAGE_TAG}
+docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.2-0.9.20
 ```
 
 ### Build the docker image yourself
