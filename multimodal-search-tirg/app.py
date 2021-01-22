@@ -13,24 +13,25 @@ from jina.clients.sugary_io import _input_files
 from jina.logging import default_logger as logger
 from jina.types.document.multimodal import MultimodalDocument
 
-
 num_docs = 100
 data_path = 'data/**/*.jpeg'
 batch_size = 8
 TOP_K = 5
 
+
 def clean_workdir():
-    if os.path.exists(os.environ['WORKDIR']):
-        shutil.rmtree(os.environ['WORKDIR'])
+    if os.path.exists(os.environ['JINA_WORKSPACE']):
+        shutil.rmtree(os.environ['JINA_WORKSPACE'])
         logger.warning('Workspace deleted')
 
 
 def config():
-    os.environ['PARALLEL'] = '1'
-    os.environ['SHARDS'] = '2'
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
+    os.environ['JINA_SHARDS'] = os.environ.get('JINA_PARALLEL', '2')
+    os.environ['JINA_WORKSPACE'] = './workspace'
+    os.makedirs(os.environ['JINA_WORKSPACE'], exist_ok=True)
     os.environ['JINA_PORT'] = '45678'
+
 
 def plot_topk_images(images):
     n_row = 1
@@ -42,12 +43,14 @@ def plot_topk_images(images):
         ax.imshow(img)
     plt.show()
 
+
 def index_generator(data_path, num_docs):
     for buffer in _input_files(data_path, True, num_docs, None, 'rb'):
         with Document() as doc:
             doc.buffer = buffer
             doc.mime_type = 'image/jpeg'
         yield doc
+
 
 def uri2image(uri):
     import io
@@ -57,6 +60,7 @@ def uri2image(uri):
     image_data = b64decode(encoded)
     return Image.open(io.BytesIO(image_data))
 
+
 def print_result(resp):
     images = []
     for i in range(TOP_K):
@@ -65,11 +69,13 @@ def print_result(resp):
         images.append(image)
     plot_topk_images(images)
 
+
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
         with open(image_path, 'rb') as fp:
             buffer = fp.read()
         yield MultimodalDocument(modality_content_map={'image': buffer, 'text': text})
+
 
 @click.command()
 @click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
@@ -93,6 +99,7 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
         f = Flow.load_config('flow-query.yml')
         with f:
             f.search(input_fn=query_generator(image_paths, text_queries), on_done=print_result)
+
 
 if __name__ == '__main__':
     main()
