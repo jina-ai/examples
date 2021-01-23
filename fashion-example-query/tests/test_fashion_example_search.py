@@ -1,17 +1,15 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import os
-
-import urllib.request
 import gzip
-import numpy as np
+import os
+import urllib.request
 
-from jina.flow import Flow
-from jina.logging.profile import ProgressBar
+import numpy as np
 from jina import Document
 from jina.executors.encoders import BaseImageEncoder
-
+from jina.flow import Flow
+from jina.logging.profile import ProgressBar
 from pkg_resources import resource_filename
 
 
@@ -33,11 +31,9 @@ class MyEncoder(BaseImageEncoder):
         return (data.reshape([-1, 784]) / 255) @ self.oth_mat
 
 
-result = []
 TOP_K = 10
 NUM_DOCS_QUERY = 100
 NUM_DOCS_INDEX = 600
-NUM_OF_QUERIES = []
 
 label_id = {
     0: 'T-shirt/top',
@@ -55,15 +51,6 @@ def get_mapped_label(label_int: str):
     2	        Pullover
     """
     return label_id.get(label_int, "Invalid tag")
-
-
-def print_result(resp):
-    for data in resp.search.docs:
-        NUM_OF_QUERIES.append(data)
-        for match in data.matches:
-            match_label = match.tags['label']
-            result.append(match_label)
-
 
 
 def load_mnist(path: str):
@@ -114,8 +101,8 @@ def query_generator(num_doc: int, target: dict):
             yield d
 
 
-def config(task):
-    parallel = 2 if task == 'index' else 1
+def config():
+    parallel = 1
     shards = 1
     os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
     os.environ['JINA_SHARDS'] = str(shards)
@@ -125,30 +112,31 @@ def config(task):
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
 
-def index(num_doc, target: dict):
-    f = Flow.load_config('flows/index.yml')
+def test_query(mocker):
+    def extract_result(resp):
+        result = []
+        num_of_queries = []
+        for data in resp.search.docs:
+            num_of_queries.append(data)
+            for match in data.matches:
+                match_label = match.tags['label']
+                result.append(match_label)
+        return result, num_of_queries
 
-    with f:
-        f.index(index_generator(num_doc, target), request_size=2048)
+    def search_done(resp):
+        result, num_of_queries = extract_result(resp)
+        validate(result, num_of_queries)
 
+    m = mocker.Mock()
 
-def index_documents(num_docs_index, targets):
+    def validate(result, num_of_queries):
+        m()
+        result_set = set(result)
+        contain_query = 'Pullover' in result_set
 
-    f = Flow.load_config('flows/index.yml')
+        assert len(result) == TOP_K * len(num_of_queries)  # Make sure we query correct amount of data
+        assert contain_query and len(result_set) == 1  # Make sure we query correct data 'Pullover'
 
-    with f:
-        f.index(index_generator(num_docs_index, targets), request_size=2048)
-
-
-def query(num_doc, target: dict):
-    f = Flow.load_config('flows/query.yml')
-
-    with f:
-        f.search(query_generator(num_doc, target), shuffle=False, size=128,
-                 on_done=print_result, request_size=32, top_k=TOP_K)
-
-
-def test_query():
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
@@ -168,15 +156,18 @@ def test_query():
         }
     }
 
-    config('index')
+    config()
     download_data(targets, None)
-    index_documents(NUM_DOCS_INDEX, targets)
 
-    config('query')
-    query(NUM_DOCS_QUERY, targets)
-    result_set = set(result)
-    contain_query = True if 'Pullover' in result_set else False
+    f = Flow.load_config('flows/index.yml')
 
-    assert len(result) == TOP_K * len(NUM_OF_QUERIES)  # Make sure we query correct amount of data
-    assert contain_query == True and len(result_set) == 1   # Make sure we query correct data 'Pullover'
+    with f:
+        f.index(index_generator(NUM_DOCS_INDEX, targets), request_size=2048)
 
+    f = Flow.load_config('flows/query.yml')
+
+    with f:
+        f.search(query_generator(NUM_DOCS_QUERY, targets), shuffle=False, size=128,
+                 on_done=search_done, request_size=32, top_k=TOP_K)
+
+    m.assert_called()
