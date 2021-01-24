@@ -6,13 +6,11 @@ components:
       metric: euclidean
     metas:
       name: vecidx  # a customized name
-      workspace: $JINA_WORKSPACE
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx
-      workspace: $JINA_WORKSPACE
 metas:
   name: chunk_compound_indexer
   workspace: $JINA_WORKSPACE
