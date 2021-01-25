@@ -3,8 +3,9 @@ version: '1'
 pods:
   - name: encoder
     uses: yaml/encode.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_PARALLEL
   - name: indexer
     uses: yaml/indexer.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: 10000
+    polling: any

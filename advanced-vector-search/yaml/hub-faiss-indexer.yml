@@ -2,7 +2,10 @@
 components:
   - !FaissIndexer
     with:
-      index_key: 'IVF10,PQ4'
+      index_key: $JINA_FAISS_INDEX_KEY
+      distance: $JINA_FAISS_DISTANCE
+      normalize: $JINA_FAISS_NORMALIZE
+      nprobe: $JINA_FAISS_NPROBE
       train_filepath: './workspace/train.tgz'
       index_filename: 'index.gz'
       ref_indexer:
@@ -13,14 +16,12 @@ components:
         with:
           index_filename: 'index.gz'
     metas:
-      workspace: './workspace'
       name: faissidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './workspace'
 metas:
   name: indexer
   workspace: './workspace'

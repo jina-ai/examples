@@ -18,15 +18,18 @@
 
 In this demo, we use Jina to build a vector search engine that finds the closest vector in the database to a query
 
-This example uses [ANN_SIFT10K](http://corpus-texmex.irisa.fr/), which is a dataset comprised of three vector sets:  
+This example is prepared to use one of these 2 datasets [ANN_SIFT10K or ANN_SIFT1M](http://corpus-texmex.irisa.fr/), which are datasets comprised of three vector sets:  
 
-- 10K index
-- 100 vectors query
-- 25K vectors to train
+- 10K or 1M index
+- 100 or 10K vectors query
+- 25K or 100k vectors to train
+
+To run the local example, we show here the steps to work with ANN_SIFT10K (siftsmall). A [docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) is published where the ANN_SIFT1M (sift) has already been indexed
+using 4 shards.
   
-These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a document and only one chunk per document is used.
+These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a Document.
 
-In this example, we use Faiss and Annoy Indexer Vectors from the hub (https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) (https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer).
+In this example, we use [Faiss](https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) and [Annoy](https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer) Indexer Vectors from the hub.
 
 This example will show how the same index created with an index Flow can be used to be queried using different type of indexers.
 
@@ -57,16 +60,17 @@ We encourage you to try different indexers and different options for other index
 ## Requirements
 
 Be sure to create an environment with Python 3.7 or higher installed, then you also need to have the requirements of this example,
-which is `jina` and `click`.
+which are `jina`, `docker` and `click`.
 
-In order to run the example with the different indexers, make sure to pull the docker images from the [Jina Hub repository] (https://hub.docker.com/u/jinahub)
+In order to run the example with the different indexers, make sure to pull the docker images from the [Jina Hub repository](https://hub.docker.com/u/jinahub)
 
 ## Prepare the data
 
 In order to get the data needed to run the example, we have prepared a small script that will download the required fails.
+In this e
 
 ```bash
-./get_siftsmall.sh
+./get_data.sh siftsmall
 ```
 
 Moreover, FAISS needs to learn some structural patterns of the data in order to build an efficient indexing scheme. Usually, the training is done with some subset of data that is not necessarily part of the index.
@@ -88,7 +92,6 @@ This workspace folder will contain the built index once the vectors are indexed 
 
 To index the data we first need to define our **Flow** and for this example we'll use a **YAML** file. In the Flow YAML file, we add **Pods** in sequence. In this demo, we have five pods defined:
 
-- `crafter`
 - `encoder`
 - `indexer`
 
@@ -104,16 +107,16 @@ However, we have another Pod working in silence. Actually, the input to the very
 
 ```yaml
 !Flow
-metas:
-  prefetch: 10
+version: '1'
 pods:
-  encoder:
+  - name: encoder
     uses: yaml/encode.yml
-    parallel: $JINA_PARALLEL
-  indexer:
+    shards: $JINA_PARALLEL
+  - name: indexer
     uses: yaml/indexer.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: 10000
+    polling: any
 ```
 </sub>
 </td>
@@ -135,22 +138,42 @@ to the index flow but with an extra pod used to evaluate results.
 
 ```yaml
 !Flow
+version: '1'
+env:
+  OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
 with:
   read_only: true
 pods:
-  encoder:
+  - name: encoder
+    show_exc_info: true
     uses: yaml/encode.yml
-    parallel: $JINA_PARALLEL
-  indexer:
+    shards: $JINA_PARALLEL
+  - name: indexer
+    polling: all
+    show_exc_info: true
     uses: $JINA_USES
     uses_internal: $JINA_USES_INTERNAL
-    parallel: $JINA_PARALLEL
-    timeout_ready: 600000
-    #uses_after: _merge_matches  # uncomment this if you want to increase parallelization
-    volumes: './workspace:/workspace/workspace'
-  evaluate:
+    shards: $JINA_SHARDS
+    timeout_ready: -1
+    uses_after: yaml/merge-matches-sort.yml
+    volumes: './workspace:/docker-workspace'
+    remove_uses_ba: true
+    docker_kwargs:
+      environment:
+        JINA_FAISS_INDEX_KEY: $JINA_FAISS_INDEX_KEY
+        JINA_FAISS_DISTANCE: $JINA_FAISS_DISTANCE
+        JINA_FAISS_NORMALIZE: $JINA_FAISS_NORMALIZE
+        JINA_FAISS_NPROBE: $JINA_FAISS_NPROBE
+        JINA_ANNOY_METRIC: $JINA_ANNOY_METRIC
+        JINA_ANNOY_NTREES: $JINA_ANNOY_NTREES
+        JINA_ANNOY_SEARCH_K: $JINA_ANNOY_SEARCH_K
+        OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
+  - name: evaluate
+    show_exc_info: true
     uses: yaml/evaluate.yml
 ```
+
+All the `environment` variables are added so that it is easy for the user to try out different configurations of `annoy` or `faiss` indexers.
 
 </sub>
 
@@ -167,7 +190,7 @@ In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours
 Index is run with the following command, where batch_size can be chosen by the user. Indexing reads a file of numpy arrays, and sends them to the flow gateway in binary mode to be converted back into numpy arrays by the crafter.
 
 ```bash
-python app.py -t index -n $batch_size
+python app.py -t index
 ```
 
 ### Query <!-- omit in toc -->
@@ -205,24 +228,41 @@ It can be good to look for different parameters to guarantee the best results
 
 ## Use Docker image from the jina hub
 
-To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) with the indexed documents.
+To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) with the ANN_SIFT1M dataset indexed.
 You can retrieve the docker image using:
 
 ```bash
-docker pull jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17
+docker pull jinahub/app.example.advancedvectorsearch:0.0.2-0.9.20
 ```
 So you can pull from its latest tags. And you can run it. By default it runs the search with `faiss` indexer. 
 
 To simply run it, please do:
 ```bash
-docker run jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17
+docker run jinahub/app.example.advancedvectorsearch:0.0.2-0.9.20
 ```
 
 If you want to run the image with `annoy` as a search library, you can override the entrypoint doing:
 
 ```bash
-docker run -it --entrypoint=/bin/bash jinahub/app.example.advancedvectorsearch:0.0.1-0.9.17 entrypoint.sh annoy
+docker run -it --entrypoint=/bin/bash jinahub/app.example.advancedvectorsearch:0.0.2-0.9.20 entrypoint.sh annoy
 ```
+
+If you want to change the parameters or of the `Faiss` or the `Annoy` Indexer you can pass different environment variables
+to the `docker run` command by doing for instance:
+
+```bash
+docker run -e JINA_FAISS_INDEX_KEY='Flat' jinahub/app.example.advancedvectorsearch:0.0.2-0.9.20
+```
+
+An important parameter to set is `JINA_DISTANCE_REVERSE`, depending on the type of distance or metric that is used. For instance
+for `inner_product` distance, `JINA_DISTANCE_REVERSE` should be set to True as the returned measure is similarity for `Faiss` and not
+`distance`. Therefore the results should be scores in descending order.
+
+Another parameter that cannot be found int the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS` that 
+controls how many threads are used by `Faiss` when doing queries. Since the image has been built with 4 shards (around 250K documents each),
+the `OMP_NUM_THREADS` is set to 1 by default to have the example use 4 CPUs. You can try to change also this parameter to investigate
+the quality and speed of the results.
+
 
 ## Wrap up
 

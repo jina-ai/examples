@@ -2,30 +2,31 @@
 components:
   - !FaissIndexer
     with:
-      index_key: 'IVF10,PQ4'
-      train_filepath: '/workspace/workspace/train.tgz'
+      index_key: $JINA_FAISS_INDEX_KEY
+      distance: $JINA_FAISS_DISTANCE
+      normalize: $JINA_FAISS_NORMALIZE
+      nprobe: $JINA_FAISS_NPROBE
+      train_filepath: '/docker-workspace/train.tgz'
       index_filename: 'index.gz'
       ref_indexer:
         !NumpyIndexer
         metas:
-          workspace: '/workspace/workspace'
+          workspace: '/docker-workspace'
           name: wrapidx
         with:
           index_filename: 'index.gz'
     metas:
-      workspace: '/workspace/workspace'
       name: faissidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: '/workspace/workspace'
 metas:
   name: indexer
   py_modules:
     - workspace/__init__.py
-  workspace: '/workspace/workspace'
+  workspace: '/docker-workspace'
 requests:
   on:
     SearchRequest:

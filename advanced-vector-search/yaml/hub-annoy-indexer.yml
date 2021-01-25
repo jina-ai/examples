@@ -3,8 +3,9 @@ components:
   - !AnnoyIndexer
     with:
       index_filename: 'index.gz'
-      n_trees: 10
-      search_k: -1
+      metric: $JINA_ANNOY_METRIC
+      n_trees: $JINA_ANNOY_NTREES
+      search_k: $JINA_ANNOY_SEARCH_K
       ref_indexer:
         !NumpyIndexer
         metas:
@@ -13,14 +14,12 @@ components:
         with:
           index_filename: 'index.gz'
     metas:
-      workspace: './workspace'
       name: annoyidx
   - !BinaryPbIndexer
     with:
       index_filename: doc.gz
     metas:
       name: docidx
-      workspace: './workspace'
 metas:
   name: indexer
   workspace: './workspace'
