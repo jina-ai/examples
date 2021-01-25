@@ -45,11 +45,11 @@ def get_mapped_label(label_int: str):
 
 def print_result(resp):
     for d in resp.search.docs:
-        vi = d.uri
-        result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
-        for kk in d.matches:
-            kmi = kk.uri
-            result_html.append(f'<img src="{kmi}"/>')
+        data_uri = d.uri
+        result_html.append(f'<tr><td><img src="{data_uri}"/></td><td>')
+        for match in d.matches:
+            match_uri = match.uri
+            result_html.append(f'<img src="{match_uri}"/>')
         result_html.append('</td></tr>\n')
 
 
