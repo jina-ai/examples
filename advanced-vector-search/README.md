@@ -27,7 +27,7 @@ This example is prepared to use one of these 2 datasets [ANN_SIFT10K or ANN_SIFT
 To run the local example, we show here the steps to work with ANN_SIFT10K (siftsmall). A [docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) is published where the ANN_SIFT1M (sift) has already been indexed
 using 4 shards.
   
-These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a document.
+These vectors are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. The example is easily adapted for use with larger datasets from the same source which can be found [here](http://corpus-texmex.irisa.fr/). For this demo, a vector is considered to be a Document.
 
 In this example, we use [Faiss](https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) and [Annoy](https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer) Indexer Vectors from the hub.
 
