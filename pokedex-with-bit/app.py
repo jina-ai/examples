@@ -11,11 +11,11 @@ image_src = 'data/**/*.png'
 
 
 def config():
-    parallel = 1 if sys.argv[1] == 'index' else 1
+    num_encoders = 1 if sys.argv[1] == 'index' else 1
     shards = 8
 
-    os.environ['JINA_PARALLEL'] = str(parallel)
-    os.environ['JINA_SHARDS'] = str(shards)
+    os.environ['JINA_SHARDS'] = str(num_encoders)
+    os.environ['JINA_SHARDS_INDEXERS'] = str(shards)
     os.environ['JINA_WORKSPACE'] = './workspace'
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
