@@ -19,6 +19,7 @@ python -c "import nltk; nltk.download('punkt')"
 
 ENV JINA_USES_VSE_IMAGE_ENCODER='yaml/hub-image-encoder.yml'
 ENV JINA_USES_VSE_TEXT_ENCODER='yaml/hub-text-encoder.yml'
+ENV JINA_SHARDS='2'
 
 RUN ./prepare_data.sh && python app.py -t index -n 20000 && rm -rf data
 
@@ -39,4 +40,4 @@ LABEL platform="linux/amd64"
 LABEL update="None"
 LABEL url="https://github.com/jina-ai/examples/tree/master/cross-modal-search"
 LABEL vendor="Jina AI Limited"
-LABEL version="0.0.1"
+LABEL version="0.0.2"
