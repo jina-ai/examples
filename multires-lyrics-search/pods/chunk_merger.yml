@@ -8,3 +8,8 @@ requests:
       - !ReduceAllDriver
         with:
           traversal_paths: ['cm']
+      - !SortQL
+        with:
+          traversal_paths: ['cm']
+          reverse: false
+          field: 'score__value'

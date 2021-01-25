@@ -64,19 +64,17 @@ To make it easier for the user, we have built and published the [Docker image](h
 You can retrieve the docker image using:
 
 ```bash
-docker pull jinahub/app.example.multireslyricssearch:0.0.1-0.9.17
+docker pull jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 ```
 So you can pull from its latest tags.
 
 Then you can run it, and you can proceed to see the results in the browser as explained before
 
 ```bash
-docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.1-0.9.17
+docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 ```
 
 
 ## License
 
 Copyright (c) 2020-2021 Han Xiao. All rights reserved.
-
-
