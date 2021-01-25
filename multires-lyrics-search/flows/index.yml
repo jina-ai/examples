@@ -8,16 +8,17 @@ pods:
   - name: encoder
     show_exc_info: true
     uses: pods/encode.yml
-    parallel: $JINA_PARALLEL
+    polling: any
+    shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   - name: chunk_idx
+    polling: any
     show_exc_info: true
     uses: pods/chunk.yml
     shards: $JINA_SHARDS
-    separated_workspace: true
   - name: doc_idx
-    show_exc_info: true
+    polling: any
     uses: pods/doc.yml
     needs: gateway
   - name: join_all

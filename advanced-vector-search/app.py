@@ -1,4 +1,4 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import click
@@ -13,20 +13,43 @@ from jina import Document
 from read_vectors_files import fvecs_read, ivecs_read
 
 
-def config(indexer_query_type: str):
-    os.environ['JINA_PARALLEL'] = str(1)
-    os.environ['JINA_SHARDS'] = str(1)
-    os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './siftsmall')
+def general_config():
+    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
+    os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '2')
+    os.environ['JINA_DATASET_NAME'] = os.environ.get('JINA_DATASET_NAME', 'siftsmall')
+    os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './')
+    os.environ['JINA_REQUEST_SIZE'] = os.environ.get('JINA_REQUEST_SIZE', '100')
+    os.environ['OMP_NUM_THREADS'] = os.environ.get('OMP_NUM_THREADS', '1')
+
+
+def query_config(indexer_query_type: str):
     if indexer_query_type == 'faiss':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_FAISS',
                                                  'docker://jinahub/pod.indexer.faissindexer:0.0.14-0.9.17')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
+        os.environ['JINA_FAISS_INDEX_KEY'] = os.environ.get('JINA_FAISS_INDEX_KEY',
+                                                            'IVF10,PQ4')
+        os.environ['JINA_FAISS_DISTANCE'] = os.environ.get('JINA_FAISS_DISTANCE',
+                                                           'l2')
+        os.environ['JINA_FAISS_NORMALIZE'] = os.environ.get('JINA_FAISS_NORMALIZE',
+                                                            'False')
+        os.environ['JINA_FAISS_NPROBE'] = os.environ.get('JINA_FAISS_NPROBE',
+                                                         '1')
     elif indexer_query_type == 'annoy':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_ANNOY',
                                                  'docker://jinahub/pod.indexer.annoyindexer:0.0.14-0.9.17')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
+        os.environ['JINA_ANNOY_METRIC'] = os.environ.get('JINA_ANNOY_METRIC',
+                                                         'euclidean')
+        os.environ['JINA_ANNOY_NTREES'] = os.environ.get('JINA_ANNOY_NTREES',
+                                                         '10')
+        os.environ['JINA_ANNOY_SEARCH_K'] = os.environ.get('JINA_ANNOY_SEARCH_K',
+                                                           '-1')
     elif indexer_query_type == 'numpy':
         os.environ['JINA_USES'] = 'yaml/indexer.yml'
+
+    os.environ['JINA_DISTANCE_REVERSE'] = os.environ.get('JINA_DISTANCE_REVERSE',
+                                                         'False')
 
 
 def index_generator(db_file_path: str):
@@ -54,13 +77,18 @@ def evaluate_generator(db_file_path: str, groundtruth_path: str):
         yield doc, groundtruth
 
 
-def run(task, request_size, top_k, indexer_query_type):
-    config(indexer_query_type)
+def run(task, top_k, indexer_query_type):
+    general_config()
+    query_config(indexer_query_type)
+
+    request_size = int(os.environ['JINA_REQUEST_SIZE'])
+    dataset_name = os.environ['JINA_DATASET_NAME']
+    data_dir = os.path.join(dataset_name, os.environ['JINA_TMP_DATA_DIR'])
 
     if task == 'index':
-        data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_base.fvecs')
+        data_path = os.path.join(data_dir, f'{dataset_name}_base.fvecs')
         with Flow.load_config('flow-index.yml') as flow:
-            flow.index(index_generator(data_path), request_size=request_size)
+            flow.index(input_fn=index_generator(data_path), request_size=request_size)
     elif task == 'query':
         evaluation_results = defaultdict(float)
 
@@ -71,15 +99,16 @@ def run(task, request_size, top_k, indexer_query_type):
 
         get_evaluation_results = partial(_get_evaluation_results, evaluation_results)
 
-        data_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_query.fvecs')
-        groundtruth_path = os.path.join(os.environ['JINA_TMP_DATA_DIR'], 'siftsmall_groundtruth.ivecs')
+        data_path = os.path.join(data_dir, f'{dataset_name}_query.fvecs')
+        groundtruth_path = os.path.join(data_dir, f'{dataset_name}_groundtruth.ivecs')
         with Flow.load_config('flow-query.yml') as flow:
-            flow.search(evaluate_generator(data_path, groundtruth_path), output_fn=get_evaluation_results,
+            flow.search(input_fn=evaluate_generator(data_path, groundtruth_path), request_size=request_size,
+                        on_done=get_evaluation_results,
                         top_k=top_k)
         evaluation = evaluation_results[list(evaluation_results.keys())[0]]
         # return for test
-        print(f'Recall@{top_k} ==> {100*evaluation}')
-        return 100*evaluation
+        print(f'Recall@{top_k} ==> {100 * evaluation}')
+        return 100 * evaluation
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
@@ -87,12 +116,11 @@ def run(task, request_size, top_k, indexer_query_type):
 
 @click.command()
 @click.option('--task', '-t')
-@click.option('--request-size', '-s', default=50)
 @click.option('--top_k', '-k', default=100)
 @click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy', 'numpy'], case_sensitive=False),
               default='faiss')
-def main(task, request_size, top_k, indexer_query_type):
-    run(task, request_size, top_k, indexer_query_type)
+def main(task, top_k, indexer_query_type):
+    run(task, top_k, indexer_query_type)
 
 
 if __name__ == '__main__':

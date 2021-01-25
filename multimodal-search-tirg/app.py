@@ -1,4 +1,4 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
@@ -7,11 +7,11 @@ import shutil
 import click
 import matplotlib.pyplot as plt
 
-from jina import Document
 from jina.flow import Flow
+from jina import Document
+from jina.clients.sugary_io import _input_files
 from jina.logging import default_logger as logger
 from jina.types.document.multimodal import MultimodalDocument
-from jina.clients.python.io import input_files
 
 
 num_docs = 100
@@ -42,6 +42,13 @@ def plot_topk_images(images):
         ax.imshow(img)
     plt.show()
 
+def index_generator(data_path, num_docs):
+    for buffer in _input_files(data_path, True, num_docs, None, 'rb'):
+        with Document() as doc:
+            doc.buffer = buffer
+            doc.mime_type = 'image/jpeg'
+        yield doc
+
 def uri2image(uri):
     import io
     from base64 import b64decode
@@ -58,13 +65,6 @@ def print_result(resp):
         images.append(image)
     plot_topk_images(images)
 
-def index_generator(data_path, num_docs):
-    for buffer in input_files(data_path, True, num_docs, None, 'rb'):
-        with Document() as doc:
-            doc.buffer = buffer
-            doc.mime_type = 'image/jpeg'
-        yield doc
-
 def query_generator(image_paths, text_queries):
     for image_path, text in zip(image_paths, text_queries):
         with open(image_path, 'rb') as fp:
@@ -72,11 +72,11 @@ def query_generator(image_paths, text_queries):
         yield MultimodalDocument(modality_content_map={'image': buffer, 'text': text})
 
 @click.command()
-@click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
+@click.option('--task', '-t', type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
-@click.option('--image_path', '-ip', default='data/women/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
+@click.option('--image_path', '-ip', default='data/images/dresses/casual_and_day_dresses/58648388/58648388_2.jpeg')
 @click.option('--text_query', '-tq', default='change color to black')
 @click.option('--overwrite_workspace', '-overwrite', default=True)
 def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrite_workspace):
@@ -92,7 +92,7 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
-            f.search(query_generator(image_paths, text_queries), output_fn=print_result, batch_size=1)
+            f.search(input_fn=query_generator(image_paths, text_queries), on_done=print_result)
 
 if __name__ == '__main__':
     main()

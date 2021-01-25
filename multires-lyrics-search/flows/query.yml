@@ -18,7 +18,6 @@ pods:
     show_exc_info: true
     uses: pods/chunk.yml
     shards: $JINA_SHARDS
-    separated_workspace: true
     polling: all
     uses_after: pods/chunk_merger.yml
     timeout_ready: -1 # larger timeout as in query time will read all the data

@@ -1,20 +1,34 @@
 !Flow
 version: '1'
+env:
+  OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
 with:
   read_only: true
 pods:
   - name: encoder
     show_exc_info: true
     uses: yaml/encode.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_PARALLEL
   - name: indexer
+    polling: all
     show_exc_info: true
     uses: $JINA_USES
     uses_internal: $JINA_USES_INTERNAL
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: -1
-    #uses_after: _merge_matches  # uncomment this if you want to increase parallelization
-    volumes: './workspace:/workspace/workspace'
+    uses_after: yaml/merge-matches-sort.yml
+    volumes: './workspace:/docker-workspace'
+    remove_uses_ba: true
+    docker_kwargs:
+      environment:
+        JINA_FAISS_INDEX_KEY: $JINA_FAISS_INDEX_KEY
+        JINA_FAISS_DISTANCE: $JINA_FAISS_DISTANCE
+        JINA_FAISS_NORMALIZE: $JINA_FAISS_NORMALIZE
+        JINA_FAISS_NPROBE: $JINA_FAISS_NPROBE
+        JINA_ANNOY_METRIC: $JINA_ANNOY_METRIC
+        JINA_ANNOY_NTREES: $JINA_ANNOY_NTREES
+        JINA_ANNOY_SEARCH_K: $JINA_ANNOY_SEARCH_K
+        OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
   - name: evaluate
     show_exc_info: true
     uses: yaml/evaluate.yml
