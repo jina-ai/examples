@@ -155,11 +155,11 @@ def query(num_doc, target: dict):
 
 
 def config(task):
-    parallel = 2 if task == 'index' else 1
-    shards = 1
+    shards_encoder = 2 if task == 'index' else 1
+    shards_indexer = 1
     os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['JINA_SHARDS'] = str(shards)
-    os.environ['JINA_PARALLEL'] = str(parallel)
+    os.environ['JINA_SHARDS_INDEXER'] = str(shards_indexer)
+    os.environ['JINA_SHARDS_ENCODER'] = str(shards_encoder)
     os.environ['JINA_WORKDIR'] = './workspace'
     os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
