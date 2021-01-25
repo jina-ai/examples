@@ -3,7 +3,7 @@ with:
   index_filename: doc.gz
 metas:
   name: docidx
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     IndexRequest:

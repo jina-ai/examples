@@ -16,22 +16,23 @@ pods:
     read_only: true
     needs: [gateway]
   - name: encode
-    uses: docker://jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.17
+    uses: docker://jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-0.9.19
     uses_internal: pods/encode-tirg-multimodal.yml
-    # uses: pods/encode-tirg-multimodal-dummy.yml
-    parallel: $PARALLEL
+    shards: $JINA_PARALLEL
     timeout_ready: 600000
     uses_before: _merge_chunks
     needs: [normalize, pass_text]
   - name: vec_idx
     uses: pods/vec.yml
     polling: all
-    shards: $SHARDS
+    shards: $JINA_SHARDS
+    uses_after: _merge_matches
+    remove_uses_ba: true
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    separated_workspace: true
   - name: doc_idx
     uses: pods/doc.yml
     polling: all
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    separated_workspace: true
+    uses_after: yaml/merge_matches_sort_topk.yml
+    remove_uses_ba: true
