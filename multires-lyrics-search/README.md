@@ -71,11 +71,10 @@ So you can pull from its latest tags.
 Then you can run it, and you can proceed to see the results in the browser as explained before
 
 ```bash
-docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.17
+docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 ```
 
 
 ## License
 
 Copyright (c) 2020-2021 Han Xiao. All rights reserved.
-
