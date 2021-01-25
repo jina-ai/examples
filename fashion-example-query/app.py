@@ -3,7 +3,8 @@ __license__ = "Apache-2.0"
 
 import os
 import click
-import sys
+from collections import defaultdict
+
 
 import urllib.request
 import gzip
@@ -24,6 +25,9 @@ from components import *
 
 result_html = []
 TOP_K = 10
+num_docs_evaluated = 0
+evaluation_value = defaultdict(float)
+
 
 label_id = {
     0: 'T-shirt/top',
@@ -52,12 +56,25 @@ def print_result(resp):
             result_html.append(f'<img src="{match_uri}"/>')
         result_html.append('</td></tr>\n')
 
+        # update evaluation values
+        # as evaluator set to return running avg, here we can simply replace the value
+        for evaluation in d.evaluations:
+            evaluation_value[evaluation.op_name] = evaluation.value
+
 
 def write_html(html_path: str):
+    global num_docs_evaluated
+    global evaluation_value
+
     with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
             open(html_path, 'w') as fw:
         t = fp.read()
         t = t.replace('{% RESULT %}', '\n'.join(result_html))
+        t = t.replace('{% PRECISION_EVALUATION %}',
+            '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
+        t = t.replace('{% RECALL_EVALUATION %}',
+            '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
+        t = t.replace('{% TOP_K %}', str(TOP_K))
         fw.write(t)
 
     url_html_path = 'file://' + os.path.abspath(html_path)
