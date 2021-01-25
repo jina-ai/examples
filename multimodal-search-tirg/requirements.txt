@@ -1,4 +1,4 @@
 click==7.1.2
-jina==0.9.17
+jina[python-magic]==0.9.20
 matplotlib==3.3.3
 pillow==8.1.0

@@ -4,7 +4,7 @@ with:
   metric: cosine
 metas:
   name: vecidx
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     IndexRequest:

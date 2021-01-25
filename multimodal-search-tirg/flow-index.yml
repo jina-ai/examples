@@ -1,7 +1,5 @@
 !Flow
 version: '1'
-with:
-  logserver: false
 pods:
   - name: read
     uses: pods/image-read.yml
@@ -10,23 +8,21 @@ pods:
     uses: pods/normalize.yml
     read_only: true
   - name: encode
-    uses: docker://jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.17
-    # uses_internal: pods/encode-tirg-image.yml
-    # uses: pods/encode-tirg-image-dummy.yml
-    parallel: $PARALLEL
+    uses: docker://jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.20
+    shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
   - name: vec_idx
+    polling: any
     uses: pods/vec.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    separated_workspace: true
   - name: image_kv
+    polling: any
     uses: pods/doc.yml
     needs: [gateway]
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    separated_workspace: true
   - name: join_all
     uses: _merge
     needs: [image_kv, vec_idx]
