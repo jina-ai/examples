@@ -2,7 +2,6 @@
 version: '1'
 with:
   read_only: true  # better add this in the query time
-  logserver: False
   compress_hwm: 1024
 pods:
   - name: encode
@@ -11,7 +10,6 @@ pods:
   - name: indexer_tshirt
     uses: pods/indexer-tshirt.yml
     shards: $JINA_SHARDS
-    separated_workspace: true
     needs: [encode]
     polling: all
     uses_after: pods/reduce.yml
@@ -19,7 +17,6 @@ pods:
   - name: indexer_trouser
     uses: pods/indexer-trouser.yml
     shards: $JINA_SHARDS
-    separated_workspace: true
     needs: [encode]
     polling: all
     uses_after: pods/reduce.yml
@@ -27,7 +24,6 @@ pods:
   - name: indexer_pullover
     uses: pods/indexer-pullover.yml
     shards: $JINA_SHARDS
-    separated_workspace: true
     needs: [encode]
     polling: all
     uses_after: pods/reduce.yml
