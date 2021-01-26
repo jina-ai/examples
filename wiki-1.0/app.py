@@ -11,11 +11,12 @@ from jina import Document
 
 def config():
     os.environ["JINA_DATA_FILE"] = os.environ.get(
-        "JINA_DATA_FILE", "data/character-lines.csv"
+        "JINA_DATA_FILE", "data/input.txt"
     )
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
 
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
+    os.environ["JINA_MAX_DOCS"] = os.environ.get("JINA_MAX_DOCS", int(1000))
 
 
 def print_topk(resp, sentence):
@@ -48,7 +49,7 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search_lines(lines=[text, ], output_fn=ppr, top_k=top_k)
+            f.search_lines(lines=[text, ], on_done=ppr, top_k=top_k)
 
 
 def query_restful():
@@ -64,6 +65,7 @@ def dryrun():
         f.dry_run()
 
 
+max_docs = int(os.environ["JINA_MAX_DOCS"])
 @click.command()
 @click.option(
     "--task",
@@ -72,7 +74,7 @@ def dryrun():
         ["index", "query", "query_restful", "dryrun"], case_sensitive=False
     ),
 )
-@click.option("--num_docs", "-n", default=50)
+@click.option("--num_docs", "-n", default=max_docs)
 @click.option("--top_k", "-k", default=5)
 def main(task, num_docs, top_k):
     config()
