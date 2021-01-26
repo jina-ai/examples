@@ -1,8 +1,10 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import click	
+import click
+from collections import defaultdict
+
 
 import urllib.request
 import gzip
@@ -11,7 +13,7 @@ import webbrowser
 import random
 
 from jina.flow import Flow
-from jina.clients.python import ProgressBar
+from jina.logging.profile import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
 from jina.proto import jina_pb2
@@ -22,18 +24,15 @@ from pkg_resources import resource_filename
 from components import *
 
 result_html = []
+TOP_K = 10
+num_docs_evaluated = 0
+evaluation_value = defaultdict(float)
+
 
 label_id = {
     0: 'T-shirt/top',
     1: 'Trouser',
-    2: 'Pullover',
-    3: 'Dress',
-    4: 'Coat',
-    5: 'Sandal',
-    6: 'Shirt',
-    7: 'Sneaker',
-    8: 'Bag',
-    9: 'Ankle boot'
+    2: 'Pullover'
 }
 
 
@@ -44,32 +43,38 @@ def get_mapped_label(label_int: str):
     0	        T-shirt/top
     1	        Trouser
     2	        Pullover
-    3	        Dress
-    4	        Coat
-    5	        Sandal
-    6	        Shirt
-    7	        Sneaker
-    8	        Bag
-    9	        Ankle boot
     """
     return label_id.get(label_int, "Invalid tag")
 
 
 def print_result(resp):
     for d in resp.search.docs:
-        vi = d.uri
-        result_html.append(f'<tr><td><img src="{vi}"/></td><td>')
-        for kk in d.matches:
-            kmi = kk.uri
-            result_html.append(f'<img src="{kmi}" style="opacity:{kk.score.value}"/>')
+        data_uri = d.uri
+        result_html.append(f'<tr><td><img src="{data_uri}"/></td><td>')
+        for match in d.matches:
+            match_uri = match.uri
+            result_html.append(f'<img src="{match_uri}"/>')
         result_html.append('</td></tr>\n')
+
+        # update evaluation values
+        # as evaluator set to return running avg, here we can simply replace the value
+        for evaluation in d.evaluations:
+            evaluation_value[evaluation.op_name] = evaluation.value
 
 
 def write_html(html_path: str):
+    global num_docs_evaluated
+    global evaluation_value
+
     with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
             open(html_path, 'w') as fw:
         t = fp.read()
         t = t.replace('{% RESULT %}', '\n'.join(result_html))
+        t = t.replace('{% PRECISION_EVALUATION %}',
+            '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
+        t = t.replace('{% RECALL_EVALUATION %}',
+            '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
+        t = t.replace('{% TOP_K %}', str(TOP_K))
         fw.write(t)
 
     url_html_path = 'file://' + os.path.abspath(html_path)
@@ -115,45 +120,46 @@ def download_data(target: dict, download_proxy=None):
 
 def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        d = Document(content=target['index']['data'][j])
-        d.update_id()
         label_int = target['index-labels']['data'][j][0]
-        category = get_mapped_label(label_int)
-        d.tags['label'] = category
-        yield d
+        if label_int < 3: #We are using only 3 categories, no need to index the rest
+            with Document() as d:
+                d.content = target['index']['data'][j]
+                category = get_mapped_label(label_int)
+                d.tags['label'] = category
+            yield d
 
 
 def query_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        n = random.randint(0, 10000) #there are 10000 query examples, so that's the limit
+        n = random.randint(0, 9999) #there are 10000 query examples, so that's the limit
         label_int = target['query-labels']['data'][n][0] 
         category = get_mapped_label(label_int) 
-        if category == 'Bag':
+        if category == 'Pullover':
             d = Document(content=(target['query']['data'][n]))
             d.tags['label'] = category
             yield d
 
 
 def index(num_doc, target: dict):
-    f = Flow.load_config('flow-index.yml')
+    f = Flow.load_config('flows/index.yml')
     with f:
-        f.index(index_generator(num_doc, target), batch_size=2048)
+        f.index(index_generator(num_doc, target), request_size=2048)
 
 
 def query(num_doc, target: dict):
-    f = Flow.load_config('flow-query.yml')
+    f = Flow.load_config('flows/query.yml')
     with f:
         f.search(query_generator(num_doc, target), shuffle=True, size=128,
-                 output_fn=print_result, batch_size=32)
+                 on_done=print_result, request_size=32, top_k=TOP_K)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
 def config(task):
-    parallel = 2 if task == 'index' else 1
-    shards = 1
+    shards_encoder = 2 if task == 'index' else 1
+    shards_indexer = 1
     os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['JINA_SHARDS'] = str(shards)
-    os.environ['JINA_PARALLEL'] = str(parallel)
+    os.environ['JINA_SHARDS_INDEXER'] = str(shards_indexer)
+    os.environ['JINA_SHARDS_ENCODER'] = str(shards_encoder)
     os.environ['JINA_WORKDIR'] = './workspace'
     os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
