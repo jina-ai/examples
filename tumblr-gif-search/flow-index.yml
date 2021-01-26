@@ -18,7 +18,6 @@ pods:
   - name: chunk_idx
     uses: index/chunk.yml
     shards: $SHARDS_INDEXER
-    separated_workspace: true
   - name: doc_idx
     uses: index/doc.yml
     shards: $SHARDS_DOC
