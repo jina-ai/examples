@@ -68,19 +68,19 @@ with:
   logserver: true
 pods:
   chunk_seg:
-    uses: craft/index-craft.yml
-    parallel: $PARALLEL
+    uses: segment/index-segment.yml
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
   doc_idx:
     uses: index/doc.yml
   tf_encode:
     uses: encode/encode.yml
     needs: chunk_seg
-    parallel: $PARALLEL
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
   chunk_idx:
     uses: index/chunk.yml
-    shards: $SHARDS
+    shards: $SHARDS_INDEXER
     separated_workspace: true
   join_all:
     uses: _merge
@@ -111,14 +111,14 @@ with:
   read_only: true  # better add this in the query time
 pods:
   chunk_seg:
-    uses: craft/index-craft.yml
-    parallel: $PARALLEL
+    uses: segment/index-segment.yml
+    shards: $SHARDS_CHUNK_SEG
   tf_encode:
     uses: encode/encode.yml
-    parallel: $PARALLEL
+    shards: $SHARDS_CHUNK_SEG
   chunk_idx:
     uses: index/chunk.yml
-    shards: $SHARDS
+    shards: $SHARDS_INDEXER
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
@@ -176,9 +176,9 @@ def input_fn(with_filename=True):
 
 What it does is reading all gif video files under `GIF_GLOB` and sending the binary contents to the Jina gateway one by one.
 
-One natural question is why can't we send file path (i.e. a tiny binary string) to the gateway and parallelize the file reading inside Jina with multiple crafters?
+One natural question is why can't we send file path (i.e. a tiny binary string) to the gateway and SHARDS_CHUNK_SEGize the file reading inside Jina with multiple crafters?
 
-If your data is stored on HDD, then multiple crafters can not improve the performance: the mechanical structure limits that only one "block" can be read/written at the same time. As your data files probably scatter all over the place, random read/write in parallel won't make significant difference in speed comparing to sequential reading.
+If your data is stored on HDD, then multiple crafters can not improve the performance: the mechanical structure limits that only one "block" can be read/written at the same time. As your data files probably scatter all over the place, random read/write in SHARDS_CHUNK_SEG won't make significant difference in speed comparing to sequential reading.
 
 If you use SSD, then such multi-reader implementation can indeed improve the performance. However, a further question is how many files can you load into Jina.
 
@@ -210,7 +210,7 @@ This is good. Because on the one hand you avoid loading too many data into memor
 
 ## Sharding
 
-In this example, we set the number of `parallel` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
+In this example, we set the number of `SHARDS_CHUNK_SEG` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
 
 ```bash
 .
@@ -258,7 +258,7 @@ In this example, we set the number of `parallel` to 8 for `chunk_idx`. After ind
  |-doc_indexer.bin
 ```
 
-You can see that the data is splitted into 8 different directories under the given `workspace`, in a more or less uniform way. This is good because otherwise we end up with one big file that is slow to load and to query. With sharding enabled, one can query multiple smaller index in parallel, which gives better efficiency. 
+You can see that the data is splitted into 8 different directories under the given `workspace`, in a more or less uniform way. This is good because otherwise we end up with one big file that is slow to load and to query. With sharding enabled, one can query multiple smaller index in SHARDS_CHUNK_SEG, which gives better efficiency. 
 
 If you think about it, a multi-replica indexer behaves no differently than a multi-replica crafter/encoder at least in the index time: replicas compete for every incoming request and each request eventually is polled by one replica. The only difference is that multi-replica crafter/encoder is usually stateless and does not need independent workspace. However, each indexer replica needs a separate workspace to distinguish their own data from others. Hence, for `chunk_idx`, we set `separated_workspace` to `true`. Each replica works in its own sub-workspace. For this reason, we call **Replica** with `separated_workspace=True` as **Shard**.
 
@@ -339,6 +339,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2020 - 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

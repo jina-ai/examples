@@ -1,0 +1,15 @@
+!BaseExecutor
+with: {}
+metas:
+  name: merge
+requests:
+  on:
+    [SearchRequest, IndexRequest]:
+      - !ReduceAllDriver
+        with:
+          traversal_paths: ['c', 'm']
+      - !SortQL
+        with:
+          traversal_paths: ['c', 'm']
+          reverse: false
+          field: 'score__value'

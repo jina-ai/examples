@@ -3,7 +3,7 @@ with:
   index_filename: doc.gzip
 metas:
   name: doc_indexer  # a customized name
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     IndexRequest:
@@ -12,22 +12,18 @@ requests:
           override: true
       - !KVIndexDriver
         with:
-          granularity_range: [0, 0]
-          recur_on: ['chunks',]
+          traversal_paths: ['r',]
     SearchRequest:
       - !KVSearchDriver
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [0, 1]
-          recur_on: ['matches',]
-      - !ExcludeQL
+          traversal_paths: ['m',]
+      - !ExcludeQL # for network usage
         with:
-          granularity_range: [0, 2]
           fields:
             - embedding
             - blob
             - chunks
-          recur_on: ['chunks', 'matches']
+          traversal_paths: ['m']
     ControlRequest:
       - !ControlReqDriver {}
 
