@@ -1,27 +1,26 @@
 !Flow
+version: '1'
 with:
   read_only: true  # better add this in the query time
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  crafter:
+  - name: crafter
     uses: pods/craft.yml
-    parallel: $JINA_PARALLEL
-  tf_encode:
+    shards: $JINA_SHARDS
+  - name: tf_encode
     uses: pods/encode.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: 600000
-  vec_idx:
+  - name: vec_idx
     uses: pods/vec.yml
-    shards: $JINA_SHARDS
-    separated_workspace: true
+    shards: $JINA_SHARDS_INDEXERS
     polling: all
-    uses_reducing: _merge_all
+    uses_after: _merge_matches
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-  doc_idx:
+  - name: doc_idx
     uses: pods/doc.yml
-    shards: $JINA_SHARDS
-    separated_workspace: true
+    shards: $JINA_SHARDS_INDEXERS
     polling: all
-    uses_reducing: _merge_all
+    uses_after: pods/merge_matches_sort_topk.yml
     timeout_ready: 100000 # larger timeout as in query time will read all the data

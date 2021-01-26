@@ -19,17 +19,23 @@ requests:
     IndexRequest:
       - !CraftDriver
         with:
+          traversal_paths: ['r']
           executor: img_read
       - !CraftDriver
         with:
+          traversal_paths: ['r']
           executor: img_norm
     SearchRequest:
-      - !URI2Buffer {}
+      - !URI2Buffer
+        with:
+          traversal_paths: ['r']
       - !CraftDriver
         with:
+          traversal_paths: ['r']
           executor: img_read
       - !CraftDriver
         with:
+          traversal_paths: ['r']
           executor: img_norm
     ControlRequest:
       - !ControlReqDriver {}
