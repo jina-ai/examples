@@ -1,4 +1,4 @@
-!DataURIPbIndexer
+!BinaryPbIndexer
 with:
   index_filename: doc.gzip
 metas:
@@ -22,8 +22,9 @@ requests:
           fields:
             - embedding
             - blob
+            - buffer
             - chunks
-          traversal_paths: ['m']
+          traversal_paths: ['r', 'm']
     ControlRequest:
       - !ControlReqDriver {}
 

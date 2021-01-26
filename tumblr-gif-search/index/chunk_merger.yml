@@ -1,15 +1,15 @@
 !BaseExecutor
 with: {}
 metas:
-  name: merge
+  name: merge_chunk_matches
 requests:
   on:
     [SearchRequest, IndexRequest]:
       - !ReduceAllDriver
         with:
-          traversal_paths: ['c', 'm']
+          traversal_paths: ['cm']
       - !SortQL
         with:
-          traversal_paths: ['c', 'm']
+          traversal_paths: ['cm']
           reverse: false
           field: 'score__value'

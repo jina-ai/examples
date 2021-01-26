@@ -1,8 +1,6 @@
 !Flow
 version: '1'
 with:
-  prefetch: 2
-  logserver: false
   show_exc_info: true
 pods:
   - name: chunk_seg
@@ -30,4 +28,5 @@ pods:
     uses: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
+    polling: all
     show_exc_info: true

@@ -20,7 +20,6 @@ requests:
         with:
           executor: vecidx
           traversal_paths: ['c']
-          top_k: $JINA_TOPK
       - !KVSearchDriver
         with:
           executor: chunkidx

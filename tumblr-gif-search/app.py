@@ -10,15 +10,13 @@ from jina.flow import Flow
 GIF_BLOB = 'data/*.gif'
 LEN_DOCS = len(glob(GIF_BLOB))
 # allows for returning all docs
-JINA_TOPK = 5
 # TODO test w 2
 SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
-SHARDS_INDEXER = 1
+SHARDS_INDEXER = 2
 
 
 def config():
-    os.environ['JINA_TOPK'] = str(JINA_TOPK)
     os.environ['SHARDS_DOC'] = str(SHARDS_DOC)
     os.environ['SHARDS_CHUNK_SEG'] = str(SHARDS_CHUNK_SEG)
     os.environ['SHARDS_INDEXER'] = str(SHARDS_INDEXER)
@@ -31,13 +29,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(GIF_BLOB, request_size=1, read_mode='rb', skip_dry_run=True)
-
-
-def validate_output(resp):
-    print(f'****************** got {len(resp.docs)} documents in response')
-    print(f'****************** got {len(resp.docs[0].matches)} documents in doc.matches')
-    assert len(resp.docs[0].matches) <= JINA_TOPK
+        f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True)
 
 
 # for search
@@ -46,7 +38,6 @@ def search():
 
     with f:
         # running one search with one of the files
-        f.search_files(glob(GIF_BLOB)[0], on_done=validate_output)
         # waiting for input via REST gateway
         f.block()
 
