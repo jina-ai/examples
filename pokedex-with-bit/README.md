@@ -17,9 +17,8 @@
 
 </p>
 
-In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results.
+In this example, we use [BiT (Big Transfer)](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. You can use this demo to index an image dataset and query the most similar image from it. 
 
-[![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
 Features that come out of the box:
 
@@ -29,8 +28,6 @@ Features that come out of the box:
 - Dashboard monitor
 
 To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install.
-
-The code can of course run natively on your local machine, please [read the Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -52,45 +49,57 @@ The code can of course run natively on your local machine, please [read the Jina
 
 > *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
-We have a pre-built Docker image ready to use:
+We have a pre-built Docker image ready to use, you need to run this on your console:
 
 ```bash
-docker run -p 45678:45678 jinaai/app.examples.pokedexwithbit
+docker run -p 45678:45678 jinahub/app.example.pokedexwithbit:0.0.1-0.9.20
 ```
 
-Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api). You can also use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+So now you're ready to query! And for that you have two options:
 
-## Download and Extract Data
+ - You can use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+ - Or you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api). 
 
-We're using Pokemon sprites from generations one through five, downloaded from [veekun.com](https://veekun.com/dex/downloads). To download and extract the PNGs, simply run:
+## I want the long route
+
+If you don't want to use the docker image and you want to run this yourself, don't worry, we got your back here. Let's start
+
+### Download and Extract Data
+
+First things first, we need some data. For this example we're using Pokemon sprites that we got from [veekun.com](https://veekun.com/dex/downloads). 
+But to download them you just need to run:
 
 ```sh
 sh ./get_data.sh
 ```
 
-## Run outside of Docker
+### Download and Extract Pretrained Model
+
+Ok, we have the data but we still need a pretrained model:
+
+```sh
+sh ./download.sh
+```
 
 ### Indexing the Data
 
-`app.py` is already configured to index all the PNG files in the `data` folder, no matter how deep the subfolder:
-
-```python
-image_src = 'data/**/*.png'
-```
-
-Just run:
+We're ready to index.
+For this just run:
 
 ```sh
 python app.py index
 ```
+After this step you should see a new `workspace` folder, in there is all the encoded data that was generated during our index time. 
 
 ### Querying the Data
+
+So if we have our data encoded, we can query through it:
 
 ```python
 python app.py search
 ```
-
-You can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+And to see the results you can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly.
+Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
 
 #### Behind the Scenes
 
@@ -171,7 +180,7 @@ Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_index
 
 ### Query via REST API
 
-When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:34567/api/search`, e.g.:
+When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
 
 ```bash
 curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:34567/api/search'
