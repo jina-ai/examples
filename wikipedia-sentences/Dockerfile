@@ -11,9 +11,9 @@ ENTRYPOINT ["python", "app.py", "search"]
 
 LABEL author="Alex Cureton-Griffiths (alex.cg@jina.ai)"
 LABEL type="app"
-LABEL kind="app"
+LABEL kind="example"
 LABEL avatar="None"
-LABEL description="Jina App for searching 50,000 sentences from Wikipedia"
+LABEL description="Jina App for searching sentences from Wikipedia"
 LABEL documentation="https://github.com/alexcg1/jina-wikipedia-sentences"
 LABEL keywords="[NLP, wikipedia, text, distilbert]"
 LABEL license="apache-2.0"
