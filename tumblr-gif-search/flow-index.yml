@@ -9,20 +9,25 @@ pods:
     uses: segment/segment.yml
     shards: $SHARDS_CHUNK_SEG
     read_only: true
+    show_exc_info: true
   - name: tf_encode
     uses: encode/encode.yml
     needs: chunk_seg
     shards: $SHARDS_CHUNK_SEG
     read_only: true
     timeout_ready: 600000
+    show_exc_info: true
   - name: chunk_idx
     uses: index/chunk.yml
     shards: $SHARDS_INDEXER
+    show_exc_info: true
   - name: doc_idx
     uses: index/doc.yml
     shards: $SHARDS_DOC
     needs: gateway
+    show_exc_info: true
   - name: join_all
     uses: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
+    show_exc_info: true
