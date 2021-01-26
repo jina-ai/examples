@@ -5,16 +5,17 @@ __version__ = '0.0.1'
 
 import os
 import click
+import sys
 
 from jina.flow import Flow
-
+from jina import Document
 
 def config(task):
     parallel = 2 if task == 'index' else 1
     os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(1)
     os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    #os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
 
 @click.command()
@@ -30,6 +31,8 @@ def main(task, num_docs):
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
+            sys.exit(1)
+
         f = Flow.load_config('flows/index.yml')
         with f:
             f.index_files('data/*.wav', batch_size=2, size=num_docs)
@@ -40,7 +43,7 @@ def main(task, num_docs):
     elif task == 'dryrun':
         f = Flow.load_config('flows/query.yml')
         with f:
-            pass
+            f.search('data/*.wav', batch_size=2, size=num_docs)
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query` or `dryrun`.')

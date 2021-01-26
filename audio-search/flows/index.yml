@@ -5,20 +5,27 @@ pods:
   crafter:
     uses: pods/craft.yml
     parallel: $PARALLEL
+    timeout_ready: 600000
+    show_exc_info: true
   encoder:
     uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
+    show_exc_info: true
   vec_indexer:
     uses: pods/vec.yml
     shards: $SHARDS
     separated_workspace: true
+    timeout_ready: 600000
+    show_exc_info: true
   doc_indexer:
     uses: pods/doc.yml
     needs: [gateway]
     shards: $SHARDS
     separated_workspace: true
+    timeout_ready: 600000
+    show_exc_info: true
   join_all:
     uses: _merge
     needs: [vec_indexer, doc_indexer]

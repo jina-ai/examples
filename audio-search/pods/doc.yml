@@ -12,30 +12,25 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [0, 1]
-          recur_on: ['matches', ]
+          traversal_paths: ['m', ]
       - !ExcludeQL
         with:
-          granularity_range: [0, 2]
           fields:
             - embedding
             - blob
             - buffer
-          recur_on: ['matches', 'chunks']
+          traversal_paths: ['mc']
     IndexRequest:
       - !URI2DataURI
         with:
           override: true
       - !ExcludeQL
         with:
-          granularity_range: [0, 2]
           fields:
             - embedding
             - blob
             - chunks
-          recur_on: ['chunks', 'matches']
+          traversal_paths: ['cm']
       - !KVIndexDriver
         with:
-          granularity_range: [0, 0]
-          recur_on: ['chunks', ]
+          traversal_paths: ['c', ]

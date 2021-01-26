@@ -4,14 +4,17 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  crafter:
+  segmenter:
     uses: pods/craft.yml
     parallel: $PARALLEL
+    timeout_ready: 600000
+    show_exc_info: true
   encoder:
     uses: pods/encode.yml
     parallel: $PARALLEL
     timeout_ready: 600000
     read_only: true
+    show_exc_info: true
   vec_idx:
     uses: pods/vec.yml
     shards: $SHARDS
@@ -19,11 +22,15 @@ pods:
     polling: all
     uses_reducing: _merge_all
     timeout_ready: 100000
+    show_exc_info: true
   ranker:
     uses: pods/rank.yml
+    timeout_ready: 600000
+    show_exc_info: true
   doc_idx:
     uses: pods/doc.yml
     shards: $SHARDS
     separated_workspace: true
     polling: all
     uses_reducing: _merge_all
+    show_exc_info: true

@@ -8,9 +8,7 @@ requests:
     SearchRequest:
       - !Chunk2DocRankDriver
         with:
-          granularity_range: [1, 1]
-          adjacency_range: [0, 1]
-          recur_on: ['chunks',]
+          traversal_paths: ['c',]
       - !ExcludeQL
         with:
           fields:
@@ -20,6 +18,4 @@ requests:
             - length
             - weight
             - chunks
-          granularity_range: [0, 2]
-          adjacency_range: [0, 1]
-          recur_on: ['chunks', 'matches']
+          traversal_paths: ['c', 'm']

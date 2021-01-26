@@ -1,7 +1,7 @@
 !VggishCrafter
 with:
   window_length_secs: 1.0
-
+  show-exc-info: true
 metas:
   py_modules: [vggish/vggish_params.py, vggish/mel_features.py, vggish/vggish_input.py,vggish/vggish_slim.py, vggish/vggish_postprocess.py, customized_executors.py]
 requests:

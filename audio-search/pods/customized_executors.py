@@ -7,13 +7,13 @@ from typing import Any, Dict, List
 
 from jina.executors.encoders.frameworks import BaseTFEncoder
 from jina.executors.decorators import batching
-from jina.executors.crafters import BaseSegmenter
+from jina.executors.segmenters import BaseSegmenter
 from jina.executors.rankers import Chunk2DocRanker
 
-import vggish_params
-import vggish_input
-import vggish_slim
-import vggish_postprocess
+from jinahub.vggish_params import *
+from jinahub.vggish_input import *
+from jinahub.vggish_slim import *
+from jinahub.vggish_postprocess import *
 import librosa
 
 
@@ -28,13 +28,13 @@ class VggishEncoder(BaseTFEncoder):
         import tensorflow as tf
         tf.compat.v1.disable_eager_execution()
         self.sess = tf.compat.v1.Session()
-        vggish_slim.define_vggish_slim()
-        vggish_slim.load_vggish_slim_checkpoint(self.sess, self.model_path)
+        define_vggish_slim()
+        load_vggish_slim_checkpoint(self.sess, self.model_path)
         self.feature_tensor = self.sess.graph.get_tensor_by_name(
-            vggish_params.INPUT_TENSOR_NAME)
+            INPUT_TENSOR_NAME)
         self.embedding_tensor = self.sess.graph.get_tensor_by_name(
-            vggish_params.OUTPUT_TENSOR_NAME)
-        self.post_processor = vggish_postprocess.Postprocessor(self.pca_path)
+            OUTPUT_TENSOR_NAME)
+        self.post_processor = Postprocessor(self.pca_path)
 
     @batching
     def encode(self, data: Any, *args, **kwargs) -> Any:
@@ -54,7 +54,7 @@ class VggishCrafter(BaseSegmenter):
         self.window_length_secs = window_length_secs
         self.hop_length_secs = hop_length_secs
 
-    def craft(self, uri, buffer, *args, **kwargs) -> List[Dict]:
+    def segment(self, uri, buffer, *args, **kwargs) -> List[Dict]:
         result = []
         # load the data
         data, sample_rate = self.read_wav(uri, buffer)
@@ -64,12 +64,12 @@ class VggishCrafter(BaseSegmenter):
         mel_data = self.wav2mel(data, sample_rate)
         for idx, blob in enumerate(mel_data):
             self.logger.debug(f'blob: {blob.shape}')
-            result.append(dict(offset=idx, weight=1.0, blob=blob, length=mel_data.shape[0]))
+            result.append(dict(offset=idx, weight=1.0, blob=blob))
         return result
 
     def wav2mel(self, blob, sample_rate):
         self.logger.debug(f'blob: {blob.shape}, sample_rate: {sample_rate}')
-        mel_spec = vggish_input.waveform_to_examples(blob, sample_rate).squeeze()
+        mel_spec = waveform_to_examples(blob, sample_rate).squeeze()
         self.logger.debug(f'mel_spec: {mel_spec.shape}')
         return mel_spec
 
@@ -88,8 +88,9 @@ class VggishCrafter(BaseSegmenter):
             wav_data = np.mean(wav_data, axis=1)
         data = wav_data / 32768.0
         return data, sample_rate
-
-    def segment(self, signal, sample_rate):
+    '''
+    def segment(self,uri, buffer):
+        signal,sample_rate=self.read_wav(uri, buffer)
         frame_length = int(round(sample_rate * self.window_length_secs))
         hop_length = int(round(sample_rate * self.hop_length_secs))
         if signal.ndim == 1:  # mono
@@ -103,6 +104,7 @@ class VggishCrafter(BaseSegmenter):
         else:
             raise ValueError(f'audio signal must be 1D or 2D array: {signal}')
         return frames
+    '''
 
 
 class MinRanker(Chunk2DocRanker):
@@ -112,8 +114,7 @@ class MinRanker(Chunk2DocRanker):
 
     .. warning:: Here we suppose that the smaller chunk score means the more similar.
     """
-
     def _get_score(self, match_idx, query_chunk_meta, match_chunk_meta, *args, **kwargs):
-        _doc_id = match_idx[0, self.col_doc_id]
-        return self.get_doc_id(match_idx), 1. / (1. + match_idx[:, self.col_score].min())
-
+        #_doc_id = match_idx[0, self.col_doc_id]
+        #return self.get_doc_id(match_idx), 1. / (1. + match_idx[:, self.col_score].min())
+        return self.get_doc_id(match_idx), 1. / (1. + match_idx[self.COL_SCORE].min())
