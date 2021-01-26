@@ -55,7 +55,7 @@ We will create a separate index per category, so each category will have its own
 d.tags.update({'label': get_mapped_label(label_int)})
 ```
 This is where you could tweak the code if you would like to see only one category.
-For example if you would like to see only Pullovers, you could do something like this
+For example if you would like to see only pullovers, you could do something like this
 
 ![alt text](.github/images/filter.png "Results")
 
@@ -72,7 +72,7 @@ python app.py query
 
 ## Results
 
-So if we run this as it is, we will see our results filtered by Pullovers like this:
+So if we run this as it is, we will see our results filtered by pullovers like this:
 
 ![alt text](.github/images/results.png "Results")
 
