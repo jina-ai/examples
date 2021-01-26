@@ -10,18 +10,18 @@ from jina.flow import Flow
 GIF_BLOB = 'data/*.gif'
 LEN_DOCS = len(glob(GIF_BLOB))
 # allows for returning all docs
-JINA_TOPK = 5000
+JINA_TOPK = 5
 # TODO test w 2
-SHARDS_DOC = 1
-SHARDS_CHUNK_SEG = 1
+SHARDS_DOC = 2
+SHARDS_CHUNK_SEG = 2
+SHARDS_INDEXER = 1
 
 
 def config():
-    shards = 1
     os.environ['JINA_TOPK'] = str(JINA_TOPK)
     os.environ['SHARDS_DOC'] = str(SHARDS_DOC)
     os.environ['SHARDS_CHUNK_SEG'] = str(SHARDS_CHUNK_SEG)
-    os.environ['SHARDS_INDEXER'] = str(shards)
+    os.environ['SHARDS_INDEXER'] = str(SHARDS_INDEXER)
     os.environ['JINA_WORKSPACE'] = './workspace'
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
@@ -37,7 +37,7 @@ def index():
 def validate_output(resp):
     print(f'****************** got {len(resp.docs)} documents in response')
     print(f'****************** got {len(resp.docs[0].matches)} documents in doc.matches')
-    assert len(resp.docs[0].matches) == LEN_DOCS
+    assert len(resp.docs[0].matches) <= JINA_TOPK
 
 
 # for search
