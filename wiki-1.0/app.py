@@ -11,7 +11,7 @@ from jina import Document
 
 def config():
     os.environ["JINA_DATA_FILE"] = os.environ.get(
-        "JINA_DATA_FILE", "data/input.txt"
+        "JINA_DATA_FILE", "data/toy-input.txt"
     )
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
 
