@@ -9,4 +9,4 @@ requests:
     [SearchRequest, IndexRequest]:
       - !EncodeDriver
         with:
-          traversal_paths: ['c', ]
+          traversal_paths: ['c',]

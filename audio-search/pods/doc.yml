@@ -12,7 +12,7 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          traversal_paths: ['m', ]
+          traversal_paths: ['m',]
       - !ExcludeQL
         with:
           fields:
@@ -33,4 +33,4 @@ requests:
           traversal_paths: ['cm']
       - !KVIndexDriver
         with:
-          traversal_paths: ['c', ]
+          traversal_paths: ['c',]
