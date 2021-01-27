@@ -20,6 +20,10 @@ def config(tmpdir):
     os.environ['JINA_WORKSPACE'] = str(tmpdir)
 
 
+def sh():
+    os.system('./download.sh')
+
+
 def index_documents():
     f = Flow().load_config('flows/index.yml')
 
@@ -46,6 +50,7 @@ def get_flow():
 
 def test_query(tmpdir):
     config(tmpdir)
+    sh()
     index_documents()
     f = get_flow()
     with f:
