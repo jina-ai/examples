@@ -12,7 +12,5 @@ components:
       index_filename: doc.gz
     metas:
       name: docidx  # a customized name
-      workspace: $JINA_WORKSPACE
 metas:
   name: indexer
-  workspace: $JINA_WORKSPACE
