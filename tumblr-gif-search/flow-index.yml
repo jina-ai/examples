@@ -1,26 +1,32 @@
 !Flow
+version: '1'
 with:
-  prefetch: 2
-  logserver: false
+  show_exc_info: true
 pods:
-  chunk_seg:
-    uses: craft/craft.yml
-    parallel: $PARALLEL
+  - name: chunk_seg
+    uses: segment/segment.yml
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
-  tf_encode:
-    uses: $ENCODER_CONF
+    show_exc_info: true
+  - name: tf_encode
+    uses: encode/encode.yml
     needs: chunk_seg
-    parallel: $PARALLEL
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
     timeout_ready: 600000
-  chunk_idx:
+    show_exc_info: true
+  - name: chunk_idx
     uses: index/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
-  doc_idx:
+    shards: $SHARDS_INDEXER
+    show_exc_info: true
+  - name: doc_idx
     uses: index/doc.yml
+    shards: $SHARDS_DOC
     needs: gateway
-  join_all:
+    show_exc_info: true
+  - name: join_all
     uses: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
+    polling: all
+    show_exc_info: true

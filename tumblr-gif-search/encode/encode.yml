@@ -10,5 +10,4 @@ requests:
     [IndexRequest, SearchRequest]:
       - !EncodeDriver
         with:
-          granularity_range: [1, 1]
-          recur_on: ['chunks', ]
+          traversal_paths: ['c']

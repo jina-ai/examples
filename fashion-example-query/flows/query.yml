@@ -1,0 +1,34 @@
+!Flow
+version: '1'
+with:
+  read_only: true  # better add this in the query time
+  compress_hwm: 1024
+pods:
+  - name: encode
+    uses: pods/encode.yml
+    shards: $JINA_SHARDS_ENCODER
+  - name: indexer_tshirt
+    uses: pods/indexer-tshirt.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+    polling: all
+    uses_after: pods/reduce.yml
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+  - name: indexer_trouser
+    uses: pods/indexer-trouser.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+    polling: all
+    uses_after: pods/reduce.yml
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+  - name: indexer_pullover
+    uses: pods/indexer-pullover.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+    polling: all
+    uses_after: pods/reduce.yml
+    timeout_ready: 100000 # larger timeout as in query time will read all the data # larger timeout as in query time will read all the data# larger timeout as in query time will read all the data
+  - name: join_all
+    uses: _merge
+    needs: [indexer_tshirt, indexer_trouser, indexer_pullover]
+    read_only: true

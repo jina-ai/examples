@@ -26,7 +26,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Prerequirements](#prerequirements)
+- [Requirements](#requirements)
 - [Run Index Flow](#run-index-flow)
 - [Run Query Flow](#run-query-flow)
 - [View the Result in a Webpage](#view-the-result-in-a-webpage)
@@ -39,7 +39,7 @@ This tutorial shows how to use prefetching and sharding to improve the performan
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## Prerequirements
+## Requirements
 
 ```bash
 pip install --upgrade -r requirements.txt
@@ -64,32 +64,38 @@ python app.py index
 The index Flow is defined as follows:
 ```yaml
 !Flow
+version: '1'
 with:
-  logserver: true
+  prefetch: 2
+  logserver: false
+  show_exc_info: true
 pods:
-  chunk_seg:
-    uses: craft/index-craft.yml
-    parallel: $PARALLEL
+  - name: chunk_seg
+    uses: segment/segment.yml
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
-  doc_idx:
-    uses: index/doc.yml
-  tf_encode:
+  - name: tf_encode
     uses: encode/encode.yml
     needs: chunk_seg
-    parallel: $PARALLEL
+    shards: $SHARDS_CHUNK_SEG
     read_only: true
-  chunk_idx:
+    timeout_ready: 600000
+  - name: chunk_idx
     uses: index/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
-  join_all:
+    shards: $SHARDS_INDEXER
+  - name: doc_idx
+    uses: index/doc.yml
+    shards: $SHARDS_DOC
+    needs: gateway
+  - name: join_all
     uses: _merge
     needs: [doc_idx, chunk_idx]
     read_only: true
+
 ```
 
 This breaks down into the following steps:
-1. Segment each video into chunks;
+1. Segment each gif into chunks;
 2. Encode each chunk as a fixed-length vector;
 3. Store all vector representations in a vector database with *shards*.
 
@@ -100,33 +106,39 @@ This breaks down into the following steps:
 python app.py search
 ```
 
-You can then open [Jinabox](https://jina.ai/jinabox.js/) with the custom endpoint `http://localhost:45678/api/search`
+You can then open [Jinabox](https://jina.ai/jinabox.js/) with the custom endpoint `http://localhost:45678/api/search`. Here you can drag one of the gifs under the `Videos` tab into the search box. It will then return the top matching results. You can adjust `Top K` in the web interface as well.
 
 The query Flow is defined as follows:
 
 ```yaml
 !Flow
+version: '1'
 with:
-  logserver: true
+  prefetch: 2
+  logserver: false
   read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
 pods:
-  chunk_seg:
-    uses: craft/index-craft.yml
-    parallel: $PARALLEL
-  tf_encode:
+  - name: chunk_seg
+    uses: segment/segment.yml
+    shards: $SHARDS_CHUNK_SEG
+  - name: tf_encode
     uses: encode/encode.yml
-    parallel: $PARALLEL
-  chunk_idx:
+    shards: $SHARDS_CHUNK_SEG
+    timeout_ready: -1 # larger timeout as in query time will read all the data
+  - name: chunk_idx
     uses: index/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
+    shards: $SHARDS_INDEXER
     polling: all
-    uses_reducing: _merge_all
-    timeout_ready: 100000 # larger timeout as in query time will read all the data
-  ranker:
-    uses: BiMatchRanker
-  doc_idx:
+    uses_after: index/_merge_matches_topk.yml
+    timeout_ready: -1 # larger timeout as in query time will read all the data
+  - name: ranker
+    uses: index/rank.yml
+  - name: doc_idx
     uses: index/doc.yml
+
 ```
 
 
@@ -155,7 +167,7 @@ The query flow breaks down into the following steps:
 3. You may also need to change some paths. Just play with the javascript.
 4. Host it like a static website, e.g. `python -m SimpleHTTPServer`.
 
-I'm no expert on frontend and Vue. Feel free to contribute if you can improve it.
+Feel free to contribute if you can improve it.
 
 ## Prefetching
 
@@ -174,15 +186,15 @@ def input_fn(with_filename=True):
             idx += 1
 ```
 
-What it does is reading all gif video files under `GIF_GLOB` and sending the binary contents to the Jina gateway one by one.
+It reads all gif files under `GIF_GLOB` and sends the binary contents to the Jina gateway, one at a time.
 
-One natural question is why can't we send file path (i.e. a tiny binary string) to the gateway and parallelize the file reading inside Jina with multiple crafters?
+Question: why can't we send file path (i.e. a tiny binary string) to the gateway and parallelize the file reading inside Jina with multiple segmenters?
 
-If your data is stored on HDD, then multiple crafters can not improve the performance: the mechanical structure limits that only one "block" can be read/written at the same time. As your data files probably scatter all over the place, random read/write in parallel won't make significant difference in speed comparing to sequential reading.
+If your data is stored on HDD, then multiple segmenters can not improve the performance: the mechanical structure imposes a read/write limit of only one "block" at a time. As your data files are probably scattered all over, random read/write in parallel won't bring significant improvements in speed.
 
 If you use SSD, then such multi-reader implementation can indeed improve the performance. However, a further question is how many files can you load into Jina.
 
-Think about a complete index workflow with crafters, encoders, and indexers, where encoders and indexers are often slower than crafters. If we don't add any restriction, `input_fn` will send all file paths to the gateway, which forces crafter to load **everything** into memory. As encoders and indexers can not consume data fast enough, your will soon run out of memory.
+Think about a complete index workflow with segmenters, encoders, and indexers, where encoders and indexers are often slower than segmenters. If we don't add any restriction, `input_fn` will send all file paths to the gateway, which forces segmenter to load **everything** into memory. As encoders and indexers can not consume data fast enough, your will soon run out of memory.
 
 In Jina, we have two arguments `--prefetch` and `--prefetch-on-recv` in `gateway` to control the max number of pending requests in the network. If you see the log close enough, you will find:
 
@@ -198,7 +210,7 @@ index [=                   ] 📃      0 ⏱️ 0.0s 🐎 0.0/s      0 batchinde
  chunk_seg-head@16239[I]:received "index" from gateway▸⚐
 ```
 
-The `gateway` tells the client (`input_fn`) to send 50 requests before feeding to the first Pod of the flow. It stops there and takes some time (22s in the example above) to warm up. But after that you never have to wait such long time for IO ops again. This is because on every round-trip request, the gateway will tell the client to send `--prefetch-on-recv` number of new requests. If you use Dashboard to filter the log on `gateway` only, you can see that the whole Flow has always up to 50 requests in pending.
+The `gateway` tells the client (`input_fn`) to send 50 requests before feeding to the first Pod of the flow. It stops there and takes some time (22s in the example above) to warm up. But, after that, you never have to wait such a long time again for IO ops. This is because on every round-trip request, the gateway will tell the client to send `--prefetch-on-recv` number of new requests. If you use Dashboard to filter the log on `gateway` only, you can see that the whole Flow always has a max of 50 pending requests.
 
 ```bash
 4/24/2020, 5:27:54 PM gateway@16335[I]: send: 0 recv: 0 pending: 0
@@ -206,11 +218,11 @@ The `gateway` tells the client (`input_fn`) to send 50 requests before feeding t
 4/24/2020, 5:29:49 PM gateway@16335[I]: send: 149 recv: 100 pending: 49
 ```
 
-This is good. Because on the one hand you avoid loading too many data into memory, on the other hand you still have enough data in memory to work with. With `--prefetch` turns on, the time of computation and IO operation are overlapped, make the whole flow non-blocking and highly efficient.
+This is good. On the one hand, you avoid loading too much data in memory; on the other hand, you still have enough data in memory to work with. With `--prefetch` turned on, computation and IO operation are overlapped, making the whole flow non-blocking and highly efficient.
 
 ## Sharding
 
-In this example, we set the number of `parallel` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
+In this example, we set the number of `shards` to 8 for `chunk_idx`. After indexing, when you open `workspace`, you will find:
 
 ```bash
 .
@@ -258,20 +270,20 @@ In this example, we set the number of `parallel` to 8 for `chunk_idx`. After ind
  |-doc_indexer.bin
 ```
 
-You can see that the data is splitted into 8 different directories under the given `workspace`, in a more or less uniform way. This is good because otherwise we end up with one big file that is slow to load and to query. With sharding enabled, one can query multiple smaller index in parallel, which gives better efficiency. 
+You can see that the data is split into 8 different directories under the given `workspace`, in a more or less uniform way. This is good because otherwise we end up with one big file that is slow to load and to query. With sharding enabled, one can query multiple smaller index in parallel, which gives better efficiency. 
 
-If you think about it, a multi-replica indexer behaves no differently than a multi-replica crafter/encoder at least in the index time: replicas compete for every incoming request and each request eventually is polled by one replica. The only difference is that multi-replica crafter/encoder is usually stateless and does not need independent workspace. However, each indexer replica needs a separate workspace to distinguish their own data from others. Hence, for `chunk_idx`, we set `separated_workspace` to `true`. Each replica works in its own sub-workspace. For this reason, we call **Replica** with `separated_workspace=True` as **Shard**.
+A multi-replica indexer behaves no differently than a multi-replica segmenter/encoder at least in the index time: replicas compete for every incoming request and each request eventually is polled by one replica. The only difference is that multi-replica segmenter/encoder is usually stateless and does not need independent workspace. However, each indexer replica needs a separate workspace to distinguish their own data from others. Hence, for `chunk_idx`, we set `separated_workspace` to `true` (this is done implicitly, no need for any configuration). Each replica works in its own sub-workspace.
 
-In the query time, replicas and shards behave differently on how they handle new requests. Replicas still compete on each request as they do in the index time. Shards, however, work more cooperatively: each request is published to *all* replicas, each replica works on the same request, and the final result has to be collected from all replicas.
+In the query time, replicas and shards behave differently in how they handle new requests. Replicas still compete on each request as they do in the index time. Shards, however, work more cooperatively: each request is published to *all* replicas, each replica works on the same request, and the final result has to be collected from all replicas.
 
-In Jina, such behavior in the query time can be simply specified via `polling` and `uses_reducing`:
+In Jina, such behavior in the query time can be simply specified via `polling` and `uses_after`:
 
 ```yaml
     polling: all
-    uses_reducing: _merge_all
+    uses_after: index/_merge_matches_topk.yml
 ```
 
-`polling` and `uses_reducing` are Pod-specific argument, you can find more details in `jina pod --help`.
+`polling` and `uses_after` are Pod-specific argument, you can find more details in `jina pod --help`.
 
 ```bash
 --polling {ANY, ALL, ALL_ASYNC}
@@ -339,6 +351,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2020 - 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

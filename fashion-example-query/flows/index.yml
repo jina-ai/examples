@@ -1,0 +1,25 @@
+!Flow
+version: '1'
+with:
+  compress_hwm: 1024
+pods:
+  - name: encode
+    uses: pods/encode.yml
+    shards: $JINA_SHARDS_ENCODER
+    timeout_ready: 600000
+  - name: indexer_tshirt
+    uses: pods/indexer-tshirt.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+  - name: indexer_trouser
+    uses: pods/indexer-trouser.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+  - name: indexer_pullover
+    uses: pods/indexer-pullover.yml
+    shards: $JINA_SHARDS_INDEXER
+    needs: [encode]
+  - name: join_all
+    uses: _merge
+    needs: [indexer_tshirt, indexer_trouser, indexer_pullover]
+    read_only: true
