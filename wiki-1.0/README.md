@@ -45,18 +45,26 @@ curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello wo
 
 ## Setup
 
-1. `pip install -r requirements.txt`
-2. Set up [Kaggle](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication) to download the dataset
-3. `sh ./get_data.sh`
-4. `export JINA_DATA_FILE='data/input.txt'`
+```sh
+pip install -r requirements.txt`
+```
 
 ## Index
+
+We'll start off by indexing a small dataset of 50 sentences (`data/toy-input.txt`) to make sure everything is working:
 
 ```sh
 python app.py -t index
 ```
 
-By default, Jina only indexes 50 sentences (so you can test that your Flows work). You change this with `export JINA_MAX_DOCS=500` or whatever number suits you.
+To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB):
+
+1. Set up [Kaggle](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication)
+2. Run the script: `sh ./get_data.sh`
+3. Set the input file: `export JINA_DATA_FILE='data/input.txt'`
+4. Set the number of docs to index `export JINA_MAX_DOCS=500` (or whatever number you prefer. The default is `50`)
+5. Delete the old index: `rm -rf workspace`
+6. Index your new dataset: `python app.py -t index`
 
 ## Search
 
@@ -92,10 +100,10 @@ This will create a Docker image with pre-indexed data and an open port for REST 
 
 ### Image name format
 
-Please use the following name format for your Docker image, otherwise it will be rejected if you want to push it to Jina Hub. Please also see my [versioning notes](#versioning-weirdness) section before which explains my versioning workaround.
+Please use the following name format for your Docker image, otherwise it will be rejected if you want to push it to Jina Hub. 
 
 ```
-jinahub/type.kind.jina-image-name:image-jina_version
+jinahub/type.kind.image-name:image-version-jina_version
 ```
 
 For example:
