@@ -54,5 +54,6 @@ def test_query(tmpdir):
             output = get_results(object_image_path)
             matches = output['search']['docs'][0]['matches']
             assert len(matches) == TOP_K
-            assert matches[0]['uri'].startswith('data:image/png;charset=utf-8,')
+            for match in matches:
+                assert match['uri'].startswith('data:image/png;charset=utf-8,')
 
