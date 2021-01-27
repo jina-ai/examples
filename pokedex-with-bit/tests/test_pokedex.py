@@ -34,7 +34,7 @@ def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
 
 def get_results(query, top_k=TOP_K):
     return call_api(
-        'http://0.0.0.0:45678/api/search',
+        f'http://0.0.0.0:{os.environ["JINA_PORT"]}/api/search',
         payload={'top_k': top_k, 'mode': 'search', 'data': [query]})
 
 
@@ -44,17 +44,13 @@ def get_flow():
     return f
 
 
-@pytest.fixture
-def object_image_paths():
-    return ['tests/test-data/1.png', 'tests/test-data/2.png', 'tests/test-data/3.png']
-
-
-def test_query(tmpdir, object_image_paths):
+def test_query(tmpdir):
     config(tmpdir)
     index_documents()
     f = get_flow()
     with f:
-        for object_image_path in object_image_paths:
+        from glob import iglob
+        for object_image_path in iglob(os.environ['JINA_DATA']):
             output = get_results(object_image_path)
             matches = output['search']['docs'][0]['matches']
             assert len(matches) == TOP_K
