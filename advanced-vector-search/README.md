@@ -269,7 +269,7 @@ docker run -e JINA_FAISS_INDEX_KEY='Flat' jinahub/app.example.advancedvectorsear
 An important parameter to set is `JINA_DISTANCE_REVERSE`, depending on the type of distance or metric that is used. 
 For instance for `inner_product` distance, `JINA_DISTANCE_REVERSE` should be set to `True`.
 This is because returned measure for `Faiss` is similarity and not distance. 
-Which means that the results should be scored in descending order to get what we would expect.
+Which means that the results should be sorted in descending order to get what we would expect.
 
 Another parameter that cannot be found int the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS`.
 This controls how many threads are used by `Faiss` when querying. 
