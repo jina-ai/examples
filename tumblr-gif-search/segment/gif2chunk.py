@@ -1,12 +1,12 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2020 - 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import io
 
 import numpy as np
 from PIL import Image
-from craft.gif_reader import get_frames
-from jina.executors.crafters import BaseSegmenter
+from segment.gif_reader import get_frames
+from jina.executors.segmenters import BaseSegmenter
 
 
 class GifPreprocessor(BaseSegmenter):
@@ -17,7 +17,7 @@ class GifPreprocessor(BaseSegmenter):
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
 
-    def craft(self, buffer, id):
+    def segment(self, buffer, id):
         result = []
         try:
             im = Image.open(io.BytesIO(buffer))
