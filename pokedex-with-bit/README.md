@@ -1,24 +1,6 @@
-
-# Google's Big Transfer Model in (Poké-)Production using Jina
-
-<p align="center">
-
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
-[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
-[![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
-[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jobs.jina.ai)
-<a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
-  <img src="https://github.com/jina-ai/jina/blob/master/.github/badges/twitter-badge.svg"
-       alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
-</a>
-[![Python 3.7 3.8](https://github.com/jina-ai/jina/blob/master/.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
-[![Docker](https://github.com/jina-ai/jina/blob/master/.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
-
-</p>
+# Search Pokemon Images with Jina
 
 In this example, we use [BiT (Big Transfer)](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. You can use this demo to index an image dataset and query the most similar image from it. 
-
 
 Features that come out of the box:
 
@@ -45,7 +27,7 @@ To save you from dependency hell, we'll use the containerized version in these i
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## TL;DR: Just Show Me the Pokemon!
+## Query from Docker
 
 > *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
@@ -57,17 +39,14 @@ docker run -p 45678:45678 jinahub/app.example.pokedexwithbit:0.0.1-0.9.20
 
 So now you're ready to query! And for that you have two options:
 
- - You can use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+ - You can use [Jinabox.js](https://jina.ai/jinabox.js/) to find the Pokemon which matches most clearly. Just set the endpoint to `http://127.0.0.1:45678/api/search` and drag from the thumbnails on the left or from your file manager.
  - Or you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api). 
 
-## I want the long route
-
-If you don't want to use the docker image and you want to run this yourself, don't worry, we got your back here. Let's start
+## Run without Docker
 
 ### Download and Extract Data
 
-First things first, we need some data. For this example we're using Pokemon sprites that we got from [veekun.com](https://veekun.com/dex/downloads). 
-But to download them you just need to run:
+For this example we're using Pokemon sprites from [veekun.com](https://veekun.com/dex/downloads). To download them run:
 
 ```sh
 sh ./get_data.sh
@@ -75,7 +54,7 @@ sh ./get_data.sh
 
 ### Download and Extract Pretrained Model
 
-Ok, we have the data but we still need a pretrained model:
+In this example we use [BiT (Big Transfer) model](https://github.com/google-research/big_transfer), To download it:
 
 ```sh
 sh ./download.sh
@@ -83,23 +62,19 @@ sh ./download.sh
 
 ### Indexing the Data
 
-We're ready to index.
-For this just run:
-
 ```sh
 python app.py index
 ```
-After this step you should see a new `workspace` folder, in there is all the encoded data that was generated during our index time. 
+
+After this you should see a new `workspace` folder, which contains all the encoded data generated during indexing. 
 
 ### Querying the Data
-
-So if we have our data encoded, we can query through it:
 
 ```python
 python app.py search
 ```
-And to see the results you can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly.
-Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+To see the results you can use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly.
+Set the endpoint to `http://127.0.0.1:45678/api/search` and drag from the thumbnails on the left or from your file manager.
 
 #### Behind the Scenes
 
@@ -213,31 +188,6 @@ BiT model seems pretty resource-hungry. If you are using Docker Desktop, make su
 Incremental indexing and entry-level deleting are yet not supported in this demo. Duplicate indexing may not throw exceptions, but may produce strange results. So make sure to clean `$(pwd)/workspace` before each run.
 
 Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
-
-
-## Documentation
-
-<a href="https://docs.jina.ai/">
-<img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
-</a>
-
-The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
-
-- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/index.html)
-- [Jina Python API interface](https://docs.jina.ai/api/jina.html)
-- [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
-- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/index.html)
-- [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
-- ... [and more](https://docs.jina.ai/index.html)
-
-## Community
-
-- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
-- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
-- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`
-- [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
-
 
 
 ## License
