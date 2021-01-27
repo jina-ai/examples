@@ -56,8 +56,7 @@ But if you wish you could use a larger datasets from the same [source](http://co
 A [docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) is published where the ANN_SIFT1M (sift) has already been indexed
 using 4 shards.
 
-And since we said we want to use different indexers to query.
-And for this case, those indexers are [Faiss](https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) and [Annoy](https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer).
+And since we said we want to use different indexers to query, we will use [Faiss](https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) and [Annoy](https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer).
 
 Another cool thing to have would be to be able to compare the results between those indexers, so we will also show how to evaluate ranking results with Faiss and Annoy, and add the search with NumpyIndexer (that uses exhaustive search, so it's close to 100% recall) to compare. 
 But we encourage you to try different indexers and different options for other indexers to see what gets the best results and performance.
@@ -93,7 +92,7 @@ This workspace folder will contain the built index once the vectors are indexed 
 
 ### Index <!-- omit in toc -->
 
-Finally we're done getting all the pre requisites, we can index our data now!
+Finally we're done getting all the prerequisites, we can index our data now!
 To index the data we will define our **Flow** with a **YAML** file. In the Flow YAML file, we will add **Pods** in sequence. 
 In this demo, we have two pods defined `encoder` and `indexer` as you can see it here:
 
@@ -271,7 +270,7 @@ For instance for `inner_product` distance, `JINA_DISTANCE_REVERSE` should be set
 This is because returned measure for `Faiss` is similarity and not distance. 
 Which means that the results should be sorted in descending order to get what we would expect.
 
-Another parameter that cannot be found int the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS`.
+Another parameter that cannot be found in the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS`.
 This controls how many threads are used by `Faiss` when querying. 
 And since the image has been built with 4 shards (around 250K documents each),
 the `OMP_NUM_THREADS` is set to 1 to have the example use 4 CPUs. 
