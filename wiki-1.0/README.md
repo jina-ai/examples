@@ -60,8 +60,10 @@ By default, Jina only indexes 50 sentences (so you can test that your Flows work
 
 ## Search
 
+### With REST API
+
 ```sh
-python app.py -t query
+python app.py -t query_restful
 ```
 
 Then:
@@ -71,6 +73,12 @@ curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello wo
 ````
 
 Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/api/search`
+
+### From the Terminal
+
+```sh
+python app.py -t query
+```
 
 ## Build a Docker Image
 
