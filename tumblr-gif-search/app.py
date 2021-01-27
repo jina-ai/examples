@@ -8,8 +8,6 @@ from glob import glob
 from jina.flow import Flow
 
 GIF_BLOB = 'data/*.gif'
-LEN_DOCS = len(glob(GIF_BLOB))
-# allows for returning all docs
 # TODO test w 2
 SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
@@ -38,6 +36,9 @@ def search():
 
     with f:
         # running one search with one of the files
+        # FIXME this fails
+        # d.uri is ''
+        f.search_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=1)
         # waiting for input via REST gateway
         f.block()
 
