@@ -51,15 +51,12 @@ For this example you can use one of these 2 datasets [ANN_SIFT10K or ANN_SIFT1M]
 - 25K or 100k to train
 
 We will work with ANN_SIFT10K (siftsmall), that are [SIFT](https://en.wikipedia.org/wiki/Scale-invariant_feature_transform) descriptors for some image dataset. 
-But if you wish you could use a larger datasets from the same [source](http://corpus-texmex.irisa.fr/). 
-
-A [docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) is published where the ANN_SIFT1M (sift) has already been indexed
+But if you wish you could use a larger datasets from the same [source](http://corpus-texmex.irisa.fr/). A [docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) is published where the ANN_SIFT1M (sift) has already been indexed
 using 4 shards.
 
 And since we said we want to use different indexers to query, we will use [Faiss](https://hub.docker.com/r/jinahub/pod.indexer.faissindexer) and [Annoy](https://hub.docker.com/r/jinahub/pod.indexer.annoyindexer).
 
-Another cool thing to have would be to be able to compare the results between those indexers, so we will also show how to evaluate ranking results with Faiss and Annoy, and add the search with NumpyIndexer (that uses exhaustive search, so it's close to 100% recall) to compare. 
-But we encourage you to try different indexers and different options for other indexers to see what gets the best results and performance.
+Another cool thing to have would be to be able to compare the results between those indexers, so we will also show how to evaluate ranking results with Faiss and Annoy, and add the search with NumpyIndexer (that uses exhaustive search, so it's close to 100% recall) to compare. But we encourage you to try different indexers and different options for other indexers to see what gets the best results and performance.
 
 ## Requirements
 
@@ -79,9 +76,7 @@ Now let's get some data. We have prepared a small script that will download it
 ./get_data.sh siftsmall
 ```
 
-Cool we have the data now, but FAISS needs to learn some patterns of the data in order to build an efficient indexing scheme. 
-A.K.A we still need the training data, which is done with some subset of data that is not necessarily part of the index.
-So you need to run this script that will generate a workspace folder where the training data will be stored.
+Cool we have the data now, but FAISS needs to learn some patterns of the data in order to build an efficient indexing scheme. A.K.A we still need the training data, which is done with some subset of data that is not necessarily part of the index.So you need to run this script that will generate a workspace folder where the training data will be stored.
 
 ```bash
 ./generate_training_data.sh
@@ -92,9 +87,9 @@ This workspace folder will contain the built index once the vectors are indexed 
 
 ### Index <!-- omit in toc -->
 
-Finally we're done getting all the prerequisites, we can index our data now!
-To index the data we will define our **Flow** with a **YAML** file. In the Flow YAML file, we will add **Pods** in sequence. 
-In this demo, we have two pods defined `encoder` and `indexer` as you can see it here:
+Finally we're done getting all the prerequisites, we can index our data now! 
+
+To index the data we will define our **Flow** with a **YAML** file. In the Flow YAML file, we will add **Pods** in sequence. In this demo, we have two pods defined `encoder` and `indexer` as you can see it here:
 
 
 <table style="margin-left:auto;margin-right:auto;">
@@ -123,14 +118,12 @@ pods:
 </tr>
 </table>
 
-As a side note, we actually have another Pod working in silence, since the input to the very first Pod is always the Pod with the name of **gateway**, aka the "Forgotten" Pod. 
-But most of the time, we can safely ignore the **gateway** because it essentially does the dirty work of orchestrating the work for the Flow.
+As a side note, we actually have another Pod working in silence, since the input to the very first Pod is always the Pod with the name of **gateway**, aka the "Forgotten" Pod. But most of the time, we can safely ignore the **gateway** because it essentially does the dirty work of orchestrating the work for the Flow.
 
 
 ### Query <!-- omit in toc -->
 
-Ok, we have our data indexed, and for query we need to do a similar thing.
-Which means we also need a Flow to process the request message during querying. The query flow looks very similar
+Ok, we have our data indexed, and for query we need to do a similar thing.Which means we also need a Flow to process the request message during querying. The query flow looks very similar
 to the index flow but with an extra pod used to evaluate results.
 
 <table  style="margin-left:auto;margin-right:auto;">
@@ -184,15 +177,13 @@ pods:
 
 All the `environment` variables are added so that it is easy for the user to try out different configurations of `annoy` or `faiss` indexers.
 
-
 In this Flow, the `faiss_indexer` is the one that will do the nearest neighbours search from the given chunk (in this case, since every document has one chunk they are the same). Additionally, it will return the top_k most similiar documents in order of similiarity. Later, `doc_indexer` retrieves the actual document value from the Document Id.
 
 ## Run the Flows
 
 ### Index <!-- omit in toc -->
 
-That was a lot of info, let's get to actually run our Flows now.
-To index you just run the following command
+That was a lot of info, let's get to actually run our Flows now. To index you just run the following command
 
 ```bash
 python app.py -t index
@@ -201,8 +192,7 @@ You could also change request_size if you want.
 
 ### Query <!-- omit in toc -->
 
-Now, to query you can choose between `annoy`, `faiss`, or `numpy`.
-And you run the script like this:
+Now, to query you can choose between `annoy`, `faiss`, or `numpy`. And you run the script like this:
 
 ```bash
 python app.py -t query -i {index_type}
@@ -236,14 +226,12 @@ But feel free to look for different parameters to guarantee the best results
 
 ## Use Docker image from the jina hub
 
-To make thing a little easier, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) with the ANN_SIFT1M dataset indexed.
-You can retrieve the docker image using:
+To make thing a little easier, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.advancedvectorsearch) with the ANN_SIFT1M dataset indexed. You can retrieve the docker image using:
 
 ```bash
 docker pull jinahub/app.example.advancedvectorsearch:0.0.2-0.9.20
 ```
-So you can pull from its latest tags and run it. 
-By default it runs the search with `faiss` indexer. 
+So you can pull from its latest tags and run it. By default it runs the search with `faiss` indexer. 
 
 To simply run it, please do:
 ```bash
@@ -265,23 +253,14 @@ docker run -e JINA_FAISS_INDEX_KEY='Flat' jinahub/app.example.advancedvectorsear
 
 ## Good to know
 
-An important parameter to set is `JINA_DISTANCE_REVERSE`, depending on the type of distance or metric that is used. 
-For instance for `inner_product` distance, `JINA_DISTANCE_REVERSE` should be set to `True`.
-This is because returned measure for `Faiss` is similarity and not distance. 
-Which means that the results should be sorted in descending order to get what we would expect.
+An important parameter to set is `JINA_DISTANCE_REVERSE`, depending on the type of distance or metric that is used. For instance for `inner_product` distance, `JINA_DISTANCE_REVERSE` should be set to `True`. This is because returned measure for `Faiss` is similarity and not distance. Which means that the results should be sorted in descending order to get what we would expect.
 
-Another parameter that cannot be found in the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS`.
-This controls how many threads are used by `Faiss` when querying. 
-And since the image has been built with 4 shards (around 250K documents each),
-the `OMP_NUM_THREADS` is set to 1 to have the example use 4 CPUs. 
-But also feel free to tweak this parameter to check the quality and speed of the results.
+Another parameter that cannot be found in the `init` arguments of `FaissIndexer` or `AnnoyIndexer` is `OMP_NUM_THREADS`. This controls how many threads are used by `Faiss` when querying. And since the image has been built with 4 shards (around 250K documents each), the `OMP_NUM_THREADS` is set to 1 to have the example use 4 CPUs. But also feel free to tweak this parameter to check the quality and speed of the results.
 
 
 ## Wrap up
 
-In this example we have seen how to use different indexers as vector databases and how to use a `ref_indexer` as a base indexer.
- We also have seen how to use a pod inside a docker container inside our index and query flows, and how to use evaluators to assess the quality 
- of our search system.
+In this example we have seen how to use different indexers as vector databases and how to use a `ref_indexer` as a base indexer. We also have seen how to use a pod inside a docker container inside our index and query flows, and how to use evaluators to assess the quality of our search system.
 
 ## Next Steps
 
