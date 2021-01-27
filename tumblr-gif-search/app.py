@@ -35,10 +35,6 @@ def search():
     f = Flow.load_config('flow-query.yml')
 
     with f:
-        # running one search with one of the files
-        # FIXME this fails
-        # d.uri is ''
-        f.search_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=1)
         # waiting for input via REST gateway
         f.block()
 
