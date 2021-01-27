@@ -16,17 +16,7 @@ requests:
       - !SliceQL
         with:
           start: 0
-          end: 200
-          traversal_paths: ['m']
-      - !SliceQL
-        with:
-          start: 0
           end: $JINA_TOPK
-          traversal_paths: ['m']
-      - !SliceQL
-        with:
-          start: 0
-          end: 200
           traversal_paths: ['m']
     ControlRequest:
       - !ControlReqDriver {}

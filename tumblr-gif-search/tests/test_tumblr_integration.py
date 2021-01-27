@@ -5,7 +5,6 @@ import json
 import os
 from glob import glob
 
-# noinspection PyUnresolvedReferences
 import pytest
 import requests
 from jina.flow import Flow
@@ -13,12 +12,13 @@ from jina.flow import Flow
 SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
 SHARDS_INDEXER = 2
-JINA_TOPK = 4
+JINA_TOPK = 2
 GIF_BLOB = 'tests/data/*.gif'
 NR_CASES_SEARCH = 3
-REQ_SIZE = 3
+REQ_SIZE = 1
 
 
+@pytest.fixture()
 def env_setup(tmpdir):
     os.environ['SHARDS_DOC'] = str(SHARDS_DOC)
     os.environ['JINA_TOPK'] = str(JINA_TOPK)
@@ -52,8 +52,7 @@ def get_flow():
     return f
 
 
-def test_query(tmpdir):
-    env_setup(tmpdir)
+def test_query(env_setup):
     index_documents()
     f = get_flow()
     with f:
