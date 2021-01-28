@@ -60,7 +60,7 @@ In this example we use [BiT (Big Transfer) model](https://github.com/google-rese
 sh ./download.sh
 ```
 
-### Indexing the Data
+### Index Data
 
 ```sh
 python app.py index
@@ -68,7 +68,7 @@ python app.py index
 
 After this you should see a new `workspace` folder, which contains all the encoded data generated during indexing. 
 
-### Querying the Data
+### Query Data
 
 ```python
 python app.py search
