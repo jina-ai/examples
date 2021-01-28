@@ -4,6 +4,7 @@ with:
   read_only: true  # better add this in the query time
   rest_api: true
   port_expose: $JINA_PORT
+  show_exc_info: true
 pods:
   - name: chunk_seg
     uses: segment/segment.yml

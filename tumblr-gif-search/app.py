@@ -12,10 +12,12 @@ GIF_BLOB = 'data/*.gif'
 SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
 SHARDS_INDEXER = 2
+JINA_TOPK = 11
 
 
 def config():
     os.environ['SHARDS_DOC'] = str(SHARDS_DOC)
+    os.environ['JINA_TOPK'] = str(JINA_TOPK)
     os.environ['SHARDS_CHUNK_SEG'] = str(SHARDS_CHUNK_SEG)
     os.environ['SHARDS_INDEXER'] = str(SHARDS_INDEXER)
     os.environ['JINA_WORKSPACE'] = './workspace'
