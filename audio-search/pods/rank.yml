@@ -18,4 +18,4 @@ requests:
             - length
             - weight
             - chunks
-          traversal_paths: ['cm']
+          traversal_paths: ['m']

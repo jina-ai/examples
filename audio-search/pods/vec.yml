@@ -25,13 +25,7 @@ requests:
       - !KVSearchDriver
         with:
           executor: BinaryPbIndexer
-          traversal_paths: ['m',]
-      - !ExcludeQL
-        with:
-          fields:
-            - embedding
-            - blob
-          traversal_paths: ['mc']
+          traversal_paths: ['cm',]
     IndexRequest:
       - !VectorIndexDriver
         with:

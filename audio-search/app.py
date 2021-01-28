@@ -75,7 +75,6 @@ def main(task, num_docs):
     elif task == 'query':
         f = Flow.load_config('flows/query.yml')
         with f:
-            #f.search_files('data/*.wav', batch_size=2, size=num_docs)
             f.block()
     elif task == 'dryrun':
         f = Flow.load_config('flows/query.yml')

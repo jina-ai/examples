@@ -13,13 +13,6 @@ requests:
       - !KVSearchDriver
         with:
           traversal_paths: ['m',]
-      - !ExcludeQL
-        with:
-          fields:
-            - embedding
-            - blob
-            - buffer
-          traversal_paths: ['mc']
     IndexRequest:
       - !URI2DataURI
         with:
@@ -30,7 +23,7 @@ requests:
             - embedding
             - blob
             - chunks
-          traversal_paths: ['cm']
+          traversal_paths: ['r']
       - !KVIndexDriver
         with:
-          traversal_paths: ['c',]
+          traversal_paths: ['r',]
