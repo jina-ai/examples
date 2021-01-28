@@ -10,8 +10,8 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, pokedex-with-bit]
-
+        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, pokedex-with-bit, tumblr-gif-search]
+        
     steps:
       - uses: actions/checkout@v2
         with:
