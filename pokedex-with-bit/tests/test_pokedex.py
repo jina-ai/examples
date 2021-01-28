@@ -20,7 +20,7 @@ def config(tmpdir):
     os.environ['JINA_WORKSPACE'] = str(tmpdir)
 
 @pytest.fixture
-def sh():
+def download_model():
     os.system('./download.sh')
 
 
@@ -48,7 +48,7 @@ def get_flow():
     return f
 
 
-def test_query(config, sh):
+def test_query(config, download_model):
     index_documents()
     f = get_flow()
     with f:
