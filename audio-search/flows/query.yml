@@ -1,33 +1,33 @@
 !Flow
+version: '1'
 with:
   read_only: true
   rest_api: true
   port_expose: $JINA_PORT
 pods:
-  segmenter:
-    uses: pods/craft.yml
-    parallel: $PARALLEL
+  - name: segmenter
+    uses: pods/segment.yml
+    shards: $SHARDS
     timeout_ready: 600000
     show_exc_info: true
-  encoder:
+  - name: encoder
     uses: pods/encode.yml
-    parallel: $PARALLEL
+    shards: $SHARDS
     timeout_ready: 600000
     read_only: true
     show_exc_info: true
-  vec_idx:
+  - name: vec_idx
     uses: pods/vec.yml
     shards: $SHARDS
-    separated_workspace: true
     polling: all
     uses_reducing: _merge_all
-    timeout_ready: 100000
+    timeout_ready: 600000
     show_exc_info: true
-  ranker:
+  - name: ranker
     uses: pods/rank.yml
     timeout_ready: 600000
     show_exc_info: true
-  doc_idx:
+  - name: doc_idx
     uses: pods/doc.yml
     shards: $SHARDS
     separated_workspace: true

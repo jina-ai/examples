@@ -21,25 +21,25 @@ requests:
       - !VectorSearchDriver
         with:
           executor: NumpyIndexer
-          traversal_paths: ['c',]
+          traversal_paths: ['c']
       - !KVSearchDriver
         with:
           executor: BinaryPbIndexer
-          traversal_paths: ['cm',]
+          traversal_paths: ['cm']
     IndexRequest:
       - !VectorIndexDriver
         with:
           executor: NumpyIndexer
-          traversal_paths: ['c',]
+          traversal_paths: ['c']
       - !ExcludeQL
         with:
           fields:
             - embedding
             - blob
-          traversal_paths: ['c',]
+          traversal_paths: ['c']
       - !KVIndexDriver
         with:
           executor: BinaryPbIndexer
-          traversal_paths: ['c',]
+          traversal_paths: ['c']
     ControlRequest:
       - !ControlReqDriver {}

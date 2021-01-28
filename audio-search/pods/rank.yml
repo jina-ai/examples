@@ -8,7 +8,7 @@ requests:
     SearchRequest:
       - !Chunk2DocRankDriver
         with:
-          traversal_paths: ['c',]
+          traversal_paths: ['c']
       - !ExcludeQL
         with:
           fields:

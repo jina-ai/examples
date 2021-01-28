@@ -1,4 +1,4 @@
-!VggishCrafter
+!VggishSegmenter
 with:
   window_length_secs: 1.0
   show-exc-info: true

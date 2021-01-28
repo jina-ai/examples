@@ -12,7 +12,7 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          traversal_paths: ['m',]
+          traversal_paths: ['m']
     IndexRequest:
       - !URI2DataURI
         with:
@@ -26,4 +26,4 @@ requests:
           traversal_paths: ['r']
       - !KVIndexDriver
         with:
-          traversal_paths: ['r',]
+          traversal_paths: ['r']

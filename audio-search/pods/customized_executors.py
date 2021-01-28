@@ -1,20 +1,18 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import numpy as np
 import io
 from typing import Any, Dict, List
 
-from jina.executors.encoders.frameworks import BaseTFEncoder
+import numpy as np
 from jina.executors.decorators import batching
-from jina.executors.segmenters import BaseSegmenter
+from jina.executors.encoders.frameworks import BaseTFEncoder
 from jina.executors.rankers import Chunk2DocRanker
-
-from jinahub.vggish_params import *
+from jina.executors.segmenters import BaseSegmenter
 from jinahub.vggish_input import *
-from jinahub.vggish_slim import *
+from jinahub.vggish_params import *
 from jinahub.vggish_postprocess import *
-import librosa
+from jinahub.vggish_slim import *
 
 
 class VggishEncoder(BaseTFEncoder):
@@ -44,7 +42,7 @@ class VggishEncoder(BaseTFEncoder):
         return (np.float32(result) - 128.) / 128.
 
 
-class VggishCrafter(BaseSegmenter):
+class VggishSegmenter(BaseSegmenter):
     def __init__(self, window_length_secs=0.025, hop_length_secs=0.010, *args, **kwargs):
         """
         :param frame_length: the number of samples in each frame
@@ -88,23 +86,6 @@ class VggishCrafter(BaseSegmenter):
             wav_data = np.mean(wav_data, axis=1)
         data = wav_data / 32768.0
         return data, sample_rate
-    '''
-    def segment(self,uri, buffer):
-        signal,sample_rate=self.read_wav(uri, buffer)
-        frame_length = int(round(sample_rate * self.window_length_secs))
-        hop_length = int(round(sample_rate * self.hop_length_secs))
-        if signal.ndim == 1:  # mono
-            frames = librosa.util.frame(signal, frame_length=frame_length, hop_length=hop_length, axis=0)
-        elif signal.ndim == 2:  # stereo
-            left_frames = librosa.util.frame(
-                signal[0,], frame_length=frame_length, hop_length=hop_length, axis=0)
-            right_frames = librosa.util.frame(
-                signal[1,], frame_length=frame_length, hop_length=hop_length, axis=0)
-            frames = np.concatenate((left_frames, right_frames), axis=0)
-        else:
-            raise ValueError(f'audio signal must be 1D or 2D array: {signal}')
-        return frames
-    '''
 
 
 class MinRanker(Chunk2DocRanker):
@@ -115,6 +96,4 @@ class MinRanker(Chunk2DocRanker):
     .. warning:: Here we suppose that the smaller chunk score means the more similar.
     """
     def _get_score(self, match_idx, query_chunk_meta, match_chunk_meta, *args, **kwargs):
-        #_doc_id = match_idx[0, self.col_doc_id]
-        #return self.get_doc_id(match_idx), 1. / (1. + match_idx[:, self.col_score].min())
         return self.get_doc_id(match_idx), 1. / (1. + match_idx[self.COL_SCORE].min())

@@ -13,12 +13,11 @@ from jina.flow import Flow
 TOP_K = 3
 
 
-def config(task):
-    parallel = 2 if task == 'index' else 1
-    os.environ['PARALLEL'] = str(parallel)
+def config():
+    # parallel = 2 if task == 'index' else 1
+    # os.environ['PARALLEL'] = str(parallel)
     os.environ['SHARDS'] = str(1)
     os.environ['WORKDIR'] = './workspace'
-    # os.makedirs(os.environ['WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
 
 
@@ -27,18 +26,11 @@ def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
     return requests.post(url, data=json.dumps(payload), headers=headers).json()
 
 
-def get_results(query, top_k=TOP_K):
-    return call_api(
-        'http://0.0.0.0:45678/api/search',
-        payload={"top_k": top_k, "mode": "search", "data": [f"text:{query}"]}
-    )
-
-
 def extract_result(resp):
     result = []
     num_of_queries = []
-    # resp.search.docs[0].uri
-    # resp.search.docs[0].chunks[0].matches
+    # resp.search.docs[0].matches
+    # resp.search.docs[0].matches[0].score.value == 1
     for data in resp.search.docs:
         num_of_queries.append(data)
         for match in data.matches:
@@ -57,7 +49,7 @@ def search_done(resp):
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=100)
 def main(task, num_docs):
-    config(task)
+    config()
     if task == 'index':
         workspace = os.environ['WORKDIR']
         if os.path.exists(workspace):
@@ -79,7 +71,6 @@ def main(task, num_docs):
     elif task == 'dryrun':
         f = Flow.load_config('flows/query.yml')
         with f:
-            # pass
             f.search_files('data/Y--4gqARaEJE.wav', on_done=search_done)
     else:
         raise NotImplementedError(
