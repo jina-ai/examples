@@ -11,7 +11,7 @@ from jina.flow import Flow
 NUM_DOCS = 3
 TOP_K = 3
 
-
+@pytest.fixture
 def config(tmpdir):
     os.environ['JINA_DATA'] = 'tests/test-data/*.png'
     os.environ['JINA_PORT'] = str(45678)
@@ -19,7 +19,7 @@ def config(tmpdir):
     os.environ['JINA_SHARDS_INDEXERS'] = str(1)
     os.environ['JINA_WORKSPACE'] = str(tmpdir)
 
-
+@pytest.fixture
 def sh():
     os.system('./download.sh')
 
@@ -48,9 +48,7 @@ def get_flow():
     return f
 
 
-def test_query(tmpdir):
-    config(tmpdir)
-    sh()
+def test_query(config, sh):
     index_documents()
     f = get_flow()
     with f:
