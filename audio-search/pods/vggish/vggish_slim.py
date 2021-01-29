@@ -26,7 +26,7 @@ internal to Google. We call it 'VGGish'.
 
 Note that we only define the model up to the embedding layer, which is the
 penultimate layer before the final classifier layer. We also provide various
-hyperparameter values (in vggish_py) that were used to train this model
+hyperparameter values (in vggish_params.py) that were used to train this model
 internally.
 
 For comparison, here is TF-Slim's VGG definition:
