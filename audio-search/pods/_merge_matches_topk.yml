@@ -18,5 +18,5 @@ requests:
           start: 0
           end: $JINA_TOPK
           traversal_paths: ['m']
-      ControlRequest:
-        - !ControlReqDriver {}
+    ControlRequest:
+      - !ControlReqDriver {}
