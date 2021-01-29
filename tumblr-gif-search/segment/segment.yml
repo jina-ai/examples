@@ -1,0 +1,24 @@
+!GifPreprocessor
+with:
+  every_k_frame: 2
+metas:
+  name: gif2chunk_preprocessor  # a customized name
+  py_modules: gif2chunk.py
+requests:
+  on:
+    IndexRequest:
+      - !SegmentDriver
+        with:
+          executor: gif2chunk_preprocessor
+    SearchRequest:
+      - !URI2Buffer {}
+      - !SegmentDriver
+        with:
+          executor: gif2chunk_preprocessor
+      - !ExcludeQL
+        with:
+          fields:
+            - buffer
+
+    ControlRequest:
+      - !ControlReqDriver {}

@@ -5,55 +5,45 @@ components:
       index_filename: vec.gz
     metas:
       name: vecidx  # a customized name
-      workspace: $WORKDIR
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx
-      workspace: $WORKDIR
 metas:
   name: chunk_compound_indexer
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     SearchRequest:
       - !VectorSearchDriver
         with:
-          executor: NumpyIndexer
-          granularity_range: [1, 1]
-          recur_on: ['chunks', ]
+          executor: vecidx
+          traversal_paths: ['c']
       - !KVSearchDriver
         with:
-          executor: BinaryPbIndexer
-          granularity_range: [1, 1]
-          adjacency_range: [1, 1]
-          recur_on: ['matches', ]
-      - !ExcludeQL
+          executor: chunkidx
+          traversal_paths: ['cm']
+      - !ExcludeQL # for reducing network usage
         with:
-          granularity_range: [0, 1]
-          adjacency_range: [0, 1]
           fields:
             - embedding
             - blob
-          recur_on: ['matches', 'chunks']
+          traversal_paths: ['cm']
     IndexRequest:
       - !VectorIndexDriver
         with:
-          executor: NumpyIndexer
-          granularity_range: [1, 1]
-          recur_on: ['chunks', ]
+          executor: vecidx
+          traversal_paths: ['c']
       - !ExcludeQL
         with:
-          granularity_range: [0, 1]
           fields:
             - embedding
             - blob
-          recur_on: ['chunks', ]
+          traversal_paths: ['c']
       - !KVIndexDriver
         with:
-          executor: BinaryPbIndexer
-          granularity_range: [1, 1]
-          recur_on: ['chunks', ]
+          executor: chunkidx
+          traversal_paths: ['c']
     ControlRequest:
       - !ControlReqDriver {}

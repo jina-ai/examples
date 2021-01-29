@@ -3,3 +3,11 @@ with:
   model_path: pretrained
   pool_strategy: avg
   channel_axis: -1
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    [SearchRequest, IndexRequest]:
+      - !EncodeDriver
+        with:
+          traversal_paths: ['r']

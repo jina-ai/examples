@@ -1,26 +1,33 @@
 !Flow
+version: '1'
 with:
-  prefetch: 2
-  logserver: false
   read_only: true  # better add this in the query time
   rest_api: true
   port_expose: $JINA_PORT
+  show_exc_info: true
 pods:
-  chunk_seg:
-    uses: craft/craft.yml
-    parallel: $PARALLEL
-  tf_encode:
-    uses: $ENCODER_CONF
-    parallel: $PARALLEL
-    timeout_ready: 100000 # larger timeout as in query time will read all the data
-  chunk_idx:
+  - name: chunk_seg
+    uses: segment/segment.yml
+    shards: $SHARDS_CHUNK_SEG
+    show_exc_info: true
+  - name: tf_encode
+    uses: encode/encode.yml
+    shards: $SHARDS_CHUNK_SEG
+    timeout_ready: -1 # larger timeout as in query time will read all the data
+    show_exc_info: true
+  - name: chunk_idx
     uses: index/chunk.yml
-    shards: $SHARDS
-    separated_workspace: true
+    shards: $SHARDS_INDEXER
     polling: all
-    uses_reducing: _merge_all
-    timeout_ready: 100000 # larger timeout as in query time will read all the data
-  ranker:
+    uses_after: index/chunk_merger.yml
+    timeout_ready: -1 # larger timeout as in query time will read all the data
+    show_exc_info: true
+  - name: ranker
     uses: index/rank.yml
-  doc_idx:
+    show_exc_info: true
+  - name: doc_idx
     uses: index/doc.yml
+    shards: $SHARDS_DOC
+    uses_after: index/_merge_matches_topk.yml
+    polling: all
+    show_exc_info: true

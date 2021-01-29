@@ -1,0 +1,17 @@
+!MyEncoder
+metas:
+  name: myenc  # a customized name
+  workspace: $JINA_WORKDIR
+requests:
+  on:
+    [IndexRequest, SearchRequest]:
+      - !Blob2PngURI 
+        with:
+          height: 28
+          width: 28
+      - !EncodeDriver {}
+      - !ExcludeQL
+        with:
+          fields:
+            - buffer
+            - chunks

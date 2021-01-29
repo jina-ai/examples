@@ -1,27 +1,27 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2020 - 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
 import sys
+from glob import glob
 
 from jina.flow import Flow
 
-num_docs = os.environ.get('MAX_DOCS', 30)
-
 GIF_BLOB = 'data/*.gif'
+# TODO test w 2
+SHARDS_DOC = 2
+SHARDS_CHUNK_SEG = 2
+SHARDS_INDEXER = 2
+JINA_TOPK = 11
 
 
 def config():
-    parallel = 1 if sys.argv[1] == 'index' else 1
-    shards = 1
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['SHARDS'] = str(shards)
-    os.environ['WORKDIR'] = './workspace'
-    os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['SHARDS_DOC'] = str(SHARDS_DOC)
+    os.environ['JINA_TOPK'] = str(JINA_TOPK)
+    os.environ['SHARDS_CHUNK_SEG'] = str(SHARDS_CHUNK_SEG)
+    os.environ['SHARDS_INDEXER'] = str(SHARDS_INDEXER)
+    os.environ['JINA_WORKSPACE'] = './workspace'
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
-    os.environ['ENCODER_CONF'] = 'encode/encode.yml'
-    # if you have no ImageKerasEnoder locally,
-    # set this to 'jinahub/pod.encoder.imagekerasencoder:0.0.5'
 
 
 # for index
@@ -29,7 +29,7 @@ def index():
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(GIF_BLOB, batch_size=1, read_mode='rb', size=num_docs, skip_dry_run=True)
+        f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True)
 
 
 # for search
@@ -37,6 +37,7 @@ def search():
     f = Flow.load_config('flow-query.yml')
 
     with f:
+        # waiting for input via REST gateway
         f.block()
 
 
@@ -54,13 +55,14 @@ if __name__ == '__main__':
         exit(1)
     if sys.argv[1] == 'index':
         config()
-        workspace = os.environ['WORKDIR']
+        workspace = os.environ['JINA_WORKSPACE']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
+            sys.exit(1)
         index()
     elif sys.argv[1] == 'search':
         config()

@@ -9,11 +9,16 @@ requests:
     ControlRequest:
       - !ControlReqDriver {}
     SearchRequest:
-      - !VectorSearchDriver {}
+      - !VectorSearchDriver
+        with:
+          traversal_paths: ['r']
     IndexRequest:
       - !ExcludeQL
         with:
+          traversal_paths: ['r']
           fields:
             - buffer
             - chunks
-      - !VectorIndexDriver {}
+      - !VectorIndexDriver
+        with:
+          traversal_paths: ['r']

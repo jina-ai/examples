@@ -17,22 +17,17 @@
 
 </p>
 
-In this example, we use [BiT (Big Transfer): the latest pretrained computer-vision model by Google](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. [Thanks to Jina](https://github.com/jina-ai/jina), you can see how easy it is to put an academic result released a few days ago into production (spoiler alert: this project only took me *2 hours*). You can use this demo system to index an image dataset and query the most similar image from it. In the example output below, the first column in every row is the query, and the rest is the top-k results.
+In this example, we use [BiT (Big Transfer)](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. You can use this demo to index an image dataset and query the most similar image from it. 
 
-[![](.github/.README_images/7262e2aa.png)](https://get.jina.ai)
 
 Features that come out of the box:
 
 - Interactive query
-- Parallel replicas
 - Index with shards
-- Containerization
 - REST and gRPC gateway
 - Dashboard monitor
 
 To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install.
-
-The code can of course run natively on your local machine, please [read the Jina installation guide for details](https://docs.jina.ai/chapters/install/via-pip.html).
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -54,60 +49,57 @@ The code can of course run natively on your local machine, please [read the Jina
 
 > *I want Pokémon! I don't care about Jina cloud-native neural search or whatever big names you throw around, just show me the Pokémon!*
 
-We have a pre-built Docker image ready to use:
+We have a pre-built Docker image ready to use, you need to run this on your console:
 
 ```bash
-docker run -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch-pokedex search
+docker run -p 45678:45678 jinahub/app.example.pokedexwithbit:0.0.1-0.9.20
 ```
 
-Then you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api).
+So now you're ready to query! And for that you have two options:
 
-## Download and Extract Data
+ - You can use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
+ - Or you can `curl`/query/js it via HTTP POST request. [Details here](#query-via-rest-api). 
 
-We're using Pokemon sprites from generations one through five, downloaded from [veekun.com](https://veekun.com/dex/downloads). To download and extract the PNGs, simply run:
+## I want the long route
+
+If you don't want to use the docker image and you want to run this yourself, don't worry, we got your back here. Let's start
+
+### Download and Extract Data
+
+First things first, we need some data. For this example we're using Pokemon sprites that we got from [veekun.com](https://veekun.com/dex/downloads). 
+But to download them you just need to run:
 
 ```sh
 sh ./get_data.sh
 ```
 
-## Run outside of Docker
+### Download and Extract Pretrained Model
+
+Ok, we have the data but we still need a pretrained model:
+
+```sh
+sh ./download.sh
+```
 
 ### Indexing the Data
 
-`app.py` is already configured to index all the PNG files in the `data` folder, no matter how deep the subfolder:
-
-```python
-image_src = 'data/**/*.png'
-```
-
-Just run:
+We're ready to index.
+For this just run:
 
 ```sh
 python app.py index
 ```
+After this step you should see a new `workspace` folder, in there is all the encoded data that was generated during our index time. 
 
 ### Querying the Data
+
+So if we have our data encoded, we can query through it:
 
 ```python
 python app.py search
 ```
-
-You can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly. Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
-
-## Run in Docker
-
-### Index Image Data
-
-We use BiT `R50x1` model in this example. You can change it in [`download.sh`](./download.sh) if you want
-
-```bash
-docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_PROFILING=1" -p 5000:5000 jinaai/hub.app.bitsearch index
-```
-
-#### Command Line Arguments Explained
-- `$(pwd)/data`: the directory where all your images are stored (jpg/png are supported). You can change it to any path you like, just make sure it's an absolute path
-- `$(pwd)/workspace`: the directory where Jina stores indexes and other artifacts.
-- `"JINA_LOG_PROFILING=1" -p 5000:5000`: optionally enables dashboard monitoring.
+And to see the results you can then use [Jinabox.js](https://jina.ai/jinabox.js/) to drag and drop image files to find the Pokemon which matches most clearly.
+Just set the endpoint to `45678` and drag from the thumbnails on the left or from your file manager.
 
 #### Behind the Scenes
 
@@ -121,12 +113,10 @@ docker run -v "$(pwd)/data:/data" -v "$(pwd)/workspace:/workspace" -e "JINA_LOG_
 <td>
 
 ```python
-from jina.flow import Flow
+    f = Flow.load_config('flows/index.yml')
 
-f = Flow.load_config('flows/index.yml')
-
-with f:
-    f.index(input_fn, batch_size=128)
+    with f:
+        f.index_files(image_src, request_size=64, read_mode='rb', size=num_docs)
 ```
 
 </td>
@@ -135,27 +125,35 @@ with f:
 
 ```yaml
 !Flow
-with:
-  logserver: true
+version: '1'
 pods:
-  crafter:
+  - name: crafter
+    show_exc_info: true
     uses: pods/craft.yml
+    shards: $JINA_SHARDS
     read_only: true
-  encoder:
+  - name: encoder
+    show_exc_info: true
     uses: pods/encode.yml
-    parallel: $JINA_PARALLEL
+    shards: $JINA_SHARDS
     timeout_ready: 600000
     read_only: true
-  chunk_idx:
-    uses: pods/chunk.yml
-    shards: $JINA_SHARDS
-    separated_workspace: true
-  doc_idx:
+  - name: vec_idx
+    show_exc_info: true
+    uses: pods/vec.yml
+    shards: $JINA_SHARDS_INDEXERS
+    polling: any
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+  - name: doc_idx
     uses: pods/doc.yml
-    needs: crafter
-  join_all:
+    shards: $JINA_SHARDS_INDEXERS
+    polling: any
+    timeout_ready: 100000 # larger timeout as in query time will read all the data
+    needs: [gateway]
+  - name: join_all
     uses: _merge
-    needs: [doc_idx, chunk_idx]
+    needs: [doc_idx, vec_idx]
+    read_only: true
 ```
 
 </sub>
@@ -180,20 +178,9 @@ If it's running successfully, you should be able to see logs scrolling in the co
 
 Under `$(pwd)/workspace`, you'll see a list of directories `chunk_compound_indexer-*` after indexing. This is because we set shards to 8.
 
-### Query Top-K Visually Similar Images
-
-#### Start the Jina server
-```bash
-docker run -v "$(pwd)/workspace:/workspace" -p 34567:34567 -e "JINA_PORT=34567" jinaai/hub.app.bitsearch search
-```
-
-##### Command args explained
-- `$(pwd)/workspace` is where Jina previously stored our indexes and other artifacts. Now we need to load them.
-- `-p 34567:34567 -e "PUB_PORT=34567"` is the REST API port.
-
 ### Query via REST API
 
-When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:34567/api/search`, e.g.:
+When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
 
 ```bash
 curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:34567/api/search'
@@ -203,33 +190,19 @@ curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["dat
 
 This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
-### Query Results in Batch
-
-Let's test the results on Pokémon! This time we use our gRPC gateway (for better efficiency in batch querying): Simply run `python make_html.py`
-
-<p align="center">
-  <img src=".github/.README_images/f2dcf24c452f73b085c0108867f4ff33.gif?raw=true" alt="Jina banner" width="80%">
-</p>
 
 ### Build the Docker Image Yourself
 
 After playing with it for a while, you may want to change the code and rebuild the image. Simply run:
 ```bash
-docker build -t jinaai/hub.app.bitsearch .
-```
-
-If you want to keep up with Jina's master branch, then pull before building:
-```bash
-docker pull jinaai/jina:devel
-docker build -t jinaai/hub.app.bitsearch .
+docker build -t jinaai/app.examples.pokedexwithbit .
 ```
 
 ## Troubleshooting
 
 ### Memory Issues
 
-BiT model seems pretty resource-hungry. If you are using Docker Desktop, make sure to assign enough memory for your Docker container, especially when you have multiple replicas. Below are my MacOS settings with two replicas:
-
+BiT model seems pretty resource-hungry. If you are using Docker Desktop, make sure to assign enough memory for your Docker container, especially when you have multiple shards. Below are my MacOS settings with two shards:
 
 <p align="center">
   <img src=".github/.README_images/d4165abd.png?raw=true" alt="Jina banner" width="80%">
@@ -269,6 +242,6 @@ The best way to learn Jina in depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI Limited. All rights reserved.
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.
