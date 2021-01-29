@@ -13,6 +13,10 @@ TOP_K = 3
 
 @pytest.fixture
 def config(tmpdir):
+    import subprocess
+    import sys
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'tensorflow-cpu==2.1'])
+
     os.environ['JINA_DATA'] = 'tests/test-data/*.png'
     os.environ['JINA_PORT'] = str(45678)
     os.environ['JINA_SHARDS'] = str(1)

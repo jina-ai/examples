@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search]
+        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, pokedex-with-bit]
         
     steps:
       - uses: actions/checkout@v2
@@ -29,8 +29,6 @@ jobs:
           pip install -r ${{ matrix.path }}/requirements.txt --no-cache-dir
           pip uninstall -y jina
           pip install jina[cicd,test,http,hub] requests --no-cache-dir
-          pip install -r pokedex-with-bit/requirements.txt --no-cache-dir
-
       - name: Test examples with pytest
         run: |
           jina check
