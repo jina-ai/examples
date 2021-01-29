@@ -20,6 +20,11 @@ def env_setup(tmpdir):
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
 
 
+@pytest.fixture
+def download_model():
+    os.system('./download_model.sh')
+
+
 def index_documents():
     f = Flow().load_config('flows/index.yml')
     with f:
@@ -48,7 +53,7 @@ def queries():
     return ['Y-0BIyqJj9ZU', 'Y-0CamVQdP_Y', 'Y-0Gj8-vB1q4']
 
 
-def test_query(env_setup, queries):
+def test_query(env_setup, download_model, queries):
     index_documents()
     f = get_flow()
     paths = queries
