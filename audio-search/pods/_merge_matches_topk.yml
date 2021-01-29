@@ -10,7 +10,7 @@ requests:
           traversal_paths: ['m']
       - !SortQL
         with:
-          reverse: false
+          reverse: true
           traversal_paths: ['m']
           field: 'score__value'
       - !SliceQL
