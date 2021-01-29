@@ -17,7 +17,7 @@ QUERY_FLOW_FILE_PATH = 'flows/query.yml'
 
 
 def config(tmpdir):
-    os.environ['JINA_DATA_FILE'] = 'test-input.txt'
+    os.environ['JINA_DATA_FILE'] = 'toy-input.txt'
     os.environ['JINA_WORKSPACE'] = str(tmpdir)
     os.environ['JINA_PORT'] = str(45678)
 
