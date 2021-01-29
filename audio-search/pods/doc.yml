@@ -1,10 +1,10 @@
 !BinaryPbIndexer
 with:
   index_filename: doc.gzip
-  shards: $SHARDS
+  shards: $JINA_SHARDS
 metas:
   name: doc_indexer
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     ControlRequest:

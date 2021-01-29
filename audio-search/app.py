@@ -15,7 +15,7 @@ JINA_TOPK = 5
 
 def config():
     os.environ['JINA_SHARDS'] = str(4)
-    os.environ['WORKDIR'] = './workspace'
+    os.environ['JINA_WORKSPACE'] = './workspace'
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
     os.environ['JINA_TOPK'] = str(JINA_TOPK)
 
@@ -31,7 +31,7 @@ def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
 def main(task, num_docs):
     config()
     if task == 'index':
-        workspace = os.environ['WORKDIR']
+        workspace = os.environ['JINA_WORKSPACE']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \

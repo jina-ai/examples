@@ -16,7 +16,7 @@ NUM_DOCS = 3
 @pytest.fixture()
 def env_setup(tmpdir):
     os.environ['JINA_SHARDS'] = str(2)
-    os.environ['WORKDIR'] = str(tmpdir)
+    os.environ['JINA_WORKSPACE'] = str(tmpdir)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
     os.environ['JINA_TOPK'] = str(JINA_TOPK)
     if platform == "linux":

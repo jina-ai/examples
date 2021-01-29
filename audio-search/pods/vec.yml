@@ -5,16 +5,16 @@ components:
       index_filename: vec.gz
     metas:
       name: vec_idx  # a customized name
-      workspace: $WORKDIR
+      workspace: $JINA_WORKSPACE
   - !BinaryPbIndexer
     with:
       index_filename: chunk.gz
     metas:
       name: chunkidx  # a customized name
-      workspace: $WORKDIR
+      workspace: $JINA_WORKSPACE
 metas:
   name: chunk_compound_indexer
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     SearchRequest:
