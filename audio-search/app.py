@@ -10,13 +10,14 @@ import sys
 import click
 from jina.flow import Flow
 
+JINA_TOPK = 5
 
-def config(task):
-    parallel = 2 if task == 'index' else 1
-    os.environ['PARALLEL'] = str(parallel)
-    os.environ['SHARDS'] = str(1)
+
+def config():
+    os.environ['JINA_SHARDS'] = str(4)
     os.environ['WORKDIR'] = './workspace'
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
+    os.environ['JINA_TOPK'] = str(JINA_TOPK)
 
 
 def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
@@ -28,7 +29,7 @@ def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
 @click.option('--task', '-t')
 @click.option('--num_docs', '-n', default=100)
 def main(task, num_docs):
-    config(task)
+    config()
     if task == 'index':
         workspace = os.environ['WORKDIR']
         if os.path.exists(workspace):

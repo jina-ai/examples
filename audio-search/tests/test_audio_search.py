@@ -3,6 +3,7 @@ __license__ = "Apache-2.0"
 
 import json
 import os
+from sys import platform
 
 import pytest
 import requests
@@ -18,6 +19,8 @@ def env_setup(tmpdir):
     os.environ['SHARDS'] = str(1)
     os.environ['WORKDIR'] = str(tmpdir)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(65481))
+    if platform == "linux":
+        os.system('sudo apt-get install libsndfile1')
 
 
 @pytest.fixture

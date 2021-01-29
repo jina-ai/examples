@@ -1,31 +1,33 @@
 !Flow
 version: '1'
-with:
-  logserver: false
 pods:
   - name: crafter
     uses: pods/segment.yml
-    shards: $SHARDS
+    read_only: true
+    shards: $JINA_SHARDS
     timeout_ready: 600000
     show_exc_info: true
-  - name: encoder
+  - name: segmenter
     uses: pods/encode.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     timeout_ready: 600000
     read_only: true
     show_exc_info: true
-  - name: vec_indexer
+  - name: vec_idx
+    polling: any
     uses: pods/vec.yml
-    shards: $SHARDS
+    shards: $JINA_SHARDS
     timeout_ready: 600000
     show_exc_info: true
-  - name: doc_indexer
+  - name: doc_idx
     uses: pods/doc.yml
-    needs: [gateway]
-    shards: $SHARDS
+    needs: gateway
+    shards: $JINA_SHARDS
     timeout_ready: 600000
     show_exc_info: true
   - name: join_all
     uses: _merge
-    needs: [vec_indexer, doc_indexer]
+    needs: [vec_idx, doc_idx]
     read_only: true
+    polling: all
+
