@@ -1,5 +1,4 @@
 name: CI
-
 on:
   pull_request:
 
@@ -10,7 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, audio-search]
+        path: [southpark-search, multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, pokedex-with-bit, audio-search]
 
     steps:
       - uses: actions/checkout@v2
