@@ -1,10 +1,10 @@
 !BinaryPbIndexer
 with:
   index_filename: doc.gzip
-  shards: $SHARDS
+  shards: $JINA_SHARDS
 metas:
   name: doc_indexer
-  workspace: $WORKDIR
+  workspace: $JINA_WORKSPACE
 requests:
   on:
     ControlRequest:
@@ -12,30 +12,18 @@ requests:
     SearchRequest:
       - !KVSearchDriver
         with:
-          granularity_range: [0, 0]
-          adjacency_range: [0, 1]
-          recur_on: ['matches', ]
-      - !ExcludeQL
-        with:
-          granularity_range: [0, 2]
-          fields:
-            - embedding
-            - blob
-            - buffer
-          recur_on: ['matches', 'chunks']
+          traversal_paths: ['m']
     IndexRequest:
       - !URI2DataURI
         with:
           override: true
       - !ExcludeQL
         with:
-          granularity_range: [0, 2]
           fields:
             - embedding
             - blob
             - chunks
-          recur_on: ['chunks', 'matches']
+          traversal_paths: ['r']
       - !KVIndexDriver
         with:
-          granularity_range: [0, 0]
-          recur_on: ['chunks', ]
+          traversal_paths: ['r']

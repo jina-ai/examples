@@ -1,4 +1,4 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 # Copyright 2017 The TensorFlow Authors All Rights Reserved.
@@ -35,7 +35,7 @@ MEL_MIN_HZ = 125
 MEL_MAX_HZ = 7500
 LOG_OFFSET = 0.01  # Offset used for stabilized log of input mel-spectrogram.
 EXAMPLE_WINDOW_SECONDS = 0.96  # Each example contains 96 10ms frames
-EXAMPLE_HOP_SECONDS = 0.96     # with zero overlap.
+EXAMPLE_HOP_SECONDS = 0.96  # with zero overlap.
 
 # Parameters used for embedding postprocessing.
 PCA_EIGEN_VECTORS_NAME = 'pca_eigen_vectors'
