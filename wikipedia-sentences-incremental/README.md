@@ -14,7 +14,7 @@
       Output
     </td>
     <td>
-      <pre>top_k</pre> number of sentences that match input query
+      top_k number of sentences that match input query
     </td>
   </tr>
 </table>
@@ -29,65 +29,69 @@ This is an example of using [Jina](http://www.jina.ai)'s neural search framework
 
 Briefly, this lets a user re-use an index to add new data. It also automatically adds documents with duplicate IDs. For a more in-depth explanation on how Jina handles this, refer to [our documentation](https://docs.jina.ai/chapters/prevent_duplicate_indexing/index.html).
 
-### Configuration changes
+## Configuration changes
 
 In order to adapt the Wikipedia sentence search example to support incremental indexing, we need to:
 
-1. Change `indexer` entry in `flows/index.yml` and `flows/query.yml` to use `DocIDCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
+### Edit Flows
 
-    In this example the `DocIDCache` is separated into its own `.yml` file, in `pods/index_cache.yml`:
-    
-    ```yaml
-    !DocIDCache
-    with:
-      index_path: cache.tmp
-    metas:
-      name: cache
-      workspace: $JINA_WORKSPACE
-    requests:
-      on:
-        [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:
-          - !RouteDriver {}
-        IndexRequest:
-          - !TaggingCacheDriver
-            with:
-              tags:
-                is_indexed: true
-          - !FilterQL
-            with:
-              lookups: {tags__is_indexed__neq: true}
-    ```
-    
-  This might look complicated, but it basically first checks the cache for any matching doc IDs before indexing and querying.
+Change `indexer` entry in `flows/index.yml` and `flows/query.yml` to use `DocIDCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
 
-2. Adapt dataset to highlight incremental indexing.
+In this example the `DocIDCache` is separated into its own `.yml` file, in `pods/index_cache.yml`:
 
-  We split the dataset into two files: `input-1.txt` and `input-2.txt`. This way we can index one, close the `Flow` object, and then index the other.
+```yaml
+!DocIDCache
+with:
+  index_path: cache.tmp
+metas:
+  name: cache
+  workspace: $JINA_WORKSPACE
+requests:
+  on:
+    [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:
+      - !RouteDriver {}
+    IndexRequest:
+      - !TaggingCacheDriver
+        with:
+          tags:
+            is_indexed: true
+      - !FilterQL
+        with:
+          lookups: {tags__is_indexed__neq: true}
+```
+  
+This might look complicated, but it basically first checks the cache for any matching doc IDs before indexing and querying.
 
-  The environment variable `JINA_DATA_FILE` has also been split, with `JINA_DATA_FILE_1` and `JINA_DATA_FILE_2` pointing to the two files above.
+### Adapt Dataset
 
-3. Adapt `app.py` to index, close, and index again.
+We split the dataset into two files: `input-1.txt` and `input-2.txt`. This way we can index one, close the `Flow` object, and then index the other.
 
-    When running `python app.py -t index` we would usually only index one file. We now have the following:
-    
-    ```python
-    f = Flow().load_config("flows/index.yml")
+The environment variable `JINA_DATA_FILE` has also been split, with `JINA_DATA_FILE_1` and `JINA_DATA_FILE_2` pointing to the two files above.
 
-    with f:
-        print(f'Indexing file {os.environ["JINA_DATA_FILE_1"]}')
-        f.index_lines(
-        ...
-        )
+### Adapt `app.py`
 
-    # we then re-use the same index to append new data
-    with f:
-        print(f'Indexing file {os.environ["JINA_DATA_FILE_2"]}')
-        f.index_lines(
-           ...
-        )
-    ```
-    
-    This indexes the first file, closes the flow, and then indexes a second file.
+Adapt `app.py` to index, close, and index again.
+
+When running `python app.py -t index` we would usually only index one file. We now have the following:
+
+```python
+f = Flow().load_config("flows/index.yml")
+
+with f:
+    print(f'Indexing file {os.environ["JINA_DATA_FILE_1"]}')
+    f.index_lines(
+    ...
+    )
+
+# we then re-use the same index to append new data
+with f:
+    print(f'Indexing file {os.environ["JINA_DATA_FILE_2"]}')
+    f.index_lines(
+       ...
+    )
+```
+
+This indexes the first file, closes the flow, and then indexes a second file.
 
 ## Run in Docker
 
