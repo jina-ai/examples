@@ -1,0 +1,6 @@
+.git
+.github
+data
+env
+get-data.sh
+workspace.*
