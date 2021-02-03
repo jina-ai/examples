@@ -20,7 +20,6 @@ def config():
     os.environ['JINA_WORKSPACE'] = os.environ.get('JINA_WORKSPACE', 'workspace')
 
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
-    # os.environ['JINA_MAX_DOCS'] = os.environ.get('JINA_MAX_DOCS', str(100))
 
 
 def print_topk(resp, sentence):
