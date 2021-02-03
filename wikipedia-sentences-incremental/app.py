@@ -41,14 +41,14 @@ def index(num_docs):
         data_path = os.path.join(
             os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None)
         )
-        f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+        f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
     with f:
         print(f'Indexing {os.environ['JINA_DATA_FILE_2']}')
         data_path = os.path.join(
             os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None)
         )
-        f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+        f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
 
 def query(top_k):
