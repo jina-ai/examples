@@ -3,11 +3,9 @@ __license__ = 'Apache-2.0'
 
 import sys
 import os
-import itertools as it
 
 import click
 from jina.flow import Flow
-from jina import Document
 
 
 def config():
