@@ -1,0 +1,15 @@
+manifest_version: 1
+name: wikipedia-sentences-incremental
+description: 'Example Jina app for searching 30,000 sentences from Wikipedia'
+author: Alex Cureton-Griffiths (alex.cg@jina.ai)
+url: https://github.com/jina-ai/examples/wikipedia-sentences-incremental
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/examples/wikipedia-sentences-incremental
+version: 0.1
+license: apache-2.0
+keywords: [NLP, wikipedia, text, distilbert, example, transformers, incremental]
+type: app
+kind: example
+avatar: None
+platform: "linux/amd64"
+update: "None"

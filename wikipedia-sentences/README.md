@@ -34,7 +34,7 @@ This is an example of using [Jina](http://www.jina.ai)'s neural search framework
 To test this example you can run a Docker image with 30,000 pre-indexed sentences:
 
 ```sh
-docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.21
+docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.23
 ```
 
 You can then query by running:
@@ -109,7 +109,7 @@ jinahub/type.kind.image-name:image-version-jina_version
 For example:
 
 ```
-jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.21
+jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.23
 ```
 
 ## Push to [Jina Hub](https://github.com/jina-ai/jina-hub)
