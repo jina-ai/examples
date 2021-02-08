@@ -130,15 +130,6 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
 Want to add your own example? Please check our [guidelines](example-guidelines.md)!
 
 <table>
-  <tr>
-    <td>
-      <h1>📄</h1>
-    </td>
-    <td>
-      <h4><a href="https://github.com/alexcg1/jina-wikipedia-sentences">Simple Wikipedia Sentence Search</a></h4>
-      Simple Jina app to search sentences from Wikipedia using Transformers
-    </td>
-  </tr>
     <tr>
     <td>
       <h1>📄</h1>
