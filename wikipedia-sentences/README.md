@@ -1,4 +1,4 @@
-# Search Wikipedia Sentences with Transformers and DistilBERT
+# Semantic Wikipedia Search with Transformers and DistilBERT
 
 <table>
   <tr>
