@@ -1,4 +1,0 @@
-click
-laserembeddings
-torch
-jina[scipy]==0.4.1

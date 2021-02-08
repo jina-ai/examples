@@ -1,2 +1,0 @@
-jina==0.7.8
-streamlit==0.71.0
