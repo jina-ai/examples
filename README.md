@@ -24,7 +24,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./wikipedia-sentences">Search Wikipedia Sentences with Transformers and DistilBERT</a></h4>
+      <h4><a href="./wikipedia-sentences">Semantic Wikipedia Search with Transformers and DistilBERT</a></h4>
       Brand new to neural search? See a simple text-search example to understand how Jina works
     </td>
   </tr>
