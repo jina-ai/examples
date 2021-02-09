@@ -6,3 +6,4 @@ six==1.15.0
 soundfile==0.10.3.post1
 librosa==0.8.0
 click==7.1.2
+pandas==1.2.2
