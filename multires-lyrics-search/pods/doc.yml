@@ -12,6 +12,7 @@ requests:
       - !KVSearchDriver
         with:
           traversal_paths: ['m']
+          is_merge: True
       - !SortQL
         with:
           traversal_paths: ['m']
