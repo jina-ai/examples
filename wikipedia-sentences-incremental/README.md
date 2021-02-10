@@ -35,12 +35,12 @@ In order to adapt the Wikipedia sentence search example to support incremental i
 
 ### Edit Flows
 
-Change `indexer` entry in `flows/index.yml` and `flows/query.yml` to use `DocIDCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
+Change `indexer` entry in `flows/index.yml` and `flows/query.yml` to use `DocCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
 
-In this example the `DocIDCache` is separated into its own `.yml` file, in `pods/index_cache.yml`:
+In this example the `DocCache` is separated into its own `.yml` file, in `pods/index_cache.yml`:
 
 ```yaml
-!DocIDCache
+!DocCache
 with:
   index_path: cache.tmp
 metas:
@@ -59,7 +59,7 @@ requests:
         with:
           lookups: {tags__is_indexed__neq: true}
 ```
-  
+
 This might look complicated, but it basically first checks the cache for any matching doc IDs before indexing and querying.
 
 ### Adapt Dataset

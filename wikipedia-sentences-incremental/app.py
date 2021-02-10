@@ -8,6 +8,8 @@ import os
 import click
 from jina.flow import Flow
 
+MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
+
 
 def config():
     os.environ['JINA_DATA_FILE_1'] = os.environ.get(
@@ -65,6 +67,7 @@ def query(top_k):
                 lines=[
                     text,
                 ],
+                line_format='text',
                 on_done=ppr,
                 top_k=top_k,
             )
@@ -77,16 +80,13 @@ def query_restful():
         f.block()
 
 
-max_docs = int(os.environ.get('JINA_MAX_DOCS', 50))
-
-
 @click.command()
 @click.option(
     '--task',
     '-t',
     type=click.Choice(['index', 'query', 'query_restful'], case_sensitive=False),
 )
-@click.option('--num_docs', '-n', default=max_docs)
+@click.option('--num_docs', '-n', default=MAX_DOCS)
 @click.option('--top_k', '-k', default=5)
 def main(task, num_docs, top_k):
     config()
