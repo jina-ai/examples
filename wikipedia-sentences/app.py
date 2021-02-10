@@ -2,11 +2,12 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import itertools as it
 
 import click
 from jina.flow import Flow
-from jina import Document
+
+
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 
 
 def config():
@@ -16,7 +17,6 @@ def config():
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
 
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
-    # os.environ["JINA_MAX_DOCS"] = os.environ.get("JINA_MAX_DOCS", str(100))
 
 
 def print_topk(resp, sentence):
@@ -49,7 +49,7 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search_lines(lines=[text, ], on_done=ppr, top_k=top_k)
+            f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
 
 
 def query_restful():
@@ -65,7 +65,6 @@ def dryrun():
         f.dry_run()
 
 
-max_docs = int(os.environ.get("JINA_MAX_DOCS", 50))
 @click.command()
 @click.option(
     "--task",
@@ -74,7 +73,7 @@ max_docs = int(os.environ.get("JINA_MAX_DOCS", 50))
         ["index", "query", "query_restful", "dryrun"], case_sensitive=False
     ),
 )
-@click.option("--num_docs", "-n", default=max_docs)
+@click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option("--top_k", "-k", default=5)
 def main(task, num_docs, top_k):
     config()
