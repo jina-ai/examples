@@ -34,4 +34,3 @@ requests:
         with:
           executor: chunkidx
           traversal_paths: ['cm']
-          is_merge: True
