@@ -40,13 +40,13 @@ docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.
 You can then query by running:
 
 ```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'`
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 
 ## Setup
 
 ```sh
-pip install -r requirements.txt`
+pip install -r requirements.txt
 ```
 
 ## Index
