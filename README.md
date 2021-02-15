@@ -24,8 +24,8 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./my-first-jina-app">My First Jina App</a></h4>
-      Brand new to neural search? Not for long! Use cookiecutter to search through Star Trek scripts using Jina
+      <h4><a href="./wikipedia-sentences">Semantic Wikipedia Search with Transformers and DistilBERT</a></h4>
+      Brand new to neural search? See a simple text-search example to understand how Jina works
     </td>
   </tr>
   <tr>
@@ -33,8 +33,8 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./southpark-search">Build a NLP Semantic Search System with Transformers</a></h4>
-      Upgrade from plain search to sentence search and practice your Flows and Pods by searching South Park scripts
+      <h4><a href="./wikipedia-sentences-incremental">Add Incremental Indexing to Wikipedia Search</a></h4>
+      Index more effectively by adding incremental indexing to your Wikipedia search
     </td>
   </tr>
   <tr>
@@ -130,15 +130,6 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
 Want to add your own example? Please check our [guidelines](example-guidelines.md)!
 
 <table>
-  <tr>
-    <td>
-      <h1>📄</h1>
-    </td>
-    <td>
-      <h4><a href="https://github.com/alexcg1/jina-wikipedia-sentences">Simple Wikipedia Sentence Search</a></h4>
-      Simple Jina app to search sentences from Wikipedia using Transformers
-    </td>
-  </tr>
     <tr>
     <td>
       <h1>📄</h1>
