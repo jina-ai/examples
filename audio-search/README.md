@@ -41,6 +41,15 @@ A demo of neural search for audio data based Vggish model.
 
 ## Install Prerequisites
 
+- In order to run this example, you should have [youtube-dl](https://ytdl-org.github.io/youtube-dl/index.html),
+[ffmpeg](https://ffmpeg.org/download.html) available in your system. Please refer to the specific installation instructions.
+- For MacOS users, a [libmagic](https://filemagic.readthedocs.io/en/latest/guide.html)
+installation will furtherly be needed and can be obtained by running
+```bash
+brew install libmagic
+```
+
+- You can add to your system the python libraries required for this example by running the following:
 ```bash
 pip install -r requirements.txt
 ```
@@ -63,22 +72,27 @@ After preparing the data, here is how the folder looks like,
 ├── README.md
 ├── app.py
 ├── data
+├── ├── metadata
+│   │   └── eval_segments.csv
 │   ├── YjmN-c5mDxfw.wav
 │   ├── Yjo9lFbGXf_0.wav
 │   └── Yjzij1UX73kU.wav
-├── download.sh
+├── download_data.sh
+├── download_model.sh
 ├── flows
 │   ├── index.yml
 │   └── query.yml
+├── get_data.sh
 ├── models
 │   ├── vggish_model.ckpt
 │   └── vggish_pca_params.npz
 ├── pods
-│   ├── craft.yml
+│   ├── chunk_merger.yml
 │   ├── customized_executors.py
 │   ├── doc.yml
 │   ├── encode.yml
 │   ├── rank.yml
+│   ├── segment.yml
 │   ├── vec.yml
 │   └── vggish
 │       ├── mel_features.py
@@ -86,7 +100,13 @@ After preparing the data, here is how the folder looks like,
 │       ├── vggish_params.py
 │       ├── vggish_postprocess.py
 │       └── vggish_slim.py
-└── requirements.txt
+├── requirements.txt
+└── tests
+    ├── data
+    │   ├── YjmN-c5mDxfw.wav
+    │   ├── Yjo9lFbGXf_0.wav
+    │   └── Yjzij1UX73kU.wav
+    └── test_audio_search.py
 ```
 
 
