@@ -100,6 +100,8 @@ To make this work, we need to get the image files from the `kaggle` [dataset](ht
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
+mkdir data
+mkdir data/f8k
 mv Images data/f8k/images
 mv captions.txt data/f8k/captions.txt
 ```
