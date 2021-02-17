@@ -1,11 +1,11 @@
 manifest_version: 1
-name: jina-wikipedia-sentences-30k
+name: wikipedia-sentences-30k
 description: 'Example Jina app for searching 30,000 sentences from Wikipedia'
 author: Alex Cureton-Griffiths (alex.cg@jina.ai)
-url: https://github.com/alexcg1/jina-wikipedia-sentences
+url: https://github.com/jina-ai/examples/tree/master/wikipedia-sentences
 vendor: Jina AI Limited
-documentation: https://github.com/alexcg1/jina-wikipedia-sentences
-version: 0.2.8
+documentation: https://github.com/jina-ai/examples/tree/master/wikipedia-sentences
+version: 0.2.9
 license: apache-2.0
 keywords: [NLP, wikipedia, text, distilbert, example, transformers]
 type: app
