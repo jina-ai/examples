@@ -4,10 +4,7 @@
 
 - [Run the Hello World example using query language](#run-the-hello-world-example-using-query-language)
   - [🗝️ Key Concepts](#️-key-concepts)
-    - [Install Requirements](#install-requirements)
   - [🏃 Run the Flows](#-run-the-flows)
-    - [Index Flow](#index-flow)
-    - [Query Flow](#query-flow)
   - [Results](#results)
   - [QueryLanguage](#querylanguage)
 
