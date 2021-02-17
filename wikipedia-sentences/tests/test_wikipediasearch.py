@@ -39,7 +39,7 @@ def get_results(query, top_k=TOP_K):
 
     output =  call_api(
         'http://0.0.0.0:45678/api/search',
-        payload={"top_k": top_k, "mode": "search", "data": [f"text:{query}"]}
+        payload={"top_k": top_k, "mode": "search", "data": [f"{query}"]}
     )
     return output
 
@@ -56,7 +56,7 @@ def queries():
         ("Don't say anything\n",
          [
              'His most recent novel in this series, The Bangkok Asset, was published on 4 August 2015.\n',
-             'In February 2009, it was revealed that the site was projected onto a wall at The Daily Telegraph to allow journalists there to view breaking news posted by users to Twitter.\n',
+             'Their land was taken back by the Spanish Crown; and then irretrievably lost however, when California became part of the United States.\n',
              '"Super Scooter Happy" was covered by Kyary Pamyu Pamyu on her 2013 album, Nanda Collection.\n'
          ]
         )
