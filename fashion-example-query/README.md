@@ -3,8 +3,11 @@
 **Table of Contents**
 
 - [Run the Hello World example using query language](#run-the-hello-world-example-using-query-language)
-  - [🗝️ Key Concepts](#-key-concepts)
+  - [🗝️ Key Concepts](#️-key-concepts)
+    - [Install Requirements](#install-requirements)
   - [🏃 Run the Flows](#-run-the-flows)
+    - [Index Flow](#index-flow)
+    - [Query Flow](#query-flow)
   - [Results](#results)
   - [QueryLanguage](#querylanguage)
 
@@ -14,7 +17,7 @@
 
 ## 🗝️ Key Concepts
 
-First of all, read up on [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) so you have a clear understanding of how Jina works. We're going to refer to those concepts a lot. We assume you already have some knowledge of Python and machine learning.
+First of all, read up on [Jina 101](http://101.jina.ai) so you have a clear understanding of how Jina works. We're going to refer to those concepts a lot. We assume you already have some knowledge of Python and machine learning.
 
 This is an extension of the Hello World example, but here we use QueryLanguage to create an index per category and then, with that we can filter by category
 
