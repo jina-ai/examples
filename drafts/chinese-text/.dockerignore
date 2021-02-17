@@ -1,0 +1,8 @@
+.dockerignore
+.git
+.github
+.gitignore
+data
+env
+get-data.sh
+tests
