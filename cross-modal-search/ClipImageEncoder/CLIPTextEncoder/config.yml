@@ -1,0 +1,4 @@
+!CLIPTextEncoder
+metas:
+  py_modules:
+    - __init__.py
