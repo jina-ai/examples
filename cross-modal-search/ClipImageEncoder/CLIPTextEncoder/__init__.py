@@ -4,21 +4,18 @@ __license__ = "Apache-2.0"
 import numpy as np
 from jina.executors.decorators import batching, as_ndarray
 from jina.executors.encoders.frameworks import BaseTorchEncoder
+from jina.executors.devices import TorchDevice
 import torch
 import clip
 
-class CLIPTextEncoder(BaseTorchEncoder):
-    """
-    """
+class CLIPTextEncoder(BaseTorchEncoder, TorchDevice):
     def __init__(self,
                  *args, **kwargs):
-        """
-        """
         super().__init__(*args, **kwargs)
 
     def post_init(self):
         import clip
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        device = "cuda" if self.on_gpu else "cpu"
         model, preprocess = clip.load('ViT-B/32', device)
         self.model = model
         self.preprocess = preprocess
@@ -30,8 +27,5 @@ class CLIPTextEncoder(BaseTorchEncoder):
         with torch.no_grad():
             return self.model.encode_text(clip.tokenize(text))
     
-        #with torch.no_grad():
-        #    text_features_tensor = model.encode_text(clip.tokenize(data).to(device))
-
 
 

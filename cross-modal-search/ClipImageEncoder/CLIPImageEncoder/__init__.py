@@ -4,20 +4,19 @@ __license__ = "Apache-2.0"
 import numpy as np
 from jina.executors.decorators import batching, as_ndarray
 from jina.executors.encoders.frameworks import BaseTorchEncoder
+from jina.executors.devices import TorchDevice
 import torch
 
-class CLIPImageEncoder(BaseTorchEncoder):
-    """
-    """
+class CLIPImageEncoder(BaseTorchEncoder, TorchDevice):
+    
     def __init__(self,
                  *args, **kwargs):
-        """
-        """
         super().__init__(*args, **kwargs)
 
     def post_init(self):
         import clip
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+
+        device = "cuda" if self.on_gpu else "cpu"
         model, preprocess = clip.load('ViT-B/32', device)
         self.model = model
         self.preprocess = preprocess
