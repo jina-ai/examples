@@ -1,5 +1,8 @@
 FROM jinaai/jina
 
+# install git
+RUN apt-get -y update && apt-get install -y git
+
 # setup the workspace
 COPY . /workspace
 WORKDIR /workspace
@@ -8,6 +11,6 @@ WORKDIR /workspace
 RUN pip install -r requirements.txt
 
 # for testing the image
-RUN pip install pytest && pytest -s -vv
+#RUN pip install pytest && pytest -s -vv
 
 ENTRYPOINT ["jina", "pod", "--uses", "config.yml"]

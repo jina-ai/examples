@@ -1,5 +1,8 @@
 FROM jinaai/jina
 
+# install git
+RUN apt-get -y update && apt-get install -y git
+
 # setup the workspace
 COPY . /workspace
 WORKDIR /workspace

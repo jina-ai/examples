@@ -1,5 +1,1 @@
-jina[hub, http]==0.9.20
-torch==1.7.0
-torchvision
-click==7.1.2
-clip
+git+https://github.com/openai/CLIP.git

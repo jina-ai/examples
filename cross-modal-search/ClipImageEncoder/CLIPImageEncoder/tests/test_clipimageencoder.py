@@ -9,10 +9,18 @@ from .. import CLIPImageEncoder
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
+
+def test_clip_available_models():
+
+    models = ['ViT-B/32', 'RN50']
+    for model in models:
+        _,_ = clip.load(model)
+
+
 def test_clip_image_encoder():
 
     man_piercing_image_path = os.path.join(cur_dir, 'imgs/man_piercing.jpg')
-    im = PIL.Image.open('../imgs/man_piercing.jpg')
+    im = PIL.Image.open(man_piercing_image_path)
     
     device='cpu'
     _, preprocess = clip.load('ViT-B/32', device=device)
