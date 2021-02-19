@@ -24,7 +24,7 @@ what you do then? You index your data each time for every type? No, no, don't wo
 So you can have that as a base and then query with whatever type you wish.
  
 
-Before moving forward, we highly suggest completing/reviewing our [Jina 101](https://github.com/jina-ai/jina/tree/master/docs/chapters/101) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jina#jina-hello-world-) to make sure we are on the same page. 
+Before moving forward, we highly suggest completing/reviewing our [Jina 101](http://101.jina.ai) and [Jina "Hello, World!"👋🌍](https://github.com/jina-ai/jina#jina-hello-world-) to make sure we are on the same page. 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -34,8 +34,9 @@ Before moving forward, we highly suggest completing/reviewing our [Jina 101](htt
 - [Prepare the data](#prepare-the-data)
 - [Define the Flows](#define-the-flows)
 - [Run the Flows](#run-the-flows)
-- [Dive into the `FaissIndexer`](#dive-into-the-faissindexer)
-- [Evaluate the results](#evaluate-the-results)
+- [Evaluation results](#evaluation-results)
+- [Use Docker image from the jina hub](#use-docker-image-from-the-jina-hub)
+- [Good to know](#good-to-know)
 - [Wrap up](#wrap-up)
 - [Next Steps](#next-steps)
 - [Documentation](#documentation)
