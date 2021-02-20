@@ -38,7 +38,7 @@ Now that we've got the code to load our data, we're going to dive into writing o
 To run the index you type:
 
 ```bash
-python app.py index
+python app.py -t index
 ```
 First up we need to build up an index and then we'll search through this index when we use the query Flow later.
 So what is happening here?
@@ -67,7 +67,7 @@ Then we have ready all the indexes!
 Now for the query time, run:
 
 ```bash
-python app.py query
+python app.py -t query
 ```
 
 ## Results
