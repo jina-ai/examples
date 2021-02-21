@@ -1,7 +1,7 @@
 !SimpleAggregateRanker
 with:
   aggregate_function: 'min'
-  is_reversed_score: true
+  inverse_score: true
 requests:
   on:
     ControlRequest:
