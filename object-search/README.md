@@ -49,7 +49,7 @@ The code can of course run natively on your local machine, please [read the Jina
 
 ## Download and Extract Data
 ### Use Flickr8k
-You can try this example with [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k) object detection dataset. You can also use other datasets like COCO & [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview)
+You can try this example with [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k) object detection dataset. You can also use other datasets like [COCO](https://cocodataset.org/#home) & [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview)
 
 Download the Flickr8k from Kaggle
 
@@ -83,6 +83,7 @@ If it's running successfully, you should be able to see logs scrolling in the co
 <p align="center">
   <img src=".github/.README_images/query.png?raw=true" alt="Jina banner" width="90%">
 </p>
+
 Start server which returns `original` images. The matching of query happens with all indexed object images and returns the original parent image in which the indexed object was found.
 
 ``` bash
