@@ -27,10 +27,10 @@ def test_clip_text_encoder():
 
 def test_clip_text_encoder_batch():
 
-    text = np.array(['Han likes eating pizza', 'Han likes pizza'])
+    text_batch = np.array(['Han likes eating pizza', 'Han likes pizza', 'Jina rocks'])
     device='cpu'
 
     encoder = CLIPTextEncoder()
-    embeddeding_np = encoder.encode(text)
-    expected = np.load(os.path.join(cur_dir, 'expected.npy'))
-    np.testing.assert_almost_equal(embeddeding_np, expected)
+    embeddeding_batch_np = encoder.encode(text_batch)
+    expected_batch = np.load(os.path.join(cur_dir, 'expected_batch.npy'))
+    np.testing.assert_almost_equal(embeddeding_batch_np, expected_batch)

@@ -19,7 +19,7 @@ def test_clip_available_models():
 
 def test_clip_image_encoder():
 
-    man_piercing_image_path = os.path.join(cur_dir, 'imgs/man_piercing.jpg')
+    man_piercing_image_path = os.path.join(cur_dir, '../imgs/man_piercing.jpg')
     im = PIL.Image.open(man_piercing_image_path)
     
     device='cpu'
@@ -30,4 +30,25 @@ def test_clip_image_encoder():
     encoder = CLIPImageEncoder()
     embeddeding_np = encoder.encode(im_tensor_clip_np)
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
-    np.testing.assert_almost_equal(embeddeding_np, expected)
+    np.testing.assert_almost_equal(embeddeding_np, expected, decimal=3)
+
+
+def test_clip_image_encoder_batch():
+
+    man_piercing_image_path = os.path.join(cur_dir, '../imgs/man_piercing.jpg')
+    im = PIL.Image.open(man_piercing_image_path)
+        
+    device='cpu'
+    _, preprocess = clip.load('ViT-B/32', device=device)
+    im_tensor_clip_input = preprocess(im).unsqueeze(0).to(device)
+    im_tensor_clip_np = im_tensor_clip_input.detach().numpy()
+    batch = torch.cat([im_tensor_clip_input,
+                       im_tensor_clip_input,
+                       im_tensor_clip_input])
+
+    encoder = CLIPImageEncoder()
+    embeddeding_batch_np = encoder.encode(batch)
+    print(f'embeddeding_batch_np.shape={embeddeding_batch_np.shape}')
+    print(f'batch.shape={batch.shape}')
+    expected = np.load(os.path.join(cur_dir, 'expected_batch.npy'))
+    np.testing.assert_almost_equal(embeddeding_batch_np, expected, decimal=3)

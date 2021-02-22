@@ -8,7 +8,7 @@ from jina.executors.decorators import batching, as_ndarray
 from jina.executors.encoders.frameworks import BaseTorchEncoder
 from jina.executors.devices import TorchDevice
 
-class CLIPImageEncoder(TorchDevice, BaseTorchEncoder):
+class CLIPImageEncoder(BaseTorchEncoder):
     
     def __init__(self, model_name: str ='ViT-B/32',
                  *args, **kwargs):
