@@ -9,7 +9,16 @@ from jina.executors.encoders.frameworks import BaseTorchEncoder
 from jina.executors.devices import TorchDevice
 
 class CLIPImageEncoder(BaseTorchEncoder):
-    
+    """
+    Encode data from a `np.ndarray` of shape `BatchSize x (Channel x Height x Width)` into
+    a `np.ndarray` of shape `Batchsize x EmbeddingDim`.
+
+    Internally, :class:`CLIPImageEncoder` wraps the `CLIP` model
+    https://github.com/openai/CLIP
+
+    :param model_name: the name of the model. Supported models include ``ViT-B/32`` and ``RN50``.
+ 
+    """
     def __init__(self, model_name: str ='ViT-B/32',
                  *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,10 +1,12 @@
 
 import os
+
 import numpy as np
-import PIL
 import clip
-from PIL import Image
+import PIL
 import torch
+import pytest
+
 from .. import CLIPImageEncoder
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,8 +22,13 @@ def print_array_info(x, x_varname):
 def test_clip_available_models():
 
     models = ['ViT-B/32', 'RN50']
-    for model in models:
-        _,_ = clip.load(model)
+    for model_name in models:
+        m = CLIPImageEncoder(model_name=model_name)
+        assert m.model_name == model_name
+
+def test_inexistant_model():
+    with pytest.raises(AssertionError):
+       encoder = CLIPImageEncoder(model_name='model_name_inexistant')
 
 
 def test_clip_image_encoder():
