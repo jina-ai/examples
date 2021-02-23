@@ -18,8 +18,6 @@ def test_clip_available_models():
 def test_clip_text_encoder():
 
     text = 'Han likes eating pizza'
-    device='cpu'
-
     encoder = CLIPTextEncoder()
     embeddeding_np = encoder.encode(text)
     expected = np.load(os.path.join(cur_dir, 'expected.npy'))
@@ -28,8 +26,6 @@ def test_clip_text_encoder():
 def test_clip_text_encoder_batch():
 
     text_batch = np.array(['Han likes eating pizza', 'Han likes pizza', 'Jina rocks'])
-    device='cpu'
-
     encoder = CLIPTextEncoder()
     embeddeding_batch_np = encoder.encode(text_batch)
     expected_batch = np.load(os.path.join(cur_dir, 'expected_batch.npy'))

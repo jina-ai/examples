@@ -18,7 +18,6 @@ class CLIPImageEncoder(BaseTorchEncoder):
     def post_init(self):
         import clip
 
-        #device = "cuda" if self.on_gpu else "cpu"
         assert self.model_name in clip.available_models(),\
             f'model_name={self.model_name} not in clip.available_models'
 
@@ -29,7 +28,13 @@ class CLIPImageEncoder(BaseTorchEncoder):
     @batching
     @as_ndarray
     def encode(self, data: 'np.ndarray', *args, **kwargs) -> 'np.ndarray':
-        # data.shape should be [1, 3, 224, 224]
+
+        input_torchtensor = torch.from_numpy(data.astype('float32'))
+        if self.on_gpu:
+            input_torchtensor = input_torchtensor.cuda()
+
         with torch.no_grad():
-            return self.model.encode_image(torch.tensor(data))
+            #self.logger.warning(f'data shape {data.shape}')
+            #self.logger.warning(f'data encoded shape {self.model.encode_image(input_torchtensor)}')
+            return self.model.encode_image(input_torchtensor)
 

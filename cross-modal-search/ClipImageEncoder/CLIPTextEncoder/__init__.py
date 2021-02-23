@@ -18,8 +18,6 @@ class CLIPTextEncoder(BaseTorchEncoder):
 
     def post_init(self):
         import clip
-        #device = "cuda" if self.on_gpu else "cpu"
-
         model, _ = clip.load(self.model_name, self.device)
         self.model = model
         #self.preprocess = preprocess
@@ -27,9 +25,15 @@ class CLIPTextEncoder(BaseTorchEncoder):
     @batching
     @as_ndarray
     def encode(self, data: 'np.ndarray', *args, **kwargs) -> 'np.ndarray':
-        # data.shape should be [1, 3, 224, 224]
+
+        input_torchtensor = clip.tokenize(data)
+        if self.on_gpu:
+            input_torchtensor = input_torchtensor.cuda()
+
         with torch.no_grad():
-            return self.model.encode_text(clip.tokenize(data))
+            #self.logger.warning(f'text data shape {data.shape}')
+            #self.logger.warning(f'text data encoded shape {self.model.encode_text(clip.tokenize(data))}')
+            return self.model.encode_text(input_torchtensor)
     
 
 

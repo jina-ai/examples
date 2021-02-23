@@ -12,5 +12,7 @@ RUN pip install -r requirements.txt
 
 # for testing the image
 RUN pip install pytest && pytest -s -vv
+# import clip before
+#RUN python -c 'import clip: clip.load('ViT-B/32')'
 
 ENTRYPOINT ["jina", "pod", "--uses", "config.yml"]
