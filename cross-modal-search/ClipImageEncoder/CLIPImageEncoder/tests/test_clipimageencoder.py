@@ -29,9 +29,8 @@ def test_clip_image_encoder():
     # Input
     man_piercing_image_path = os.path.join(cur_dir, '../imgs/man_piercing.jpg')
     im = PIL.Image.open(man_piercing_image_path)
-    device='cpu'
-    _, preprocess = clip.load('ViT-B/32', device=device)
-    im_tensor_clip_input = preprocess(im).unsqueeze(0).to(device)
+    _, preprocess = clip.load('ViT-B/32')
+    im_tensor_clip_input = preprocess(im).unsqueeze(0)
     im_tensor_clip_np = im_tensor_clip_input.detach().numpy()
 
     # Encoder embedding 
@@ -50,9 +49,8 @@ def test_clip_image_encoder_batch():
     # Input
     man_piercing_image_path = os.path.join(cur_dir, '../imgs/man_piercing.jpg')
     im = PIL.Image.open(man_piercing_image_path)
-    device='cpu'
-    _, preprocess = clip.load('ViT-B/32', device=device)
-    im_tensor_clip_input = preprocess(im).unsqueeze(0).to(device)
+    _, preprocess = clip.load('ViT-B/32')
+    im_tensor_clip_input = preprocess(im).unsqueeze(0)
     im_tensor_clip_np = im_tensor_clip_input.detach().numpy()
     batch = np.vstack([im_tensor_clip_input, im_tensor_clip_input, im_tensor_clip_input])
 
