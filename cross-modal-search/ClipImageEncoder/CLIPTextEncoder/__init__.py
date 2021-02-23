@@ -33,7 +33,11 @@ class CLIPTextEncoder(BaseTorchEncoder):
         with torch.no_grad():
             #self.logger.warning(f'text data shape {data.shape}')
             #self.logger.warning(f'text data encoded shape {self.model.encode_text(clip.tokenize(data))}')
-            return self.model.encode_text(input_torchtensor)
+            embedded_data = self.model.encode_text(input_torchtensor)
+
+        embedded_data = embedded_data.numpy()
+        return embedded_data
     
+
 
 

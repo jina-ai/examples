@@ -36,5 +36,9 @@ class CLIPImageEncoder(BaseTorchEncoder):
         with torch.no_grad():
             #self.logger.warning(f'data shape {data.shape}')
             #self.logger.warning(f'data encoded shape {self.model.encode_image(input_torchtensor)}')
-            return self.model.encode_image(input_torchtensor)
+            embedded_data = self.model.encode_image(input_torchtensor)   
+
+        embedded_data = embedded_data.numpy()
+        return embedded_data
+    
 
