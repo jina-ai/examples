@@ -37,6 +37,7 @@ The code can of course run natively on your local machine, please [read the Jina
 **Table of Contents**
 
 - [Download and Extract Data](#download-and-extract-data)
+- [Install](#install)
 - [Index Image Data](#index-image-data)
 - [Start the Server](#start-the-server)
 - [Query via REST API](#query-via-rest-api)
@@ -61,6 +62,12 @@ mv Images data/f8k/images
 ```
 
 Note: Flickr8k is not an ideal dataset but we are using due to its small size.
+
+## Install
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Index Image Data
 <p align="center">

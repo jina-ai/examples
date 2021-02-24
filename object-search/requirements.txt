@@ -1,4 +1,4 @@
-jina[http]
-torch
-torchvision
-Pillow
+jina[http]==0.9.1
+torch==1.6.0
+torchvision==0.7.0
+Pillow==8.1.0
