@@ -1,8 +1,11 @@
-!MinRanker
+!SimpleAggregateRanker
+with:
+  aggregate_function: 'min'
+  inverse_score: true
 requests:
   on:
     SearchRequest:
-      - !CollectMatches2DocRankDriver
+      - !AggregateMatches2DocRankDriver
         with:
           traversal_paths: ['m']
     ControlRequest:
