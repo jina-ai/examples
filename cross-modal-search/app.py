@@ -1,9 +1,11 @@
 __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import click
 import os
-from jina.flow import Flow
+
+import click
+
+from jina import Flow
 from jina import Document
 
 RANDOM_SEED = 14
