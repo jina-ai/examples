@@ -15,10 +15,12 @@ def config(model_name):
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ['JINA_PORT'] = '45678'
     if model_name == 'clip':
-        pass
+        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7'
+        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7'
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/clip/text-encoder.yml'
     elif model_name == 'vse':
-        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.6'
-        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.6'
+        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7'
+        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7'
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/vse/text-encoder.yml'
     else:
         msg = f'Unsupported model {model_name}.'
@@ -78,7 +80,7 @@ def main(task, num_docs, request_size, data_set, model_name):
     else:
         msg = f'Unknown task {task}'
         msg += 'A valid task is either `index` or `query-restful`.'
-        raise Exception(msg)
+        raise ValueError(msg)
 
 
 if __name__ == '__main__':
