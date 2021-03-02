@@ -60,15 +60,19 @@ def main(task, num_docs, request_size, data_set):
     if task == 'index':
         f = Flow().load_config('flow-index.yml')
         with f:
-            f.index(input_fn=input_index_data(num_docs, request_size, data_set), request_size=request_size)
+            f.index(
+                input_fn=input_index_data(num_docs, request_size, data_set),
+                request_size=request_size
+            )
     elif task == 'query-restful':
         f = Flow().load_config('flow-query.yml')
         f.use_rest_gateway()
         with f:
             f.block()
     else:
-        raise NotImplementedError(f'unknown task: {task}.'
-                                  f' A valid task is either `index`, `query-restful`, `query-i2t` and `query-t2i`.')
+        msg = f'Unknown task {task}'
+        msg += 'A valid task is either `index`, `query-restful`.'
+        raise Exception(msg)
 
 
 if __name__ == '__main__':
