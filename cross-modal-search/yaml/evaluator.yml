@@ -1,0 +1,10 @@
+!ReciprocalRankEvaluator
+with:
+  {}
+requests:
+    on:
+      SearchRequest:
+        - !RankEvaluateDriver
+          with:
+            fields: ['tags__id']
+            traversal_paths: ['r']
