@@ -1,4 +1,4 @@
-# Chinese Text Search with Transformers and bert-base-chinese
+# Chinese Text Search with Transformers and bert-base-chinese [简体中文](README_CN.md)
 
 <table>
   <tr>
