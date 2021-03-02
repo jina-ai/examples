@@ -15,7 +15,7 @@ pods:
     read_only: true
   - name: image_encoder
     polling: any
-    uses: $JINA_USES_VSE_IMAGE_ENCODER
+    uses: $JINA_IMAGE_ENCODER
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -26,8 +26,8 @@ pods:
     uses_after: yaml/merge_matches_sort_topk.yml
     remove_uses_ba: true
   - name: text_encoder
-    uses: $JINA_USES_VSE_TEXT_ENCODER
-    uses_internal: yaml/text-encoder.yml
+    uses: $JINA_TEXT_ENCODER
+    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true

@@ -12,7 +12,7 @@ pods:
     shards: $JINA_PARALLEL
     read_only: true
   - name: image_encoder
-    uses: docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.6
+    uses: $JINA_IMAGE_ENCODER
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -26,8 +26,8 @@ pods:
     shards: $JINA_SHARDS
     needs: [gateway]
   - name: text_encoder
-    uses: docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.6
-    uses_internal: yaml/text-encoder.yml
+    uses: $JINA_TEXT_ENCODER
+    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
