@@ -10,6 +10,7 @@ from jina import Document
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 def config(model_name):
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
@@ -26,7 +27,6 @@ def config(model_name):
         msg = f'Unsupported model {model_name}.'
         msg += 'Expected `clip` or `vse`.'
         raise ValueError(msg)
-
 
 
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
@@ -62,7 +62,6 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
             break
 
 
-
 def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
     from dataset import get_data_loader
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
@@ -84,18 +83,22 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
                 match = Document()
                 match.tags = {'id': hash(image)}
                 gt.matches.append(match)
-            yield (document, gt)
+            yield document, gt
 
         if num_docs and (i + 1) * batch_size >= num_docs:
             break
+
 
 def print_evaluation_score(resp):
     print("==================================")
     print(len(resp.search.docs))
     for doc in resp.search.docs:
+       print(doc.id)
        print(doc.evaluations)
+       print(len(doc.evaluations))
        print(f' Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
     print("==================================")
+
 
 @click.command()
 @click.option('--num_docs', '-n', default=50)
@@ -109,11 +112,9 @@ def main(num_docs, request_size, data_set, model_name):
             input_fn=input_index_data(num_docs, request_size, data_set),
             request_size=request_size
         )
-    flow_eval = Flow().load_config('flow-query.yml')
-    flow_eval.add(name='evaluator', uses='yaml/evaluator.yml')
+    flow_eval = Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluator.yml')
     with flow_eval:
         flow_eval.search(input_fn=evaluation_generator, on_done=print_evaluation_score)
-
 
 
 if __name__ == '__main__':
