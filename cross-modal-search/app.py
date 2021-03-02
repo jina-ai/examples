@@ -14,10 +14,6 @@ def config():
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ['JINA_PORT'] = '45678'
-    os.environ['JINA_USES_VSE_IMAGE_ENCODER'] = os.environ.get('JINA_USES_VSE_IMAGE_ENCODER',
-                                                               'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.6')
-    os.environ['JINA_USES_VSE_TEXT_ENCODER'] = os.environ.get('JINA_USES_VSE_TEXT_ENCODER',
-                                                              'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.6')
 
 
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
