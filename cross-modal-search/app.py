@@ -12,11 +12,10 @@ RANDOM_SEED = 14
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
-
 def config():
-    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', str(1))
-    os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', str(1))
-    os.environ['JINA_PORT'] = str(45678)
+    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
+    os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
+    os.environ['JINA_PORT'] = '45678'
     os.environ['JINA_USES_VSE_IMAGE_ENCODER'] = os.environ.get('JINA_USES_VSE_IMAGE_ENCODER',
                                                                'docker://jinahub/pod.encoder.vseimageencoder:0.0.4-0.9.17')
     os.environ['JINA_USES_VSE_TEXT_ENCODER'] = os.environ.get('JINA_USES_VSE_TEXT_ENCODER',
