@@ -20,14 +20,16 @@ def config():
                                                               'docker://jinahub/pod.encoder.vsetextencoder:0.0.3-0.9.17')
 
 
-def input_index_data(num_docs=None, batch_size=8, dataset='f30k'):
+def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     from dataset import get_data_loader
-    captions = 'dataset_flickr30k.json' if dataset == 'f30k' else 'captions.txt'
-    data_loader = get_data_loader(root=os.path.join(cur_dir, f'data/{dataset}/images'),
-                                  captions=os.path.join(cur_dir, f'data/{dataset}/{captions}'),
-                                  split='test',
-                                  batch_size=batch_size,
-                                  dataset_type=dataset)
+    captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
+    data_loader = get_data_loader(
+        root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
+        captions=os.path.join(cur_dir, f'data/{dataset_type}/{captions}'),
+        split='test',
+        batch_size=batch_size,
+        dataset_type=dataset_type
+    )
 
     for i, (images, captions) in enumerate(data_loader):
         for image in images:
@@ -69,7 +71,7 @@ def main(task, num_docs, request_size, data_set):
             f.block()
     else:
         msg = f'Unknown task {task}'
-        msg += 'A valid task is either `index`, `query-restful`.'
+        msg += 'A valid task is either `index` or `query-restful`.'
         raise Exception(msg)
 
 
