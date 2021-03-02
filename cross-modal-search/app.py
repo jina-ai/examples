@@ -58,16 +58,14 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
 def main(task, num_docs, request_size, data_set):
     config()
     if task == 'index':
-        f = Flow().load_config('flow-index.yml')
-        with f:
+        with Flow().load_config('flow-index.yml') as f:
             f.index(
                 input_fn=input_index_data(num_docs, request_size, data_set),
                 request_size=request_size
             )
     elif task == 'query-restful':
-        f = Flow().load_config('flow-query.yml')
-        f.use_rest_gateway()
-        with f:
+        with Flow().load_config('flow-query.yml') as f:
+            f.use_rest_gateway()
             f.block()
     else:
         msg = f'Unknown task {task}'
