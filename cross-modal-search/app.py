@@ -8,8 +8,6 @@ import click
 from jina import Flow
 from jina import Document
 
-RANDOM_SEED = 14
-
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 def config():
