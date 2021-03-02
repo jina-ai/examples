@@ -5,9 +5,6 @@ import base64
 import io
 import json
 import os
-import sys
-import shutil
-import subprocess
 
 import pytest
 
@@ -22,7 +19,7 @@ QUERY_FLOW_FILE_PATH = 'flow-query-object.yml'
 
 def config(tmpdir):
     os.environ['JINA_DATA'] = 'tests/test-data/*.jpg'
-    os.environ['JINA_PORT'] = str(45678)
+    os.environ['JINA_PORT'] = str(45680)
     os.environ['PARALLEL'] = str(1)
     os.environ['SHARDS'] = str(1)
     os.environ['WORKDIR'] = str(tmpdir)
@@ -56,28 +53,30 @@ def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
 
 def get_results(query, top_k=TOP_K):
     return call_api(
-        'http://0.0.0.0:45678/api/search', 
-         payload={'top_k': top_k, 'mode': 'search',  'data': [query]})
+        f'http://0.0.0.0:{os.getenv("JINA_PORT")}/api/search',
+        payload={'top_k': top_k, 'mode': 'search',  'data': [query]})
 
 
 def get_flow():
     f = Flow().load_config(QUERY_FLOW_FILE_PATH)
-    f.use_rest_gateway()
     return f
 
 
 @pytest.fixture
 def object_image_paths():
-    return ['tests/test-data/dog-object.png', 'tests/test-data/horse-object.png', 'tests/test-data/jacket-object.png']
+    return ['tests/test-data/dog-object.png', ] # 'tests/test-data/horse-object.png', 'tests/test-data/jacket-object.png']
+
 
 def test_query(tmpdir, object_image_paths):
     config(tmpdir)
     index_documents()
     f = get_flow()
+
+    test_fn_list = ['tests/test-data/dog-object.png', 'tests/test-data/horse-object.png', 'tests/test-data/jacket-object.png']
+
+    def validate(req):
+        for doc, fn in zip(req.search.docs, test_fn_list):
+            assert doc.matches[0].uri == read_and_convert2png(fn)
+
     with f:
-        for object_image_path in object_image_paths:
-            object_image = read_and_convert2png(object_image_path)
-            output = get_results(object_image)
-            matches = output['search']['docs'][0]['matches']
-            uri = matches[0]['uri'] #getting uri of first match
-            assert object_image == uri #first match should be the object image itself
+        f.search_files(test_fn_list, on_done=validate)
