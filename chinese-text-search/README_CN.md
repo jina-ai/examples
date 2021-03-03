@@ -5,20 +5,7 @@
 | 输入     | 一个text文本文件 |
 | 输出     | top_k 个匹配查询的句子| 
 | Jina版本 | 1.0.0   |
-
-
-- [基于Transformer的中文文字搜索](#--transformer-------)
-  * [安装](#--)
-  * [开始](#--)
-  * [建立索引](#----)
-  * [进行搜索](#----)
-    + [使用 REST API](#---rest-api)
-    + [使用终端](#----)
-  * [建立 Docker 镜像](#---docker---)
-    + [镜像命名规范](#------)
-  * [上传到 Jina Hub](#-----jina-hub--https---githubcom-jina-ai-jina-hub-)
-
-    
+ 
 这是一个使用[Jina](http://www.jina.ai) 神经搜索框架来对红楼梦第一章节进行搜索的例子。这个例子使用了基于 [Transformers](https://huggingface.co) 的[`bert-base-chinese`](https://huggingface.co/bert-base-chinese) 预训练模型。
 
 ## 安装
