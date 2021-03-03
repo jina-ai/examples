@@ -1,41 +1,33 @@
 # 基于Transformer的中文文字搜索
 
-<table>
-  <tr>
-    <td>
-      输入
-    </td>
-    <td>
-      一个text文本文件
-    </td>
-  </tr>
-  <tr>
-    <td>
-      输出
-    </td>
-    <td>
-      <pre>top_k</pre> 个匹配查询的句子
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Jina 版本
-    </td>
-    <td>
-      1.0.0
-    </td>
-  </tr>
-</table>
+| 列表        | 内容           |
+| ------------- |:-------------:|
+| 输入     | 一个text文本文件 |
+| 输出     | top_k 个匹配查询的句子| 
+| Jina版本 | 1.0.0   |
 
+
+- [基于Transformer的中文文字搜索](#--transformer-------)
+  * [安装](#--)
+  * [开始](#--)
+  * [建立索引](#----)
+  * [进行搜索](#----)
+    + [使用 REST API](#---rest-api)
+    + [使用终端](#----)
+  * [建立 Docker 镜像](#---docker---)
+    + [镜像命名规范](#------)
+  * [上传到 [Jina Hub](https://github.com/jina-ai/jina-hub)](#-----jina-hub--https---githubcom-jina-ai-jina-hub-)
+
+    
 这是一个使用[Jina](http://www.jina.ai) 神经搜索框架来对红楼梦第一章节进行搜索的例子。这个例子使用了基于 [Transformers](https://huggingface.co) 的[`bert-base-chinese`](https://huggingface.co/bert-base-chinese) 预训练模型。
 
-## 配置环境
+## 安装
 
 ```sh
 pip install -r requirements.txt
 ```
 
-## 简单样例
+## 开始
 
 我们先从一个小的数据集(`data/toy-data.txt`) 开始进行建立索引与搜索，以确保其功能性的正确。执行以下两个命令即可在终端进行交互式搜索。
 
@@ -101,11 +93,11 @@ jinahub/type.kind.image-name:image-version-jina_version
 比如:
 
 ```
-jinahub/app.example.wikipedia-sentences-30k:0.2.8-0.9.23
+jinahub/app.example.chiese-text-search:0.0.1-1.0.0
 ```
 
 ## 上传到 [Jina Hub](https://github.com/jina-ai/jina-hub)
 
-1. 确保安装 `pip install jina[hub]`
-2. 执行 `jina hub login` and 并把相应代码粘贴到浏览器中鉴权
+1. 确保安装 `pip install jina[hub]==1.0.0`
+2. 执行 `jina hub login` 并把相应代码粘贴到浏览器中鉴权
 3. 执行 `jina hub push <your_image_name>`
