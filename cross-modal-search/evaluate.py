@@ -47,13 +47,13 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
                 document_img.buffer = image
                 document_img.modality = 'image'
                 document_img.mime_type = 'image/jpeg'
-                document_img.tags = {'id': current_hash}
+                document_img.tags['id'] = current_hash
 
             with Document() as document_caption:
                 document_caption.text = caption
                 document_caption.modality = 'text'
                 document_caption.mime_type = 'text/plain'
-                document_caption.tags = {'id': caption}
+                document_caption.tags['id'] = caption
             yield document_img, document_caption
 
         if num_docs and (i + 1) * batch_size >= num_docs:
@@ -79,7 +79,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
                 document.mime_type = 'text/plain'
             with Document() as gt:
                 match = Document()
-                match.tags = {'id': hash(image)}
+                match.tags['id'] = hash(image)
                 gt.matches.append(match)
             yield document, gt
 
