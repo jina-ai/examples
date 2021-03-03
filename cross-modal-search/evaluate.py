@@ -88,14 +88,11 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
 
 
 def print_evaluation_score(resp):
-    print("==================================")
-    print(len(resp.search.docs))
+    sum_of_score = 0
     for doc in resp.search.docs:
-       print(doc.id)
-       print(doc.evaluations)
-       print(len(doc.evaluations))
-       print(f' Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
-    print("==================================")
+        sum_of_score += doc.evaluations[0].value
+        print(f' Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
+    print(f'MeanReciprocalRank is: {sum_of_score/len(resp.search.docs)}')
 
 
 @click.command()
