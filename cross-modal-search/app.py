@@ -15,6 +15,7 @@ def config(model_name):
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ['JINA_PORT'] = '45678'
+    os.environ['JINA_USE_REST_API'] = 'true'
     if model_name == 'clip':
         os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7'
         os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7'
@@ -72,7 +73,7 @@ def main(task, num_docs, request_size, data_set, model_name):
                 request_size=request_size
             )
     elif task == 'query-restful':
-        with Flow().load_config('flow-query.yml') as f:
+        with Flow(rest_api=True).load_config('flow-query.yml') as f:
             f.use_rest_gateway()
             f.block()
     else:

@@ -2,7 +2,7 @@
 version: '1'
 with:
   prefetch: 10
-  rest_api: true
+  rest_api: $JINA_USE_REST_API
   port_expose: 45678
 pods:
   - name: loader
