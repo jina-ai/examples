@@ -10,6 +10,7 @@ from jina import Document
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
+
 def config(model_name):
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
@@ -28,7 +29,6 @@ def config(model_name):
         raise ValueError(msg)
 
 
-
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     from dataset import get_data_loader
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
@@ -41,19 +41,17 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     )
 
     for i, (images, captions) in enumerate(data_loader):
-        for image in images:
-            with Document() as document:
-                document.buffer = image
-                document.modality = 'image'
-                document.mime_type = 'image/jpeg'
-            yield document
+        for image, caption in zip(images, captions):
+            with Document() as document_img:
+                document_img.buffer = image
+                document_img.modality = 'image'
+                document_img.mime_type = 'image/jpeg'
 
-        for caption in captions:
-            with Document() as document:
-                document.text = caption
-                document.modality = 'text'
-                document.mime_type = 'text/plain'
-            yield document
+            with Document() as document_caption:
+                document_caption.text = caption
+                document_caption.modality = 'text'
+                document_caption.mime_type = 'text/plain'
+            yield document_img, document_caption
 
         if num_docs and (i + 1) * batch_size >= num_docs:
             break
