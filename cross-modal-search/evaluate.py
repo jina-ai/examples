@@ -91,7 +91,7 @@ def print_evaluation_score(resp):
     sum_of_score = 0
     for doc in resp.search.docs:
         sum_of_score += doc.evaluations[0].value
-        print(f' Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
+        print(f'Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
     print(f'MeanReciprocalRank is: {sum_of_score/len(resp.search.docs)}')
 
 
