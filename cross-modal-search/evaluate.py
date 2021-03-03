@@ -112,7 +112,7 @@ def main(num_docs, request_size, data_set, model_name):
             input_fn=input_index_data(num_docs, request_size, data_set),
             request_size=request_size
         )
-    flow_eval = Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluator.yml')
+    flow_eval = Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml')
     with flow_eval:
         flow_eval.search(input_fn=evaluation_generator, on_done=print_evaluation_score)
 
