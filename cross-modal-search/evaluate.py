@@ -34,7 +34,7 @@ def config(model_name):
         raise ValueError(msg)
 
 
-def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
+def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='text2image'):
     from dataset import get_data_loader
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
     data_loader = get_data_loader(
@@ -44,18 +44,32 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
         batch_size=batch_size,
         dataset_type=dataset_type
     )
-
     for i, (images, captions) in enumerate(data_loader):
         for image, caption in zip(images, captions):
-            with Document() as document:
-                document.text = caption
-                document.modality = 'text'
-                document.mime_type = 'text/plain'
-            with Document() as gt:
-                match = Document()
-                match.tags['id'] = hash(image)
-                gt.matches.append(match)
-            yield document, gt
+            if mode == 'text2image':
+                with Document() as document:
+                    document.text = caption
+                    document.modality = 'text'
+                    document.mime_type = 'text/plain'
+                with Document() as gt:
+                    match = Document()
+                    match.tags['id'] = hash(image)
+                    gt.matches.append(match)
+                yield document, gt
+            elif mode == 'image2text':
+                with Document() as document:
+                    document.buffer = image
+                    document.modality = 'image'
+                    document.mime_type = 'image/jpeg'
+                with Document() as gt:
+                    match = Document()
+                    match.tags['id'] = caption
+                    gt.matches.append(match)
+                yield document, gt
+            else:
+                msg = f'Not supported mode {mode}.'
+                msg += 'expected `image2text` or `text2image`'
+                raise ValueError(msg)
 
         if num_docs and (i + 1) * batch_size >= num_docs:
             break
@@ -77,7 +91,8 @@ def print_evaluation_score(resp):
 @click.option('--request_size', '-s', default=8)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
-def main(num_docs, request_size, data_set, model_name):
+@click.option('--evaluation_mode', '-e', type=click.Choice(['image2text', 'text2image'], case_sensitive=False), default='text2image')
+def main(num_docs, request_size, data_set, model_name, evaluation_mode):
     config(model_name)
     with Flow().load_config('flow-index.yml') as f:
         f.index(
@@ -85,7 +100,10 @@ def main(num_docs, request_size, data_set, model_name):
             request_size=request_size
         )
     with Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
-        flow_eval.search(input_fn=evaluation_generator(num_docs, request_size, data_set), on_done=print_evaluation_score)
+        flow_eval.search(
+            input_fn=evaluation_generator(num_docs, request_size, data_set, mode=evaluation_mode),
+            on_done=print_evaluation_score
+        )
     print(f'MeanReciprocalRank is: {sum_of_score / num_of_searches}')
 
 
