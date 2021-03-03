@@ -4,9 +4,11 @@ __license__ = "Apache-2.0"
 import os
 
 import click
-
 from jina import Flow
 from jina import Document
+
+from dataset import input_index_data
+
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 sum_of_score = 0
@@ -30,37 +32,6 @@ def config(model_name):
         msg = f'Unsupported model {model_name}.'
         msg += 'Expected `clip` or `vse`.'
         raise ValueError(msg)
-
-
-def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
-    from dataset import get_data_loader
-    captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
-    data_loader = get_data_loader(
-        root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
-        captions=os.path.join(cur_dir, f'data/{dataset_type}/{captions}'),
-        split='test',
-        batch_size=batch_size,
-        dataset_type=dataset_type
-    )
-
-    for i, (images, captions) in enumerate(data_loader):
-        for image, caption in zip(images, captions):
-            current_hash = hash(image)
-            with Document() as document_img:
-                document_img.buffer = image
-                document_img.modality = 'image'
-                document_img.mime_type = 'image/jpeg'
-                document_img.tags['id'] = current_hash
-
-            with Document() as document_caption:
-                document_caption.text = caption
-                document_caption.modality = 'text'
-                document_caption.mime_type = 'text/plain'
-                document_caption.tags['id'] = caption
-            yield document_img, document_caption
-
-        if num_docs and (i + 1) * batch_size >= num_docs:
-            break
 
 
 def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
