@@ -16,7 +16,7 @@
     + [使用终端](#----)
   * [建立 Docker 镜像](#---docker---)
     + [镜像命名规范](#------)
-  * [上传到 [Jina Hub](https://github.com/jina-ai/jina-hub)](#-----jina-hub--https---githubcom-jina-ai-jina-hub-)
+  * [上传到 Jina Hub](#-----jina-hub--https---githubcom-jina-ai-jina-hub-)
 
     
 这是一个使用[Jina](http://www.jina.ai) 神经搜索框架来对红楼梦第一章节进行搜索的例子。这个例子使用了基于 [Transformers](https://huggingface.co) 的[`bert-base-chinese`](https://huggingface.co/bert-base-chinese) 预训练模型。
