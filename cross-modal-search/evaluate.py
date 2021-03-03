@@ -9,6 +9,8 @@ from jina import Flow
 from jina import Document
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
+sum_of_score = 0
+num_of_matches = 0
 
 
 def config(model_name):
@@ -89,11 +91,14 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k'):
 
 
 def print_evaluation_score(resp):
-    sum_of_score = 0
+    batch_of_score = 0
     for doc in resp.search.docs:
-        sum_of_score += doc.evaluations[0].value
-        print(f'Evaluation {doc.evaluations[0].op_name}: {doc.evaluations[0].value}')
-    print(f'MeanReciprocalRank is: {sum_of_score/len(resp.search.docs)}')
+        batch_of_score += doc.evaluations[0].value
+    print(f'MeanReciprocalRank of the batch is: {batch_of_score/len(resp.search.docs)}')
+    global sum_of_score
+    global num_of_matches
+    sum_of_score += batch_of_score
+    num_of_matches += len(resp.search.docs)
 
 
 @click.command()
@@ -109,7 +114,8 @@ def main(num_docs, request_size, data_set, model_name):
             request_size=request_size
         )
     with Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
-        flow_eval.search(input_fn=evaluation_generator, on_done=print_evaluation_score)
+        flow_eval.search(input_fn=evaluation_generator(num_docs, request_size, data_set), on_done=print_evaluation_score)
+    print(f'MeanReciprocalRank is: {sum_of_score / num_of_matches}')
 
 
 if __name__ == '__main__':
