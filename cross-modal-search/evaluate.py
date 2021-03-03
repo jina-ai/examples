@@ -41,22 +41,20 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     )
 
     for i, (images, captions) in enumerate(data_loader):
-        for image in images:
+        for image, caption in zip(images, captions):
             current_hash = hash(image)
-            with Document() as document:
-                document.buffer = image
-                document.modality = 'image'
-                document.mime_type = 'image/jpeg'
-                document.tags = {'id': current_hash}
-            yield document
+            with Document() as document_img:
+                document_img.buffer = image
+                document_img.modality = 'image'
+                document_img.mime_type = 'image/jpeg'
+                document_img.tags = {'id': current_hash}
 
-        for caption in captions:
-            with Document() as document:
-                document.text = caption
-                document.modality = 'text'
-                document.mime_type = 'text/plain'
-                document.tags = {'id': caption}
-            yield document
+            with Document() as document_caption:
+                document_caption.text = caption
+                document_caption.modality = 'text'
+                document_caption.mime_type = 'text/plain'
+                document_caption.tags = {'id': caption}
+            yield document_img, document_caption
 
         if num_docs and (i + 1) * batch_size >= num_docs:
             break
@@ -112,8 +110,7 @@ def main(num_docs, request_size, data_set, model_name):
             input_fn=input_index_data(num_docs, request_size, data_set),
             request_size=request_size
         )
-    flow_eval = Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml')
-    with flow_eval:
+    with Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
         flow_eval.search(input_fn=evaluation_generator, on_done=print_evaluation_score)
 
 
