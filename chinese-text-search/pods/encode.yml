@@ -1,0 +1,5 @@
+!TransformerTorchEncoder
+with:
+  pooling_strategy: auto
+  pretrained_model_name_or_path: bert-base-chinese
+  max_length: 192

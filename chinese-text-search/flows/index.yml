@@ -1,0 +1,9 @@
+!Flow
+version: '1'
+pods:
+  - name: encoder
+    uses: pods/encode.yml
+    timeout_ready: 1200000
+    read_only: true
+  - name: indexer
+    uses: pods/index.yml
