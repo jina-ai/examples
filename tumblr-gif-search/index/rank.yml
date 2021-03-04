@@ -1,7 +1,6 @@
 !BiMatchRanker
 requests:
   on:
-    [SearchRequest, IndexRequest]:
-      - !Chunk2DocRankDriver
-        with:
-          traversal_paths: ['c']
+    SearchRequest:
+      - !Chunk2DocRankDriver {}
+      - !LogInfoDriver {}
