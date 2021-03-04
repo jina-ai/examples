@@ -61,7 +61,7 @@ The models used for the example are cited from the paper, you can try our exampl
 1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
 2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
 
-Both of the models has been trained that encodes pair of `text` and `images` into a common embedding space.
+Both of the models have been trained that encodes pair of `text` and `images` into a common embedding space.
 
 **CLIP Encoders in Jina for Cross Modal Search**
 
