@@ -9,7 +9,6 @@ from jina import Document
 
 from dataset import input_index_data
 
-
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 sum_of_score = 0
 num_of_searches = 0
@@ -61,6 +60,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
                     document.buffer = image
                     document.modality = 'image'
                     document.mime_type = 'image/jpeg'
+                    document.convert_buffer_to_uri()
                 with Document() as gt:
                     match = Document()
                     match.tags['id'] = caption
@@ -85,23 +85,25 @@ def print_evaluation_score(resp):
     num_of_searches += len(resp.search.docs)
 
 
-
 @click.command()
-@click.option('--num_docs', '-n', default=50)
+@click.option('--index_num_docs', '-i', default=50)
+@click.option('--evaluate_num_docs', '-n', default=20)
 @click.option('--request_size', '-s', default=8)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
-@click.option('--evaluation_mode', '-e', type=click.Choice(['image2text', 'text2image'], case_sensitive=False), default='text2image')
-def main(num_docs, request_size, data_set, model_name, evaluation_mode):
+@click.option('--evaluation_mode', '-e', type=click.Choice(['image2text', 'text2image'], case_sensitive=False),
+              default='text2image')
+def main(index_num_docs, evaluate_num_docs, request_size, data_set, model_name, evaluation_mode):
     config(model_name)
-    with Flow().load_config('flow-index.yml') as f:
-        f.index(
-            input_fn=input_index_data(num_docs, request_size, data_set),
-            request_size=request_size
-        )
+    if index_num_docs > 0:
+        with Flow().load_config('flow-index.yml') as f:
+            f.index(
+                input_fn=input_index_data(index_num_docs, request_size, data_set),
+                request_size=request_size
+            )
     with Flow().load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
         flow_eval.search(
-            input_fn=evaluation_generator(num_docs, request_size, data_set, mode=evaluation_mode),
+            input_fn=evaluation_generator(evaluate_num_docs, request_size, data_set, mode=evaluation_mode),
             on_done=print_evaluation_score
         )
     print(f'MeanReciprocalRank is: {sum_of_score / num_of_searches}')
