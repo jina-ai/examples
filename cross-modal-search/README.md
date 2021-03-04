@@ -32,7 +32,7 @@
 
 </p>
 
-In this example, `jina` is used to implement a Cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
+In this example, `jina` is used to implement a cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
 
 **Motive behind Cross Modal Retrieval**
 
@@ -42,7 +42,7 @@ Modality is an attribute assigned to a document in Jina in the protobuf Document
 It is possible that documents may be of the same mime type,
 but come from different distributions,
 for them to have different modalities.
-**Example**: In a an article or web page, 
+**Example**: In an article or web page, 
 the body text and the title are from the same mime type (text),
 but can be considered of different modalities (distributions).
 
@@ -151,7 +151,7 @@ check `dataset.py` to see how `data` is provided and adapt to your own data sour
 If you want to switch to `VSE++` model, replace `-m clip` with `-m vse`
 
 Jina normalizes the images needed before entering them in the encoder.
-QueryLanguageDriver is used to redirect (filtering) documents based on modality.
+`QueryLanguageDriver` is used to redirect (filtering) documents based on modality.
 
 ### Query
 
@@ -191,7 +191,7 @@ docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.2-0.9.20
 
 ### Build the docker image yourself
 
-In order to buld the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
+In order to build the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
 
 And then just simply run:
 
