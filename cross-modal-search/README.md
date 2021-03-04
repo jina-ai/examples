@@ -38,49 +38,40 @@ In this example, `jina` is used to implement a Cross-modal search system. This e
 
 Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
 
-Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. **Example**: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
+It is possible that documents may be of the same mime type,
+but come from different distributions,
+for them to have different modalities.
+**Example**: In a an article or web page, 
+the body text and the title are from the same mime type (text),
+but can be considered of different modalities (distributions).
 
-Different encoders map different modalities to a common embedding space. They need to extract semantic information from the documents. 
+Different encoders map different modalities to a common embedding space.
+They need to extract semantic information from the documents. 
 
-In this embedding space, documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
+In this embedding space,
+documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
 
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
 **Research for Cross Modal Retrieval**
 
-The models used for the example are cited from the paper _Improving Visual-Semantic Embeddings with Hard Negatives_ (https://arxiv.org/pdf/1707.05612.pdf).
+The models used for the example are cited from the paper, you can try our example with one of them:
 
-To make this search system retrieve good results, we have used the models trained in [https://github.com/fartashf/vsepp](https://github.com/fartashf/vsepp) . A model has been trained that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
+1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
+2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
 
-We use one network per modality:
+Both of the models has been trained that encodes pair of `text` and `images` into a common embedding space.
 
-- VGG19 for images, pretrained on ImageNet.
-- A Gated Recurrent Unit (GRU) for captions.
+**CLIP Encoders in Jina for Cross Modal Search**
 
-Last layers of these networks are removed and they are used as feature extractors. A Fully Connected Layer is added on top of each one that actually maps the extracted features to the new embedding space.
-
-They are trained on `Flickr30k` dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples).
+Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
+for encoding image and text respectively.
 
 **VSE Encoders in Jina for Cross Modal Search**
 
-Two encoders have been created for this example, namely VSEImageEncoder and VSETextEncoder
-
-Process followed is as below:
-
-- Load the weights published by the research paper as result
-- Instantiate their VSE encoder and extracts the branch interesting for the modality.
-
-The 2 models exist in our jinahub [VSEImageEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vseimageencoder) and [VSETextEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vsetextencoder)
-
-**Table of Contents**
-
-- [Prerequisites](#prerequisites)
-- [Prepare the data](#prepare-the-data)
-- [Build the docker images](#build-the-docker-images)
-- [Run the Flows](#run-the-flows)
-- [Documentation](#documentation)
-- [Community](#community)
-- [License](#license)
+Two encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
+for encoding image and text respectively.
 
 
 ## Prerequisites
@@ -148,13 +139,16 @@ Once all the steps are completed, we need to make sure that under `cross-modal-s
 Index is run with the following command, where `request_size` can be chosen by the user. Index will process both images and captions
 
 ```bash
-python app.py -t index -n $num_docs -s request_size -d 'f8k'
+python app.py -t index -n $num_docs -s $request_size -d 'f8k' -m clip
 ```
 
-Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use. If you decide to index the complete datasets,
-it is recommendable to increase the number of shards and parallelization. The dataset is provided with the `-d` parameter
-with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
-how `data` is provided and adapt to your own data source.
+Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use.
+If you decide to index the complete datasets,
+it is recommendable to increase the number of shards and parallelization.
+The dataset is provided with the `-d` parameter with the valid options of `30k` and `8k`.
+If you want to index your own dataset,
+check `dataset.py` to see how `data` is provided and adapt to your own data source.
+If you want to switch to `VSE++` model, replace `-m clip` with `-m vse`
 
 Jina normalizes the images needed before entering them in the encoder.
 QueryLanguageDriver is used to redirect (filtering) documents based on modality.
@@ -162,7 +156,7 @@ QueryLanguageDriver is used to redirect (filtering) documents based on modality.
 ### Query
 
 ```bash
-python app.py -t query-restful
+python app.py -t query -m clip
 ```
 
 You can then query the system from [jinabox](https://jina.ai/jinabox.js/) using either images or text. 
