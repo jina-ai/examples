@@ -45,6 +45,6 @@ pods:
     uses_after: yaml/merge_matches_sort_topk.yml
     remove_uses_ba: true
   - name: join_all
-    uses: _merge
+    uses: _merge_root
     needs: [text_indexer, image_kv_indexer]
     read_only: true
