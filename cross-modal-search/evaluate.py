@@ -16,7 +16,6 @@ num_of_searches = 0
 
 
 def config(model_name):
-    os.environ['PYTHONHASHSEED'] = '0'
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ['JINA_PORT'] = '45678'

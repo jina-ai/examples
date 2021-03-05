@@ -96,7 +96,6 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
 
 
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
-    os.environ['PYTHONHASHSEED'] = '0'
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
     data_loader = get_data_loader(
         root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
