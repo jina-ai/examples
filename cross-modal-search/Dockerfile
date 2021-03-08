@@ -1,43 +1,34 @@
-FROM pytorch/pytorch:1.6.0-cuda10.1-cudnn7-runtime
+FROM jinaai/jina
 
-RUN apt-get update && apt-get install --no-install-recommends -y git wget gcc unzip libmagic1
-
-RUN wget http://www.cs.toronto.edu/~faghri/vsepp/runs.tar && tar -xvf runs.tar && rm -rf runs/coco* && rm -rf runs/f30k_vse0/ && \
-rm -rf runs/f30k_order*/ && rm -rf runs/f30k_vse++/ && rm -rf runs/f30k_vse++_resnet* && rm -rf runs/f30k_vse++_vggfull_finetune/ && \
-rm -rf runs.tar && \
-wget http://www.cs.toronto.edu/~faghri/vsepp/vocab.tar && \
-tar -xvf vocab.tar && \
-rm -rf vocab/coco* && rm -rf vocab/f8k* && rm -rf vocab/10crop*/ && rm -rf vocab/f30k_precomp* && \
-rm -rf runs.tar && rm -rf vocab.tar
+RUN apt-get -y update && apt-get install -y git wget gcc unzip libmagic1
 
 COPY . /workspace
 WORKDIR /workspace
 
-RUN pip install -r requirements.txt && \
-python -c "import torchvision.models as models; model = getattr(models, 'vgg19')(pretrained=True).eval()" && \
-python -c "import nltk; nltk.download('punkt')"
+# install the third-party requirements
+RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
 
-ENV JINA_USES_VSE_IMAGE_ENCODER='yaml/hub-image-encoder.yml'
-ENV JINA_USES_VSE_TEXT_ENCODER='yaml/hub-text-encoder.yml'
+ENV JINA_IMAGE_ENCODER='yaml/clip/hub-image-encoder.yml'
+ENV JINA_TEXT_ENCODER='yaml/clip/hub-text-encoder.yml'
 ENV JINA_SHARDS='2'
 
 RUN ./prepare_data.sh && python app.py -t index -n 20000 && rm -rf data
 
 EXPOSE 45678
 
-ENTRYPOINT ["python", "app.py", "-t", "query-restful"]
+ENTRYPOINT ["python", "app.py", "-t", "query"]
 
 LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
 LABEL type="app"
 LABEL kind="example"
 LABEL avatar="None"
-LABEL description="Jina App to do cross modal search between images and captions using Flickr8k and VSE++ models"
+LABEL description="Jina App to do cross modal search between images and captions using Flickr8k and CLIP models"
 LABEL documentation="https://github.com/jina-ai/examples/tree/master/cross-modal-search"
-LABEL keywords="[examples, cross-modal, VSE++, Flickr8k]"
+LABEL keywords="[examples, cross-modal, CLIP, Flickr8k, Computer Vision, NLP]"
 LABEL license="apache-2.0"
 LABEL name="crossmodalsearch"
 LABEL platform="linux/amd64"
 LABEL update="None"
 LABEL url="https://github.com/jina-ai/examples/tree/master/cross-modal-search"
 LABEL vendor="Jina AI Limited"
-LABEL version="0.0.2"
+LABEL version="0.0.3"
