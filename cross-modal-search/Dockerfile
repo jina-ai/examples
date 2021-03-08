@@ -6,7 +6,7 @@ COPY . /workspace
 WORKDIR /workspace
 
 # install the third-party requirements
-RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && python -c "import clip; clip.load('ViT-B/32')"
+RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
 
 ENV JINA_IMAGE_ENCODER='yaml/clip/hub-image-encoder.yml'
 ENV JINA_TEXT_ENCODER='yaml/clip/hub-text-encoder.yml'

@@ -3,6 +3,7 @@ __license__ = "Apache-2.0"
 
 
 import os
+import base64
 import json as jsonmod
 
 import torch
@@ -106,12 +107,12 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
 
     for i, (images, captions) in enumerate(data_loader):
         for image, caption in zip(images, captions):
-            current_hash = hash(image)
+            encoded = base64.b64encode(image)
             with Document() as document_img:
                 document_img.buffer = image
                 document_img.modality = 'image'
                 document_img.mime_type = 'image/jpeg'
-                document_img.tags['id'] = current_hash
+                document_img.tags['id'] = str(encoded)
 
             with Document() as document_caption:
                 document_caption.text = caption
