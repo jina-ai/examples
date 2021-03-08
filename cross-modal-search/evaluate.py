@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import base64
+import hashlib
 
 import click
 from jina import Flow
@@ -46,7 +46,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
     )
     for i, (images, captions) in enumerate(data_loader):
         for image, caption in zip(images, captions):
-            encoded = base64.b64encode(image)
+            hashed = hashlib.sha1(image).hexdigest()
             if mode == 'text2image':
                 with Document() as document:
                     document.text = caption
@@ -54,7 +54,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
                     document.mime_type = 'text/plain'
                 with Document() as gt:
                     match = Document()
-                    match.tags['id'] = str(encoded)
+                    match.tags['id'] = hashed
                     gt.matches.append(match)
                 yield document, gt
             elif mode == 'image2text':

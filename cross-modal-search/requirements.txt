@@ -3,5 +3,4 @@ nltk==3.5
 pycocotools==2.0.2
 torchvision
 python-magic==0.4.20
-torch==1.7.0
 click==7.1.2
