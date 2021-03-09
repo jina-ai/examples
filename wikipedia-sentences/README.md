@@ -106,7 +106,7 @@ For example:
 jinahub/app.example.my-wikipedia-sentences-30k:0.2.9-1.0.1
 ```
 
-##⬆️ Push to [Jina Hub](https://github.com/jina-ai/jina-hub)
+## ⬆️ Push to [Jina Hub](https://github.com/jina-ai/jina-hub)
 
 1. Ensure hub is installed with `pip install jina[hub]`
 2. Run `jina hub login` and paste the code into your browser to authenticate
