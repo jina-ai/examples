@@ -8,8 +8,8 @@ This example **isn't supposed to work as is**. It's meant as a template for user
 
 - Sample indexing and query Flows
 - Sample Pods
-- Empty placeholder data files
 - Tests with placeholder strings
+- An empty shell script for getting remote dataset
 - Dockerfile
 - Support files (requirements.txt, manifest.json, etc)
 
