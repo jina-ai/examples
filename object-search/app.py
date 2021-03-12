@@ -32,7 +32,7 @@ def config():
 
 
 @click.command()
-@click.option('--task', '-task', type=click.Choice(['index', 'query'], case_sensitive=False))
+@click.option('--task', '-task', "-t", type=click.Choice(['index', 'query'], case_sensitive=False))
 @click.option('--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False))
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
@@ -57,6 +57,7 @@ def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspac
         f = Flow.load_config(f'flow-query-{return_image}.yml')
         with f:
             f.block()
+
 
 if __name__ == '__main__':
     main()
