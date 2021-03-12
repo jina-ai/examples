@@ -8,7 +8,7 @@ pods:
     uses: pods/normalize.yml
     read_only: true
   - name: encode
-    uses: docker://jinahub/pod.encoder.tirgimageencoder:0.0.4-0.9.20
+    uses: docker://jinahub/pod.encoder.tirgimageencoder:0.0.5-1.0.7
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
