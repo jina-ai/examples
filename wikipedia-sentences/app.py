@@ -62,7 +62,7 @@ def query_restful():
 def dryrun():
     f = Flow().load_config("flows/index.yml")
     with f:
-        f.dry_run()
+        pass
 
 
 @click.command()
