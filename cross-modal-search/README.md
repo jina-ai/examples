@@ -76,28 +76,23 @@ for encoding image and text respectively.
 
 ## Prerequisites
 
-This demo requires Python 3.7 and `jina` installation.
+This demo requires Python 3.7, [`docker`](https://www.docker.com/get-started) and [`jina`](https://docs.jina.ai/chapters/core/setup/) installation.
 
 ## Prepare the data
 
 
 ### Use Flickr8k
 
-Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example
+Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example.
 
 To make this work, we need to get the image files from the `kaggle` [dataset](https://www.kaggle.com/adityajn105/flickr8k). To get it, once you have your Kaggle Token in your system as described [here](https://www.kaggle.com/docs/api), run:
 
 ```bash
-kaggle datasets download adityajn105/flickr8k
-unzip flickr8k.zip 
-rm flickr8k.zip
-mkdir data
-mkdir data/f8k
-mv Images data/f8k/images
-mv captions.txt data/f8k/captions.txt
+bash get_data.sh
+bash prepare_data.sh
 ```
 
-make sure that your data folder has:
+Make sure that your data folder has:
 
 ```bash
 data/f8k/images/*jpg
@@ -111,28 +106,36 @@ The model used has been trained using `Flickr30k` and therefore we recommend usi
 To do so, instead of downloading the `flickr8k` from kaggle, just take its 30k counterpart
 
 ```bash
-pip install kaggle
-kaggle datasets download hsankesara/flickr-image-dataset
-unzip flickr-image-dataset.zip
-rm flickr-image-dataset.zip
+bash get_data30k.sh
 ``` 
 
 Then we also need `captions` data, to get this:
 
 ```bash
-wget http://www.cs.toronto.edu/~faghri/vsepp/data.tar
-tar -xvf data.tar
-rm -rf data.tar
-rm -rf data/coco*
-rm -rf data/f8k*
-rm -rf data/*precomp*
-rm -rf data/f30k/images
-mv flickr-image-dataset data/f30k/images
+bash prepare_data30k.sh
 ```
 
 Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
 
 ## Run the Flows
+
+### Pull docker image(Optional)
+
+To save your time when doing indexing, you could pull the docker images to your local machine.
+
+To use CLIP model:
+
+```bash
+docker pull jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7
+docker pull jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7
+```
+
+Or use VSE model:
+
+```bash
+docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7
+docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7
+```
 
 ### Index 
 
