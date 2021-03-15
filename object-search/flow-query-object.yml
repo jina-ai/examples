@@ -2,6 +2,7 @@
 version: '1'
 with:
   read_only: true  # better add this in the query time
+  rest_api: true
   port_expose: $JINA_PORT
   timeout_ready: 600000
 pods:
@@ -19,15 +20,13 @@ pods:
     method: add
     uses: pods/vec.yml
     shards: $SHARDS
-    separated_workspace: true
     polling: all
-    uses_reducing: _merge_all
+    uses_after: _merge_matches
     timeout_ready: 100000 # larger timeout as in query time will read all the data
   - name: chunk_idx
     method: add
     uses: pods/chunk.yml
     shards: $SHARDS
-    separated_workspace: true
     polling: all
-    uses_reducing: _merge_all
+    uses_after: _merge_matches
     timeout_ready: 100000 # larger timeout as in query time will read all the data
