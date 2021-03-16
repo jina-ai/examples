@@ -1,0 +1,5 @@
+!TransformerTorchEncoder
+with:
+  pooling_strategy: auto
+  pretrained_model_name_or_path: distilbert-base-cased
+  max_length: 96

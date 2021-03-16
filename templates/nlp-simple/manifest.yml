@@ -1,0 +1,15 @@
+manifest_version: 1
+name: project-name
+description: 'Your description'
+author: Your name (you@yourhost.com)
+url: https://your.url
+vendor: Your company
+documentation: https://your.url
+version: 0.0.1
+license: apache-2.0
+keywords: [NLP, text, distilbert, example, transformers]
+type: app
+kind: example
+avatar: None
+platform: "linux/amd64"
+update: "None"
