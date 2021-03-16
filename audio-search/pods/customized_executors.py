@@ -5,7 +5,7 @@ import io
 from typing import Any, Dict, List
 
 import numpy as np
-from jina.executors.decorators import batching
+from jina.executors.decorators import batching, single_multi_input
 from jina.executors.encoders.frameworks import BaseTFEncoder
 from jina.executors.segmenters import BaseSegmenter
 from jinahub.vggish_input import *
@@ -51,22 +51,18 @@ class VggishSegmenter(BaseSegmenter):
         self.window_length_secs = window_length_secs
         self.hop_length_secs = hop_length_secs
 
+    @single_multi_input(num_data=2, flatten_output=False)
     def segment(self, uri, buffer, *args, **kwargs) -> List[Dict]:
         result = []
         # load the data
-        uri_list = uri
-        buffer_list = buffer
-        for uri, buffer in zip(uri_list, buffer_list):
-            single_result = []
-            data, sample_rate = self.read_wav(uri, buffer)
-            if data is None:
-                return single_result
-            # slice the wav array
-            mel_data = self.wav2mel(data, sample_rate)
-            for idx, blob in enumerate(mel_data):
-                self.logger.debug(f'blob: {blob.shape}')
-                single_result.append(dict(offset=idx, weight=1.0, blob=blob))
-            result.append(single_result)
+        data, sample_rate = self.read_wav(uri, buffer)
+        if data is None:
+            return result
+        # slice the wav array
+        mel_data = self.wav2mel(data, sample_rate)
+        for idx, blob in enumerate(mel_data):
+            self.logger.debug(f'blob: {blob.shape}')
+            result.append(dict(offset=idx, weight=1.0, blob=blob))
         return result
 
     def wav2mel(self, blob, sample_rate):
