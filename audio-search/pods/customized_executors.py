@@ -54,14 +54,19 @@ class VggishSegmenter(BaseSegmenter):
     def segment(self, uri, buffer, *args, **kwargs) -> List[Dict]:
         result = []
         # load the data
-        data, sample_rate = self.read_wav(uri, buffer)
-        if data is None:
-            return result
-        # slice the wav array
-        mel_data = self.wav2mel(data, sample_rate)
-        for idx, blob in enumerate(mel_data):
-            self.logger.debug(f'blob: {blob.shape}')
-            result.append(dict(offset=idx, weight=1.0, blob=blob))
+        uri_list = uri
+        buffer_list = buffer
+        for uri, buffer in zip(uri_list, buffer_list):
+            single_result = []
+            data, sample_rate = self.read_wav(uri, buffer)
+            if data is None:
+                return single_result
+            # slice the wav array
+            mel_data = self.wav2mel(data, sample_rate)
+            for idx, blob in enumerate(mel_data):
+                self.logger.debug(f'blob: {blob.shape}')
+                single_result.append(dict(offset=idx, weight=1.0, blob=blob))
+            result.append(single_result)
         return result
 
     def wav2mel(self, blob, sample_rate):
