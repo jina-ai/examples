@@ -9,6 +9,7 @@ from PIL import Image, ImageFile
 # workaround initialization code
 from PIL.GifImagePlugin import GifImageFile, _accept, _save, _save_all
 from jina.executors.segmenters import BaseSegmenter
+from jina.executors.decorators import single
 
 
 class GifPreprocessor(BaseSegmenter):
@@ -19,6 +20,7 @@ class GifPreprocessor(BaseSegmenter):
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
 
+    @single(slice_nargs=2, flatten_output=False)
     def segment(self, buffer, id):
         result = []
         try:

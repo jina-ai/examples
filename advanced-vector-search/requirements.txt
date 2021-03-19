@@ -1,4 +1,4 @@
 docker==4.0.1
-click
-jina[hub]==0.9.20
+click==7.1.2
+jina[hub]==1.0.5
 

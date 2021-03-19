@@ -1,0 +1,13 @@
+!CLIPTextEncoder
+requests:
+  on:
+    IndexRequest:
+      - !FilterQL
+        with:
+          lookups: {'modality': 'text'}
+      - !EncodeDriver {}
+    SearchRequest:
+      - !FilterQL
+        with:
+          lookups: {'mime_type__contains': 'text'}
+      - !EncodeDriver {}

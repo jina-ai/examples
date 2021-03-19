@@ -5,7 +5,7 @@ import io
 from typing import Any, Dict, List
 
 import numpy as np
-from jina.executors.decorators import batching
+from jina.executors.decorators import batching, single
 from jina.executors.encoders.frameworks import BaseTFEncoder
 from jina.executors.segmenters import BaseSegmenter
 from jinahub.vggish_input import *
@@ -51,6 +51,7 @@ class VggishSegmenter(BaseSegmenter):
         self.window_length_secs = window_length_secs
         self.hop_length_secs = hop_length_secs
 
+    @single(slice_nargs=2, flatten_output=False)
     def segment(self, uri, buffer, *args, **kwargs) -> List[Dict]:
         result = []
         # load the data

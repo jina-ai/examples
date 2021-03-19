@@ -17,7 +17,7 @@ def config(tmpdir):
     os.system('pip uninstall -y tensorflow-cpu')
     os.system('pip install tensorflow-cpu==2.1')
     os.environ['JINA_DATA'] = 'tests/test-data/*.png'
-    os.environ['JINA_PORT'] = str(45678)
+    os.environ['JINA_PORT'] = str(45680)
     os.environ['JINA_SHARDS'] = str(1)
     os.environ['JINA_SHARDS_INDEXERS'] = str(1)
     os.environ['JINA_WORKSPACE'] = str(tmpdir)
@@ -47,19 +47,19 @@ def get_results(query, top_k=TOP_K):
 
 def get_flow():
     f = Flow().load_config('flows/query.yml')
-    f.use_rest_gateway()
+    f.use_grpc_gateway()
     return f
 
 
 def test_query(config, download_model):
     index_documents()
     f = get_flow()
-    with f:
-        from glob import iglob
-        for object_image_path in iglob(os.environ['JINA_DATA']):
-            output = get_results(object_image_path)
-            matches = output['search']['docs'][0]['matches']
-            assert len(matches) == TOP_K
-            for match in matches:
-                assert match['uri'].startswith('data:image/png;charset=utf-8,')
 
+    def validate(req):
+        for doc in req.search.docs:
+            for match in doc.matches:
+                assert match.uri.startswith('data:image/png;charset=utf-8,')
+
+    from glob import iglob
+    with f:
+        f.search_files(iglob(os.environ.get('JINA_DATA')), on_done=validate)

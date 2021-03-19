@@ -1,10 +1,17 @@
-__copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
+__copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
+
+
+import os
+import json as jsonmod
+import hashlib
 
 import torch
 import torch.utils.data as data
-import json as jsonmod
-import os
+from jina import Document
+
+
+cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 class Flickr30kDataset(data.Dataset):
@@ -86,3 +93,34 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
                                               collate_fn=collate_fn)
 
     return data_loader
+
+
+def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
+    captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
+    data_loader = get_data_loader(
+        root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
+        captions=os.path.join(cur_dir, f'data/{dataset_type}/{captions}'),
+        split='test',
+        batch_size=batch_size,
+        dataset_type=dataset_type
+    )
+
+    for i, (images, captions) in enumerate(data_loader):
+        for image, caption in zip(images, captions):
+            hashed = hashlib.sha1(image).hexdigest()
+            with Document() as document_img:
+                document_img.buffer = image
+                document_img.modality = 'image'
+                document_img.mime_type = 'image/jpeg'
+                document_img.tags['id'] = hashed
+
+            with Document() as document_caption:
+                document_caption.text = caption
+                document_caption.modality = 'text'
+                document_caption.mime_type = 'text/plain'
+                document_caption.tags['id'] = caption
+            yield document_img
+            yield document_caption
+
+        if num_docs and (i + 1) * batch_size >= num_docs:
+            break

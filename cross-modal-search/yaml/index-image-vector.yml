@@ -1,7 +1,7 @@
 !NumpyIndexer
 with:
   index_filename: images_embs.gz
-  metrix: cosine
+  metric: cosine
 metas:
   name: images_vec_idx  # a customized name
   workspace: './workspace'

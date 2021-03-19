@@ -32,81 +32,67 @@
 
 </p>
 
-In this example, `jina` is used to implement a Cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
+In this example, `jina` is used to implement a cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
 
 **Motive behind Cross Modal Retrieval**
 
 Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
 
-Modality is an attribute assigned to a document in Jina in the protobuf Document structure. It is possible that documents may be of the same mime type, but come from different distributions, for them to have different modalities. **Example**: In a an article or web page,  the body text and the title are from the same mime type (text), but can be considered of different modalities (distributions).
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
+It is possible that documents may be of the same mime type,
+but come from different distributions,
+for them to have different modalities.
+**Example**: In an article or web page, 
+the body text and the title are from the same mime type (text),
+but can be considered of different modalities (distributions).
 
-Different encoders map different modalities to a common embedding space. They need to extract semantic information from the documents. 
+Different encoders map different modalities to a common embedding space.
+They need to extract semantic information from the documents. 
 
-In this embedding space, documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
+In this embedding space,
+documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
 
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
 **Research for Cross Modal Retrieval**
 
-The models used for the example are cited from the paper _Improving Visual-Semantic Embeddings with Hard Negatives_ (https://arxiv.org/pdf/1707.05612.pdf).
+The models used for the example are cited from the paper, you can try our example with one of them:
 
-To make this search system retrieve good results, we have used the models trained in [https://github.com/fartashf/vsepp](https://github.com/fartashf/vsepp) . A model has been trained that encodes `text` and `images` in a common embedding space trying to put together the embedding of images and its corresponding captions.
+1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
+2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
 
-We use one network per modality:
+Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
 
-- VGG19 for images, pretrained on ImageNet.
-- A Gated Recurrent Unit (GRU) for captions.
+**CLIP Encoders in Jina for Cross Modal Search**
 
-Last layers of these networks are removed and they are used as feature extractors. A Fully Connected Layer is added on top of each one that actually maps the extracted features to the new embedding space.
-
-They are trained on `Flickr30k` dataset with ContrastiveLoss (Tries to put positive matches close in the embedding space and separate negative samples).
+Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
+for encoding image and text respectively.
 
 **VSE Encoders in Jina for Cross Modal Search**
 
-Two encoders have been created for this example, namely VSEImageEncoder and VSETextEncoder
-
-Process followed is as below:
-
-- Load the weights published by the research paper as result
-- Instantiate their VSE encoder and extracts the branch interesting for the modality.
-
-The 2 models exist in our jinahub [VSEImageEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vseimageencoder) and [VSETextEncoder](https://hub.docker.com/r/jinahub/pod.encoder.vsetextencoder)
-
-**Table of Contents**
-
-- [Prerequisites](#prerequisites)
-- [Prepare the data](#prepare-the-data)
-- [Build the docker images](#build-the-docker-images)
-- [Run the Flows](#run-the-flows)
-- [Documentation](#documentation)
-- [Community](#community)
-- [License](#license)
+Two encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
+for encoding image and text respectively.
 
 
 ## Prerequisites
 
-This demo requires Python 3.7 and `jina` installation.
+This demo requires Python 3.7, [`docker`](https://www.docker.com/get-started) and [`jina`](https://docs.jina.ai/chapters/core/setup/) installation.
 
 ## Prepare the data
 
 
 ### Use Flickr8k
 
-Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example
+Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example.
 
 To make this work, we need to get the image files from the `kaggle` [dataset](https://www.kaggle.com/adityajn105/flickr8k). To get it, once you have your Kaggle Token in your system as described [here](https://www.kaggle.com/docs/api), run:
 
 ```bash
-kaggle datasets download adityajn105/flickr8k
-unzip flickr8k.zip 
-rm flickr8k.zip
-mkdir data
-mkdir data/f8k
-mv Images data/f8k/images
-mv captions.txt data/f8k/captions.txt
+bash get_data.sh
+bash prepare_data.sh
 ```
 
-make sure that your data folder has:
+Make sure that your data folder has:
 
 ```bash
 data/f8k/images/*jpg
@@ -120,49 +106,60 @@ The model used has been trained using `Flickr30k` and therefore we recommend usi
 To do so, instead of downloading the `flickr8k` from kaggle, just take its 30k counterpart
 
 ```bash
-pip install kaggle
-kaggle datasets download hsankesara/flickr-image-dataset
-unzip flickr-image-dataset.zip
-rm flickr-image-dataset.zip
+bash get_data30k.sh
 ``` 
 
 Then we also need `captions` data, to get this:
 
 ```bash
-wget http://www.cs.toronto.edu/~faghri/vsepp/data.tar
-tar -xvf data.tar
-rm -rf data.tar
-rm -rf data/coco*
-rm -rf data/f8k*
-rm -rf data/*precomp*
-rm -rf data/f30k/images
-mv flickr-image-dataset data/f30k/images
+bash prepare_data30k.sh
 ```
 
 Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
 
 ## Run the Flows
 
+### Pull docker image(Optional)
+
+To save your time when doing indexing, you could pull the docker images to your local machine.
+
+To use CLIP model:
+
+```bash
+docker pull jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7
+docker pull jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7
+```
+
+Or use VSE model:
+
+```bash
+docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7
+docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7
+```
+
 ### Index 
 
 Index is run with the following command, where `request_size` can be chosen by the user. Index will process both images and captions
 
 ```bash
-python app.py -t index -n $num_docs -s request_size -d 'f8k'
+python app.py -t index -n $num_docs -s $request_size -d 'f8k' -m clip
 ```
 
-Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use. If you decide to index the complete datasets,
-it is recommendable to increase the number of shards and parallelization. The dataset is provided with the `-d` parameter
-with the valid options of `30k` and `8k`. If you want to index your own dataset, check `dataset.py` to see 
-how `data` is provided and adapt to your own data source.
+Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use.
+If you decide to index the complete datasets,
+it is recommendable to increase the number of shards and parallelization.
+The dataset is provided with the `-d` parameter with the valid options of `30k` and `8k`.
+If you want to index your own dataset,
+check `dataset.py` to see how `data` is provided and adapt to your own data source.
+If you want to switch to `VSE++` model, replace `-m clip` with `-m vse`
 
 Jina normalizes the images needed before entering them in the encoder.
-QueryLanguageDriver is used to redirect (filtering) documents based on modality.
+`QueryLanguageDriver` is used to redirect (filtering) documents based on modality.
 
 ### Query
 
 ```bash
-python app.py -t query-restful
+python app.py -t query -m clip
 ```
 
 You can then query the system from [jinabox](https://jina.ai/jinabox.js/) using either images or text. 
@@ -185,19 +182,19 @@ Just be aware that the image weights 11 GB. Make sure that your docker lets you 
 You can retrieve the docker image using:
 
 ```bash
-docker pull jinahub/app.example.crossmodalsearch:0.0.2-0.9.20
+docker pull jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 ```
 So you can pull from its latest tags. 
 
 To run the application with the pre-indexed documents and ready to be used from jina-box, run
 
 ```bash
-docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.2-0.9.20
+docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 ```
 
 ### Build the docker image yourself
 
-In order to buld the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
+In order to build the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
 
 And then just simply run:
 
