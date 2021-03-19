@@ -20,7 +20,7 @@ class GifPreprocessor(BaseSegmenter):
         self.every_k_frame = every_k_frame
         self.max_frame = max_frame
 
-    @single
+    @single(slice_nargs=2, flatten_output=False)
     def segment(self, buffer, id):
         result = []
         try:
