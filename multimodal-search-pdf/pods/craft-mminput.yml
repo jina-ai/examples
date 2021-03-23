@@ -1,0 +1,16 @@
+jtype: CompoundExecutor
+components:
+  - jtype: MMExtraSegmenter
+    metas:
+      name: seg
+metas:
+  name: converter
+  py_modules:
+    - PDFcrafter.py
+requests:
+  use_default: true
+  on:
+    [IndexRequest, SearchRequest]:
+      - jtype: SegmentDriver
+        with:
+          executor: seg

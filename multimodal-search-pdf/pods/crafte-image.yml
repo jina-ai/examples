@@ -1,0 +1,13 @@
+jtype: ImageNormalizer
+requests:
+  on:
+    IndexRequest:
+      with:
+        traversal_paths: ['c']
+      drivers:
+        - jtype: CraftDriver {}
+    SearchRequest:
+      with:
+        traversal_paths: [ 'c' ]
+      drivers:
+        - jtype: CraftDriver { }
