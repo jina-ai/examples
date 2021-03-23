@@ -1,93 +1,11 @@
-from jina import Segmenter, Crafter
-
-
-class SimpleCrafter(Crafter):
-    """Simple crafter for multimodal example."""
-
-    def craft(self, tags):
-        """
-        Read the data and add tags.
-
-        :param tags: tags of data
-        :return: crafted data
-        """
-        a = 1
-        return {
-            'text': tags['caption'],
-            'uri': f'data/people-img/{tags["image"]}',
-        }
-
-
-class PDFSegmenter(Segmenter):
-    """Segmenter for multimodal example."""
-
-    def segment(self, text, uri):
-        """
-        Segment data into text and uri.
-
-        :param text: text data
-        :param uri: uri data of images
-        :return: Segmented data.
-        """
-        b = 1
-        return [
-            {'text': text, 'mime_type': 'text/plain'},
-            {'uri': uri, 'mime_type': 'image/jpeg'},
-        ]
-
-
 import io
 from typing import Dict, List
 
 import numpy as np
-
 from jina.executors.segmenters import BaseSegmenter
 
 
-class ImageSegmenter(BaseSegmenter):
-    """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
-    """
-
-    def __init__(self, channel_axis: int = -1, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.channel_axis = channel_axis
-
-    def segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
-        """
-        Segements PDF files. Extracts data from them.
-
-        Checks if the input is a string of the filename,
-        or if it's the file in bytes.
-        It will then extract the data from the file, creating a list for images,
-        and text.
-
-        :param uri: File name of PDF
-        :type uri: str
-        :param buffer: PDF file in bytes
-        :type buffer: bytes
-        :returns: A list of documents with the extracted data
-        :rtype: List[Dict]
-        """
-
-        from PIL import Image
-
-        if buffer:
-            raw_img = Image.open(io.BytesIO(buffer))
-        elif uri:
-            raw_img = Image.open(uri)
-        else:
-            raise ValueError('no value found in "buffer" and "uri"')
-        raw_img = raw_img.convert('RGB')
-        img = np.array(raw_img).astype('float32')
-        if self.channel_axis != -1:
-            img = np.moveaxis(img, -1, self.channel_axis)
-        chunks = []
-        chunks.append(dict(blob=img, weight=1.0, mime_type='image/png'))
-        return chunks
-
-
-class PDFExtraSegmenter(BaseSegmenter):
+class PDFSegmenter(BaseSegmenter):
     """
     :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
     """
@@ -152,14 +70,15 @@ class PDFExtraSegmenter(BaseSegmenter):
                 page = pdf_reader.getPage(page)
                 text += page.extractText()
             if text:
-                chunks.append(
-                    dict(text=text, weight=1.0, mime_type='text/plain'))
+                text_array=text.split('\n')
+                for chunk_text in text_array:
+                    chunks.append(
+                        dict(text=chunk_text, weight=1.0, mime_type='text/plain'))
 
         return chunks
 
 
-
-class MMExtraSegmenter(BaseSegmenter):
+class MultimodalSegmenter(BaseSegmenter):
     """
     :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
     """
@@ -249,14 +168,16 @@ class MMExtraSegmenter(BaseSegmenter):
         :rtype: List[Dict]
         """
 
-
         if text:
             return self._text_segment(text)
         elif uri:
-            file_type = uri.split('.')[-1]
-            if file_type == 'pdf':
+            from jina.types.document.converters import guess_mime
+            guess_mime_type = guess_mime(uri)
+            if guess_mime_type == 'application/pdf':
                 return self._pdf_segment(uri, buffer)
-            elif file_type == 'png':
+            elif guess_mime_type == 'image/png':
                 return self._image_segment(uri, buffer)
+            else:
+                raise ValueError('Not supported type for this "uri"')
         else:
             raise ValueError('No value found in "text" or "uri"')

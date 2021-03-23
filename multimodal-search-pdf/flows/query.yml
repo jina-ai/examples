@@ -36,9 +36,6 @@ pods:
   # join
   - needs: [imageModIndexer, textModIndexer]
     name: joiner
-    uses: _merge_chunks
-  - uses: pods/ranker.yml
-    name: ranker
   - name: rank
     uses: pods/rank.yml
   - name: docIndexer

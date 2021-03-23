@@ -1,22 +1,16 @@
 jtype: CompoundExecutor
 components:
-  - jtype: SimpleCrafter
-    metas:
-      name: craft
-  - jtype: BiSegmenter
+  - jtype: PDFSegmenter
     metas:
       name: seg
 metas:
   name: converter
   py_modules:
-    - segmenter.py
+    - PDFcrafter.py
 requests:
   use_default: true
   on:
     [IndexRequest, SearchRequest]:
-      - jtype: CraftDriver
-        with:
-          executor: craft
       - jtype: SegmentDriver
         with:
           executor: seg

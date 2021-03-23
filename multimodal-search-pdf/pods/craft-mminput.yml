@@ -1,6 +1,6 @@
 jtype: CompoundExecutor
 components:
-  - jtype: MMExtraSegmenter
+  - jtype: MultimodalSegmenter
     metas:
       name: seg
 metas:

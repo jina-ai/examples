@@ -30,8 +30,9 @@ def dryrun():
         f.dry_run()
 
 
-def getPDF(resp):
+def get_pdf(resp):
     print(resp.search.docs[0].matches[0].mime_type == 'application/pdf')
+    print(len(resp.search.docs[0].matches))
 
 
 @click.command()
@@ -58,12 +59,13 @@ def main(task, num_docs, top_k):
             d = Document()
             search_text = 'First things first'
             d.text = search_text
-            f.search(input_fn=d, on_done=getPDF)
-            """
-            Another two ways to directly search. 
-            f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r',on_done=getPDF)
-            f.search(input_fn=search_generator(path='data/blog2.pdf', buffer=None), read_mode='r',on_done=getPDF)
-            """
+            # There are three ways to search.
+            print('text search:')
+            f.search(input_fn=d, on_done=get_pdf)
+            print('image search:')
+            f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r',on_done=get_pdf)
+            print('pdf search:')
+            f.search(input_fn=search_generator(path='data/blog2.pdf', buffer=None), read_mode='r',on_done=get_pdf)
 
 
 if __name__ == "__main__":

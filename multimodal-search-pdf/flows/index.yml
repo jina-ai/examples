@@ -2,7 +2,7 @@ jtype: Flow
 version: '1'
 pods:
   - name: segment
-    uses: pods/craft.yml
+    uses: pods/segment-pdf.yml
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
