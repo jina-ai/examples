@@ -31,6 +31,7 @@ def dryrun():
 
 
 def get_pdf(resp):
+    print(resp)
     print(resp.search.docs[0].matches[0].mime_type == 'application/pdf')
     print(len(resp.search.docs[0].matches))
     print(resp.search.docs[0].matches)
@@ -53,14 +54,16 @@ def main(task, num_docs, top_k):
         with f:
             #for pdffile in ['data/blog1.pdf', 'data/blog2.pdf', 'data/blog3.pdf']:
             for pdffile in ['data/1806.05662.pdf', 'data/2103.01937.pdf', 'data/2103.07969.pdf']:
+            #for pdffile in ['data/1806.05662.pdf']:
                 f.index(input_fn=search_generator(path=pdffile, buffer=None), read_mode='r')
 
     if task == 'query':
         f = Flow.load_config('flows/query-separate-segmenters.yml')
+        f.plot()
         with f:
             d = Document()
-            #search_text = 'Unsupervisedly Learned Relational Graphs'
-            search_text = 'Neural Production Systems'
+            search_text = 'Unsupervisedly Learned Relational Graphs'
+            #search_text = 'Recent advances in deep learning have largely relied on building blocks such as convolutional'
             d.text = search_text
             # There are three ways to search.
             print('text search:')

@@ -1,0 +1,12 @@
+jtype: SlidingWindowSegmenter
+with:
+  window_size: 10
+  step_size: 10
+requests:
+  use_default: true
+  on:
+    [SearchRequest, IndexRequest]:
+      with:
+        traversal_paths: ['c']
+      drivers:
+        - jtype: SegmentDriver {}

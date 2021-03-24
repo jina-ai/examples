@@ -1,10 +1,6 @@
-jtype: CompoundExecutor
-components:
-  - jtype: PDFSegmenter
-    metas:
-      name: seg
+jtype: PDFSegmenter
 metas:
-  name: converter
+  name: seg
   py_modules:
     - PDFcrafter.py
 requests:
