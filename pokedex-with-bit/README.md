@@ -17,10 +17,8 @@ To save you from dependency hell, we'll use the containerized version in these i
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [TL;DR: Just Show Me the Pokemon!](#tldr-just-show-me-the-pokemon)
-- [Download and Extract Data](#download-and-extract-data)
-- [Run outside of Docker](#run-outside-of-docker)
-- [Run in Docker](#run-in-docker)
+- [TL;DR: Just Show Me the Pokemon!](#query-from-docker)
+- [Run outside of Docker](#run-without-docker)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -124,6 +122,29 @@ Incremental indexing and entry-level deleting are yet not supported in this demo
 
 Meet other problems? Check our [troubleshooting guide](https://docs.jina.ai/chapters/troubleshooting.html) or [submit a Github issue](https://github.com/jina-ai/jina/issues/new/choose).
 
+
+## Documentation 
+
+<a href="https://docs.jina.ai/">
+<img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
+</a>
+
+The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
+
+- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/index.html)
+- [Jina Python API interface](https://docs.jina.ai/api/jina.html)
+- [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
+- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/index.html)
+- [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
+- ... [and more](https://docs.jina.ai/index.html)
+
+## Community
+
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
+- [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
 ## License
 
