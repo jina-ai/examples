@@ -65,8 +65,8 @@ def main(task, num_docs, top_k):
             # There are three ways to search.
             print('text search:')
             f.search(input_fn=d, on_done=get_pdf)
-            #print('image search:')
-            #f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r',on_done=get_pdf)
+            print('image search:')
+            f.search(input_fn=search_generator(path='data/photo-2103.07969.png', buffer=None), read_mode='r',on_done=get_pdf)
             print('pdf search:')
             f.search(input_fn=search_generator(path='data/2103.01937.pdf', buffer=None), read_mode='r',on_done=get_pdf)
 

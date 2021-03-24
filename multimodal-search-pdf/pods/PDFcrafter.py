@@ -154,7 +154,7 @@ class MultimodalSegmenter(BaseSegmenter):
             chunks.append(dict(text=t, weight=1.0, mime_type='text/plain'))
         return chunks
 
-    def segment(self, text: str, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
+    def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
 
@@ -171,14 +171,12 @@ class MultimodalSegmenter(BaseSegmenter):
         :rtype: List[Dict]
         """
 
-        if text:
+        if mime_type == 'text/plain':
             return self._text_segment(text)
         elif uri:
-            from jina.types.document.converters import guess_mime
-            guess_mime_type = guess_mime(uri)
-            if guess_mime_type == 'application/pdf':
+            if mime_type == 'application/pdf':
                 return self._pdf_segment(uri, buffer)
-            elif guess_mime_type == 'image/png':
+            elif mime_type == 'image/png':
                 return self._image_segment(uri, buffer)
             else:
                 raise ValueError('Not supported type for this "uri"')
