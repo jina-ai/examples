@@ -1,8 +1,13 @@
 jtype: Flow
 version: '1'
+with:
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
 pods:
   - name: segment
-    uses: pods/segment-pdf.yml
+    uses: pods/segmenter-separate.yml
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
@@ -28,10 +33,10 @@ pods:
     uses: pods/index-comp.yml
     env:
       indexer_name: image
-  # third pathway, in parallel
+  # join
+  - needs: [imageModIndexer, textModIndexer]
+    name: joiner
+  - name: rank
+    uses: pods/rank.yml
   - name: docIndexer
     uses: pods/index-doc.yml
-    needs: segment
-  # join all parallel works
-  - needs: [docIndexer, imageModIndexer, textModIndexer]
-    name: joiner

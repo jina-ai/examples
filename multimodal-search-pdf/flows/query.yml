@@ -26,7 +26,7 @@ pods:
       filter_mime: image/png
     needs: segment
   - name: imageCrafter
-    uses: pods/crafte-image.yml
+    uses: pods/craft-image.yml
   - name: imageEncoder
     uses: pods/encode-image.yml
   - name: imageModIndexer

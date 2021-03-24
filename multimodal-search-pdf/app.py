@@ -56,7 +56,7 @@ def main(task, num_docs, top_k):
                 f.index(input_fn=search_generator(path=pdffile, buffer=None), read_mode='r')
 
     if task == 'query':
-        f = Flow.load_config('flows/query.yml')
+        f = Flow.load_config('flows/query-separate-segmenters.yml')
         with f:
             d = Document()
             #search_text = 'Unsupervisedly Learned Relational Graphs'

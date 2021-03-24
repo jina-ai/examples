@@ -1,0 +1,28 @@
+jtype: CompoundExecutor
+components:
+  - jtype: PDFSegmenter
+    metas:
+      name: seg-pdf
+  - jtype: TextSegmenter
+    metas:
+      name: seg-text
+  - jtype: ImageSegmenter
+    metas:
+      name: seg-image
+metas:
+  name: converter
+  py_modules:
+    - PDFSegmenter-separate.py
+requests:
+  use_default: true
+  on:
+    [IndexRequest, SearchRequest]:
+      - jtype: SegmentDriver
+        with:
+          executor: seg-pdf
+      - jtype: SegmentDriver
+        with:
+          executor: seg-text
+      - jtype: SegmentDriver
+        with:
+          executor: seg-image
