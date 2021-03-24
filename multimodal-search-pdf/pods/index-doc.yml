@@ -12,7 +12,7 @@ requests:
         with:
           fields:
             - chunks
-      - jtype: URI2DataURI {}
+      #- jtype: URI2DataURI {} #URI2DataURI comment it to get local uri
       - jtype: ExcludeQL
         with:
           fields:

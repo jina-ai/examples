@@ -63,17 +63,22 @@ class PDFSegmenter(BaseSegmenter):
 
         # Extract text
         with pdf_text:
-            text = ''
+            #text = ''
             pdf_reader = PyPDF2.PdfFileReader(pdf_text)
             count = pdf_reader.numPages
             for page in range(count):
                 page = pdf_reader.getPage(page)
-                text += page.extractText()
+                text_page = page.extractText()
+                chunks.append(
+                    dict(text=text_page, weight=1.0, mime_type='text/plain'))
+            '''
             if text:
                 text_array=text.split('\n')
                 for chunk_text in text_array:
                     chunks.append(
                         dict(text=chunk_text, weight=1.0, mime_type='text/plain'))
+            '''
+
 
         return chunks
 
@@ -118,11 +123,9 @@ class MultimodalSegmenter(BaseSegmenter):
             count = pdf_reader.numPages
             for page in range(count):
                 page = pdf_reader.getPage(page)
-                text += page.extractText()
-            if text:
-                temp = text.split('\n')
-                for t in temp:
-                    chunks.append(dict(text=t, weight=1.0, mime_type='text/plain'))
+                text_page = page.extractText()
+                chunks.append(
+                    dict(text=text_page, weight=1.0, mime_type='text/plain'))
 
         return chunks
 
