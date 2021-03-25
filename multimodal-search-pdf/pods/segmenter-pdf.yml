@@ -1,0 +1,12 @@
+jtype: PDFSegmenter
+metas:
+  name: seg-pdf
+  py_modules:
+    - PDFSegmenter-separate.py
+requests:
+  use_default: true
+  on:
+    [IndexRequest, SearchRequest]:
+      - jtype: SegmentDriver
+        with:
+          executor: seg-pdf

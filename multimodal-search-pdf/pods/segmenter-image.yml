@@ -1,0 +1,12 @@
+jtype: ImageSegmenter
+metas:
+  name: seg-image
+  py_modules:
+    - PDFSegmenter-separate.py
+requests:
+  use_default: true
+  on:
+    [IndexRequest, SearchRequest]:
+      - jtype: SegmentDriver
+        with:
+          executor: seg-image

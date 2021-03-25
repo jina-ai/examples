@@ -6,13 +6,23 @@ with:
   port_expose: $JINA_PORT
   show_exc_info: true
 pods:
-  - name: segment
-    uses: pods/segmenter-separate.yml
+  - name: segmentpdf
+    uses: pods/segmenter-pdf.yml
+    needs: gateway
+  - name: segmenttext
+    uses: pods/segmenter-text.yml
+    needs: gateway
+  - name: segmentimage
+    uses: pods/segmenter-image.yml
+    needs: gateway
+  - needs: [segmentpdf,segmentimage,segmenttext]
+    name: joiner1
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
     env:
       filter_mime: text/plain
+    needs: joiner1
   #- name: textSegmenter
   #  uses: pods/segment-text-small.yml
   - name: textEncoder
@@ -28,7 +38,7 @@ pods:
     uses: pods/filter.yml
     env:
       filter_mime: image/png
-    needs: segment
+    needs: joiner1
   - name: imageCrafter
     uses: pods/craft-image.yml
   - name: imageEncoder

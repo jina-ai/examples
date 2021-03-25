@@ -31,7 +31,7 @@ def dryrun():
 
 
 def get_pdf(resp):
-    print(resp)
+    #print(resp)
     print(resp.search.docs[0].matches[0].mime_type == 'application/pdf')
     print(len(resp.search.docs[0].matches))
     print(resp.search.docs[0].matches)

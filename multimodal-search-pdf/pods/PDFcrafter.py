@@ -33,10 +33,12 @@ class PDFSegmenter(BaseSegmenter):
 
         import fitz
         import PyPDF2
+        import pdfplumber
 
         if uri:
             pdf_img = fitz.open(uri)
-            pdf_text = open(uri, 'rb')
+            # pdf_text = open(uri, 'rb')
+            pdf_text = pdfplumber.open(uri)
         elif buffer:
             pdf_img = fitz.open(stream=buffer, filetype='pdf')
             pdf_text = io.BytesIO(buffer)
