@@ -66,12 +66,14 @@ def main(task, num_docs, top_k):
                 )
 
     if task == 'query':
-        f = Flow.load_config('flows/query-only-text.yml')
+        #f = Flow.load_config('flows/query-only-text.yml')
+        f = Flow.load_config('flows/query-separate-segmenters.yml')
         f.plot()
         with f:
             d = Document()
-            # search_text = 'Developing a Jina app often means writing YAML configs.'
-            search_text = 'First things first, I hope you all saw we'
+            #search_text = 'It makes sense to first define what we mean by multimodality before going into morefancy terms.'
+            #search_text = 'We all know about CRUD[1]. Every app out there does it.'
+            search_text = 'Developing a Jina app often means writing YAML configs.'
             # search_text = 'Unsupervisedly Learned Relational Graphs'
             # search_text = 'Recent advances in deep learning have largely relied on building blocks such as convolutional'
             d.text = search_text
@@ -79,9 +81,9 @@ def main(task, num_docs, top_k):
             print('text search:')
             f.search(input_fn=d, on_done=get_pdf)
             print('image search:')
-            # f.search(input_fn=search_generator(path='data/photo-2103.07969.png', buffer=None), read_mode='r',on_done=get_pdf)
+            f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r',on_done=get_pdf)
             print('pdf search:')
-            # f.search(input_fn=search_generator(path='data/2103.01937.pdf', buffer=None), read_mode='r',on_done=get_pdf)
+            f.search(input_fn=search_generator(path='data/blog2.pdf', buffer=None), read_mode='r',on_done=get_pdf)
 
 
 if __name__ == "__main__":

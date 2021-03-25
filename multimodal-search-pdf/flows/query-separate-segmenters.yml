@@ -6,23 +6,15 @@ with:
   port_expose: $JINA_PORT
   show_exc_info: true
 pods:
-  - name: segmentpdf
-    uses: pods/segmenter-pdf.yml
+  - name: segmentmm
+    uses: pods/segmenter-separate.yml
     needs: gateway
-  - name: segmenttext
-    uses: pods/segmenter-text.yml
-    needs: gateway
-  - name: segmentimage
-    uses: pods/segmenter-image.yml
-    needs: gateway
-  - needs: [segmentpdf,segmentimage,segmenttext]
-    name: joiner1
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
     env:
       filter_mime: text/plain
-    needs: joiner1
+    needs: segmentmm
   - name: textSegmenter
     uses: pods/segment-text-customized.yml
   - name: textEncoder
@@ -31,13 +23,17 @@ pods:
     uses: pods/index-comp-text-cc.yml
     env:
       indexer_name: textCC  #- name: textranker
+  - name: rankCCToC
+    uses: pods/rankc.yml
+  - name: CMetadataIndexer
+    uses: pods/cMetaIndex.yml
    # uses: pods/textranker.yml
   # second pathway, in parallel
   - name: filter_image
     uses: pods/filter.yml
     env:
       filter_mime: image/png
-    needs: joiner1
+    needs: segmentmm
   - name: imageCrafter
     uses: pods/craft-image.yml
   - name: imageEncoder
@@ -47,12 +43,8 @@ pods:
     env:
       indexer_name: image
   # join
-  - needs: [imageModIndexer, textModIndexerCC]
+  - needs: [imageModIndexer, CMetadataIndexer]
     name: joiner
-  - name: rankCCToC
-    uses: pods/rankc.yml
-  - name: CMetadataIndexer
-    uses: pods/cMetaIndex.yml
   - name: rankCToR
     uses: pods/rank.yml
   - name: docIndexer

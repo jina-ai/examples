@@ -12,9 +12,6 @@ requests:
         with:
           fields:
             - chunks
-            - buffer
-            - embedding
-            - blob
       - jtype: KVSearchDriver
         with:
           executor: kv_indexer
