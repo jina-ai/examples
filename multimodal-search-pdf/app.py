@@ -33,10 +33,12 @@ def dryrun():
 def get_pdf(resp):
     #print(resp)
     #print(len(resp.search.docs[0].chunks[0].chunks[0].matches))
-    #print(len(resp.search.docs[0].chunks[0].matches))
+    #print(resp.search.docs[0].chunks[0].chunks[0].matches)
 
-    # import pdb
-    # pdb.set_trace()
+    #print(len(resp.search.docs[0].chunks[0].matches))
+    #print(resp.search.docs[0].chunks[0].matches)
+    #import pdb
+    #pdb.set_trace()
     print(resp.search.docs[0].matches[0].mime_type == 'application/pdf')
     print(len(resp.search.docs[0].matches))
     print(resp.search.docs[0].matches)
@@ -71,9 +73,9 @@ def main(task, num_docs, top_k):
         f.plot()
         with f:
             d = Document()
-            #search_text = 'It makes sense to first define what we mean by multimodality before going into morefancy terms.'
-            #search_text = 'We all know about CRUD[1]. Every app out there does it.'
-            search_text = 'Developing a Jina app often means writing YAML configs.'
+            search_text = 'It makes sense to first define what we mean by multimodality before going into morefancy terms.'#blog1
+            #search_text = 'We all know about CRUD[1]. Every app out there does it.'#blog2
+            #search_text = 'Developing a Jina app often means writing YAML configs.'#blog3
             # search_text = 'Unsupervisedly Learned Relational Graphs'
             # search_text = 'Recent advances in deep learning have largely relied on building blocks such as convolutional'
             d.text = search_text

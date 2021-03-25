@@ -68,12 +68,16 @@ class PDFSegmenter(BaseSegmenter):
             with pdf_text:
                 # text = ''
                 #pdf_reader = PyPDF2.PdfFileReader(pdf_text)
-                count = len(pdf_text.pages)
+                #count = len(pdf_text.pages)
+                page = pdf_text.pages[0]
+                text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
+                chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
+                '''
                 for i in range(count):
                     page = pdf_text.pages[i]
                     text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
                     chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
-                    '''
+
                     if text_page:
                         text_array = text_page.split('\n')
                         length=len(text_array)

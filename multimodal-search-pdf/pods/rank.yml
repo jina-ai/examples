@@ -9,3 +9,8 @@ requests:
         with:
           traversal_paths: ['r']
       #- jtype: LogInfoDriver {}
+      - jtype: ExcludeQL
+        with:
+          fields:
+            - buffer
+          traversal_paths: [ 'cm', 'm' ]
