@@ -12,10 +12,14 @@ pods:
     uses: pods/segment-text-customized.yml
   - name: textEncoder
     uses: pods/encode-text.yml
-  - name: textModIndexer
-    uses: pods/index-comp-text.yml
+  - name: textModIndexerC
+    uses: pods/index-comp-text-c.yml
     env:
-      indexer_name: text
+      indexer_name: textC
+  - name: textModIndexerCC
+    uses: pods/index-comp-text-cc.yml
+    env:
+      indexer_name: textCC
   # second pathway, in parallel
   - name: filter_image
     uses: pods/filter.yml
@@ -35,5 +39,5 @@ pods:
     uses: pods/index-doc.yml
     needs: segment
   # join all parallel works
-  - needs: [docIndexer, imageModIndexer, textModIndexer]
+  - needs: [docIndexer, imageModIndexer, textModIndexerCC]
     name: joiner

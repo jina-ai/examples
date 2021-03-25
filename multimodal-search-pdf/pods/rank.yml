@@ -7,7 +7,5 @@ requests:
     SearchRequest:
       - jtype: Chunk2DocRankDriver
         with:
-          traversal_paths: ['r']
+          traversal_paths: ['c', 'r']
       #- jtype: LogInfoDriver {}
-
-

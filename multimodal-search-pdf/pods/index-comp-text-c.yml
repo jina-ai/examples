@@ -22,20 +22,20 @@ requests:
         - jtype: VectorSearchDriver
           with:
             executor: BaseVectorIndexer
-            traversal_paths: ['c','cc' ]
+            traversal_paths: ['c' ]
         - jtype: KVSearchDriver
           with:
             executor: BaseKVIndexer
-            traversal_paths: [ 'cm','ccm' ]
+            traversal_paths: ['cm' ]
         - jtype: ExcludeQL
           with:
             fields:
               - embedding
               - blob
-            traversal_paths: [ 'cm','ccm', 'cc' ]
+            traversal_paths: ['c' ]
     [ IndexRequest, UpdateRequest ]:
       with:
-        traversal_paths: [ 'c','cc' ]
+        traversal_paths: ['c' ]
       drivers:
         - jtype: VectorIndexDriver
           with:
