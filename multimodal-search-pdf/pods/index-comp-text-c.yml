@@ -21,11 +21,11 @@ requests:
       drivers:
         - jtype: VectorSearchDriver
           with:
-            executor: BaseVectorIndexer
+            executor: vecidx
             traversal_paths: ['c' ]
         - jtype: KVSearchDriver
           with:
-            executor: BaseKVIndexer
+            executor: docidx
             traversal_paths: ['cm' ]
         - jtype: ExcludeQL
           with:
@@ -39,7 +39,7 @@ requests:
       drivers:
         - jtype: VectorIndexDriver
           with:
-            executor: BaseVectorIndexer
+            executor: vecidx
         - jtype: ExcludeQL
           with:
             fields:
@@ -47,4 +47,4 @@ requests:
               - blob
         - jtype: KVIndexDriver
           with:
-            executor: BaseKVIndexer
+            executor: docidx

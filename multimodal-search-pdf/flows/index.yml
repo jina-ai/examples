@@ -12,10 +12,12 @@ pods:
     uses: pods/segment-text-customized.yml
   - name: textEncoder
     uses: pods/encode-text.yml
-  - name: textModIndexerC
-    uses: pods/index-comp-text-c.yml
-    env:
-      indexer_name: textC
+  #- name: textModIndexerC
+  #  uses: pods/index-comp-text-c.yml
+  #  env:
+  #    indexer_name: textC
+  - name: CMetadataIndexer
+    uses: pods/cMetaIndex.yml
   - name: textModIndexerCC
     uses: pods/index-comp-text-cc.yml
     env:

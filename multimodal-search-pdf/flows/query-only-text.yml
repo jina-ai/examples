@@ -1,0 +1,34 @@
+jtype: Flow
+version: '1'
+with:
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
+pods:
+  - name: segmenttext
+    uses: pods/segmenter-text.yml
+    needs: gateway
+  # first pathway
+
+  - name: textSegmenter
+    uses: pods/segment-text-customized.yml
+  - name: textEncoder
+    uses: pods/encode-text.yml
+  - name: textModIndexerCC
+    uses: pods/index-comp-text-cc.yml
+    env:
+      indexer_name: textCC
+      #- name: textranker
+   # uses: pods/textranker.yml
+  # second pathway, in parallel
+
+  # join
+  - name: rankCCToC
+    uses: pods/rankc.yml
+  - name: CMetadataIndexer
+    uses: pods/cMetaIndex.yml
+  - name: rankCToR
+    uses: pods/rank.yml
+  - name: docIndexer
+    uses: pods/index-doc.yml

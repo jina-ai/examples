@@ -1,0 +1,27 @@
+jtype: BinaryPbIndexer
+with:
+  index_filename: 'chunkmeta.gz'
+metas:
+  name: ChunkmetaKV
+  workspace: $JINA_WORKSPACE/indexed
+requests:
+  use_default: true
+  on:
+    SearchRequest:
+      drivers:
+        - jtype: KVSearchDriver
+          with:
+            executor: ChunkmetaKV
+            traversal_paths: ['cm' ]
+    [ IndexRequest, UpdateRequest ]:
+      with:
+        traversal_paths: ['c' ]
+      drivers:
+        - jtype: ExcludeQL
+          with:
+            fields:
+              - embedding
+              - blob
+        - jtype: KVIndexDriver
+          with:
+            executor: ChunkmetaKV

@@ -49,7 +49,11 @@ pods:
   # join
   - needs: [imageModIndexer, textModIndexerCC]
     name: joiner
-  - name: rank
+  - name: rankCCToC
+    uses: pods/rankc.yml
+  - name: CMetadataIndexer
+    uses: pods/cMetaIndex.yml
+  - name: rankCToR
     uses: pods/rank.yml
   - name: docIndexer
     uses: pods/index-doc.yml

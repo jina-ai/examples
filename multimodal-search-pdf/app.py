@@ -31,9 +31,9 @@ def dryrun():
 
 
 def get_pdf(resp):
-    print(resp)
-    print(len(resp.search.docs[0].chunks[0].chunks[0].matches))
-    print(len(resp.search.docs[0].chunks[0].matches))
+    #print(resp)
+    #print(len(resp.search.docs[0].chunks[0].chunks[0].matches))
+    #print(len(resp.search.docs[0].chunks[0].matches))
 
     # import pdb
     # pdb.set_trace()
@@ -66,7 +66,7 @@ def main(task, num_docs, top_k):
                 )
 
     if task == 'query':
-        f = Flow.load_config('flows/query-separate-segmenters.yml')
+        f = Flow.load_config('flows/query-only-text.yml')
         f.plot()
         with f:
             d = Document()

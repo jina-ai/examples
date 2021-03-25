@@ -7,6 +7,17 @@ metas:
 requests:
   use_default: true
   on:
+    SearchRequest:
+      - jtype: ExcludeQL
+        with:
+          fields:
+            - chunks
+            - buffer
+            - embedding
+            - blob
+      - jtype: KVSearchDriver
+        with:
+          executor: kv_indexer
     IndexRequest:
       - jtype: ExcludeQL
         with:
@@ -17,4 +28,6 @@ requests:
         with:
           fields:
             - buffer
-      - jtype: KVIndexDriver {}
+      - jtype: KVIndexDriver
+        with:
+          executor: kv_indexer

@@ -30,7 +30,7 @@ class PDFSegmenter(BaseSegmenter):
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
-
+        chunks=[]
         if mime_type == 'application/pdf':
             import fitz
             import PyPDF2
@@ -79,7 +79,7 @@ class PDFSegmenter(BaseSegmenter):
                         length=len(text_array)
                         chunks.append(dict(text=text_array[length//2], weight=1.0, mime_type='text/plain'))
                     '''
-            return chunks
+        return chunks
 
 
 class MultimodalSegmenter(BaseSegmenter):
