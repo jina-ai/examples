@@ -4,8 +4,10 @@ with:
   inverse_score: true
 requests:
   on:
-    ControlRequest:
-      - !ControlReqDriver {}
     SearchRequest:
-      - !Chunk2DocRankDriver {}
+      - jtype: Chunk2DocRankDriver
+        with:
+          traversal_paths: ['r']
+      #- jtype: LogInfoDriver {}
+
 

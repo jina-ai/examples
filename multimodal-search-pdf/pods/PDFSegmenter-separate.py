@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 from jina.executors.segmenters import BaseSegmenter
-
+from jina.executors.decorators import single, batching
 
 class PDFSegmenter(BaseSegmenter):
     """
@@ -13,6 +13,7 @@ class PDFSegmenter(BaseSegmenter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @single(slice_nargs=3, flatten_output=False)
     def segment(self, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
@@ -71,13 +72,13 @@ class PDFSegmenter(BaseSegmenter):
                 for i in range(count):
                     page = pdf_text.pages[i]
                     text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
-                    # chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
-
+                    chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
+                    '''
                     if text_page:
                         text_array = text_page.split('\n')
                         length=len(text_array)
                         chunks.append(dict(text=text_array[length//2], weight=1.0, mime_type='text/plain'))
-
+                    '''
             return chunks
 
 
@@ -89,6 +90,7 @@ class MultimodalSegmenter(BaseSegmenter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @single
     def _pdf_segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
         import fitz
         import PyPDF2
@@ -127,6 +129,7 @@ class MultimodalSegmenter(BaseSegmenter):
 
         return chunks
 
+    @single
     def _image_segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
         from PIL import Image
         self.channel_axis: int = -1
@@ -145,6 +148,7 @@ class MultimodalSegmenter(BaseSegmenter):
         chunks.append(dict(blob=img, weight=1.0, mime_type='image/png'))
         return chunks
 
+    @single
     def _text_segment(self, text: str):
         chunks = []
         temp = text.split('\n')
@@ -152,6 +156,7 @@ class MultimodalSegmenter(BaseSegmenter):
             chunks.append(dict(text=t, weight=1.0, mime_type='text/plain'))
         return chunks
 
+    @single
     def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
@@ -190,6 +195,7 @@ class TextSegmenter(BaseSegmenter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
     def _text_segment(self, text: str):
         chunks = []
         temp = text.split('\n')
@@ -197,6 +203,49 @@ class TextSegmenter(BaseSegmenter):
             chunks.append(dict(text=t, weight=1.0, mime_type='text/plain'))
         return chunks
 
+    @single(slice_nargs=4, flatten_output=False)
+    def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
+        """
+        Segements PDF files. Extracts data from them.
+
+        Checks if the input is a string of the filename,
+        or if it's the file in bytes.
+        It will then extract the data from the file, creating a list for images,
+        and text.
+
+        :param uri: File name of PDF
+        :type uri: str
+        :param buffer: PDF file in bytes
+        :type buffer: bytes
+        :returns: A list of documents with the extracted data
+        :rtype: List[Dict]
+        """
+
+        if mime_type == 'text/plain':
+            #chunks=[]
+            return [dict(text=text, weight=1.0, mime_type='text/plain')]
+            #return self._text_segment(text)
+
+
+class TextSegmenterCustomized(BaseSegmenter):
+    """
+    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+    def _text_segment(self, text: str):
+        chunks = []
+        print(text)
+        temp = text.split('\n')
+        for t in temp:
+            chunks.append(dict(text=t, weight=1.0, mime_type='text/plain'))
+        print(chunks)
+        return chunks
+
+    @single(slice_nargs=4, flatten_output=False)
     def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
@@ -226,25 +275,8 @@ class ImageSegmenter(BaseSegmenter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def _image_segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
-        from PIL import Image
-        self.channel_axis: int = -1
-
-        if buffer:
-            raw_img = Image.open(io.BytesIO(buffer))
-        elif uri:
-            raw_img = Image.open(uri)
-        else:
-            raise ValueError('no value found in "buffer" and "uri"')
-        raw_img = raw_img.convert('RGB')
-        img = np.array(raw_img).astype('float32')
-        if self.channel_axis != -1:
-            img = np.moveaxis(img, -1, self.channel_axis)
-
-        chunks = [dict(blob=img, weight=1.0, mime_type='image/png')]
-        return chunks
-
-    def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
+    @single(slice_nargs=3, flatten_output=False)
+    def segment(self,  uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
 
@@ -260,7 +292,23 @@ class ImageSegmenter(BaseSegmenter):
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
-
+        chunks=[]
         if uri:
             if mime_type == 'image/png':
-                return self._image_segment(uri, buffer)
+                from PIL import Image
+                self.channel_axis: int = -1
+
+                if buffer:
+                    raw_img = Image.open(io.BytesIO(buffer))
+                elif uri:
+                    raw_img = Image.open(uri)
+                else:
+                    raise ValueError('no value found in "buffer" and "uri"')
+                raw_img = raw_img.convert('RGB')
+                img = np.array(raw_img).astype('float32')
+                if self.channel_axis != -1:
+                    img = np.moveaxis(img, -1, self.channel_axis)
+
+                chunks = [dict(blob=img, weight=1.0, mime_type='image/png')]
+                return chunks
+        return chunks

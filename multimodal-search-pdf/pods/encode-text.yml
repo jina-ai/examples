@@ -4,6 +4,6 @@ requests:
   on:
     [SearchRequest, IndexRequest]:
       with:
-        traversal_paths: ['c']
+        traversal_paths: ['c','cc']
       drivers:
         - jtype: EncodeDriver {}

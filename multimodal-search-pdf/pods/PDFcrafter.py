@@ -3,7 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 from jina.executors.segmenters import BaseSegmenter
-
+from jina.executors.decorators import single
 
 class PDFSegmenter(BaseSegmenter):
     """
@@ -13,6 +13,7 @@ class PDFSegmenter(BaseSegmenter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @single(slice_nargs=2, flatten_output=False)
     def segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
         """
         Segements PDF files. Extracts data from them.
@@ -71,14 +72,14 @@ class PDFSegmenter(BaseSegmenter):
             for i in range(count):
                 page = pdf_text.pages[i]
                 text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
-                # chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
-
+                chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
+                '''
                 if text_page:
                     text_array = text_page.split('\n')
                     for chunk_text in text_array:
                         chunks.append(
                             dict(text=chunk_text, weight=1.0, mime_type='text/plain'))
-
+                '''
         return chunks
 
 

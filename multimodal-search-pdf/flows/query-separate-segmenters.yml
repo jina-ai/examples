@@ -23,16 +23,16 @@ pods:
     env:
       filter_mime: text/plain
     needs: joiner1
-  #- name: textSegmenter
-  #  uses: pods/segment-text-small.yml
+  - name: textSegmenter
+    uses: pods/segment-text-customized.yml
   - name: textEncoder
     uses: pods/encode-text.yml
   - name: textModIndexer
-    uses: pods/index-comp.yml
+    uses: pods/index-comp-text.yml
     env:
       indexer_name: text
   #- name: textranker
-  #  uses: pods/textranker.yml
+   # uses: pods/textranker.yml
   # second pathway, in parallel
   - name: filter_image
     uses: pods/filter.yml
