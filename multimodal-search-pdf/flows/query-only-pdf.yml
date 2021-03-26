@@ -1,10 +1,10 @@
-jtype: Flow
+jtype: Flow  # this is a flow only for querying text data
 version: '1'
 with:
-  read_only: true  # better add this in the query time
-  rest_api: true  #expose the rest_api so we can make rest request to flow
-  port_expose: $JINA_PORT #port of rest_api
-  show_exc_info: true #used to print more logs for debugging
+  read_only: true
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
 pods:
   - name: segmentpdf
     uses: pods/segmenter-pdf.yml
@@ -24,8 +24,8 @@ pods:
       indexer_name: textCC
   - name: rankCCToC
     uses: pods/rankc.yml
-  - name: CMetadataIndexer
-    uses: pods/cMetaIndex.yml
+  - name: chunkmetaIndexer
+    uses: pods/index-chunkmeta.yml
   # second pathway, in parallel
   - name: filter_image
     uses: pods/filter.yml
@@ -41,7 +41,7 @@ pods:
     env:
       indexer_name: image
   # join
-  - needs: [imageModIndexer, CMetadataIndexer]
+  - needs: [imageModIndexer, chunkmetaIndexer]
     name: joiner
   - name: rankCToR
     uses: pods/rank.yml

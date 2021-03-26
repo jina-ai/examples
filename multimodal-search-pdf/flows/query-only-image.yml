@@ -1,7 +1,7 @@
-jtype: Flow
+jtype: Flow  # this is a flow only for querying text data
 version: '1'
 with:
-  read_only: true  # better add this in the query time
+  read_only: true
   rest_api: true
   port_expose: $JINA_PORT
   show_exc_info: true
