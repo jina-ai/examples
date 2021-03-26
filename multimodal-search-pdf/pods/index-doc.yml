@@ -1,4 +1,4 @@
-jtype: BinaryPbIndexer
+jtype: BinaryPbIndexer # KV indexer to index docs key:doc.id, value:docs
 with:
   index_filename: 'doc.gz'
 metas:
@@ -20,7 +20,7 @@ requests:
         with:
           fields:
             - chunks
-      #- jtype: URI2DataURI {} #URI2DataURI comment it to get local uri
+      #- jtype: URI2DataURI {} #URI2DataURI can convert local uri to data uri
       - jtype: ExcludeQL
         with:
           fields:

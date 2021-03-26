@@ -28,6 +28,7 @@ class PDFSegmenter(BaseSegmenter):
         :type uri: str
         :param buffer: PDF file in bytes
         :type buffer: bytes
+        :param mime_type: the type of data
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
@@ -39,7 +40,6 @@ class PDFSegmenter(BaseSegmenter):
 
             if uri:
                 pdf_img = fitz.open(uri)
-                #pdf_text = open(uri, 'rb')
                 pdf_text = pdfplumber.open(uri)
             elif buffer:
                 pdf_img = fitz.open(stream=buffer, filetype='pdf')
@@ -67,30 +67,17 @@ class PDFSegmenter(BaseSegmenter):
 
             # Extract text
             with pdf_text:
-                # text = ''
-                # pdf_reader = PyPDF2.PdfFileReader(pdf_text)
                 count = len(pdf_text.pages)
                 for i in range(count):
                     page = pdf_text.pages[i]
                     text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
                     chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
-                '''
-                for i in range(count):
-                    page = pdf_text.pages[i]
-                    text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
-                    chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
-
-                    if text_page:
-                        text_array = text_page.split('\n')
-                        length=len(text_array)
-                        chunks.append(dict(text=text_array[length//2], weight=1.0, mime_type='text/plain'))
-                    '''
         return chunks
 
 
 class TextSegmenter(BaseSegmenter):
     """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    :class:`TextSegmenter` simply store text into chunks.
     """
 
     def __init__(self, *args, **kwargs):
@@ -99,17 +86,14 @@ class TextSegmenter(BaseSegmenter):
     @single(slice_nargs=4)
     def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
-        Segements PDF files. Extracts data from them.
+        Segements text.
 
-        Checks if the input is a string of the filename,
-        or if it's the file in bytes.
-        It will then extract the data from the file, creating a list for images,
-        and text.
-
+        :param text: the text data
         :param uri: File name of PDF
         :type uri: str
         :param buffer: PDF file in bytes
         :type buffer: bytes
+        :param mime_type: the type of data
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
@@ -122,27 +106,23 @@ class TextSegmenter(BaseSegmenter):
 
 class TextSegmenterCustomized(BaseSegmenter):
     """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    :class:`TextSegmenterCustomized` segments text into lines
     """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
     @single(slice_nargs=4)
     def segment(self, text: str, uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
-        Segements PDF files. Extracts data from them.
+        Segements text.
 
-        Checks if the input is a string of the filename,
-        or if it's the file in bytes.
-        It will then extract the data from the file, creating a list for images,
-        and text.
-
+        :param text: the text data
         :param uri: File name of PDF
         :type uri: str
         :param buffer: PDF file in bytes
         :type buffer: bytes
+        :param mime_type: the type of data
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
@@ -156,7 +136,7 @@ class TextSegmenterCustomized(BaseSegmenter):
 
 class ImageSegmenter(BaseSegmenter):
     """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    :class:`ImageSegmenter` reads image and stores into chunks.
     """
 
     def __init__(self, *args, **kwargs):
@@ -165,17 +145,13 @@ class ImageSegmenter(BaseSegmenter):
     @single(slice_nargs=3)
     def segment(self,  uri: str, buffer: bytes, mime_type: str, *args, **kwargs) -> List[Dict]:
         """
-        Segements PDF files. Extracts data from them.
+        Segements image.
 
-        Checks if the input is a string of the filename,
-        or if it's the file in bytes.
-        It will then extract the data from the file, creating a list for images,
-        and text.
-
-        :param uri: File name of PDF
+        :param uri: File name of image
         :type uri: str
-        :param buffer: PDF file in bytes
+        :param buffer: image file in bytes
         :type buffer: bytes
+        :param mime_type: the type of data
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
@@ -203,7 +179,7 @@ class ImageSegmenter(BaseSegmenter):
 
 class MultimodalSegmenter(BaseSegmenter):
     """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    :class:`MultimodalSegmenter` Extracts data (text and images) from PDF files.
     """
 
     def __init__(self, *args, **kwargs):

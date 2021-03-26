@@ -1,7 +1,7 @@
-jtype: PDFSegmenter
+jtype: PDFSegmenter # customized segmenter for PDF, the name is the class name in PDFSegmenter-separate.py
 metas:
   name: seg
-  py_modules:
+  py_modules:      # defines the .py file
     - PDFSegmenter-separate.py
 requests:
   use_default: true

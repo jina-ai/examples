@@ -1,4 +1,4 @@
-jtype: BaseExecutor
+jtype: BaseExecutor # this is a BaseExecutor equipped with FilterQL driver to filter certain data
 requests:
   use_default: true
   on:

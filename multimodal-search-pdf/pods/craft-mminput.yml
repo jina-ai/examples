@@ -1,10 +1,6 @@
-jtype: CompoundExecutor
-components:
-  - jtype: MultimodalSegmenter
-    metas:
-      name: seg
+jtype: MultimodalSegmenter # this is a segmenter which combine 3 into 1, not used in current flow
 metas:
-  name: converter
+  name: mmsegmenter
   py_modules:
     - PDFSegmenter-separate.py
 requests:

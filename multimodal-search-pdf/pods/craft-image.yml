@@ -1,12 +1,12 @@
-jtype: ImageNormalizer
+jtype: ImageNormalizer # this is the pod to craft (normalize and resize) the image
 requests:
   on:
-    IndexRequest:
+    IndexRequest:     # this defines what we want to do in index flow
       with:
-        traversal_paths: ['c']
+        traversal_paths: ['c']    # we apply this on chunks level
       drivers:
-        - jtype: CraftDriver {}
-    SearchRequest:
+        - jtype: CraftDriver {}   # we use CraftDriver for craft executors
+    SearchRequest:    # this defines what we want to do in query flow
       with:
         traversal_paths: [ 'c' ]
       drivers:

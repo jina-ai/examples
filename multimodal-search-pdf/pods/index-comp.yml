@@ -1,12 +1,12 @@
-jtype: CompoundIndexer
+jtype: CompoundIndexer   # this is a CompoundIndexer for image
 components:
-  - jtype: NumpyIndexer
+  - jtype: NumpyIndexer  # this will store the vector embeddings on disk
     with:
       index_filename: vec.gz
-      metric: cosine
+      metric: cosine     # this is used to calculate the similarity between vectors
     metas:
       name: vecidx  # a customized name
-  - jtype: BinaryPbIndexer
+  - jtype: BinaryPbIndexer # a KV indexer to store the chunks data
     with:
       index_filename: chunk.gz
     metas:
@@ -19,14 +19,14 @@ requests:
   on:
     SearchRequest:
       drivers:
-        - jtype: VectorSearchDriver
+        - jtype: VectorSearchDriver   # use VectorSearchDriver for NumpyIndexer
           with:
             executor: vecidx
-            traversal_paths: [ 'c' ]
-        - jtype: KVSearchDriver
+            traversal_paths: [ 'c' ]  # during search we will get chunks sorted by similarity
+        - jtype: KVSearchDriver       # use KVSearchDriver for BinaryPbIndexer
           with:
             executor: docidx
-            traversal_paths: [ 'cm' ]
+            traversal_paths: [ 'cm' ] # during search we will add matches data for chunks
         - jtype: ExcludeQL
           with:
             fields:

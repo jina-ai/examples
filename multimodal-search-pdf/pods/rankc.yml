@@ -1,7 +1,7 @@
-!SimpleAggregateRanker
+!SimpleAggregateRanker # this is the ranker for text path, it's used to Aggregate CC to C
 with:
   aggregate_function: 'min'
-  inverse_score: false
+  inverse_score: false # note that we need to set this to false, if not we won't get correct results. The ranker should only set this to true if it is the final ranker
 requests:
   on:
     SearchRequest:
@@ -12,5 +12,5 @@ requests:
             - embedding
       - jtype: Chunk2DocRankDriver
         with:
-          traversal_paths: ['c']
+          traversal_paths: ['c'] #  get results for the chunks level with the results from the chunks of chunks
       #- jtype: LogInfoDriver {}  #this can be used to format the output

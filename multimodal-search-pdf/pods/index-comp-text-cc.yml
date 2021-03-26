@@ -1,4 +1,4 @@
-jtype: CompoundIndexer #this is a indexer for chunks of chunks level
+jtype: CompoundIndexer #this is a indexer for chunks of chunks level, so traversal_path will be one level lower
 components:
   - jtype: NumpyIndexer
     with:
