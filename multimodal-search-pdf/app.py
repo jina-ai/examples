@@ -48,7 +48,7 @@ def get_pdf(resp):
     "--task",
     "-t",
     type=click.Choice(
-        ["index", "query", "query_restful", "dryrun"], case_sensitive=False
+        ["index", "query", "query_text", "query_image", "query_pdf", "query_restful", "dryrun"], case_sensitive=False
     ),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
@@ -64,11 +64,7 @@ def main(task, num_docs, top_k):
                 f.index(
                     input_fn=search_generator(path=pdffile, buffer=None), read_mode='r'
                 )
-
     if task == 'query':
-        #f = Flow.load_config('flows/query-only-text.yml')
-        #f = Flow.load_config('flows/query-only-image.yml')
-        #f = Flow.load_config('flows/query-only-pdf.yml')
         f = Flow.load_config('flows/query-multimodal.yml')
         f.plot()
         with f:
@@ -76,14 +72,33 @@ def main(task, num_docs, top_k):
             search_text = 'It makes sense to first define what we mean by multimodality before going into morefancy terms.'  # blog1
             # search_text = 'We all know about CRUD[1]. Every app out there does it.'#blog2
             # search_text = 'Developing a Jina app often means writing YAML configs.'#blog3
-            # search_text = 'Unsupervisedly Learned Relational Graphs'
-            # search_text = 'Recent advances in deep learning have largely relied on building blocks such as convolutional'
             d.text = search_text
             # There are three ways to search.
             print('text search:')
             f.search(input_fn=d, on_done=get_pdf)
             print('image search:')
             f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r', on_done=get_pdf)
+            print('pdf search:')
+            f.search(input_fn=search_generator(path='data/blog2-pages-1.pdf', buffer=None), read_mode='r',on_done=get_pdf)
+    if task == 'query_text':
+        f = Flow.load_config('flows/query-only-text.yml')
+        with f:
+            d = Document()
+            search_text = 'It makes sense to first define what we mean by multimodality before going into morefancy terms.'  # blog1
+            # search_text = 'We all know about CRUD[1]. Every app out there does it.'#blog2
+            # search_text = 'Developing a Jina app often means writing YAML configs.'#blog3
+            d.text = search_text
+            # we only search text
+            print('text search:')
+            f.search(input_fn=d, on_done=get_pdf)
+    if task == 'query_image':
+        f = Flow.load_config('flows/query-only-image.yml')
+        with f:
+            print('image search:')
+            f.search(input_fn=search_generator(path='data/photo-1.png', buffer=None), read_mode='r', on_done=get_pdf)
+    if task == 'query_pdf':
+        f = Flow.load_config('flows/query-only-pdf.yml')
+        with f:
             print('pdf search:')
             f.search(input_fn=search_generator(path='data/blog2-pages-1.pdf', buffer=None), read_mode='r',on_done=get_pdf)
     if task == "dryrun":
