@@ -1,12 +1,12 @@
-jtype: Flow
+jtype: Flow                                     # this YAML file define the query flow,
 version: '1'
 with:
-  read_only: true  # better add this in the query time
-  rest_api: true  #expose the rest_api so we can make rest request to flow
-  port_expose: $JINA_PORT #port of rest_api
-  show_exc_info: true #used to print more logs for debugging
+  read_only: true                               # better add this in the query time
+  rest_api: true                                # expose the rest_api so we can make rest request to flow
+  port_expose: $JINA_PORT                       # port of rest_api
+  show_exc_info: true                           # used to print more logs for debugging
 pods:
-  - name: multimodal_segment
+  - name: multimodal_segment                    # this pod can receive image, text and pdf as input and segment them into chunks
     uses: pods/segmenter-multimodal-comp.yml
   # first pathway
   - name: filter_text
@@ -18,13 +18,13 @@ pods:
     uses: pods/segment-text-customized.yml
   - name: textEncoder
     uses: pods/encode-text.yml
-  - name: textModIndexerCC
+  - name: textModIndexerCC                       # we will find the chunks of chunks's matches here (CCM)
     uses: pods/index-comp-text-cc.yml
     env:
       indexer_name: textCC
-  - name: rankCCToC
+  - name: rankCCToC                              # we will get the matches of chunks here (CM)
     uses: pods/rankc.yml
-  - name: chunkmetaIndexer
+  - name: chunkmetaIndexer                       # through the KV indexer we will get the meta data of the chunks (parentID), this is important because we want to finally get higher level docs through the ID
     uses: pods/index-chunkmeta.yml
     # second pathway
   - name: filter_image
@@ -43,7 +43,7 @@ pods:
   # join
   - needs: [imageModIndexer, chunkmetaIndexer]
     name: joiner
-  - name: rankCToR
+  - name: rankCToR                               # here we will get the matches (including doc ID) of query
     uses: pods/rank.yml
-  - name: docIndexer
+  - name: docIndexer                             # here we will get the doc through the doc ID
     uses: pods/index-doc.yml
