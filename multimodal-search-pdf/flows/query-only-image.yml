@@ -1,0 +1,23 @@
+jtype: Flow
+version: '1'
+with:
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
+pods:
+  - name: segmentimage
+    uses: pods/segmenter-image.yml
+    needs: gateway
+  - name: imageCrafter
+    uses: pods/craft-image.yml
+  - name: imageEncoder
+    uses: pods/encode-image.yml
+  - name: imageModIndexer
+    uses: pods/index-comp.yml
+    env:
+      indexer_name: image
+  - name: rankCToR
+    uses: pods/rank.yml
+  - name: docIndexer
+    uses: pods/index-doc.yml

@@ -8,9 +8,6 @@ with:
 pods:
   - name: segmenttext
     uses: pods/segmenter-text.yml
-    needs: gateway
-  # first pathway
-
   - name: textSegmenter
     uses: pods/segment-text-customized.yml
   - name: textEncoder
@@ -19,11 +16,6 @@ pods:
     uses: pods/index-comp-text-cc.yml
     env:
       indexer_name: textCC
-      #- name: textranker
-   # uses: pods/textranker.yml
-  # second pathway, in parallel
-
-  # join
   - name: rankCCToC
     uses: pods/rankc.yml
   - name: CMetadataIndexer

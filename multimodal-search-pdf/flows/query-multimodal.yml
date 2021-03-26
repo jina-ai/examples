@@ -2,13 +2,12 @@ jtype: Flow
 version: '1'
 with:
   read_only: true  # better add this in the query time
-  rest_api: true
-  port_expose: $JINA_PORT
-  show_exc_info: true
+  rest_api: true  #expose the rest_api so we can make rest request to flow
+  port_expose: $JINA_PORT #port of rest_api
+  show_exc_info: true #used to print more logs for debugging
 pods:
   - name: segmentmm
     uses: pods/segmenter-separate.yml
-    needs: gateway
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
