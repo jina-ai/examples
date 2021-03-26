@@ -6,7 +6,7 @@ components:
 metas:
   name: converter
   py_modules:
-    - PDFcrafter.py
+    - PDFSegmenter-separate.py
 requests:
   use_default: true
   on:

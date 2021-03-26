@@ -8,7 +8,7 @@ requests:
       - jtype: Chunk2DocRankDriver
         with:
           traversal_paths: ['r']
-      #- jtype: LogInfoDriver {}
+      #- jtype: LogInfoDriver {} #this can be used to format the output
       - jtype: ExcludeQL
         with:
           fields:
