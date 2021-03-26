@@ -1,4 +1,4 @@
-jtype: CompoundIndexer
+jtype: CompoundIndexer #this is a indexer for chunk level
 components:
   - jtype: NumpyIndexer
     with:
