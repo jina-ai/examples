@@ -56,8 +56,14 @@ class PDFSegmenter(BaseSegmenter):
                         pix = fitz.Pixmap(pdf_img, xref)
                         np_arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.h, pix.w, pix.n).astype('float32')
                         if pix.n - pix.alpha < 4:  # if gray or RGB
-                            chunks.append(
-                                dict(blob=np_arr, weight=1.0, mime_type='image/png'))
+                            if pix.n == 1: #convert gray to rgb
+                                np_arr_rgb = np.concatenate((np_arr,)*3,-1)
+                                chunks.append(dict(blob=np_arr_rgb, weight=1.0, mime_type='image/png'))
+                            elif pix.n == 4: # remove transparency layer
+                                np_arr_rgb = np_arr[..., :3]
+                                chunks.append(dict(blob=np_arr_rgb, weight=1.0, mime_type='image/png'))
+                            else:
+                                chunks.append(dict(blob=np_arr, weight=1.0, mime_type='image/png'))
                         else:  # if CMYK:
                             pix = fitz.Pixmap(fitz.csRGB, pix)  # Convert to RGB
                             np_arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.h, pix.w, pix.n).astype(
