@@ -35,7 +35,6 @@ class PDFSegmenter(BaseSegmenter):
         chunks=[]
         if mime_type == 'application/pdf':
             import fitz
-            import PyPDF2
             import pdfplumber
 
             if uri:
@@ -195,7 +194,6 @@ class MultimodalSegmenter(BaseSegmenter):
     @single
     def _pdf_segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
         import fitz
-        import PyPDF2
 
         pdf_img = fitz.open(uri)
         pdf_text = open(uri, 'rb')
@@ -220,15 +218,12 @@ class MultimodalSegmenter(BaseSegmenter):
 
         # Extract text
         with pdf_text:
-            text = ""
-            pdf_reader = PyPDF2.PdfFileReader(pdf_text)
-            count = pdf_reader.numPages
-            for page in range(count):
-                page = pdf_reader.getPage(page)
-                text_page = page.extractText()
-                chunks.append(
-                    dict(text=text_page, weight=1.0, mime_type='text/plain'))
-
+            count = len(pdf_text.pages)
+            for i in range(count):
+                page = pdf_text.pages[i]
+                text_page = page.extract_text(x_tolerance=1, y_tolerance=1)
+                if text_page:
+                    chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
         return chunks
 
     @single
