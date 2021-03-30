@@ -32,7 +32,7 @@ def search_generator(data_path):
 def index_documents():
     f = Flow().load_config('flows/index.yml')
     with f:
-        pdf_files = ['data/blog1.pdf', 'data/blog2.pdf', 'data/blog3.pdf']
+        pdf_files = ['toy_data/blog1.pdf', 'toy_data/blog2.pdf', 'toy_data/blog3.pdf']
         f.index(input_fn=index_generator(data_path=pdf_files), read_mode='r', request_size=1)
 
 
@@ -43,7 +43,6 @@ def get_flow():
 
 
 def validate(resp):
-    print(resp)
     for doc in resp.search.docs:
         assert len(doc.matches) == 3
         for match in doc.matches:
