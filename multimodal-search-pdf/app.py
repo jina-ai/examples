@@ -16,10 +16,19 @@ def config():
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45670))
 
 
+def index_generator(data_path):
+    for path in data_path:
+        with Document() as doc:
+            doc.content = path
+            doc.mime_type = 'application/pdf'
+        yield doc
+
+
 def search_generator(data_path):
     d = Document()
     d.content = data_path
     yield d
+
 
 def dryrun():
     f = Flow().load_config("flows/flow-index.yml")
@@ -48,18 +57,16 @@ def get_pdf(resp):
     ),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
-@click.option("--top_k", "-k", default=5)
-def main(task, num_docs, top_k):
+def main(task, num_docs):
     config()
     if task == 'index':
         f = Flow.load_config('flows/index.yml')
-        f.plot()
+        #f.plot()
         with f:
             from jina.clients.helper import pprint_routes
             pdf_files = ['data/blog1.pdf', 'data/blog2.pdf', 'data/blog3.pdf']
-            for path in pdf_files:
-                f.index(input_fn=search_generator(data_path=path), read_mode='r', on_done=pprint_routes,
-                    request_size=1)
+            f.index(input_fn=index_generator(data_path=pdf_files), read_mode='r', on_done=pprint_routes,
+                    request_size=1, num_docs=num_docs)
     if task == 'query':
         f = Flow.load_config('flows/query-multimodal.yml')
         f.plot()
