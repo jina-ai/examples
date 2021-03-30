@@ -1,9 +1,9 @@
+jina[scipy, http]==1.0.15
 click==7.1.2
 transformers==4.1.1
 torch==1.7.1
 torchvision==0.8.2
-jina[scipy, http]==1.0.15
 PyPDF2==1.26.0
 PyMuPDF==1.18.5
-Pillow==8.0.1
+Pillow==8.1.2
 pdfplumber==0.5.27

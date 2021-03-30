@@ -7,7 +7,7 @@ with:
   show_exc_info: true
 pods:
   - name: segmentpdf
-    uses: pods/segmenter-pdf.yml
+    uses: pods/segment-pdf.yml
   # first pathway
   - name: filter_text
     uses: pods/filter.yml
