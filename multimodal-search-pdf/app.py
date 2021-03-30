@@ -128,7 +128,8 @@ def main(task, num_docs):
         query_pdf()
     if task == 'query_restful':
         f = Flow.load_config('flows/query-multimodal.yml')
-        f.block()
+        with f:
+            f.block()
     if task == "dryrun":
         dryrun()
 
