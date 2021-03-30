@@ -32,9 +32,9 @@ def search_generator(data_path):
 
 
 def dryrun():
-    f = Flow().load_config("flows/flow-index.yml")
+    f = Flow().load_config("flows/index.yml")
     with f:
-        f.dry_run()
+        pass
 
 
 def get_pdf(resp):
