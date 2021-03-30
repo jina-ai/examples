@@ -44,7 +44,7 @@ def get_flow():
 
 def validate(resp):
     for doc in resp.search.docs:
-        assert len(doc.matches) == 3
+        assert len(doc.matches) > 1
         for match in doc.matches:
             assert match.mime_type == 'application/pdf'
 
