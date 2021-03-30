@@ -12,6 +12,8 @@ requests:
         with:
           fields:
             - buffer
+            - chunks
+          traversal_paths: [ 'c', 'cc' ]
       - jtype: KVSearchDriver
         with:
           executor: kv_indexer
@@ -20,7 +22,7 @@ requests:
         with:
           fields:
             - chunks
-      #- jtype: URI2DataURI {} #URI2DataURI can convert local uri to data uri
+      #- jtype: URI2DataURI {} # IMPORTANT: URI2DataURI can convert local uri to data uri, uncomment this to get URI data in resp
       - jtype: ExcludeQL
         with:
           fields:
