@@ -34,7 +34,7 @@ class PDFSegmenter(BaseSegmenter):
         """
         chunks=[]
         if mime_type == 'application/pdf':
-            import fitz
+            import fitz  # fitz is a library used in `PyMuPDF` to read pdf and images
             import pdfplumber
 
             if uri:
@@ -53,6 +53,7 @@ class PDFSegmenter(BaseSegmenter):
                     for img in pdf_img.getPageImageList(page):
                         xref = img[0]
                         pix = fitz.Pixmap(pdf_img, xref)
+                        # read data from buffer and reshape the array into 3-d format
                         np_arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.h, pix.w, pix.n).astype('float32')
                         if pix.n - pix.alpha < 4:  # if gray or RGB
                             if pix.n == 1: #convert gray to rgb
