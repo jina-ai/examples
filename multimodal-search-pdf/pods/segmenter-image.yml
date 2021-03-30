@@ -2,7 +2,7 @@ jtype: ImageSegmenter
 metas:
   name: seg-image
   py_modules:
-    - PDFSegmenter-separate.py
+    - segmenters.py
 requests:
   use_default: true
   on:

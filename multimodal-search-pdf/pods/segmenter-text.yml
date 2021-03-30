@@ -2,7 +2,7 @@ jtype: TextSegmenter
 metas:
   name: seg-text
   py_modules:
-    - PDFSegmenter-separate.py
+    - segmenters.py
 requests:
   use_default: true
   on:

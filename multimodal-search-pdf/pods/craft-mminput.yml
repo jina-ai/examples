@@ -2,7 +2,7 @@ jtype: MultimodalSegmenter # this is a segmenter which combine 3 into 1, not use
 metas:
   name: mmsegmenter
   py_modules:
-    - PDFSegmenter-separate.py
+    - segmenters.py
 requests:
   use_default: true
   on:
