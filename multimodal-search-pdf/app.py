@@ -17,12 +17,9 @@ def config():
 
 
 def search_generator(data_path):
-    for path in data_path:
-        with Document() as doc:
-            doc.content = path
-            doc.mime_type = 'application/pdf'
-        yield doc
-
+    d = Document()
+    d.content = data_path
+    yield d
 
 def dryrun():
     f = Flow().load_config("flows/flow-index.yml")
@@ -60,7 +57,8 @@ def main(task, num_docs, top_k):
         with f:
             from jina.clients.helper import pprint_routes
             pdf_files = ['data/blog1.pdf', 'data/blog2.pdf', 'data/blog3.pdf']
-            f.index(input_fn=search_generator(data_path=pdf_files), read_mode='r', on_done=pprint_routes,
+            for path in pdf_files:
+                f.index(input_fn=search_generator(data_path=path), read_mode='r', on_done=pprint_routes,
                     request_size=1)
     if task == 'query':
         f = Flow.load_config('flows/query-multimodal.yml')
