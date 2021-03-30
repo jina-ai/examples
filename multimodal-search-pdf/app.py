@@ -126,6 +126,9 @@ def main(task, num_docs):
         query_image()
     if task == 'query_pdf':
         query_pdf()
+    if task == 'query_restful':
+        f = Flow.load_config('flows/query-multimodal.yml')
+        f.block()
     if task == "dryrun":
         dryrun()
 
