@@ -1,4 +1,7 @@
-!BiMatchRanker
+!SimpleAggregateRanker
+with:
+  aggregate_function: 'min'
+  inverse_score: true
 requests:
   on:
     SearchRequest:
