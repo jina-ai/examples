@@ -164,7 +164,7 @@ class ImageSegmenter(BaseSegmenter):
         """
         chunks=[]
         if uri:
-            if mime_type == 'image/png':
+            if mime_type == 'image/png' or 'image/jpeg':
                 from PIL import Image
                 self.channel_axis: int = -1
 
