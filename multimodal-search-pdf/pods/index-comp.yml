@@ -22,11 +22,11 @@ requests:
         - jtype: VectorSearchDriver   # use VectorSearchDriver for NumpyIndexer
           with:
             executor: vecidx
-            traversal_paths: [ 'c' ]  # during search we will get chunks sorted by similarity
+            traversal_paths: [ 'c' ]  # during search we will get matches of chunks sorted by similarity (scores)
         - jtype: KVSearchDriver       # use KVSearchDriver for BinaryPbIndexer
           with:
             executor: docidx
-            traversal_paths: [ 'cm' ] # during search we will add matches data for chunks
+            traversal_paths: [ 'cm' ] # during search we will add data (parentID) for matches of chunks
         - jtype: ExcludeQL
           with:
             fields:
