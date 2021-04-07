@@ -42,7 +42,8 @@ class PDFSegmenter(BaseSegmenter):
                 pdf_text = pdfplumber.open(uri)
             elif buffer:
                 pdf_img = fitz.open(stream=buffer, filetype='pdf')
-                pdf_text = io.BytesIO(buffer)
+                pdf_text_buffer = io.BytesIO(buffer)
+                pdf_text = pdfplumber.open(pdf_text_buffer)
             else:
                 raise ValueError('No value found in "buffer" or "uri"')
 
@@ -163,24 +164,23 @@ class ImageSegmenter(BaseSegmenter):
         :rtype: List[Dict]
         """
         chunks=[]
-        if uri:
-            if mime_type == 'image/png' or mime_type == 'image/jpeg':
-                from PIL import Image
-                self.channel_axis: int = -1
+        if mime_type == 'image/png' or mime_type == 'image/jpeg':
+            from PIL import Image
+            self.channel_axis: int = -1
 
-                if buffer:
-                    raw_img = Image.open(io.BytesIO(buffer))
-                elif uri:
-                    raw_img = Image.open(uri)
-                else:
-                    raise ValueError('no value found in "buffer" and "uri"')
-                raw_img = raw_img.convert('RGB')
-                img = np.array(raw_img).astype('float32')
-                if self.channel_axis != -1:
-                    img = np.moveaxis(img, -1, self.channel_axis)
+            if buffer:
+                raw_img = Image.open(io.BytesIO(buffer))
+            elif uri:
+                raw_img = Image.open(uri)
+            else:
+                raise ValueError('no value found in "buffer" and "uri"')
+            raw_img = raw_img.convert('RGB')
+            img = np.array(raw_img).astype('float32')
+            if self.channel_axis != -1:
+                img = np.moveaxis(img, -1, self.channel_axis)
 
-                chunks = [dict(blob=img, weight=1.0, mime_type='image/png')]
-                return chunks
+            chunks = [dict(blob=img, weight=1.0, mime_type='image/png')]
+            return chunks
         return chunks
 
 
