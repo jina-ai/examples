@@ -164,7 +164,7 @@ class ImageSegmenter(BaseSegmenter):
         :rtype: List[Dict]
         """
         chunks=[]
-        if mime_type == 'image/png' or mime_type == 'image/jpeg':
+        if mime_type.startswith('image'):
             from PIL import Image
             self.channel_axis: int = -1
 
