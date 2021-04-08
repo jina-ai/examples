@@ -79,18 +79,25 @@ This example shows you how to feed data into Jina via REST gateway. By default, 
 
 ## Understand the Flows
 
+The following image shows the structure of index flow, the text and image will be extracted from PDF files as chunks. Then we will use 3 paths to process and store the data.
+- For the first path, the DocIndexer will store the Document ID and Document data on disk
+- For the second path, the pods will filter the image chunks, and do the processing. It will also store chunk ID and chunk data on disk
+- For the third path, the pods will filter the text chunks, and further segment text into smaller chunks. The ChunkMeta indexer is used to store data at chunks level and text indexer is used to store data for chunks of chunks.
+The joiner will wait until 3 paths are finished.
 
 <p align="center">
   <img src=".github/.README_images/indexflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
+The following image shows the structure of query flow. For query, we can send text, image and PDF files to one flow and get the results. We use 2 parallel paths to process the query data and get results.
+- For the first path, we will get embedding of the image data and use image indexer to get the most similar matches at chunks level.
+- For the second path, we will get embedding of the text data at chunks of chunks level in the text encoder. Then we use CCtoC ranker to get the matches from chunks of chunks (CC) level to chunks (C) level. The chunkmeta indexer can help to append meta data for matches of chunks.
+The ChunktoRoot Ranker is used to get the matches at root level and then we can use the matches ID to get the documents data.
+
 <p align="center">
   <img src=".github/.README_images/queryflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
-<p align="center">
-<img src=".github/.README_images/indexflow.png" width="90%">
-</p>
 
 ## Documentation 
 
