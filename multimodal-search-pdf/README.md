@@ -77,6 +77,17 @@ curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["jina hello mu
 
 This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
+## Understand the Flows
+
+
+<p align="center">
+  <img src=".github/.README_images/indexflow.png?raw=true" alt="Jina banner" width="90%">
+</p>
+
+<p align="center">
+  <img src=".github/.README_images/queryflow.png?raw=true" alt="Jina banner" width="90%">
+</p>
+
 
 ## Documentation 
 
