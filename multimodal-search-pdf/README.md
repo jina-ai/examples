@@ -88,6 +88,9 @@ This example shows you how to feed data into Jina via REST gateway. By default, 
   <img src=".github/.README_images/queryflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
+<p align="center">
+<img src=".github/.README_images/indexflow.png" width="90%">
+</p>
 
 ## Documentation 
 
