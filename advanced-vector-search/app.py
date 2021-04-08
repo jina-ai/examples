@@ -1,6 +1,9 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
+from copy import copy
+from itertools import tee
+
 import click
 import os
 
@@ -9,6 +12,7 @@ from functools import partial
 
 from jina.flow import Flow
 from jina import Document
+from jina.logging.profile import TimeContext
 
 from read_vectors_files import fvecs_read, ivecs_read
 
@@ -25,7 +29,7 @@ def general_config():
 def query_config(indexer_query_type: str):
     if indexer_query_type == 'faiss':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_FAISS',
-                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.14-0.9.17')
+                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.15-1.0.6')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
         os.environ['JINA_FAISS_INDEX_KEY'] = os.environ.get('JINA_FAISS_INDEX_KEY',
                                                             'IVF10,PQ4')
@@ -37,7 +41,7 @@ def query_config(indexer_query_type: str):
                                                          '1')
     elif indexer_query_type == 'annoy':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_ANNOY',
-                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.14-0.9.17')
+                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.16-1.0.6')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
         os.environ['JINA_ANNOY_METRIC'] = os.environ.get('JINA_ANNOY_METRIC',
                                                          'euclidean')
@@ -87,8 +91,13 @@ def run(task, top_k, indexer_query_type):
 
     if task == 'index':
         data_path = os.path.join(data_dir, f'{dataset_name}_base.fvecs')
+        data_func = index_generator(data_path)
+        data_func_list = list(data_func)
+
         with Flow.load_config('flow-index.yml') as flow:
-            flow.index(input_fn=index_generator(data_path), request_size=request_size)
+            with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
+                flow.index(input_fn=data_func_list, request_size=request_size)
+
     elif task == 'query':
         evaluation_results = defaultdict(float)
 
@@ -101,10 +110,14 @@ def run(task, top_k, indexer_query_type):
 
         data_path = os.path.join(data_dir, f'{dataset_name}_query.fvecs')
         groundtruth_path = os.path.join(data_dir, f'{dataset_name}_groundtruth.ivecs')
+        query_input = list(evaluate_generator(data_path, groundtruth_path))
+
         with Flow.load_config('flow-query.yml') as flow:
-            flow.search(input_fn=evaluate_generator(data_path, groundtruth_path), request_size=request_size,
-                        on_done=get_evaluation_results,
-                        top_k=top_k)
+            with TimeContext(f'QPS: query with {len(query_input)}', logger=flow.logger):
+                flow.search(input_fn=query_input, request_size=request_size,
+                            on_done=get_evaluation_results,
+                            top_k=top_k)
+
         evaluation = evaluation_results[list(evaluation_results.keys())[0]]
         # return for test
         print(f'Recall@{top_k} ==> {100 * evaluation}')

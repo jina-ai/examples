@@ -1,0 +1,5 @@
+./audio-search
+           Flow@45181[I]:QPS: indexing 100 takes 3 seconds (3.92s)
+./advanced-vector-search
+           Flow@38382[I]:QPS: indexing 10000 takes 1 second (1.39s)
+           Flow@38487[I]:QPS: query with 100 takes 32 seconds (32.71s)

@@ -1,0 +1,1438 @@
+        encoder@38395[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+        encoder@38395[I]:input [33mtcp://0.0.0.0:59987[0m (PULL_BIND) output [33mtcp://0.0.0.0:50489[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:55713[0m (PAIR_BIND)
+   indexer/head@38400[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+   indexer/head@38400[I]:input [33mtcp://0.0.0.0:50489[0m (PULL_BIND) output [33mtcp://0.0.0.0:40997[0m (ROUTER_BIND) control over [33mtcp://0.0.0.0:43411[0m (PAIR_BIND)
+   indexer/tail@38405[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+   indexer/tail@38405[I]:input [33mtcp://0.0.0.0:52061[0m (PULL_BIND) output [33mtcp://0.0.0.0:60963[0m (PUSH_BIND) control over [33mtcp://0.0.0.0:38179[0m (PAIR_BIND)
+      indexer/0@38410[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+      indexer/0@38410[I]:input [33mtcp://0.0.0.0:40997[0m (DEALER_CONNECT) output [33mtcp://0.0.0.0:52061[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:39169[0m (PAIR_BIND)
+      MyEncoder@38395[I]:post_init may take some time...
+      MyEncoder@38395[I]:post_init may take some time takes 0 seconds (0.00s)
+      MyEncoder@38395[S]:[32msuccessfully built MyEncoder from a yaml config[0m
+   BaseExecutor@38400[I]:post_init may take some time...
+   BaseExecutor@38400[I]:post_init may take some time takes 0 seconds (0.00s)
+   BaseExecutor@38400[S]:[32msuccessfully built BaseExecutor from a yaml config[0m
+   BaseExecutor@38405[I]:post_init may take some time...
+      indexer/1@38417[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+   BaseExecutor@38405[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38417[I]:input [33mtcp://0.0.0.0:40997[0m (DEALER_CONNECT) output [33mtcp://0.0.0.0:52061[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:43447[0m (PAIR_BIND)
+   BaseExecutor@38405[S]:[32msuccessfully built BaseExecutor from a yaml config[0m
+        encoder@38382[S]:[32mready and listening[0m
+        gateway@38423[I]:starting jina.peapods.runtimes.asyncio.grpc.GRPCRuntime...
+   indexer/head@38382[S]:[32mready and listening[0m
+   indexer/tail@38382[S]:[32mready and listening[0m
+        gateway@38423[I]:input [33mtcp://0.0.0.0:60963[0m (PULL_CONNECT) output [33mtcp://0.0.0.0:59987[0m (PUSH_CONNECT) control over [33mipc:///tmp/tmp_osaxwrs[0m (PAIR_BIND)
+   NumpyIndexer@38410[I]:post_init may take some time...
+   NumpyIndexer@38410[I]:post_init may take some time takes 0 seconds (0.00s)
+        gateway@38423[S]:[32mGRPCRuntime is listening at: 0.0.0.0:34653[0m
+   NumpyIndexer@38410[S]:[32msuccessfully built NumpyIndexer from a yaml config[0m
+BinaryPbIndexer@38410[I]:post_init may take some time...
+BinaryPbIndexer@38410[I]:post_init may take some time takes 0 seconds (0.00s)
+BinaryPbIndexer@38410[S]:[32msuccessfully built BinaryPbIndexer from a yaml config[0m
+   NumpyIndexer@38417[I]:post_init may take some time...
+   NumpyIndexer@38417[I]:post_init may take some time takes 0 seconds (0.00s)
+CompoundIndexer@38410[I]:post_init may take some time...
+   NumpyIndexer@38417[S]:[32msuccessfully built NumpyIndexer from a yaml config[0m
+CompoundIndexer@38410[I]:post_init may take some time takes 0 seconds (0.00s)
+CompoundIndexer@38410[S]:[32msuccessfully built CompoundIndexer from a yaml config[0m
+CompoundIndexer@38410[W]:[40m[33mSetting workspace of wrapidx to ./workspace/indexer[0m
+CompoundIndexer@38410[W]:[40m[33mSetting workspace of docidx to ./workspace/indexer[0m
+      indexer/0@38382[S]:[32mready and listening[0m
+BinaryPbIndexer@38417[I]:post_init may take some time...
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 221 Bytes
+BinaryPbIndexer@38417[I]:post_init may take some time takes 0 seconds (0.00s)
+BinaryPbIndexer@38417[S]:[32msuccessfully built BinaryPbIndexer from a yaml config[0m
+CompoundIndexer@38417[I]:post_init may take some time...
+CompoundIndexer@38417[I]:post_init may take some time takes 0 seconds (0.00s)
+CompoundIndexer@38417[S]:[32msuccessfully built CompoundIndexer from a yaml config[0m
+CompoundIndexer@38417[W]:[40m[33mSetting workspace of wrapidx to ./workspace/indexer-1[0m
+CompoundIndexer@38417[W]:[40m[33mSetting workspace of docidx to ./workspace/indexer-1[0m
+      indexer/1@38382[S]:[32mready and listening[0m
+        gateway@38382[S]:[32mready and listening[0m
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+           Flow@38382[I]:3 Pods (i.e. 6 Peas) are running in this Flow
+   indexer/head@38400[I]:#sent: 1 #recv: 2 sent_size: 381 Bytes recv_size: 442 Bytes
+           Flow@38382[S]:[32m🎉 Flow is ready to use, accepting [1mgRPC request[0m[0m
+           Flow@38382[I]:
+	🖥️ Local access:	[4m[36mtcp://0.0.0.0:34653[0m
+	🔒 Private network:	[4m[36mtcp://192.168.178.144:34653[0m
+	🌐 Public address:	[4m[36mtcp://88.130.49.232:34653[0m
+           Flow@38382[I]:QPS: indexing 10000...
+         Client@38382[S]:[32mconnected to the gateway at 0.0.0.0:34653![0m
+[36mindex[0m |[32m█[0m                   | 📃      0 ⏱️ 0.0s 🐎 0.0/s      0   requestsindex ...	        gateway@38423[I]:prefetching 50 requests...
+        gateway@38423[W]:[40m[33mif this takes too long, you may want to take smaller "--prefetch" or ask client to reduce "--request-size"[0m
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 33.3 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 2 #recv: 3 sent_size: 762 Bytes recv_size: 26.7 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 1 #recv: 2 sent_size: 26.4 KB recv_size: 68.6 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 3 #recv: 4 sent_size: 27.2 KB recv_size: 54.0 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 1 #recv: 1 sent_size: 290 Bytes recv_size: 26.4 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 4 #recv: 5 sent_size: 54.7 KB recv_size: 54.3 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 26.5 KB
+        encoder@38395[I]:#sent: 2 #recv: 3 sent_size: 53.7 KB recv_size: 104.4 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 5 #recv: 6 sent_size: 55.0 KB recv_size: 81.9 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 1 #recv: 1 sent_size: 290 Bytes recv_size: 27.4 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 1 #recv: 2 sent_size: 26.6 KB recv_size: 54.0 KB
+   indexer/head@38400[I]:#sent: 6 #recv: 7 sent_size: 82.8 KB recv_size: 82.1 KB
+        encoder@38395[I]:#sent: 3 #recv: 4 sent_size: 81.4 KB recv_size: 139.6 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 7 #recv: 8 sent_size: 83.2 KB recv_size: 109.5 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 3 #recv: 2 sent_size: 27.1 KB recv_size: 54.1 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 2 #recv: 3 sent_size: 54.3 KB recv_size: 81.7 KB
+   indexer/head@38400[I]:#sent: 8 #recv: 9 sent_size: 110.7 KB recv_size: 109.7 KB
+        encoder@38395[I]:#sent: 4 #recv: 5 sent_size: 108.9 KB recv_size: 175.2 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 9 #recv: 10 sent_size: 111.1 KB recv_size: 137.3 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 3 #recv: 2 sent_size: 28.1 KB recv_size: 54.9 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 3 #recv: 4 sent_size: 82.2 KB recv_size: 109.3 KB
+   indexer/head@38400[I]:#sent: 10 #recv: 11 sent_size: 138.8 KB recv_size: 137.5 KB
+        encoder@38395[I]:#sent: 5 #recv: 6 sent_size: 136.5 KB recv_size: 211.2 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 11 #recv: 12 sent_size: 139.2 KB recv_size: 165.2 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 5 #recv: 3 sent_size: 55.2 KB recv_size: 81.8 KB
+        encoder@38395[I]:#sent: 6 #recv: 7 sent_size: 164.3 KB recv_size: 246.7 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 4 #recv: 5 sent_size: 109.9 KB recv_size: 137.1 KB
+   indexer/head@38400[I]:#sent: 12 #recv: 13 sent_size: 167.1 KB recv_size: 165.4 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 13 #recv: 14 sent_size: 167.4 KB recv_size: 192.9 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 5 #recv: 3 sent_size: 56.0 KB recv_size: 82.6 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 14 #recv: 15 sent_size: 195.1 KB recv_size: 193.1 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 5 #recv: 6 sent_size: 137.9 KB recv_size: 164.9 KB
+        encoder@38395[I]:#sent: 7 #recv: 8 sent_size: 191.8 KB recv_size: 282.4 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 15 #recv: 16 sent_size: 195.4 KB recv_size: 220.6 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 7 #recv: 4 sent_size: 83.4 KB recv_size: 109.3 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 6 #recv: 7 sent_size: 165.9 KB recv_size: 192.6 KB
+   indexer/head@38400[I]:#sent: 16 #recv: 17 sent_size: 223.2 KB recv_size: 220.9 KB
+        encoder@38395[I]:#sent: 8 #recv: 9 sent_size: 219.4 KB recv_size: 318.3 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 17 #recv: 18 sent_size: 223.5 KB recv_size: 248.3 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 7 #recv: 4 sent_size: 84.2 KB recv_size: 110.3 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 7 #recv: 8 sent_size: 193.7 KB recv_size: 220.3 KB
+   indexer/head@38400[I]:#sent: 18 #recv: 19 sent_size: 251.2 KB recv_size: 248.6 KB
+        encoder@38395[I]:#sent: 9 #recv: 10 sent_size: 247.0 KB recv_size: 354.1 KB
+        gateway@38423[I]:prefetching 50 requests takes 0 seconds (0.15s)
+        gateway@38423[I]:send: 49 recv: 8 pending: 41
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 19 #recv: 20 sent_size: 251.6 KB recv_size: 276.1 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 9 #recv: 5 sent_size: 111.4 KB recv_size: 136.9 KB
+        encoder@38395[I]:#sent: 10 #recv: 11 sent_size: 274.7 KB recv_size: 389.5 KB
+[36mindex[0m |[32m█[0m                   | 📃    100 ⏱️ 0.2s 🐎 597.1/s      1   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 8 #recv: 9 sent_size: 221.6 KB recv_size: 248.0 KB
+   indexer/head@38400[I]:#sent: 20 #recv: 21 sent_size: 279.3 KB recv_size: 276.4 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██[0m                  | 📃    200 ⏱️ 0.2s 🐎 1166.3/s      2   requests   indexer/head@38400[I]:#sent: 21 #recv: 22 sent_size: 279.7 KB recv_size: 303.6 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███[0m                 | 📃    300 ⏱️ 0.2s 🐎 1703.1/s      3   requests      indexer/1@38417[I]:#sent: 9 #recv: 5 sent_size: 112.3 KB recv_size: 138.0 KB
+[36mindex[0m |[32m████[0m                | 📃    400 ⏱️ 0.2s 🐎 2221.2/s      4   requests        encoder@38395[I]:#sent: 11 #recv: 12 sent_size: 302.0 KB recv_size: 425.3 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 9 #recv: 10 sent_size: 249.4 KB recv_size: 275.8 KB
+   indexer/head@38400[I]:#sent: 22 #recv: 23 sent_size: 307.1 KB recv_size: 303.9 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 23 #recv: 24 sent_size: 307.5 KB recv_size: 331.5 KB
+[36mindex[0m |[32m█████[0m               | 📃    500 ⏱️ 0.2s 🐎 2706.8/s      5   requests      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████[0m              | 📃    600 ⏱️ 0.2s 🐎 3182.0/s      6   requests[36mindex[0m |[32m███████[0m             | 📃    700 ⏱️ 0.2s 🐎 3647.3/s      7   requests        encoder@38395[I]:#sent: 12 #recv: 13 sent_size: 329.7 KB recv_size: 461.3 KB
+      indexer/0@38410[I]:#sent: 11 #recv: 6 sent_size: 139.4 KB recv_size: 164.3 KB
+[36mindex[0m |[32m████████[0m            | 📃    800 ⏱️ 0.2s 🐎 4036.0/s      8   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 10 #recv: 11 sent_size: 277.3 KB recv_size: 303.2 KB
+   indexer/head@38400[I]:#sent: 24 #recv: 25 sent_size: 335.3 KB recv_size: 331.7 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 25 #recv: 26 sent_size: 335.6 KB recv_size: 359.3 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████████[0m           | 📃    900 ⏱️ 0.2s 🐎 4408.0/s      9   requests      indexer/1@38417[I]:#sent: 11 #recv: 6 sent_size: 140.5 KB recv_size: 165.7 KB
+[36mindex[0m |[32m██████████[0m          | 📃   1000 ⏱️ 0.2s 🐎 4792.9/s     10   requests   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 11 #recv: 12 sent_size: 305.0 KB recv_size: 331.0 KB
+   indexer/head@38400[I]:#sent: 26 #recv: 27 sent_size: 363.4 KB recv_size: 359.5 KB
+[36mindex[0m |[32m███████████[0m         | 📃   1100 ⏱️ 0.2s 🐎 5179.7/s     11   requests        encoder@38395[I]:#sent: 13 #recv: 14 sent_size: 357.4 KB recv_size: 497.2 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 27 #recv: 28 sent_size: 363.8 KB recv_size: 387.1 KB
+[36mindex[0m |[32m████████████[0m        | 📃   1200 ⏱️ 0.2s 🐎 5509.8/s     12   requests      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 13 #recv: 7 sent_size: 167.2 KB recv_size: 192.0 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 12 #recv: 13 sent_size: 332.9 KB recv_size: 358.8 KB
+   indexer/head@38400[I]:#sent: 28 #recv: 29 sent_size: 391.5 KB recv_size: 387.3 KB
+        encoder@38395[I]:#sent: 14 #recv: 15 sent_size: 385.0 KB recv_size: 532.8 KB
+[36mindex[0m |[32m█████████████[0m       | 📃   1300 ⏱️ 0.2s 🐎 5663.7/s     13   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 29 #recv: 30 sent_size: 391.9 KB recv_size: 414.8 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 13 #recv: 7 sent_size: 168.6 KB recv_size: 193.3 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 13 #recv: 14 sent_size: 360.9 KB recv_size: 386.5 KB
+   indexer/head@38400[I]:#sent: 30 #recv: 31 sent_size: 419.5 KB recv_size: 415.0 KB
+        encoder@38395[I]:#sent: 15 #recv: 16 sent_size: 412.5 KB recv_size: 569.0 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 31 #recv: 32 sent_size: 419.9 KB recv_size: 442.7 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████████[0m      | 📃   1400 ⏱️ 0.2s 🐎 5600.7/s     14   requests      indexer/0@38410[I]:#sent: 15 #recv: 8 sent_size: 195.3 KB recv_size: 219.6 KB
+        encoder@38395[I]:#sent: 16 #recv: 17 sent_size: 440.3 KB recv_size: 604.9 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 14 #recv: 15 sent_size: 388.7 KB recv_size: 414.2 KB
+   indexer/head@38400[I]:#sent: 32 #recv: 33 sent_size: 447.7 KB recv_size: 442.9 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 33 #recv: 34 sent_size: 448.1 KB recv_size: 470.5 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 15 #recv: 8 sent_size: 196.7 KB recv_size: 221.1 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 15 #recv: 16 sent_size: 416.6 KB recv_size: 442.1 KB
+   indexer/head@38400[I]:#sent: 34 #recv: 35 sent_size: 475.9 KB recv_size: 470.7 KB
+[36mindex[0m |[32m███████████████[0m     | 📃   1500 ⏱️ 0.3s 🐎 5625.5/s     15   requests[36mindex[0m |[32m████████████████[0m    | 📃   1600 ⏱️ 0.3s 🐎 5879.5/s     16   requests        encoder@38395[I]:#sent: 17 #recv: 18 sent_size: 467.9 KB recv_size: 640.4 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 35 #recv: 36 sent_size: 476.2 KB recv_size: 498.1 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 17 #recv: 9 sent_size: 223.4 KB recv_size: 247.3 KB
+        encoder@38395[I]:#sent: 18 #recv: 19 sent_size: 495.4 KB recv_size: 676.4 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 16 #recv: 17 sent_size: 444.6 KB recv_size: 469.8 KB
+   indexer/head@38400[I]:#sent: 36 #recv: 37 sent_size: 503.8 KB recv_size: 498.3 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 37 #recv: 38 sent_size: 504.2 KB recv_size: 526.0 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 17 #recv: 9 sent_size: 224.9 KB recv_size: 248.6 KB
+[36mindex[0m |[32m█████████████████[0m   | 📃   1700 ⏱️ 0.3s 🐎 5767.3/s     17   requests   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 17 #recv: 18 sent_size: 472.5 KB recv_size: 497.4 KB
+   indexer/head@38400[I]:#sent: 38 #recv: 39 sent_size: 532.1 KB recv_size: 526.3 KB
+        encoder@38395[I]:#sent: 19 #recv: 20 sent_size: 523.2 KB recv_size: 712.1 KB
+[36mindex[0m |[32m██████████████████[0m  | 📃   1800 ⏱️ 0.3s 🐎 5902.6/s     18   requests   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 39 #recv: 40 sent_size: 532.4 KB recv_size: 553.9 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 19 #recv: 10 sent_size: 251.5 KB recv_size: 275.1 KB
+        encoder@38395[I]:#sent: 20 #recv: 21 sent_size: 550.9 KB recv_size: 747.3 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 18 #recv: 19 sent_size: 500.3 KB recv_size: 525.3 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███████████████████[0m | 📃   1900 ⏱️ 0.3s 🐎 5874.4/s     19   requests   indexer/head@38400[I]:#sent: 40 #recv: 41 sent_size: 560.3 KB recv_size: 554.1 KB
+      indexer/1@38417[I]:#sent: 19 #recv: 10 sent_size: 252.8 KB recv_size: 276.4 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 41 #recv: 42 sent_size: 560.6 KB recv_size: 581.3 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 19 #recv: 20 sent_size: 528.3 KB recv_size: 553.2 KB
+   indexer/head@38400[I]:#sent: 42 #recv: 43 sent_size: 588.0 KB recv_size: 581.5 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 21 #recv: 22 sent_size: 578.2 KB recv_size: 783.2 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 43 #recv: 44 sent_size: 588.3 KB recv_size: 609.0 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████████████████[0m| 📃   2000 ⏱️ 0.3s 🐎 5985.1/s     20   requests
+      indexer/0@38410[I]:#sent: 21 #recv: 11 sent_size: 279.7 KB recv_size: 302.3 KB
+        encoder@38395[I]:#sent: 22 #recv: 23 sent_size: 605.7 KB recv_size: 819.0 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 20 #recv: 21 sent_size: 556.3 KB recv_size: 580.5 KB
+   indexer/head@38400[I]:#sent: 44 #recv: 45 sent_size: 616.0 KB recv_size: 609.2 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 45 #recv: 46 sent_size: 616.4 KB recv_size: 636.9 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█[0m                   | 📃   2100 ⏱️ 0.4s 🐎 5977.1/s     21   requests      indexer/1@38417[I]:#sent: 21 #recv: 11 sent_size: 281.0 KB recv_size: 303.9 KB
+        encoder@38395[I]:#sent: 23 #recv: 24 sent_size: 633.4 KB recv_size: 855.4 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 21 #recv: 22 sent_size: 583.8 KB recv_size: 608.2 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 46 #recv: 47 sent_size: 644.2 KB recv_size: 637.1 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 47 #recv: 48 sent_size: 644.5 KB recv_size: 665.0 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██[0m                  | 📃   2200 ⏱️ 0.4s 🐎 6068.1/s     22   requests      indexer/0@38410[I]:#sent: 23 #recv: 12 sent_size: 307.4 KB recv_size: 330.0 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 22 #recv: 23 sent_size: 611.7 KB recv_size: 636.0 KB
+   indexer/head@38400[I]:#sent: 48 #recv: 49 sent_size: 672.6 KB recv_size: 665.2 KB
+[36mindex[0m |[32m███[0m                 | 📃   2300 ⏱️ 0.4s 🐎 6172.9/s     23   requests        encoder@38395[I]:#sent: 24 #recv: 25 sent_size: 661.4 KB recv_size: 890.8 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 49 #recv: 50 sent_size: 673.0 KB recv_size: 692.6 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 23 #recv: 12 sent_size: 309.1 KB recv_size: 331.9 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 50 #recv: 51 sent_size: 700.5 KB recv_size: 692.8 KB
+   indexer/tail@38405[I]:#sent: 23 #recv: 24 sent_size: 639.6 KB recv_size: 664.1 KB
+        encoder@38395[I]:#sent: 25 #recv: 26 sent_size: 688.9 KB recv_size: 926.7 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 51 #recv: 52 sent_size: 700.9 KB recv_size: 720.4 KB
+[36mindex[0m |[32m████[0m                | 📃   2400 ⏱️ 0.4s 🐎 6174.2/s     24   requests      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 25 #recv: 13 sent_size: 335.6 KB recv_size: 357.5 KB
+        encoder@38395[I]:#sent: 26 #recv: 27 sent_size: 716.5 KB recv_size: 962.7 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 24 #recv: 25 sent_size: 667.9 KB recv_size: 691.7 KB
+   indexer/head@38400[I]:#sent: 52 #recv: 53 sent_size: 728.6 KB recv_size: 720.6 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 53 #recv: 54 sent_size: 729.0 KB recv_size: 748.4 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████[0m               | 📃   2500 ⏱️ 0.4s 🐎 6212.2/s     25   requests      indexer/1@38417[I]:#sent: 25 #recv: 13 sent_size: 337.5 KB recv_size: 359.6 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 25 #recv: 26 sent_size: 695.6 KB recv_size: 719.4 KB
+   indexer/head@38400[I]:#sent: 54 #recv: 55 sent_size: 756.9 KB recv_size: 748.6 KB
+[36mindex[0m |[32m██████[0m              | 📃   2600 ⏱️ 0.4s 🐎 6322.6/s     26   requests        encoder@38395[I]:#sent: 27 #recv: 28 sent_size: 744.4 KB recv_size: 999.1 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 55 #recv: 56 sent_size: 757.3 KB recv_size: 776.4 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 27 #recv: 14 sent_size: 363.5 KB recv_size: 385.4 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 26 #recv: 27 sent_size: 723.5 KB recv_size: 747.4 KB
+   indexer/head@38400[I]:#sent: 56 #recv: 57 sent_size: 785.2 KB recv_size: 776.6 KB
+[36mindex[0m |[32m███████[0m             | 📃   2700 ⏱️ 0.4s 🐎 6377.5/s     27   requests        encoder@38395[I]:#sent: 28 #recv: 29 sent_size: 772.2 KB recv_size: 1.0 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 57 #recv: 58 sent_size: 785.6 KB recv_size: 804.2 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 27 #recv: 14 sent_size: 365.6 KB recv_size: 387.5 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 27 #recv: 28 sent_size: 751.6 KB recv_size: 775.3 KB
+   indexer/head@38400[I]:#sent: 58 #recv: 59 sent_size: 813.3 KB recv_size: 804.4 KB
+        encoder@38395[I]:#sent: 29 #recv: 30 sent_size: 799.8 KB recv_size: 1.0 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 59 #recv: 60 sent_size: 813.7 KB recv_size: 832.2 KB
+[36mindex[0m |[32m████████[0m            | 📃   2800 ⏱️ 0.4s 🐎 6285.1/s     28   requests      indexer/0@38410[I]:#sent: 29 #recv: 15 sent_size: 391.8 KB recv_size: 413.1 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 28 #recv: 29 sent_size: 779.7 KB recv_size: 803.1 KB
+   indexer/head@38400[I]:#sent: 60 #recv: 61 sent_size: 841.7 KB recv_size: 832.4 KB
+[36mindex[0m |[32m█████████[0m           | 📃   2900 ⏱️ 0.5s 🐎 6402.1/s     29   requests        encoder@38395[I]:#sent: 30 #recv: 31 sent_size: 827.7 KB recv_size: 1.1 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 61 #recv: 62 sent_size: 842.0 KB recv_size: 860.1 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 29 #recv: 15 sent_size: 393.9 KB recv_size: 415.3 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 29 #recv: 30 sent_size: 807.7 KB recv_size: 831.0 KB
+   indexer/head@38400[I]:#sent: 62 #recv: 63 sent_size: 870.0 KB recv_size: 860.4 KB
+        encoder@38395[I]:#sent: 31 #recv: 32 sent_size: 855.5 KB recv_size: 1.1 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████[0m          | 📃   3000 ⏱️ 0.5s 🐎 6365.8/s     30   requests   indexer/head@38400[I]:#sent: 63 #recv: 64 sent_size: 870.3 KB recv_size: 887.9 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 31 #recv: 16 sent_size: 419.9 KB recv_size: 440.9 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 32 #recv: 33 sent_size: 883.1 KB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 30 #recv: 31 sent_size: 835.8 KB recv_size: 859.0 KB
+   indexer/head@38400[I]:#sent: 64 #recv: 65 sent_size: 898.0 KB recv_size: 888.1 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 65 #recv: 66 sent_size: 898.4 KB recv_size: 915.7 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███████████[0m         | 📃   3100 ⏱️ 0.5s 🐎 6404.8/s     31   requests      indexer/1@38417[I]:#sent: 31 #recv: 16 sent_size: 422.2 KB recv_size: 443.0 KB
+        encoder@38395[I]:#sent: 33 #recv: 34 sent_size: 910.8 KB recv_size: 1.2 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 31 #recv: 32 sent_size: 863.9 KB recv_size: 886.7 KB
+   indexer/head@38400[I]:#sent: 66 #recv: 67 sent_size: 926.2 KB recv_size: 915.9 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 67 #recv: 68 sent_size: 926.5 KB recv_size: 943.7 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████████[0m        | 📃   3200 ⏱️ 0.5s 🐎 6449.8/s     32   requests      indexer/0@38410[I]:#sent: 33 #recv: 17 sent_size: 448.2 KB recv_size: 468.6 KB
+        encoder@38395[I]:#sent: 34 #recv: 35 sent_size: 938.6 KB recv_size: 1.2 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 32 #recv: 33 sent_size: 891.7 KB recv_size: 914.5 KB
+   indexer/head@38400[I]:#sent: 68 #recv: 69 sent_size: 954.5 KB recv_size: 943.9 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 69 #recv: 70 sent_size: 954.8 KB recv_size: 971.7 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 33 #recv: 17 sent_size: 450.3 KB recv_size: 470.8 KB
+[36mindex[0m |[32m█████████████[0m       | 📃   3300 ⏱️ 0.5s 🐎 6456.7/s     33   requests   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 70 #recv: 71 sent_size: 982.8 KB recv_size: 971.9 KB
+   indexer/tail@38405[I]:#sent: 33 #recv: 34 sent_size: 919.7 KB recv_size: 942.4 KB
+        encoder@38395[I]:#sent: 35 #recv: 36 sent_size: 966.5 KB recv_size: 1.3 MB
+[36mindex[0m |[32m██████████████[0m      | 📃   3400 ⏱️ 0.5s 🐎 6570.2/s     34   requests   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 71 #recv: 72 sent_size: 983.1 KB recv_size: 999.9 KB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 36 #recv: 37 sent_size: 994.5 KB recv_size: 1.3 MB
+      indexer/0@38410[I]:#sent: 35 #recv: 18 sent_size: 476.4 KB recv_size: 496.5 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 72 #recv: 73 sent_size: 1011.3 KB recv_size: 1000.1 KB
+   indexer/tail@38405[I]:#sent: 34 #recv: 35 sent_size: 947.8 KB recv_size: 970.4 KB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 73 #recv: 74 sent_size: 1011.6 KB recv_size: 1.0 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 35 #recv: 18 sent_size: 478.6 KB recv_size: 498.9 KB
+[36mindex[0m |[32m███████████████[0m     | 📃   3500 ⏱️ 0.5s 🐎 6540.1/s     35   requests   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 35 #recv: 36 sent_size: 975.9 KB recv_size: 998.5 KB
+   indexer/head@38400[I]:#sent: 74 #recv: 75 sent_size: 1.0 MB recv_size: 1.0 MB
+        encoder@38395[I]:#sent: 37 #recv: 38 sent_size: 1022.2 KB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████████████[0m    | 📃   3600 ⏱️ 0.5s 🐎 6648.0/s     36   requests   indexer/head@38400[I]:#sent: 75 #recv: 76 sent_size: 1.0 MB recv_size: 1.0 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 37 #recv: 19 sent_size: 504.7 KB recv_size: 524.1 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 36 #recv: 37 sent_size: 1004.2 KB recv_size: 1.0 MB
+   indexer/head@38400[I]:#sent: 76 #recv: 77 sent_size: 1.0 MB recv_size: 1.0 MB
+        encoder@38395[I]:#sent: 38 #recv: 39 sent_size: 1.0 MB recv_size: 1.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 77 #recv: 78 sent_size: 1.0 MB recv_size: 1.1 MB
+[36mindex[0m |[32m█████████████████[0m   | 📃   3700 ⏱️ 0.6s 🐎 6680.7/s     37   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 37 #recv: 19 sent_size: 507.1 KB recv_size: 526.7 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 37 #recv: 38 sent_size: 1.0 MB recv_size: 1.0 MB
+   indexer/head@38400[I]:#sent: 78 #recv: 79 sent_size: 1.1 MB recv_size: 1.1 MB
+[36mindex[0m |[32m██████████████████[0m  | 📃   3800 ⏱️ 0.6s 🐎 6700.3/s     38   requests        encoder@38395[I]:#sent: 39 #recv: 40 sent_size: 1.1 MB recv_size: 1.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 79 #recv: 80 sent_size: 1.1 MB recv_size: 1.1 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 39 #recv: 20 sent_size: 532.8 KB recv_size: 551.8 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 38 #recv: 39 sent_size: 1.0 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:#sent: 80 #recv: 81 sent_size: 1.1 MB recv_size: 1.1 MB
+        encoder@38395[I]:#sent: 40 #recv: 41 sent_size: 1.1 MB recv_size: 1.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 81 #recv: 82 sent_size: 1.1 MB recv_size: 1.1 MB
+[36mindex[0m |[32m███████████████████[0m | 📃   3900 ⏱️ 0.6s 🐎 6694.4/s     39   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 39 #recv: 20 sent_size: 535.3 KB recv_size: 554.4 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 39 #recv: 40 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:#sent: 82 #recv: 83 sent_size: 1.1 MB recv_size: 1.1 MB
+        encoder@38395[I]:#sent: 41 #recv: 42 sent_size: 1.1 MB recv_size: 1.5 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 83 #recv: 84 sent_size: 1.1 MB recv_size: 1.1 MB
+[36mindex[0m |[32m████████████████████[0m| 📃   4000 ⏱️ 0.6s 🐎 6731.2/s     40   requests
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 41 #recv: 21 sent_size: 560.8 KB recv_size: 579.4 KB
+        encoder@38395[I]:#sent: 42 #recv: 43 sent_size: 1.1 MB recv_size: 1.5 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 40 #recv: 41 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:#sent: 84 #recv: 85 sent_size: 1.2 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 85 #recv: 86 sent_size: 1.2 MB recv_size: 1.2 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█[0m                   | 📃   4100 ⏱️ 0.6s 🐎 6734.7/s     41   requests      indexer/1@38417[I]:#sent: 41 #recv: 21 sent_size: 563.5 KB recv_size: 582.0 KB
+        encoder@38395[I]:#sent: 43 #recv: 44 sent_size: 1.2 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 41 #recv: 42 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:#sent: 86 #recv: 87 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 87 #recv: 88 sent_size: 1.2 MB recv_size: 1.2 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██[0m                  | 📃   4200 ⏱️ 0.6s 🐎 6752.2/s     42   requests        encoder@38395[I]:#sent: 44 #recv: 45 sent_size: 1.2 MB recv_size: 1.6 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 43 #recv: 22 sent_size: 588.9 KB recv_size: 607.2 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 88 #recv: 89 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/tail@38405[I]:#sent: 42 #recv: 43 sent_size: 1.1 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 89 #recv: 90 sent_size: 1.2 MB recv_size: 1.2 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 45 #recv: 46 sent_size: 1.2 MB recv_size: 1.6 MB
+[36mindex[0m |[32m███[0m                 | 📃   4300 ⏱️ 0.6s 🐎 6742.6/s     43   requests      indexer/1@38417[I]:#sent: 43 #recv: 22 sent_size: 591.6 KB recv_size: 609.7 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 43 #recv: 44 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:#sent: 90 #recv: 91 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 91 #recv: 92 sent_size: 1.2 MB recv_size: 1.2 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████[0m                | 📃   4400 ⏱️ 0.6s 🐎 6802.3/s     44   requests        encoder@38395[I]:#sent: 46 #recv: 47 sent_size: 1.2 MB recv_size: 1.6 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 45 #recv: 23 sent_size: 617.1 KB recv_size: 634.1 KB
+        encoder@38395[I]:#sent: 47 #recv: 48 sent_size: 1.3 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 44 #recv: 45 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:#sent: 92 #recv: 93 sent_size: 1.3 MB recv_size: 1.2 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 93 #recv: 94 sent_size: 1.3 MB recv_size: 1.3 MB
+      indexer/1@38417[I]:#sent: 45 #recv: 23 sent_size: 619.6 KB recv_size: 635.4 KB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████[0m               | 📃   4500 ⏱️ 0.7s 🐎 6733.2/s     45   requests   indexer/head@38400[I]:#sent: 94 #recv: 95 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 45 #recv: 46 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 95 #recv: 96 sent_size: 1.3 MB recv_size: 1.3 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████[0m              | 📃   4600 ⏱️ 0.7s 🐎 6822.8/s     46   requests        encoder@38395[I]:#sent: 48 #recv: 49 sent_size: 1.3 MB recv_size: 1.7 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 47 #recv: 24 sent_size: 645.8 KB recv_size: 661.0 KB
+      indexer/0@38410[I]:#sent: 47 #recv: 24 sent_size: 644.5 KB recv_size: 659.1 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 46 #recv: 47 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:#sent: 96 #recv: 97 sent_size: 1.3 MB recv_size: 1.3 MB
+        encoder@38395[I]:#sent: 49 #recv: 50 sent_size: 1.3 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 97 #recv: 98 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/tail@38405[I]:#sent: 47 #recv: 48 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 98 #recv: 99 sent_size: 1.3 MB recv_size: 1.3 MB
+[36mindex[0m |[32m███████[0m             | 📃   4700 ⏱️ 0.7s 🐎 6811.7/s     47   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 99 #recv: 100 sent_size: 1.3 MB recv_size: 1.3 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████[0m            | 📃   4800 ⏱️ 0.7s 🐎 6929.1/s     48   requests        encoder@38395[I]:#sent: 50 #recv: 51 sent_size: 1.3 MB recv_size: 1.8 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 51 #recv: 52 sent_size: 1.4 MB recv_size: 1.8 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 49 #recv: 25 sent_size: 671.8 KB recv_size: 686.5 KB
+      indexer/0@38410[I]:#sent: 49 #recv: 25 sent_size: 670.0 KB recv_size: 685.0 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 48 #recv: 49 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:#sent: 100 #recv: 101 sent_size: 1.4 MB recv_size: 1.3 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 49 #recv: 50 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:#sent: 101 #recv: 102 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 102 #recv: 103 sent_size: 1.4 MB recv_size: 1.4 MB
+        encoder@38395[I]:#sent: 52 #recv: 53 sent_size: 1.4 MB recv_size: 1.8 MB
+[36mindex[0m |[32m█████████[0m           | 📃   4900 ⏱️ 0.7s 🐎 6800.4/s     49   requests   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 103 #recv: 104 sent_size: 1.4 MB recv_size: 1.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████[0m          | 📃   5000 ⏱️ 0.7s 🐎 6898.0/s     50   requests        encoder@38395[I]:#sent: 53 #recv: 54 sent_size: 1.4 MB recv_size: 1.9 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        gateway@38423[I]:send: 99 recv: 50 pending: 49
+      indexer/0@38410[I]:#sent: 51 #recv: 26 sent_size: 696.2 KB recv_size: 710.9 KB
+      indexer/1@38417[I]:#sent: 51 #recv: 26 sent_size: 697.8 KB recv_size: 712.2 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 50 #recv: 51 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:#sent: 104 #recv: 105 sent_size: 1.4 MB recv_size: 1.4 MB
+        encoder@38395[I]:#sent: 54 #recv: 55 sent_size: 1.4 MB recv_size: 1.9 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 105 #recv: 106 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 51 #recv: 52 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 106 #recv: 107 sent_size: 1.4 MB recv_size: 1.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 107 #recv: 108 sent_size: 1.4 MB recv_size: 1.4 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███████████[0m         | 📃   5100 ⏱️ 0.8s 🐎 6777.1/s     51   requests[36mindex[0m |[32m████████████[0m        | 📃   5200 ⏱️ 0.8s 🐎 6894.4/s     52   requests        encoder@38395[I]:#sent: 55 #recv: 56 sent_size: 1.5 MB recv_size: 1.9 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 53 #recv: 27 sent_size: 722.6 KB recv_size: 736.2 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 52 #recv: 53 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:#sent: 108 #recv: 109 sent_size: 1.5 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 109 #recv: 110 sent_size: 1.5 MB recv_size: 1.5 MB
+        encoder@38395[I]:#sent: 56 #recv: 57 sent_size: 1.5 MB recv_size: 1.9 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████████████[0m       | 📃   5300 ⏱️ 0.8s 🐎 6918.4/s     53   requests      indexer/1@38417[I]:#sent: 53 #recv: 27 sent_size: 723.9 KB recv_size: 738.1 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 53 #recv: 54 sent_size: 1.4 MB recv_size: 1.4 MB
+   indexer/head@38400[I]:#sent: 110 #recv: 111 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 111 #recv: 112 sent_size: 1.5 MB recv_size: 1.5 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████████[0m      | 📃   5400 ⏱️ 0.8s 🐎 6977.2/s     54   requests        encoder@38395[I]:#sent: 57 #recv: 58 sent_size: 1.5 MB recv_size: 2.0 MB
+      indexer/1@38417[I]:#sent: 55 #recv: 28 sent_size: 750.3 KB recv_size: 763.9 KB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 55 #recv: 28 sent_size: 748.4 KB recv_size: 761.1 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 54 #recv: 55 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:#sent: 112 #recv: 113 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 113 #recv: 114 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 55 #recv: 56 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:#sent: 114 #recv: 115 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 115 #recv: 116 sent_size: 1.5 MB recv_size: 1.5 MB
+[36mindex[0m |[32m███████████████[0m     | 📃   5500 ⏱️ 0.8s 🐎 6941.5/s     55   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████████████[0m    | 📃   5600 ⏱️ 0.8s 🐎 7050.8/s     56   requests        encoder@38395[I]:#sent: 58 #recv: 59 sent_size: 1.5 MB recv_size: 2.0 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 57 #recv: 29 sent_size: 776.5 KB recv_size: 789.2 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 56 #recv: 57 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:#sent: 116 #recv: 117 sent_size: 1.6 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 117 #recv: 118 sent_size: 1.6 MB recv_size: 1.6 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████████████████[0m   | 📃   5700 ⏱️ 0.8s 🐎 7030.0/s     57   requests      indexer/0@38410[I]:#sent: 57 #recv: 29 sent_size: 773.7 KB recv_size: 786.7 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 57 #recv: 58 sent_size: 1.5 MB recv_size: 1.5 MB
+   indexer/head@38400[I]:#sent: 118 #recv: 119 sent_size: 1.6 MB recv_size: 1.6 MB
+        encoder@38395[I]:#sent: 59 #recv: 60 sent_size: 1.6 MB recv_size: 2.0 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 119 #recv: 120 sent_size: 1.6 MB recv_size: 1.6 MB
+[36mindex[0m |[32m██████████████████[0m  | 📃   5800 ⏱️ 0.8s 🐎 7049.2/s     58   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 59 #recv: 30 sent_size: 802.2 KB recv_size: 814.7 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 58 #recv: 59 sent_size: 1.6 MB recv_size: 1.6 MB
+   indexer/head@38400[I]:#sent: 120 #recv: 121 sent_size: 1.6 MB recv_size: 1.6 MB
+[36mindex[0m |[32m███████████████████[0m | 📃   5900 ⏱️ 0.8s 🐎 7113.8/s     59   requests        encoder@38395[I]:#sent: 60 #recv: 61 sent_size: 1.6 MB recv_size: 2.1 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 121 #recv: 122 sent_size: 1.6 MB recv_size: 1.6 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 59 #recv: 30 sent_size: 799.7 KB recv_size: 812.3 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 59 #recv: 60 sent_size: 1.6 MB recv_size: 1.6 MB
+   indexer/head@38400[I]:#sent: 122 #recv: 123 sent_size: 1.6 MB recv_size: 1.6 MB
+        encoder@38395[I]:#sent: 61 #recv: 62 sent_size: 1.6 MB recv_size: 2.1 MB
+[36mindex[0m |[32m████████████████████[0m| 📃   6000 ⏱️ 0.8s 🐎 7112.4/s     60   requests
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 123 #recv: 124 sent_size: 1.6 MB recv_size: 1.6 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 61 #recv: 31 sent_size: 828.2 KB recv_size: 840.2 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 60 #recv: 61 sent_size: 1.6 MB recv_size: 1.6 MB
+   indexer/head@38400[I]:#sent: 124 #recv: 125 sent_size: 1.7 MB recv_size: 1.6 MB
+        encoder@38395[I]:#sent: 62 #recv: 63 sent_size: 1.6 MB recv_size: 2.1 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█[0m                   | 📃   6100 ⏱️ 0.9s 🐎 7134.3/s     61   requests   indexer/head@38400[I]:#sent: 125 #recv: 126 sent_size: 1.7 MB recv_size: 1.7 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 61 #recv: 31 sent_size: 825.8 KB recv_size: 838.1 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 61 #recv: 62 sent_size: 1.6 MB recv_size: 1.6 MB
+   indexer/head@38400[I]:#sent: 126 #recv: 127 sent_size: 1.7 MB recv_size: 1.7 MB
+        encoder@38395[I]:#sent: 63 #recv: 64 sent_size: 1.7 MB recv_size: 2.2 MB
+[36mindex[0m |[32m██[0m                  | 📃   6200 ⏱️ 0.9s 🐎 7168.7/s     62   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 127 #recv: 128 sent_size: 1.7 MB recv_size: 1.7 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 63 #recv: 32 sent_size: 854.1 KB recv_size: 865.6 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 62 #recv: 63 sent_size: 1.7 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:#sent: 128 #recv: 129 sent_size: 1.7 MB recv_size: 1.7 MB
+        encoder@38395[I]:#sent: 64 #recv: 65 sent_size: 1.7 MB recv_size: 2.2 MB
+[36mindex[0m |[32m███[0m                 | 📃   6300 ⏱️ 0.9s 🐎 7188.8/s     63   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 129 #recv: 130 sent_size: 1.7 MB recv_size: 1.7 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 63 #recv: 32 sent_size: 852.0 KB recv_size: 863.8 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 63 #recv: 64 sent_size: 1.7 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:#sent: 130 #recv: 131 sent_size: 1.7 MB recv_size: 1.7 MB
+        encoder@38395[I]:#sent: 65 #recv: 66 sent_size: 1.7 MB recv_size: 2.2 MB
+[36mindex[0m |[32m████[0m                | 📃   6400 ⏱️ 0.9s 🐎 7170.8/s     64   requests   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 131 #recv: 132 sent_size: 1.7 MB recv_size: 1.7 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 65 #recv: 33 sent_size: 879.9 KB recv_size: 890.8 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 64 #recv: 65 sent_size: 1.7 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:#sent: 132 #recv: 133 sent_size: 1.8 MB recv_size: 1.7 MB
+        encoder@38395[I]:#sent: 66 #recv: 67 sent_size: 1.7 MB recv_size: 2.2 MB
+[36mindex[0m |[32m█████[0m               | 📃   6500 ⏱️ 0.9s 🐎 7158.0/s     65   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 133 #recv: 134 sent_size: 1.8 MB recv_size: 1.8 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 65 #recv: 33 sent_size: 878.1 KB recv_size: 889.7 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 65 #recv: 66 sent_size: 1.7 MB recv_size: 1.7 MB
+   indexer/head@38400[I]:#sent: 134 #recv: 135 sent_size: 1.8 MB recv_size: 1.8 MB
+[36mindex[0m |[32m██████[0m              | 📃   6600 ⏱️ 0.9s 🐎 7190.5/s     66   requests        encoder@38395[I]:#sent: 67 #recv: 68 sent_size: 1.8 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 135 #recv: 136 sent_size: 1.8 MB recv_size: 1.8 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 67 #recv: 34 sent_size: 905.6 KB recv_size: 915.8 KB
+        encoder@38395[I]:#sent: 68 #recv: 69 sent_size: 1.8 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 66 #recv: 67 sent_size: 1.8 MB recv_size: 1.8 MB
+   indexer/head@38400[I]:#sent: 136 #recv: 137 sent_size: 1.8 MB recv_size: 1.8 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 137 #recv: 138 sent_size: 1.8 MB recv_size: 1.8 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███████[0m             | 📃   6700 ⏱️ 0.9s 🐎 7170.6/s     67   requests      indexer/0@38410[I]:#sent: 67 #recv: 34 sent_size: 904.5 KB recv_size: 915.4 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 67 #recv: 68 sent_size: 1.8 MB recv_size: 1.8 MB
+        encoder@38395[I]:#sent: 69 #recv: 70 sent_size: 1.8 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:#sent: 138 #recv: 139 sent_size: 1.8 MB recv_size: 1.8 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 139 #recv: 140 sent_size: 1.8 MB recv_size: 1.8 MB
+[36mindex[0m |[32m████████[0m            | 📃   6800 ⏱️ 0.9s 🐎 7197.9/s     68   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 69 #recv: 35 sent_size: 931.0 KB recv_size: 941.3 KB
+        encoder@38395[I]:#sent: 70 #recv: 71 sent_size: 1.8 MB recv_size: 2.4 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 68 #recv: 69 sent_size: 1.8 MB recv_size: 1.8 MB
+   indexer/head@38400[I]:#sent: 140 #recv: 141 sent_size: 1.9 MB recv_size: 1.8 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 141 #recv: 142 sent_size: 1.9 MB recv_size: 1.9 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████████[0m           | 📃   6900 ⏱️ 1.0s 🐎 7203.3/s     69   requests      indexer/0@38410[I]:#sent: 69 #recv: 35 sent_size: 930.6 KB recv_size: 940.9 KB
+        encoder@38395[I]:#sent: 71 #recv: 72 sent_size: 1.9 MB recv_size: 2.4 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 69 #recv: 70 sent_size: 1.8 MB recv_size: 1.8 MB
+   indexer/head@38400[I]:#sent: 142 #recv: 143 sent_size: 1.9 MB recv_size: 1.9 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 143 #recv: 144 sent_size: 1.9 MB recv_size: 1.9 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████[0m          | 📃   7000 ⏱️ 1.0s 🐎 7211.1/s     70   requests      indexer/1@38417[I]:#sent: 71 #recv: 36 sent_size: 957.0 KB recv_size: 967.2 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 70 #recv: 71 sent_size: 1.9 MB recv_size: 1.9 MB
+   indexer/head@38400[I]:#sent: 144 #recv: 145 sent_size: 1.9 MB recv_size: 1.9 MB
+[36mindex[0m |[32m███████████[0m         | 📃   7100 ⏱️ 1.0s 🐎 7270.8/s     71   requests        encoder@38395[I]:#sent: 72 #recv: 73 sent_size: 1.9 MB recv_size: 2.4 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 145 #recv: 146 sent_size: 1.9 MB recv_size: 1.9 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 71 #recv: 36 sent_size: 956.5 KB recv_size: 966.4 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 71 #recv: 72 sent_size: 1.9 MB recv_size: 1.9 MB
+   indexer/head@38400[I]:#sent: 146 #recv: 147 sent_size: 1.9 MB recv_size: 1.9 MB
+[36mindex[0m |[32m████████████[0m        | 📃   7200 ⏱️ 1.0s 🐎 7289.4/s     72   requests        encoder@38395[I]:#sent: 73 #recv: 74 sent_size: 1.9 MB recv_size: 2.5 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 147 #recv: 148 sent_size: 1.9 MB recv_size: 1.9 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 73 #recv: 37 sent_size: 983.3 KB recv_size: 992.5 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 148 #recv: 149 sent_size: 2.0 MB recv_size: 1.9 MB
+   indexer/tail@38405[I]:#sent: 72 #recv: 73 sent_size: 1.9 MB recv_size: 1.9 MB
+        encoder@38395[I]:#sent: 74 #recv: 75 sent_size: 1.9 MB recv_size: 2.5 MB
+[36mindex[0m |[32m█████████████[0m       | 📃   7300 ⏱️ 1.0s 🐎 7290.6/s     73   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 149 #recv: 150 sent_size: 2.0 MB recv_size: 2.0 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 73 #recv: 37 sent_size: 982.5 KB recv_size: 992.3 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 73 #recv: 74 sent_size: 1.9 MB recv_size: 1.9 MB
+   indexer/head@38400[I]:#sent: 150 #recv: 151 sent_size: 2.0 MB recv_size: 2.0 MB
+        encoder@38395[I]:#sent: 75 #recv: 76 sent_size: 2.0 MB recv_size: 2.5 MB
+[36mindex[0m |[32m██████████████[0m      | 📃   7400 ⏱️ 1.0s 🐎 7311.6/s     74   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 151 #recv: 152 sent_size: 2.0 MB recv_size: 2.0 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 75 #recv: 38 sent_size: 1009.0 KB recv_size: 1017.9 KB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 152 #recv: 153 sent_size: 2.0 MB recv_size: 2.0 MB
+   indexer/tail@38405[I]:#sent: 74 #recv: 75 sent_size: 2.0 MB recv_size: 2.0 MB
+        encoder@38395[I]:#sent: 76 #recv: 77 sent_size: 2.0 MB recv_size: 2.6 MB
+[36mindex[0m |[32m███████████████[0m     | 📃   7500 ⏱️ 1.0s 🐎 7316.9/s     75   requests   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 153 #recv: 154 sent_size: 2.0 MB recv_size: 2.0 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 75 #recv: 38 sent_size: 1008.8 KB recv_size: 1017.7 KB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 75 #recv: 76 sent_size: 2.0 MB recv_size: 2.0 MB
+   indexer/head@38400[I]:#sent: 154 #recv: 155 sent_size: 2.0 MB recv_size: 2.0 MB
+[36mindex[0m |[32m████████████████[0m    | 📃   7600 ⏱️ 1.0s 🐎 7354.2/s     76   requests        encoder@38395[I]:#sent: 77 #recv: 78 sent_size: 2.0 MB recv_size: 2.6 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 155 #recv: 156 sent_size: 2.0 MB recv_size: 2.0 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 77 #recv: 39 sent_size: 1.0 MB recv_size: 1.0 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 76 #recv: 77 sent_size: 2.0 MB recv_size: 2.0 MB
+   indexer/head@38400[I]:#sent: 156 #recv: 157 sent_size: 2.1 MB recv_size: 2.0 MB
+[36mindex[0m |[32m█████████████████[0m   | 📃   7700 ⏱️ 1.0s 🐎 7360.4/s     77   requests        encoder@38395[I]:#sent: 78 #recv: 79 sent_size: 2.0 MB recv_size: 2.6 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 157 #recv: 158 sent_size: 2.1 MB recv_size: 2.1 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 77 #recv: 39 sent_size: 1.0 MB recv_size: 1.0 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 158 #recv: 159 sent_size: 2.1 MB recv_size: 2.1 MB
+   indexer/tail@38405[I]:#sent: 77 #recv: 78 sent_size: 2.0 MB recv_size: 2.0 MB
+        encoder@38395[I]:#sent: 79 #recv: 80 sent_size: 2.1 MB recv_size: 2.6 MB
+[36mindex[0m |[32m██████████████████[0m  | 📃   7800 ⏱️ 1.1s 🐎 7356.0/s     78   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 159 #recv: 160 sent_size: 2.1 MB recv_size: 2.1 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 79 #recv: 40 sent_size: 1.0 MB recv_size: 1.0 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 78 #recv: 79 sent_size: 2.1 MB recv_size: 2.1 MB
+   indexer/head@38400[I]:#sent: 160 #recv: 161 sent_size: 2.1 MB recv_size: 2.1 MB
+[36mindex[0m |[32m███████████████████[0m | 📃   7900 ⏱️ 1.1s 🐎 7352.5/s     79   requests        encoder@38395[I]:#sent: 80 #recv: 81 sent_size: 2.1 MB recv_size: 2.7 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 161 #recv: 162 sent_size: 2.1 MB recv_size: 2.1 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 79 #recv: 40 sent_size: 1.0 MB recv_size: 1.0 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 162 #recv: 163 sent_size: 2.1 MB recv_size: 2.1 MB
+   indexer/tail@38405[I]:#sent: 79 #recv: 80 sent_size: 2.1 MB recv_size: 2.1 MB
+        encoder@38395[I]:#sent: 81 #recv: 82 sent_size: 2.1 MB recv_size: 2.7 MB
+[36mindex[0m |[32m████████████████████[0m| 📃   8000 ⏱️ 1.1s 🐎 7319.2/s     80   requests
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 163 #recv: 164 sent_size: 2.1 MB recv_size: 2.1 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 81 #recv: 41 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 80 #recv: 81 sent_size: 2.1 MB recv_size: 2.1 MB
+   indexer/head@38400[I]:#sent: 164 #recv: 165 sent_size: 2.2 MB recv_size: 2.1 MB
+[36mindex[0m |[32m█[0m                   | 📃   8100 ⏱️ 1.1s 🐎 7346.0/s     81   requests        encoder@38395[I]:#sent: 82 #recv: 83 sent_size: 2.1 MB recv_size: 2.7 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 165 #recv: 166 sent_size: 2.2 MB recv_size: 2.2 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 81 #recv: 41 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 81 #recv: 82 sent_size: 2.1 MB recv_size: 2.1 MB
+   indexer/head@38400[I]:#sent: 166 #recv: 167 sent_size: 2.2 MB recv_size: 2.2 MB
+        encoder@38395[I]:#sent: 83 #recv: 84 sent_size: 2.2 MB recv_size: 2.8 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 167 #recv: 168 sent_size: 2.2 MB recv_size: 2.2 MB
+[36mindex[0m |[32m██[0m                  | 📃   8200 ⏱️ 1.1s 🐎 7321.8/s     82   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 84 #recv: 85 sent_size: 2.2 MB recv_size: 2.8 MB
+      indexer/1@38417[I]:#sent: 83 #recv: 42 sent_size: 1.1 MB recv_size: 1.1 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 82 #recv: 83 sent_size: 2.2 MB recv_size: 2.2 MB
+   indexer/head@38400[I]:#sent: 168 #recv: 169 sent_size: 2.2 MB recv_size: 2.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 169 #recv: 170 sent_size: 2.2 MB recv_size: 2.2 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m███[0m                 | 📃   8300 ⏱️ 1.1s 🐎 7304.5/s     83   requests        encoder@38395[I]:#sent: 85 #recv: 86 sent_size: 2.2 MB recv_size: 2.8 MB
+      indexer/0@38410[I]:#sent: 83 #recv: 42 sent_size: 1.1 MB recv_size: 1.1 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 170 #recv: 171 sent_size: 2.3 MB recv_size: 2.2 MB
+   indexer/tail@38405[I]:#sent: 83 #recv: 84 sent_size: 2.2 MB recv_size: 2.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 171 #recv: 172 sent_size: 2.3 MB recv_size: 2.3 MB
+[36mindex[0m |[32m████[0m                | 📃   8400 ⏱️ 1.2s 🐎 7304.3/s     84   requests      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 86 #recv: 87 sent_size: 2.2 MB recv_size: 2.9 MB
+      indexer/1@38417[I]:#sent: 85 #recv: 43 sent_size: 1.1 MB recv_size: 1.1 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 84 #recv: 85 sent_size: 2.2 MB recv_size: 2.2 MB
+   indexer/head@38400[I]:#sent: 172 #recv: 173 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 173 #recv: 174 sent_size: 2.3 MB recv_size: 2.3 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████[0m               | 📃   8500 ⏱️ 1.2s 🐎 7302.6/s     85   requests        encoder@38395[I]:#sent: 87 #recv: 88 sent_size: 2.3 MB recv_size: 2.9 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 85 #recv: 43 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 85 #recv: 86 sent_size: 2.2 MB recv_size: 2.2 MB
+   indexer/head@38400[I]:#sent: 174 #recv: 175 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 175 #recv: 176 sent_size: 2.3 MB recv_size: 2.3 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 87 #recv: 44 sent_size: 1.1 MB recv_size: 1.1 MB
+[36mindex[0m |[32m██████[0m              | 📃   8600 ⏱️ 1.2s 🐎 7303.4/s     86   requests   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 86 #recv: 87 sent_size: 2.3 MB recv_size: 2.3 MB
+        encoder@38395[I]:#sent: 88 #recv: 89 sent_size: 2.3 MB recv_size: 2.9 MB
+   indexer/head@38400[I]:#sent: 176 #recv: 177 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 177 #recv: 178 sent_size: 2.3 MB recv_size: 2.3 MB
+[36mindex[0m |[32m███████[0m             | 📃   8700 ⏱️ 1.2s 🐎 7350.2/s     87   requests      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 87 #recv: 44 sent_size: 1.1 MB recv_size: 1.1 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 89 #recv: 90 sent_size: 2.3 MB recv_size: 3.0 MB
+   indexer/head@38400[I]:#sent: 178 #recv: 179 sent_size: 2.4 MB recv_size: 2.3 MB
+   indexer/tail@38405[I]:#sent: 87 #recv: 88 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 179 #recv: 180 sent_size: 2.4 MB recv_size: 2.4 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████[0m            | 📃   8800 ⏱️ 1.2s 🐎 7326.6/s     88   requests      indexer/1@38417[I]:#sent: 89 #recv: 45 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 88 #recv: 89 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 180 #recv: 181 sent_size: 2.4 MB recv_size: 2.4 MB
+[36mindex[0m |[32m█████████[0m           | 📃   8900 ⏱️ 1.2s 🐎 7354.1/s     89   requests        encoder@38395[I]:#sent: 90 #recv: 91 sent_size: 2.3 MB recv_size: 3.0 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 181 #recv: 182 sent_size: 2.4 MB recv_size: 2.4 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 89 #recv: 45 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 89 #recv: 90 sent_size: 2.3 MB recv_size: 2.3 MB
+   indexer/head@38400[I]:#sent: 182 #recv: 183 sent_size: 2.4 MB recv_size: 2.4 MB
+        encoder@38395[I]:#sent: 91 #recv: 92 sent_size: 2.4 MB recv_size: 3.0 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m██████████[0m          | 📃   9000 ⏱️ 1.2s 🐎 7327.0/s     90   requests   indexer/head@38400[I]:#sent: 183 #recv: 184 sent_size: 2.4 MB recv_size: 2.4 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 91 #recv: 46 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 184 #recv: 185 sent_size: 2.4 MB recv_size: 2.4 MB
+   indexer/tail@38405[I]:#sent: 90 #recv: 91 sent_size: 2.4 MB recv_size: 2.4 MB
+        encoder@38395[I]:#sent: 92 #recv: 93 sent_size: 2.4 MB recv_size: 3.1 MB
+[36mindex[0m |[32m███████████[0m         | 📃   9100 ⏱️ 1.2s 🐎 7326.0/s     91   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 185 #recv: 186 sent_size: 2.4 MB recv_size: 2.4 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 91 #recv: 46 sent_size: 1.2 MB recv_size: 1.2 MB
+        encoder@38395[I]:#sent: 93 #recv: 94 sent_size: 2.4 MB recv_size: 3.1 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 91 #recv: 92 sent_size: 2.4 MB recv_size: 2.4 MB
+   indexer/head@38400[I]:#sent: 186 #recv: 187 sent_size: 2.5 MB recv_size: 2.4 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 187 #recv: 188 sent_size: 2.5 MB recv_size: 2.5 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m████████████[0m        | 📃   9200 ⏱️ 1.3s 🐎 7324.3/s     92   requests      indexer/1@38417[I]:#sent: 93 #recv: 47 sent_size: 1.2 MB recv_size: 1.2 MB
+        encoder@38395[I]:#sent: 94 #recv: 95 sent_size: 2.4 MB recv_size: 3.1 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 92 #recv: 93 sent_size: 2.4 MB recv_size: 2.4 MB
+   indexer/head@38400[I]:#sent: 188 #recv: 189 sent_size: 2.5 MB recv_size: 2.5 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 189 #recv: 190 sent_size: 2.5 MB recv_size: 2.5 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+[36mindex[0m |[32m█████████████[0m       | 📃   9300 ⏱️ 1.3s 🐎 7300.8/s     93   requests      indexer/0@38410[I]:#sent: 93 #recv: 47 sent_size: 1.2 MB recv_size: 1.2 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 93 #recv: 94 sent_size: 2.4 MB recv_size: 2.5 MB
+   indexer/head@38400[I]:#sent: 190 #recv: 191 sent_size: 2.5 MB recv_size: 2.5 MB
+        encoder@38395[I]:#sent: 95 #recv: 96 sent_size: 2.5 MB recv_size: 3.2 MB
+[36mindex[0m |[32m██████████████[0m      | 📃   9400 ⏱️ 1.3s 🐎 7328.4/s     94   requests        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 191 #recv: 192 sent_size: 2.5 MB recv_size: 2.5 MB
+      indexer/1@38417[I]:#sent: 95 #recv: 48 sent_size: 1.2 MB recv_size: 1.2 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 94 #recv: 95 sent_size: 2.5 MB recv_size: 2.5 MB
+   indexer/head@38400[I]:#sent: 192 #recv: 193 sent_size: 2.5 MB recv_size: 2.5 MB
+[36mindex[0m |[32m███████████████[0m     | 📃   9500 ⏱️ 1.3s 🐎 7348.3/s     95   requests        encoder@38395[I]:#sent: 96 #recv: 97 sent_size: 2.5 MB recv_size: 3.2 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 193 #recv: 194 sent_size: 2.5 MB recv_size: 2.5 MB
+      indexer/0@38410[I]:#sent: 95 #recv: 48 sent_size: 1.2 MB recv_size: 1.3 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 95 #recv: 96 sent_size: 2.5 MB recv_size: 2.5 MB
+   indexer/head@38400[I]:#sent: 194 #recv: 195 sent_size: 2.6 MB recv_size: 2.5 MB
+[36mindex[0m |[32m████████████████[0m    | 📃   9600 ⏱️ 1.3s 🐎 7339.6/s     96   requests        encoder@38395[I]:#sent: 97 #recv: 98 sent_size: 2.5 MB recv_size: 3.2 MB
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 195 #recv: 196 sent_size: 2.6 MB recv_size: 2.6 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 97 #recv: 49 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 96 #recv: 97 sent_size: 2.5 MB recv_size: 2.5 MB
+   indexer/head@38400[I]:#sent: 196 #recv: 197 sent_size: 2.6 MB recv_size: 2.6 MB
+[36mindex[0m |[32m█████████████████[0m   | 📃   9700 ⏱️ 1.3s 🐎 7338.8/s     97   requests        encoder@38395[I]:#sent: 98 #recv: 99 sent_size: 2.5 MB recv_size: 3.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 197 #recv: 198 sent_size: 2.6 MB recv_size: 2.6 MB
+      indexer/1@38417[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 97 #recv: 49 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 198 #recv: 199 sent_size: 2.6 MB recv_size: 2.6 MB
+   indexer/tail@38405[I]:#sent: 97 #recv: 98 sent_size: 2.5 MB recv_size: 2.6 MB
+[36mindex[0m |[32m██████████████████[0m  | 📃   9800 ⏱️ 1.3s 🐎 7332.2/s     98   requests        encoder@38395[I]:#sent: 99 #recv: 100 sent_size: 2.6 MB recv_size: 3.3 MB
+   indexer/head@38400[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 199 #recv: 200 sent_size: 2.6 MB recv_size: 2.6 MB
+      indexer/0@38410[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 99 #recv: 50 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 98 #recv: 99 sent_size: 2.6 MB recv_size: 2.6 MB
+   indexer/head@38400[I]:#sent: 200 #recv: 201 sent_size: 2.6 MB recv_size: 2.6 MB
+[36mindex[0m |[32m███████████████████[0m | 📃   9900 ⏱️ 1.4s 🐎 7321.1/s     99   requests      indexer/0@38410[I]:#sent: 99 #recv: 50 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:recv IndexRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 201 #recv: 202 sent_size: 2.6 MB recv_size: 2.6 MB
+   indexer/tail@38405[I]:#sent: 99 #recv: 100 sent_size: 2.6 MB recv_size: 2.6 MB
+[36mindex[0m |[32m████████████████████[0m| 📃  10000 ⏱️ 1.4s 🐎 7309.3/s    100   requests
+index takes 1 second (1.37s)[0m
+	[32m✅ done in ⏱ 1 second 🐎 7277.5/s[0m
+           Flow@38382[I]:QPS: indexing 10000 takes 1 second (1.39s)
+        gateway@38423[I]:#sent: 100 #recv: 100 sent_size: 3.3 MB recv_size: 2.6 MB
+        gateway@38382[S]:[32mterminated[0m
+      indexer/1@38417[I]:recv ControlRequest  from ctl[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:recv ControlRequest  from indexer/1[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38417[I]:#sent: 103 #recv: 51 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:#sent: 202 #recv: 203 sent_size: 2.6 MB recv_size: 2.6 MB
+      indexer/1@38417[I]:The dealer indexer/1 can not unsubscribe from the router. In case the router is down this is expected.
+   NumpyIndexer@38417[I]:indexer size: 5000 physical size: 2.4 MB
+   NumpyIndexer@38417[S]:[32martifacts of this executor (wrapidx) is persisted to ./workspace/indexer-1/wrapidx-1/wrapidx.bin[0m
+BinaryPbIndexer@38417[I]:indexer size: 5000 physical size: 6.2 MB
+BinaryPbIndexer@38417[S]:[32martifacts of this executor (docidx) is persisted to ./workspace/indexer-1/docidx-1/docidx.bin[0m
+   NumpyIndexer@38417[I]:no update since 2021-04-19 16:45:40, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+BinaryPbIndexer@38417[I]:no update since 2021-04-19 16:45:40, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38417[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38382[S]:[32mterminated[0m
+      indexer/0@38410[I]:recv ControlRequest  from ctl[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38410[I]:#sent: 103 #recv: 51 sent_size: 1.3 MB recv_size: 1.3 MB
+   indexer/head@38400[I]:recv ControlRequest  from indexer/0[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 203 #recv: 204 sent_size: 2.6 MB recv_size: 2.6 MB
+      indexer/0@38410[I]:The dealer indexer/0 can not unsubscribe from the router. In case the router is down this is expected.
+   NumpyIndexer@38410[I]:indexer size: 5000 physical size: 2.4 MB
+   NumpyIndexer@38410[S]:[32martifacts of this executor (wrapidx) is persisted to ./workspace/indexer/wrapidx-0/wrapidx.bin[0m
+BinaryPbIndexer@38410[I]:indexer size: 5000 physical size: 6.2 MB
+BinaryPbIndexer@38410[S]:[32martifacts of this executor (docidx) is persisted to ./workspace/indexer/docidx-0/docidx.bin[0m
+   NumpyIndexer@38410[I]:no update since 2021-04-19 16:45:41, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+BinaryPbIndexer@38410[I]:no update since 2021-04-19 16:45:41, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38410[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38382[S]:[32mterminated[0m
+   indexer/tail@38405[I]:recv ControlRequest  from ctl[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38405[I]:#sent: 101 #recv: 101 sent_size: 2.6 MB recv_size: 2.6 MB
+   indexer/tail@38405[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+   indexer/tail@38382[S]:[32mterminated[0m
+   indexer/head@38400[I]:recv ControlRequest  from ctl[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38400[I]:#sent: 205 #recv: 205 sent_size: 2.6 MB recv_size: 2.6 MB
+   indexer/head@38400[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+   indexer/head@38382[S]:[32mterminated[0m
+        encoder@38395[I]:recv ControlRequest  from ctl[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        encoder@38395[I]:#sent: 101 #recv: 101 sent_size: 2.6 MB recv_size: 3.3 MB
+        encoder@38395[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+        encoder@38382[S]:[32mterminated[0m
+           Flow@38382[S]:[32mflow is closed and all resources are released, current build level is 0[0m
+        encoder@38498[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+        encoder@38498[I]:input [33mtcp://0.0.0.0:40481[0m (PULL_BIND) output [33mtcp://0.0.0.0:44987[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:40765[0m (PAIR_BIND)
+   indexer/head@38503[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+   indexer/head@38503[I]:input [33mtcp://0.0.0.0:44987[0m (PULL_BIND) output [33mtcp://0.0.0.0:34195[0m (PUB_BIND) control over [33mtcp://0.0.0.0:42447[0m (PAIR_BIND)
+      MyEncoder@38498[I]:post_init may take some time...
+   indexer/tail@38508[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+      MyEncoder@38498[I]:post_init may take some time takes 0 seconds (0.00s)
+   indexer/tail@38508[I]:input [33mtcp://0.0.0.0:58417[0m (PULL_BIND) output [33mtcp://0.0.0.0:45219[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:45257[0m (PAIR_BIND)
+      MyEncoder@38498[S]:[32msuccessfully built MyEncoder from a yaml config[0m
+   BaseExecutor@38503[I]:post_init may take some time...
+   BaseExecutor@38503[I]:post_init may take some time takes 0 seconds (0.00s)
+   BaseExecutor@38503[S]:[32msuccessfully built BaseExecutor from a yaml config[0m
+   BaseExecutor@38508[I]:post_init may take some time...
+   BaseExecutor@38508[I]:post_init may take some time takes 0 seconds (0.00s)
+   BaseExecutor@38508[S]:[32msuccessfully built BaseExecutor from a yaml config[0m
+      indexer/0@38523[I]:starting jina.peapods.runtimes.container.ContainerRuntime...
+      indexer/1@38539[I]:starting jina.peapods.runtimes.container.ContainerRuntime...
+       evaluate@38548[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+       evaluate@38548[I]:input [33mtcp://0.0.0.0:45219[0m (PULL_BIND) output [33mtcp://0.0.0.0:34381[0m (PUSH_BIND) control over [33mtcp://0.0.0.0:49175[0m (PAIR_BIND)
+        encoder@38487[S]:[32mready and listening[0m
+        gateway@38553[I]:starting jina.peapods.runtimes.asyncio.grpc.GRPCRuntime...
+   indexer/head@38487[S]:[32mready and listening[0m
+   indexer/tail@38487[S]:[32mready and listening[0m
+        gateway@38553[I]:input [33mtcp://0.0.0.0:34381[0m (PULL_CONNECT) output [33mtcp://0.0.0.0:40481[0m (PUSH_CONNECT) control over [33mipc:///tmp/tmp6irovv2x[0m (PAIR_BIND)
+        gateway@38553[S]:[32mGRPCRuntime is listening at: 0.0.0.0:41727[0m
+RecallEvaluator@38548[I]:post_init may take some time...
+RecallEvaluator@38548[I]:post_init may take some time takes 0 seconds (0.00s)
+RecallEvaluator@38548[S]:[32msuccessfully built RecallEvaluator from a yaml config[0m
+      indexer/0@38523[I]:will use Docker image: jinahub/pod.indexer.faissindexer:0.0.15-1.0.6
+      indexer/1@38539[I]:will use Docker image: jinahub/pod.indexer.faissindexer:0.0.15-1.0.6
+      indexer/0@38487[S]:[32mready and listening[0m
+      indexer/1@38487[S]:[32mready and listening[0m
+       evaluate@38487[S]:[32mready and listening[0m
+        gateway@38487[S]:[32mready and listening[0m
+           Flow@38487[I]:4 Pods (i.e. 7 Peas) are running in this Flow
+      indexer/1@38539[I]:JINA@ 1[I]:
+      indexer/0@38523[I]:JINA@ 1[I]:
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;224mM[38;5;223mM[38;5;222mWWW[38;5;223mMM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;224mM[38;5;223mM[38;5;222mWWW[38;5;223mMM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;222mWNNNNNNNW[38;5;230mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;222mWNNNNNNNW[38;5;230mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;223mM[38;5;222mNNNNNNNNN[38;5;223mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mM[38;5;222mWNNNNNNNN[38;5;223mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;223mM[38;5;222mNNNNNNNNN[38;5;223mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mM[38;5;223mM[38;5;222mWNNNW[38;5;223mW[38;5;230mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mMMM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mM[38;5;222mWNNNNNNNN[38;5;223mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMM[38;5;253mW[38;5;73mxxxxxxxxx[38;5;109mO[38;5;15mMMMMM[38;5;152mN[38;5;73mxxxxxxxxx[38;5;110m0[38;5;15mMMMMM[38;5;152mK[38;5;73mddddddx[38;5;109mk[38;5;116mK[38;5;253mW[38;5;15mMMMMMMMMMMM[38;5;255mM[38;5;152mX[38;5;109mO[38;5;73mxd[38;5;67md[38;5;73mdx[38;5;109mO[38;5;152mN[38;5;255mM[38;5;15mMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mM[38;5;223mM[38;5;222mWNNNW[38;5;223mW[38;5;230mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllll[38;5;67mo[38;5;109m0[38;5;255mM[38;5;15mMMMMMM[38;5;255mM[38;5;109m0[38;5;67mo[38;5;66mlllllllll[38;5;67mo[38;5;109m0[38;5;255mM[38;5;15mM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[38;5;230mMMM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllll[38;5;67mo[38;5;152mW[38;5;15mMMMM[38;5;255mM[38;5;73md[38;5;66mlllllllllllll[38;5;73md[38;5;255mM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMM[38;5;253mW[38;5;73mxxxxxxxxx[38;5;109mO[38;5;15mMMMMM[38;5;152mN[38;5;73mxxxxxxxxx[38;5;110m0[38;5;15mMMMMM[38;5;152mK[38;5;73mddddddx[38;5;109mk[38;5;116mK[38;5;253mW[38;5;15mMMMMMMMMMMM[38;5;255mM[38;5;152mX[38;5;109mO[38;5;73mxd[38;5;67md[38;5;73mdx[38;5;109mO[38;5;152mN[38;5;255mM[38;5;15mMMM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mlllllllllllll[38;5;67mo[38;5;254mM[38;5;15mMMM[38;5;110m0[38;5;66mlllllllllllllll[38;5;152mK[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllll[38;5;67mo[38;5;109m0[38;5;255mM[38;5;15mMMMMMM[38;5;255mM[38;5;109m0[38;5;67mo[38;5;66mlllllllll[38;5;67mo[38;5;109m0[38;5;255mM[38;5;15mM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mK[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;152mK[38;5;15mMMM[38;5;109m0[38;5;66mlllllllllllllll[38;5;109mO[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllll[38;5;67mo[38;5;152mW[38;5;15mMMMM[38;5;255mM[38;5;73md[38;5;66mlllllllllllll[38;5;73md[38;5;255mM[0;0m
+      indexer/0@38523[I]:[38;5;15mMMM[38;5;255mM[38;5;224mMMM[38;5;15mMMMMM[38;5;152mK[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMM[38;5;254mM[38;5;67mo[38;5;66mllllllllllllll[38;5;109mO[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mX[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mlllllllllllll[38;5;67mo[38;5;254mM[38;5;15mMMM[38;5;110m0[38;5;66mlllllllllllllll[38;5;152mK[0;0m
+      indexer/0@38523[I]:[38;5;15mM[38;5;223mW[38;5;210mOkkkkk[38;5;216m0[38;5;224mM[38;5;15mMM[38;5;152mK[38;5;66mlllllllll[38;5;109mk[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMMM[38;5;188mM[38;5;73mx[38;5;66mlllllllllllll[38;5;109mO[0;0m
+      indexer/1@38539[I]:[38;5;15mMMMMMMMMMMMM[38;5;152mK[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;152mK[38;5;15mMMM[38;5;109m0[38;5;66mlllllllllllllll[38;5;109mO[0;0m
+      indexer/0@38523[I]:[38;5;217mN[38;5;210mkkkkkkkkk[38;5;224mM[38;5;15mM[38;5;152mK[38;5;66mllllllll[38;5;67mo[38;5;254mM[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMMMMM[38;5;253mW[38;5;109mO[38;5;73md[38;5;66molllllllll[38;5;109mO[0;0m
+      indexer/0@38523[I]:[38;5;217mK[38;5;210mkkkkkkkkk[38;5;217mN[38;5;15mM[38;5;152mK[38;5;66mlllllll[38;5;73md[38;5;188mM[38;5;15mMMMMMMM[38;5;188mWWWWWWWWW[38;5;255mM[38;5;15mMMMMMM[38;5;254mMMMMMMMMMMMMMM[38;5;15mMMMMMMMMMMM[38;5;255mMMMMMMMMM[38;5;15mM[0;0m
+      indexer/1@38539[I]:[38;5;15mMMM[38;5;255mM[38;5;224mMMM[38;5;15mMMMMM[38;5;152mK[38;5;66mlllllllll[38;5;73md[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMM[38;5;254mM[38;5;67mo[38;5;66mllllllllllllll[38;5;109mO[0;0m
+      indexer/0@38523[I]:[38;5;224mM[38;5;210mOkkkkkkk[38;5;180m0[38;5;15mMM[38;5;152mK[38;5;66mlllll[38;5;73md[38;5;152mX[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;15mM[38;5;223mW[38;5;210mOkkkkk[38;5;216m0[38;5;224mM[38;5;15mMM[38;5;152mK[38;5;66mlllllllll[38;5;109mk[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMMM[38;5;188mM[38;5;73mx[38;5;66mlllllllllllll[38;5;109mO[0;0m
+      indexer/0@38523[I]:[38;5;15mMM[38;5;224mW[38;5;217mX[38;5;216m0[38;5;210m0[38;5;217mKX[38;5;224mM[38;5;15mMMM[38;5;152mX[38;5;73mx[38;5;109mk0[38;5;152mX[38;5;254mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/1@38539[I]:[38;5;217mN[38;5;210mkkkkkkkkk[38;5;224mM[38;5;15mM[38;5;152mK[38;5;66mllllllll[38;5;67mo[38;5;254mM[38;5;15mMMMMM[38;5;110m0[38;5;66mlllllllll[38;5;73mx[38;5;15mMMMMM[38;5;109mO[38;5;66mllllllllllllll[38;5;110m0[38;5;15mMMMMMM[38;5;253mW[38;5;109mO[38;5;73md[38;5;66molllllllll[38;5;109mO[0;0m
+      indexer/0@38523[I]:
+      indexer/1@38539[I]:[38;5;217mK[38;5;210mkkkkkkkkk[38;5;217mN[38;5;15mM[38;5;152mK[38;5;66mlllllll[38;5;73md[38;5;188mM[38;5;15mMMMMMMM[38;5;188mWWWWWWWWW[38;5;255mM[38;5;15mMMMMMM[38;5;254mMMMMMMMMMMMMMM[38;5;15mMMMMMMMMMMM[38;5;255mMMMMMMMMM[38;5;15mM[0;0m
+      indexer/0@38523[I]:▶️  /usr/local/bin/jina pod --uses config.yml --name indexer/0 --identity f19dc619-1768-4ce3-88ab-32c321dd31eb --port-ctrl 53263 --port-in 34195 --port-out 58417 --socket-in SUB_CONNECT --socket-out PUSH_CONNECT --read-only --num-part 1 --uses-internal yaml/faiss-indexer.yml --port-expose 59153 --workspace-id ea1f091d-559b-4fc6-80df-99c87dbe9a63 --timeout-ready -1 --pea-role PARALLEL --noblock-on-start --uses /faiss-indexer.yml
+      indexer/0@38523[I]:🔧️ [43m[34m                           cli = pod                           [0m
+      indexer/1@38539[I]:[38;5;224mM[38;5;210mOkkkkkkk[38;5;180m0[38;5;15mMM[38;5;152mK[38;5;66mlllll[38;5;73md[38;5;152mX[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:ctrl-with-ipc = False
+      indexer/1@38539[I]:[38;5;15mMM[38;5;224mW[38;5;217mX[38;5;216m0[38;5;210m0[38;5;217mKX[38;5;224mM[38;5;15mMMM[38;5;152mX[38;5;73mx[38;5;109mk0[38;5;152mX[38;5;254mM[38;5;15mMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM[0;0m
+      indexer/0@38523[I]:daemon = False
+      indexer/1@38539[I]:
+      indexer/0@38523[I]:description = None
+      indexer/1@38539[I]:▶️  /usr/local/bin/jina pod --uses config.yml --name indexer/1 --identity 51763a1f-c41d-486f-b93e-d4f407b4fe4b --port-ctrl 37497 --port-in 34195 --port-out 58417 --socket-in SUB_CONNECT --socket-out PUSH_CONNECT --read-only --num-part 1 --uses-internal yaml/faiss-indexer.yml --port-expose 59153 --workspace-id ea1f091d-559b-4fc6-80df-99c87dbe9a63 --timeout-ready -1 --pea-id 1 --pea-role PARALLEL --noblock-on-start --uses /faiss-indexer.yml
+      indexer/0@38523[I]:docker-kwargs = None
+      indexer/1@38539[I]:🔧️ [43m[34m                           cli = pod                           [0m
+      indexer/0@38523[I]:dump-interval = 240
+      indexer/0@38523[I]:entrypoint = None
+      indexer/1@38539[I]:ctrl-with-ipc = False
+      indexer/1@38539[I]:daemon = False
+      indexer/0@38523[I]:env = None
+      indexer/1@38539[I]:description = None
+      indexer/0@38523[I]:expose-public = False
+      indexer/1@38539[I]:docker-kwargs = None
+      indexer/0@38523[I]:host = 0.0.0.0
+      indexer/1@38539[I]:dump-interval = 240
+      indexer/0@38523[I]:host-in = 0.0.0.0
+      indexer/1@38539[I]:entrypoint = None
+      indexer/0@38523[I]:host-out = 0.0.0.0
+      indexer/1@38539[I]:env = None
+      indexer/0@38523[I]:🔧️ [43m[34m                      identity = f19dc619-1768-4ce3-88ab-32c321[0m
+      indexer/1@38539[I]:expose-public = False
+      indexer/0@38523[I]:log-config = /usr/local/lib/python3.7/site-
+      indexer/1@38539[I]:host = 0.0.0.0
+      indexer/0@38523[I]:memory-hwm = -1
+      indexer/1@38539[I]:host-in = 0.0.0.0
+      indexer/0@38523[I]:🔧️ [43m[34m                          name = indexer/0                     [0m
+      indexer/1@38539[I]:host-out = 0.0.0.0
+      indexer/0@38523[I]:🔧️ [43m[34m              noblock-on-start = True                          [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                      identity = 51763a1f-c41d-486f-b93e-d4f407[0m
+      indexer/1@38539[I]:log-config = /usr/local/lib/python3.7/site-
+      indexer/0@38523[I]:🔧️ [43m[34m                      num-part = 1                             [0m
+      indexer/1@38539[I]:memory-hwm = -1
+      indexer/0@38523[I]:on-error-strategy = IGNORE
+      indexer/0@38523[I]:parallel = 1
+      indexer/1@38539[I]:🔧️ [43m[34m                          name = indexer/1                     [0m
+      indexer/0@38523[I]:pea-id = 0
+      indexer/1@38539[I]:🔧️ [43m[34m              noblock-on-start = True                          [0m
+      indexer/0@38523[I]:🔧️ [43m[34m                      pea-role = PARALLEL                      [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                      num-part = 1                             [0m
+      indexer/0@38523[I]:pod-role = None
+      indexer/1@38539[I]:on-error-strategy = IGNORE
+      indexer/0@38523[I]:polling = ANY
+      indexer/1@38539[I]:parallel = 1
+      indexer/0@38523[I]:🔧️ [43m[34m                     port-ctrl = 53263                         [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                        pea-id = 1                             [0m
+      indexer/0@38523[I]:🔧️ [43m[34m                   port-expose = 59153                         [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                      pea-role = PARALLEL                      [0m
+      indexer/0@38523[I]:🔧️ [43m[34m                       port-in = 34195                         [0m
+      indexer/1@38539[I]:pod-role = None
+      indexer/0@38523[I]:🔧️ [43m[34m                      port-out = 58417                         [0m
+      indexer/1@38539[I]:polling = ANY
+      indexer/0@38523[I]:pull-latest = False
+      indexer/1@38539[I]:🔧️ [43m[34m                     port-ctrl = 37497                         [0m
+      indexer/0@38523[I]:py-modules = None
+      indexer/1@38539[I]:🔧️ [43m[34m                   port-expose = 59153                         [0m
+      indexer/0@38523[I]:quiet = False
+      indexer/1@38539[I]:🔧️ [43m[34m                       port-in = 34195                         [0m
+      indexer/0@38523[I]:quiet-error = False
+      indexer/1@38539[I]:🔧️ [43m[34m                      port-out = 58417                         [0m
+      indexer/0@38523[I]:🔧️ [43m[34m                     read-only = True                          [0m
+      indexer/1@38539[I]:pull-latest = False
+      indexer/0@38523[I]:runtime-backend = PROCESS
+      indexer/1@38539[I]:py-modules = None
+      indexer/1@38539[I]:quiet = False
+      indexer/0@38523[I]:runtime-cls = ZEDRuntime
+      indexer/1@38539[I]:quiet-error = False
+      indexer/0@38523[I]:scheduling = LOAD_BALANCE
+      indexer/1@38539[I]:🔧️ [43m[34m                     read-only = True                          [0m
+      indexer/0@38523[I]:silent-remote-logs = False
+      indexer/1@38539[I]:runtime-backend = PROCESS
+      indexer/0@38523[I]:🔧️ [43m[34m                     socket-in = SUB_CONNECT                   [0m
+      indexer/1@38539[I]:runtime-cls = ZEDRuntime
+      indexer/0@38523[I]:🔧️ [43m[34m                    socket-out = PUSH_CONNECT                  [0m
+      indexer/1@38539[I]:scheduling = LOAD_BALANCE
+      indexer/1@38539[I]:silent-remote-logs = False
+      indexer/0@38523[I]:ssh-keyfile = None
+      indexer/1@38539[I]:🔧️ [43m[34m                     socket-in = SUB_CONNECT                   [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                    socket-out = PUSH_CONNECT                  [0m
+      indexer/0@38523[I]:ssh-password = None
+      indexer/1@38539[I]:ssh-keyfile = None
+      indexer/0@38523[I]:ssh-server = None
+      indexer/1@38539[I]:ssh-password = None
+      indexer/0@38523[I]:timeout-ctrl = 5000
+      indexer/1@38539[I]:ssh-server = None
+      indexer/0@38523[I]:🔧️ [43m[34m                 timeout-ready = -1                            [0m
+      indexer/1@38539[I]:timeout-ctrl = 5000
+      indexer/0@38523[I]:upload-files = None
+      indexer/1@38539[I]:🔧️ [43m[34m                 timeout-ready = -1                            [0m
+      indexer/0@38523[I]:🔧️ [43m[34m                          uses = /faiss-indexer.yml            [0m
+      indexer/1@38539[I]:upload-files = None
+      indexer/1@38539[I]:🔧️ [43m[34m                          uses = /faiss-indexer.yml            [0m
+      indexer/0@38523[I]:uses-after = None
+      indexer/1@38539[I]:uses-after = None
+      indexer/0@38523[I]:uses-before = None
+      indexer/1@38539[I]:uses-before = None
+      indexer/0@38523[I]:🔧️ [43m[34m                 uses-internal = yaml/faiss-indexer.yml        [0m
+      indexer/1@38539[I]:🔧️ [43m[34m                 uses-internal = yaml/faiss-indexer.yml        [0m
+      indexer/0@38523[I]:volumes = None
+      indexer/1@38539[I]:volumes = None
+      indexer/1@38539[I]:🔧️ [43m[34m                  workspace-id = ea1f091d-559b-4fc6-80df-99c87d[0m
+      indexer/0@38523[I]:🔧️ [43m[34m                  workspace-id = ea1f091d-559b-4fc6-80df-99c87d[0m
+      indexer/1@38539[I]:
+      indexer/0@38523[I]:
+      indexer/1@38539[I]:JINA@ 1[W]:[40m[33mWARNING: You are using Jina version 1.0.6, however version 1.1.6 is available. You should consider upgrading via the "pip install --upgrade jina" command.[0m
+      indexer/0@38523[I]:JINA@ 1[W]:[40m[33mWARNING: You are using Jina version 1.0.6, however version 1.1.6 is available. You should consider upgrading via the "pip install --upgrade jina" command.[0m
+      indexer/1@38539[I]:indexer/1@ 9[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+      indexer/1@38539[I]:indexer/1@ 9[I]:input [33mtcp://0.0.0.0:34195[0m (SUB_CONNECT) output [33mtcp://0.0.0.0:58417[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:37497[0m (PAIR_BIND)
+      indexer/0@38523[I]:indexer/0@ 9[I]:starting jina.peapods.runtimes.zmq.zed.ZEDRuntime...
+      indexer/1@38539[I]:NumpyIndexer@ 9[I]:post_init may take some time...
+      indexer/0@38523[I]:indexer/0@ 9[I]:input [33mtcp://0.0.0.0:34195[0m (SUB_CONNECT) output [33mtcp://0.0.0.0:58417[0m (PUSH_CONNECT) control over [33mtcp://0.0.0.0:53263[0m (PAIR_BIND)
+      indexer/1@38539[I]:NumpyIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/0@38523[I]:NumpyIndexer@ 9[I]:post_init may take some time...
+      indexer/1@38539[I]:NumpyIndexer@ 9[S]:[32mrestore NumpyIndexer from /docker-workspace/indexer-1/wrapidx-1/wrapidx.bin[0m
+      indexer/1@38539[I]:FaissIndexer@ 9[W]:[40m[33m
+      indexer/0@38523[I]:NumpyIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38539[I]:num_dim extracted from `ref_indexer` to 128
+      indexer/0@38523[I]:NumpyIndexer@ 9[S]:[32msuccessfully built NumpyIndexer from a yaml config[0m
+      indexer/1@38539[I]:_size extracted from `ref_indexer` to 5000
+      indexer/0@38523[I]:FaissIndexer@ 9[W]:[40m[33m
+      indexer/1@38539[I]:dtype extracted from `ref_indexer` to float32
+      indexer/0@38523[I]:num_dim extracted from `ref_indexer` to None
+      indexer/1@38539[I]:compress_level overriden from `ref_indexer` to 0
+      indexer/0@38523[I]:_size extracted from `ref_indexer` to 0
+      indexer/1@38539[I]:index_filename overriden from `ref_indexer` to index.gz[0m
+      indexer/0@38523[I]:dtype extracted from `ref_indexer` to None
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:post_init may take some time...
+      indexer/0@38523[I]:compress_level overriden from `ref_indexer` to 0
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/0@38523[I]:index_filename overriden from `ref_indexer` to index.gz[0m
+      indexer/1@38539[I]:FaissIndexer@ 9[S]:[32msuccessfully built FaissIndexer from a yaml config[0m
+      indexer/0@38523[I]:FaissIndexer@ 9[I]:post_init may take some time...
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:post_init may take some time...
+      indexer/0@38523[I]:FaissIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[S]:[32mrestore BinaryPbIndexer from /docker-workspace/indexer-1/docidx-1/docidx.bin[0m
+      indexer/0@38523[I]:FaissIndexer@ 9[S]:[32msuccessfully built FaissIndexer from a yaml config[0m
+      indexer/1@38539[I]:CompoundIndexer@ 9[I]:post_init may take some time...
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[I]:post_init may take some time...
+      indexer/1@38539[I]:CompoundIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38539[I]:CompoundIndexer@ 9[S]:[32msuccessfully built CompoundIndexer from a yaml config[0m
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[S]:[32msuccessfully built BinaryPbIndexer from a yaml config[0m
+      indexer/1@38539[I]:CompoundIndexer@ 9[W]:[40m[33mSetting workspace of faissidx to /docker-workspace/indexer-1[0m
+      indexer/1@38539[I]:CompoundIndexer@ 9[W]:[40m[33mSetting workspace of docidx to /docker-workspace/indexer-1[0m
+      indexer/0@38523[I]:CompoundIndexer@ 9[I]:post_init may take some time...
+      indexer/1@38539[I]:indexer/1@ 9[I]:recv ControlRequest  from ctl[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38523[I]:CompoundIndexer@ 9[I]:post_init may take some time takes 0 seconds (0.00s)
+      indexer/1@38539[I]:indexer/1@ 9[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 139 Bytes
+      indexer/0@38523[I]:CompoundIndexer@ 9[S]:[32msuccessfully built CompoundIndexer from a yaml config[0m
+      indexer/0@38523[I]:CompoundIndexer@ 9[W]:[40m[33mSetting workspace of faissidx to /docker-workspace/indexer[0m
+      indexer/0@38523[I]:CompoundIndexer@ 9[W]:[40m[33mSetting workspace of docidx to /docker-workspace/indexer[0m
+      indexer/0@38523[I]:indexer/0@ 9[I]:recv ControlRequest  from ctl[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38523[I]:indexer/0@ 9[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 139 Bytes
+           Flow@38487[S]:[32m🎉 Flow is ready to use, accepting [1mgRPC request[0m[0m
+           Flow@38487[I]:
+	🖥️ Local access:	[4m[36mtcp://0.0.0.0:41727[0m
+	🔒 Private network:	[4m[36mtcp://192.168.178.144:41727[0m
+	🌐 Public address:	[4m[36mtcp://88.130.49.232:41727[0m
+           Flow@38487[I]:QPS: query with 100...
+         Client@38487[S]:[32mconnected to the gateway at 0.0.0.0:41727![0m
+[36msearch[0m |[32m█[0m                   | 📃      0 ⏱️ 0.0s 🐎 0.0/s      0   requestssearch ...	        gateway@38553[I]:prefetching 50 requests...
+        gateway@38553[W]:[40m[33mif this takes too long, you may want to take smaller "--prefetch" or ask client to reduce "--request-size"[0m
+        encoder@38498[I]:recv SearchRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        gateway@38553[I]:prefetching 50 requests takes 0 seconds (0.18s)
+        encoder@38498[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 301.0 KB
+   indexer/head@38503[I]:recv SearchRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38503[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 302.2 KB
+      indexer/0@38523[I]:indexer/0@ 9[I]:recv SearchRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38539[I]:indexer/1@ 9[I]:recv SearchRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38523[I]:FaissIndexer@ 9[W]:[40m[33myou can not query from FaissIndexer as its "query_handler" is not set. If you are indexing data from scratch then it is fine. If you are querying data then the index file must be empty or broken.[0m
+      indexer/0@38523[I]:indexer/0@ 9[I]:#sent: 1 #recv: 2 sent_size: 264 Bytes recv_size: 302.4 KB
+      indexer/1@38539[I]:FaissIndexer@ 9[S]:[32mmemmap is enabled for /docker-workspace/indexer-1/wrapidx-1/index.gz[0m
+      indexer/0@38523[I]:indexer/0@ 9[E]:[31mAttributeError("'NoneType' object has no attribute 'search'")
+      indexer/0@38523[I]:add "--quiet-error" to suppress the exception details[0m
+      indexer/0@38523[I]:Traceback (most recent call last):
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/peapods/runtimes/zmq/zed.py", line 175, in _msg_callback
+      indexer/0@38523[I]:self._zmqlet.send_message(self._callback(msg))
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/peapods/runtimes/zmq/zed.py", line 161, in _callback
+      indexer/0@38523[I]:self._pre_hook(msg)._handle(msg)._post_hook(msg)
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/peapods/runtimes/zmq/zed.py", line 154, in _handle
+      indexer/0@38523[I]:self._executor(self.request_type)
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/executors/__init__.py", line 488, in __call__
+      indexer/0@38523[I]:d()
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/drivers/__init__.py", line 408, in __call__
+      indexer/0@38523[I]:self._apply_all(self.docs, *args, **kwargs)
+      indexer/0@38523[I]:File "/usr/local/lib/python3.7/site-packages/jina/drivers/search.py", line 121, in _apply_all
+      indexer/0@38523[I]:idx, dist = self.exec_fn(embed_vecs, top_k=int(self.top_k))
+      indexer/0@38523[I]:File "/workspace/__init__.py", line 132, in query
+      indexer/0@38523[I]:dist, ids = self.query_handler.search(vecs, top_k)
+      indexer/0@38523[I]:AttributeError: 'NoneType' object has no attribute 'search'
+   indexer/tail@38508[I]:recv SearchRequest (1/2 parts) from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m[31mindexer/0/ZEDRuntime✖[0m[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:Loading training data from /docker-workspace/train.tgz
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:loading index from /docker-workspace/train.tgz...
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:Training faiss Indexer with 25000 points of 128
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:indexer size: 5000
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:indexer size: 5000
+      indexer/1@38539[I]:indexer/1@ 9[I]:#sent: 1 #recv: 2 sent_size: 264 Bytes recv_size: 302.4 KB
+   indexer/tail@38508[I]:recv SearchRequest (2/2 parts) from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38508[I]:#sent: 0 #recv: 2 sent_size: 0 Bytes recv_size: 3.2 MB
+       evaluate@38548[I]:recv SearchRequest  from gateway[32m▸[0mencoder/ZEDRuntime[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m[31mindexer/0/ZEDRuntime✖[0m[32m▸[0mindexer/1/ZEDRuntime[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0mevaluate/ZEDRuntime[32m▸[0m⚐
+       evaluate@38548[I]:#sent: 0 #recv: 1 sent_size: 0 Bytes recv_size: 2.9 MB
+[36msearch[0m |[32m█[0m                   | 📃    100 ⏱️ 32.7s 🐎 3.1/s      1   requestssearch takes 32 seconds (32.67s)[0m
+	[32m✅ done in ⏱ 32 seconds 🐎 3.1/s[0m
+           Flow@38487[I]:QPS: query with 100 takes 32 seconds (32.71s)
+        gateway@38553[I]:#sent: 1 #recv: 1 sent_size: 301.0 KB recv_size: 2.9 MB
+        gateway@38487[S]:[32mterminated[0m
+       evaluate@38548[I]:recv ControlRequest  from ctl[32m▸[0mevaluate/ZEDRuntime[32m▸[0m⚐
+       evaluate@38548[I]:#sent: 2 #recv: 2 sent_size: 2.9 MB recv_size: 2.9 MB
+       evaluate@38548[I]:no update since 2021-04-19 16:45:43, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+       evaluate@38487[S]:[32mterminated[0m
+      indexer/1@38539[I]:indexer/1@ 9[I]:recv ControlRequest  from ctl[32m▸[0mindexer/1/ZEDRuntime[32m▸[0m⚐
+      indexer/1@38539[I]:indexer/1@ 9[I]:#sent: 3 #recv: 3 sent_size: 2.9 MB recv_size: 302.5 KB
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:indexer size: 5000 physical size: 3.1 MB
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:indexer size: 5000 physical size: 6.2 MB
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38539[I]:FaissIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38539[I]:BinaryPbIndexer@ 9[I]:no update since 2021-04-19 16:45:38, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38539[I]:indexer/1@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/1@38539[I]:indexer/1@ 1[S]:[32mterminated[0m
+      indexer/1@38487[S]:[32mterminated[0m
+      indexer/0@38523[I]:indexer/0@ 9[I]:recv ControlRequest  from ctl[32m▸[0mindexer/0/ZEDRuntime[32m▸[0m⚐
+      indexer/0@38523[I]:indexer/0@ 9[I]:#sent: 3 #recv: 3 sent_size: 304.2 KB recv_size: 302.5 KB
+      indexer/0@38523[I]:FaissIndexer@ 9[I]:indexer size: 0 physical size: 9.4 MB
+      indexer/0@38523[I]:FaissIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[I]:indexer size: 0 physical size: 9.4 MB
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38523[I]:FaissIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38523[I]:BinaryPbIndexer@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38523[I]:indexer/0@ 9[I]:no update since 2021-04-19 14:45:45, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+      indexer/0@38523[I]:indexer/0@ 1[S]:[32mterminated[0m
+      indexer/0@38487[S]:[32mterminated[0m
+   indexer/tail@38508[I]:recv ControlRequest  from ctl[32m▸[0mindexer/tail/ZEDRuntime[32m▸[0m⚐
+   indexer/tail@38508[I]:#sent: 2 #recv: 3 sent_size: 2.9 MB recv_size: 3.2 MB
+   indexer/tail@38508[I]:no update since 2021-04-19 16:45:43, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+   indexer/tail@38487[S]:[32mterminated[0m
+   indexer/head@38503[I]:recv ControlRequest  from ctl[32m▸[0mindexer/head/ZEDRuntime[32m▸[0m⚐
+   indexer/head@38503[I]:#sent: 2 #recv: 2 sent_size: 302.6 KB recv_size: 302.3 KB
+   indexer/head@38503[I]:no update since 2021-04-19 16:45:43, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+   indexer/head@38487[S]:[32mterminated[0m
+        encoder@38498[I]:recv ControlRequest  from ctl[32m▸[0mencoder/ZEDRuntime[32m▸[0m⚐
+        encoder@38498[I]:#sent: 2 #recv: 2 sent_size: 302.5 KB recv_size: 301.1 KB
+        encoder@38498[I]:no update since 2021-04-19 16:45:43, will not save. If you really want to save it, call "touch()" before "save()" to force saving
+        encoder@38487[S]:[32mterminated[0m
+           Flow@38487[S]:[32mflow is closed and all resources are released, current build level is 0[0m
+Recall@100 ==> 30.079999566078186
