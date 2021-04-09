@@ -53,7 +53,8 @@ class PDFSegmenter(BaseSegmenter):
                 self.logger.error(f'Failed to load from buffer')
                 return chunks
             else:
-                raise ValueError('No value found in "buffer" or "uri"')
+            self.logger.error('No value found in `buffer` or `uri`')
+            return chunks```
 
             # Extract images
             with pdf_img:
