@@ -17,13 +17,11 @@
 
 </p>
 
-This is an example of using [Jina](http://www.jina.ai)'s neural search framework to search text, image and PDF files in indexed PDF data.
-
-In this example, we will index the PDF files in a multimodal way. That is, we extract and index both text and images from PDF files.
+This example demonstrates how [Jina](http://www.jina.ai) can be used to search a repository of PDF files. The example employs a multimodal search architecture, allowing a user to query the data by providing text, or an image, or both simultaneously.
 
 What's included in this example:
 
-- Search text, image, pdf (better partial pdf) all in one flow or in separate flows
+- Search text, image, PDF all in one flow or in separate flows
 - Leverage Jina Recursive Document Representation for to segment and encode text
 - Parallel peas to reduce indexing time
 - Customized executors to better fit the needs
