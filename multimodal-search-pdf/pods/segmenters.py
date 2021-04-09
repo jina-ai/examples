@@ -33,8 +33,9 @@ class PDFSegmenter(BaseSegmenter):
         :rtype: List[Dict]
         """
         chunks=[]
-        if mime_type == 'application/pdf':
-            import fitz  # fitz is a library used in `PyMuPDF` to read pdf and images
+        if mime_type != 'application/pdf':
+            return chunks
+        import fitz  # fitz is a library used in `PyMuPDF` to read pdf and images
             import pdfplumber
 
             if uri:
