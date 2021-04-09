@@ -46,9 +46,12 @@ class PDFSegmenter(BaseSegmenter):
                 self.logger.error(f'Failed to open {uri}: {ex}')
                 return chunks
             elif buffer:
+            try:
                 pdf_img = fitz.open(stream=buffer, filetype='pdf')
-                pdf_text_buffer = io.BytesIO(buffer)
-                pdf_text = pdfplumber.open(pdf_text_buffer)
+                pdf_text = pdfplumber.open(io.BytesIO(buffer))
+            except Exception as ex:
+                self.logger.error(f'Failed to load from buffer')
+                return chunks
             else:
                 raise ValueError('No value found in "buffer" or "uri"')
 
