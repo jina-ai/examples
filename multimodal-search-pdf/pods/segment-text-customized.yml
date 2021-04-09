@@ -1,4 +1,4 @@
-jtype: TextSegmenterCustomized
+jtype: CustomizedTextSegmenter
 metas:
   name: seg-text
   py_modules:
