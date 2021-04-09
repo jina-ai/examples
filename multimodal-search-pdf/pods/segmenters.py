@@ -8,7 +8,7 @@ from jina.executors.decorators import single, batching
 
 class PDFSegmenter(BaseSegmenter):
     """
-    :class:`PDFExtractorSegmenter` Extracts data (text and images) from PDF files.
+    :class:`PDFSegmenter` Extracts data (text and images) from PDF files.
     """
 
     def __init__(self, *args, **kwargs):
