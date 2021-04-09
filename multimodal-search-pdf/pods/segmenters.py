@@ -32,7 +32,7 @@ class PDFSegmenter(BaseSegmenter):
         :returns: A list of documents with the extracted data
         :rtype: List[Dict]
         """
-        chunks=[]
+        chunks = []
         if mime_type != 'application/pdf':
             return chunks
         import fitz  # fitz is a library used in `PyMuPDF` to read pdf and images
