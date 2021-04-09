@@ -48,7 +48,6 @@ class PDFSegmenter(BaseSegmenter):
             else:
                 raise ValueError('No value found in "buffer" or "uri"')
 
-            chunks = []
             # Extract images
             with pdf_img:
                 for page in range(len(pdf_img)):
