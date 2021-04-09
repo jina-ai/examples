@@ -120,7 +120,7 @@ class TextSegmenter(BaseSegmenter):
         return chunks
 
 
-class TextSegmenterCustomized(BaseSegmenter):
+class CustomizedTextSegmenter(BaseSegmenter):
     """
     :class:`TextSegmenterCustomized` segments text into lines
     """
