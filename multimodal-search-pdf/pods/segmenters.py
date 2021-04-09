@@ -235,7 +235,6 @@ class MultimodalSegmenter(BaseSegmenter):
                     chunks.append(dict(text=text_page, weight=1.0, mime_type='text/plain'))
         return chunks
 
-    @single
     def _image_segment(self, uri: str, buffer: bytes, *args, **kwargs) -> List[Dict]:
         from PIL import Image
         self.channel_axis: int = -1
