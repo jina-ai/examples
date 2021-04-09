@@ -13,7 +13,8 @@ requests:
           fields:
             - buffer
             - chunks
-          traversal_paths: [ 'c', 'cc' ]
+            - embedding
+          traversal_paths: ['r', 'c', 'cc', 'cm', 'ccm']
       - jtype: KVSearchDriver
         with:
           executor: kv_indexer
