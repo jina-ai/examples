@@ -39,8 +39,12 @@ class PDFSegmenter(BaseSegmenter):
             import pdfplumber
 
             if uri:
+            try:
                 pdf_img = fitz.open(uri)
                 pdf_text = pdfplumber.open(uri)
+            except Exception as ex:
+                self.logger.error(f'Failed to open {uri}: {ex}')
+                return chunks
             elif buffer:
                 pdf_img = fitz.open(stream=buffer, filetype='pdf')
                 pdf_text_buffer = io.BytesIO(buffer)
