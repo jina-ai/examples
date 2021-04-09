@@ -56,7 +56,11 @@ pip install -r requirements.txt
 | Command | Description |
 | :--- | :--- |
 | ``python app.py -t index`` | To index files/data |
-| ``python app.py -t query`` | To run query on the index |
+| ``python app.py -t query`` | To run a query flow for searching text, image, and PDF |
+| ``python app.py -t query_text`` | To run a query flow for searching text |
+| ``python app.py -t query_image`` | To run a query flow for searching image |
+| ``python app.py -t query_pdf`` | To run a query flow for searching PDF |
+| ``python app.py -t query_restful`` | To expose the restful API of the query flow for searching text, image, and PDF|
 | ``python app.py -t dryrun`` | Sanity check on the topology |
 
 ## Start the Server
