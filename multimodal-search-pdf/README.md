@@ -74,6 +74,62 @@ When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wik
 curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["jina hello multimodal"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45670/api/search'
 ```
 
+The results will be like:
+
+```json
+{
+   "requestId":"b5813834-5f42-4f6c-a313-0f397ef5cf12",
+   "search":{
+      "docs":[
+         {
+            "id":"2cd45334-98dd-11eb-85a3-38f9d3eb0f3c",
+            "weight":1.0,
+            "matches":[
+               {
+                  "id":"f61571fc-9706-11eb-ba29-38f9d3eb0f3c",
+                  "uri":"toy_data/blog1.pdf",
+                  "mimeType":"application/pdf",
+                  "score":{
+                     "value":1.0,
+                     "opName":"SimpleAggregateRanker",
+                     "refId":"2cd45334-98dd-11eb-85a3-38f9d3eb0f3c"
+                  },
+                  "adjacency":1,
+                  "contentHash":"3b46f0781f207674"
+               },
+               {
+                  "id":"f618041c-9706-11eb-ba29-38f9d3eb0f3c",
+                  "uri":"toy_data/blog3.pdf",
+                  "mimeType":"application/pdf",
+                  "score":{
+                     "value":0.83538496,
+                     "opName":"SimpleAggregateRanker",
+                     "refId":"2cd45334-98dd-11eb-85a3-38f9d3eb0f3c"
+                  },
+                  "adjacency":1,
+                  "contentHash":"89a45525161ec448"
+               },
+               {
+                  "id":"f617ec70-9706-11eb-ba29-38f9d3eb0f3c",
+                  "uri":"toy_data/blog2.pdf",
+                  "mimeType":"application/pdf",
+                  "score":{
+                     "value":0.71500874,
+                     "opName":"SimpleAggregateRanker",
+                     "refId":"2cd45334-98dd-11eb-85a3-38f9d3eb0f3c"
+                  },
+                  "adjacency":1,
+                  "contentHash":"debde7ffbb210b46"
+               }
+            ],
+            "mimeType":"text/plain",
+            "text":"jina hello multimodal",
+            "contentHash":"f7beb6d4b839aa06"
+         }
+      ]
+   }
+```
+
 [JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
 
 This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
@@ -90,7 +146,7 @@ The joiner will wait until three paths are finished.
   <img src=".github/.README_images/indexflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
-The following image shows the structure of query Flow. For query, we can send text, image and PDF files to one Flow and get the results. We use 2 parallel paths to process the query data and get results.
+The following image shows the structure of query Flow. For query, we can send text, image and PDF files to one Flow and get the results. We use two parallel paths to process the query data and get results.
 - For the first path, we will get embedding of the image data and use image indexer to get the most similar matches at chunks level.
 - For the second path, we will get embedding of the text data at chunks of chunks level in the text encoder. Then we use CCtoC ranker to get the matches from chunks of chunks (CC) level to chunks (C) level. The chunkmeta indexer can help to append meta data for matches of chunks.
 The ChunktoRoot Ranker is used to get the matches at root level and then we can use the matches ID to get the documents data.
