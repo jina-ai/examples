@@ -22,10 +22,10 @@ This example demonstrates how [Jina](http://www.jina.ai) can be used to search a
 What's included in this example:
 
 - Search text, image, PDF all in one flow or in separate flows
-- Leverage Jina Recursive Document Representation for to segment and encode text
-- Parallel peas to reduce indexing time
-- Customized executors to better fit the needs
-- Detailed docstrings for YAML files to help you understand Jina App
+- Leverage Jina Recursive Document Representation to segment and encode text
+- Speed up indexing time with parallel Peas
+- Use customized executors to better fit your needs
+- Provide detailed docstrings for YAML files to help you understand Jina App
 
 - [PDF search](#pdf-search)
   * [Use toy data](#use-toy-data)
