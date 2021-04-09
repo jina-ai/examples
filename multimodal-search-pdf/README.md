@@ -21,11 +21,11 @@ This example demonstrates how [Jina](http://www.jina.ai) can be used to search a
 
 What's included in this example:
 
-- Search text, image, PDF all in one flow or in separate flows
+- Search text, image, PDF all in one Flow or in separate Flows
 - Leverage Jina Recursive Document Representation to segment and encode text
 - Speed up indexing time with parallel Peas
 - Use customized executors to better fit your needs
-- Provide detailed docstrings for YAML files to help you understand Jina App
+- Provide detailed docstrings for YAML files to help you understand the example
 
 - [PDF search](#pdf-search)
   * [Use toy data](#use-toy-data)
@@ -40,8 +40,7 @@ What's included in this example:
 
 ## Use toy data
 
-We have included several PDF blogs as toy data in [`toy_data`](toy_data). This data is ready to use with this example.
-You can also use other PDF files supported by [`pdfplumber`](https://github.com/jsvine/pdfplumber).
+We have included several PDF blogs as toy data in [`toy_data`](toy_data). This data is ready to use straight away. You can replace this toy data with your own by simply adding new files to the toy_data folder. Be careful to check that the files are supported by [`pdfplumber`](https://github.com/jsvine/pdfplumber)..
 
 ## Install
 
@@ -54,11 +53,11 @@ pip install -r requirements.txt
 | Command | Description |
 | :--- | :--- |
 | ``python app.py -t index`` | To index files/data |
-| ``python app.py -t query`` | To run a query flow for searching text, image, and PDF |
-| ``python app.py -t query_text`` | To run a query flow for searching text |
-| ``python app.py -t query_image`` | To run a query flow for searching image |
-| ``python app.py -t query_pdf`` | To run a query flow for searching PDF |
-| ``python app.py -t query_restful`` | To expose the restful API of the query flow for searching text, image, and PDF|
+| ``python app.py -t query`` | To run a query Flow for searching text, image, and PDF |
+| ``python app.py -t query_text`` | To run a query Flow for searching text |
+| ``python app.py -t query_image`` | To run a query Flow for searching image |
+| ``python app.py -t query_pdf`` | To run a query Flow for searching PDF |
+| ``python app.py -t query_restful`` | To expose the restful API of the query Flow for searching text, image, and PDF|
 | ``python app.py -t dryrun`` | Sanity check on the topology |
 
 ## Start the Server
@@ -81,17 +80,17 @@ This example shows you how to feed data into Jina via REST gateway. By default, 
 
 ## Understand the Flows
 
-The following image shows the structure of index flow, the text and image will be extracted from PDF files as chunks. Then we will use 3 paths to process and store the data.
+The following image shows the structure of index Flow, the text and image will be extracted from PDF files as chunks. Then we will use three paths to process and store the data.
 - For the first path, the DocIndexer will store the Document ID and Document data on disk
 - For the second path, the pods will filter the image chunks, and do the processing. It will also store chunk ID and chunk data on disk
 - For the third path, the pods will filter the text chunks, and further segment text into smaller chunks. The ChunkMeta indexer is used to store data at chunks level and text indexer is used to store data for chunks of chunks.
-The joiner will wait until 3 paths are finished.
+The joiner will wait until three paths are finished.
 
 <p align="center">
   <img src=".github/.README_images/indexflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
-The following image shows the structure of query flow. For query, we can send text, image and PDF files to one flow and get the results. We use 2 parallel paths to process the query data and get results.
+The following image shows the structure of query Flow. For query, we can send text, image and PDF files to one Flow and get the results. We use 2 parallel paths to process the query data and get results.
 - For the first path, we will get embedding of the image data and use image indexer to get the most similar matches at chunks level.
 - For the second path, we will get embedding of the text data at chunks of chunks level in the text encoder. Then we use CCtoC ranker to get the matches from chunks of chunks (CC) level to chunks (C) level. The chunkmeta indexer can help to append meta data for matches of chunks.
 The ChunktoRoot Ranker is used to get the matches at root level and then we can use the matches ID to get the documents data.
