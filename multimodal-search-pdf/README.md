@@ -27,7 +27,7 @@ What's included in this example:
 - Use customized executors to better fit your needs
 - Provide detailed docstrings for YAML files to help you understand the example
 
-- [PDF search](#pdf-search)
+- [Table of contents](#pdf-search-with-jina)
   * [Use toy data](#use-toy-data)
   * [Install](#install)
   * [Run](#run)
