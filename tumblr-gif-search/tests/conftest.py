@@ -16,5 +16,5 @@ def patched_random_port(mocker):
                 used_ports.add(_port)
                 return _port
         raise NoAvailablePortError
-
+    print(f'########### calling mock')
     mocker.patch('jina.helper.random_port', new_callable=lambda: _random_port)
