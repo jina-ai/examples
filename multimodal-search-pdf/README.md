@@ -78,7 +78,8 @@ When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wik
 curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["jina hello multimodal"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45670/api/search'
 ```
 
-The results will be like:
+<details>
+<summary> The results will be like: </summary> 
 
 ```json
 {
@@ -135,6 +136,7 @@ The results will be like:
 ```
 
 [JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
+</details>
 
 This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
 
