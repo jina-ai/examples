@@ -7,3 +7,4 @@ PyPDF2==1.26.0
 PyMuPDF==1.18.5
 Pillow==8.1.2
 pdfplumber==0.5.27
+weasyprint==52.4
