@@ -13,7 +13,6 @@ MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 
 def config():
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
-    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '2')
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45670))
 
 
