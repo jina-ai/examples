@@ -161,6 +161,19 @@ The ChunktoRoot Ranker is used to get the matches at root level and then we can 
   <img src=".github/.README_images/queryflow.png?raw=true" alt="Jina banner" width="90%">
 </p>
 
+## Performance for Reference
+
+You can run the `perf-script.sh` in order to run all of the examples on your machine. Make sure this is done in a separate python virtualenv.
+
+This measures QPS for indexing and querying.
+
+This will store the results in [`performance.txt`](./performance.txt).
+
+| Item | Index | Query | 
+| :--- | :--- | :--- |
+| Number of Docs | 30 | 3 | 
+| Time | 350.74s | 5.33s |
+
 
 ## Documentation 
 

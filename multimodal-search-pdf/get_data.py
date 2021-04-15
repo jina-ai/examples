@@ -1,11 +1,12 @@
 import csv
 import os
-
+import shutil
 import weasyprint
 
 blog_file = 'toy_data/blog-pdf.csv'
 
 try:
+    shutil.rmtree('data')
     os.makedirs('data')
 except:
     pass
