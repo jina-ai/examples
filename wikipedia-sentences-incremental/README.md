@@ -104,5 +104,5 @@ docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-incremental:0.
 You can then query by running:
 
 ```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'`
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["text:hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'`
 ```
