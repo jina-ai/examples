@@ -1,0 +1,20 @@
+!NERSpacyRanker
+with:
+  model: en_core_web_lg
+  factor_type_match: 1.4
+  factor_full_match: 1.7
+  query_required_keys: ['text']
+  match_required_keys: ['text']
+metas:
+  name: ranker
+on:
+  SearchRequest:
+    - !Matches2DocRankDriver
+      with:
+        executor: ranker
+        traversal_paths: ['r']
+    - !SortQL
+      with:
+        traversal_paths: ['m']
+        reverse: true
+        field: 'score__value'

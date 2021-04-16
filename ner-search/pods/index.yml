@@ -1,0 +1,47 @@
+!CompoundIndexer
+components:
+  - !NumpyIndexer
+    with:
+      index_filename: vec.gz
+      metric: cosine
+    metas:
+      name: vecidx  # a customized name
+  - !BinaryPbIndexer
+    with:
+      index_filename: doc.gz
+    metas:
+      name: docidx  # a customized name
+metas:
+  name: indexer
+  workspace: $JINA_WORKSPACE
+requests:
+  on:
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          executor: vecidx
+      - !ExcludeQL
+        with:
+          fields:
+            - embedding
+      - !KVSearchDriver
+        with:
+          executor: docidx
+          is_update: True
+          traversal_paths: ['m']
+      - !SortQL # required to ensure sorting of results
+        with:
+          traversal_paths: ['m']
+          reverse: true
+          field: 'score__value'
+    IndexRequest:
+      - !VectorIndexDriver
+        with:
+          executor: vecidx
+      - !ExcludeQL
+        with:
+          fields:
+            - embedding
+      - !KVIndexDriver
+        with:
+          executor: docidx

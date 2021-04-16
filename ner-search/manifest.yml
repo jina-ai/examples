@@ -1,0 +1,15 @@
+manifest_version: 1
+name: ner-search
+description: 'Example Jina app for ranking results using a NER model'
+author: Jina AI Dev. Team
+url: https://github.com/jina-ai/examples/tree/master/ner-search
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/examples/tree/master/ner-search/wikipedia-sentences
+version: 0.1
+license: apache-2.0
+keywords: [NLP, text, spacy, example, NER]
+type: app
+kind: example
+avatar: None
+platform: "linux/amd64"
+update: "None"

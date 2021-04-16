@@ -1,0 +1,18 @@
+!Flow
+version: '1'
+with:
+  restful: True
+  read_only: true
+  port_expose: $JINA_PORT
+  timeout_ctrl: -1
+  timeout_ready: -1
+pods:
+  - name: encoder
+    uses: pods/encode.yml
+    timeout_ready: -1
+    timeout_ctrl: -1
+    read_only: true
+  - name: indexer
+    uses: pods/index.yml
+    timeout_ready: -1
+    timeout_ctrl: -1
