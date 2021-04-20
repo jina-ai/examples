@@ -135,3 +135,6 @@ jina-profile*.json
 
 models
 result.html # genreated in pokedex example
+/advanced-vector-search/siftsmall/
+/southpark-search/data/character-lines.csv
+**/metrics.txt

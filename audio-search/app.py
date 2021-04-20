@@ -9,6 +9,7 @@ import sys
 
 import click
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 JINA_TOPK = 5
 
@@ -42,10 +43,12 @@ def main(task, num_docs):
 
         f = Flow.load_config('flows/index.yml')
         with f:
-            f.index_files('data/*.wav', batch_size=2, size=num_docs)
+            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+                f.index_files('data/*.wav', batch_size=2, size=num_docs)
     elif task == 'query':
         f = Flow.load_config('flows/query.yml')
         with f:
+            # no perf measurement here, as it opens the REST API and blocks
             f.block()
     elif task == 'dryrun':
         f = Flow.load_config('flows/query.yml')
