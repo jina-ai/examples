@@ -9,6 +9,7 @@ import requests
 from jina import Document
 from jina.clients.sugary_io import _input_lines
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 
@@ -38,22 +39,24 @@ def index(num_docs):
     with f:
         print(f'Indexing {os.environ["JINA_DATA_FILE_1"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None))
-        f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs} (1)', logger=f.logger):
+            f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
     with f:
         print(f'Indexing {os.environ["JINA_DATA_FILE_2"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None))
-        f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs} (2)', logger=f.logger):
+            f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
 
 def index_rest(num_docs):
     f = Flow().load_config('flows/index.yml')
 
     with f:
-        for data_path in [
+        for i, data_path in enumerate([
             os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None)),
             os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None)),
-        ]:
+        ]):
             print(f'Indexing {data_path}')
             url = f'http://0.0.0.0:{f.port_expose}/index'
 
@@ -63,7 +66,8 @@ def index_rest(num_docs):
                 read_mode='r',
             )
             data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-            r = requests.post(url, json=data_json)
+            with TimeContext(f'QPS: indexing restful {num_docs} ({i+1})', logger=f.logger):
+                r = requests.post(url, json=data_json)
             if r.status_code != 200:
                 raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
 
@@ -79,19 +83,21 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search_lines(
-                lines=[
-                    text,
-                ],
-                line_format='text',
-                on_done=ppr,
-                top_k=top_k,
-            )
+            with TimeContext(f'QPS: query', logger=f.logger):
+                f.search_lines(
+                    lines=[
+                        text,
+                    ],
+                    line_format='text',
+                    on_done=ppr,
+                    top_k=top_k,
+                )
 
 
 def query_restful():
     f = Flow().load_config('flows/query.yml')
     f.use_rest_gateway()
+    # no perf measure, as it opens a REST api and blocks
     with f:
         f.block()
 
