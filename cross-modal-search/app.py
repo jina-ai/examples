@@ -9,6 +9,7 @@ import requests
 from jina import Document
 from jina.clients.sugary_io import _input_lines
 from jina import Flow
+from jina.logging.profile import TimeContext
 
 from dataset import input_index_data
 
@@ -87,10 +88,11 @@ def main(task, num_docs, request_size, data_set, model_name):
     print(f'### task = {task}')
     if task == 'index':
         with Flow.load_config('flow-index.yml') as f:
-            f.index(
-                input_fn=input_index_data(num_docs, request_size, data_set),
-                request_size=request_size
-            )
+            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+                f.index(
+                    input_fn=input_index_data(num_docs, request_size, data_set),
+                    request_size=request_size
+                )
     elif task == 'index_restful':
         index_restful(num_docs)
     elif task == 'query':
