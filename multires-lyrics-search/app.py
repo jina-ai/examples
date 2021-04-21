@@ -13,6 +13,7 @@ import requests
 from jina.flow import Flow
 from jina import Document
 from jina.clients.sugary_io import _input_lines
+from jina.logging.profile import TimeContext
 
 
 def config():
@@ -48,7 +49,8 @@ def input_fn():
 def index():
     f = Flow.load_config('flows/index.yml')
     with f:
-        f.index(input_fn, request_size=8)
+        with TimeContext(f'QPS: indexing', logger=f.logger):
+            f.index(input_fn, request_size=8)
 
 
 # for search
