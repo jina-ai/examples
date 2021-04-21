@@ -5,6 +5,7 @@ import os
 
 import click
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
@@ -35,7 +36,8 @@ def index(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
 
 
 def query(top_k):
@@ -49,12 +51,14 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
+            with TimeContext(f'QPS: query', logger=f.logger):
+                f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
 
 
 def query_restful():
     f = Flow().load_config("flows/query.yml")
     f.use_rest_gateway()
+    # no perf measure, as it opens a REST api and blocks
     with f:
         f.block()
 
