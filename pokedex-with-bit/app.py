@@ -5,6 +5,7 @@ import os
 import sys
 
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 num_docs = int(os.environ.get('JINA_MAX_DOCS', 50000))
 image_src = 'data/**/*.png'
@@ -22,10 +23,12 @@ def config():
 
 # for index
 def index():
-    f = Flow.load_config('flows/index.yml')
+    data_func_list = list(image_src)
 
-    with f:
-        f.index_files(image_src, request_size=64, read_mode='rb', size=num_docs)
+    with Flow.load_config('flows/index.yml') as flow:
+        with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
+            flow.index_files(image_src, request_size=64, read_mode='rb', size=num_docs)
+
 
 
 # for search

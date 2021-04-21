@@ -7,6 +7,7 @@ import os
 import pytest
 
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 NUM_DOCS = 3
 TOP_K = 3
@@ -28,10 +29,13 @@ def download_model():
 
 
 def index_documents():
-    f = Flow().load_config('flows/index.yml')
 
-    with f:
-        f.index_files(os.environ['JINA_DATA'], request_size=64, read_mode='rb', size=NUM_DOCS)
+    data_func_list = list(os.environ['JINA_DATA'])
+
+    with Flow.load_config('flows/index.yml') as flow:
+        with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
+            flow.index_files(os.environ['JINA_DATA'], request_size=64, read_mode='rb', size=NUM_DOCS)
+
 
 
 def call_api(url, payload=None, headers={'Content-Type': 'application/json'}):
