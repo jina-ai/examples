@@ -3,9 +3,11 @@ __license__ = "Apache-2.0"
 
 import os
 import sys
+from glob import glob
 
 import click
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50000))
 IMAGE_SRC = 'data/**/*.png'
@@ -23,15 +25,18 @@ def config():
 
 def index(num_docs: int):
     f = Flow.load_config('flows/index.yml')
+    num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC), recursive=True)))
 
     with f:
-        f.index_files(IMAGE_SRC, request_size=64, read_mode='rb', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_files(IMAGE_SRC, request_size=64, read_mode='rb', size=num_docs)
 
 
 def query():
     f = Flow.load_config('flows/query.yml')
     f.use_rest_gateway()
 
+    # no perf measure, as it opens a REST api and blocks
     with f:
         f.block()
 
@@ -55,6 +60,7 @@ def main(task: str, num_docs: int):
                     \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
                     \n |                                   🤖🤖🤖                                         | \
                     \n +----------------------------------------------------------------------------------+')
+            sys.exit(1)
         index(num_docs)
     if task == "query":
         if not os.path.exists(workspace):
