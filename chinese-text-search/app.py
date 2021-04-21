@@ -9,7 +9,7 @@ import requests
 from jina import Document
 from jina.clients.sugary_io import _input_lines
 from jina.flow import Flow
-
+from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 
@@ -36,7 +36,8 @@ def index(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
 
 def index_restful(num_docs):
     f = Flow().load_config('flows/index.yml')
@@ -60,15 +61,16 @@ def index_restful(num_docs):
 def query(top_k):
     f = Flow().load_config("flows/query.yml")
     with f:
-        while True:
-            text = input("please type a sentence: ")
-            if not text:
-                break
+        with TimeContext(f'QPS: query', logger=f.logger):
+            while True:
+                text = input("please type a sentence: ")
+                if not text:
+                    break
 
-            def ppr(x):
-                print_topk(x, text)
+                def ppr(x):
+                    print_topk(x, text)
 
-            f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
+                f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
 
 
 def query_restful():
