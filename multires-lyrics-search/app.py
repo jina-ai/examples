@@ -33,6 +33,7 @@ def input_fn():
     lyrics_file = os.environ.setdefault(
         'JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv'
     )
+    docs = []
     with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
@@ -42,15 +43,18 @@ def input_fn():
                     d.tags['SName'] = row[1]
                     d.tags['SLink'] = row[2]
                     d.text = row[3]
-                yield d
+                docs.append(d)
+
+    return docs
 
 
 # for index
 def index():
     f = Flow.load_config('flows/index.yml')
     with f:
-        with TimeContext(f'QPS: indexing', logger=f.logger):
-            f.index(input_fn, request_size=8)
+        input_docs = input_fn()
+        with TimeContext(f'QPS: indexing {len(input_docs)}', logger=f.logger):
+            f.index(input_docs, request_size=8)
 
 
 # for search

@@ -61,15 +61,15 @@ def index_restful(num_docs):
 def query(top_k):
     f = Flow().load_config("flows/query.yml")
     with f:
-        with TimeContext(f'QPS: query', logger=f.logger):
-            while True:
-                text = input("please type a sentence: ")
-                if not text:
-                    break
+        while True:
+            text = input("please type a sentence: ")
+            if not text:
+                break
 
-                def ppr(x):
-                    print_topk(x, text)
+            def ppr(x):
+                print_topk(x, text)
 
+            with TimeContext(f'QPS: query with 1', logger=f.logger):
                 f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
 
 

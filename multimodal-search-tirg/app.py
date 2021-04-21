@@ -100,7 +100,7 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
-            with TimeContext(f'QPS: query', logger=f.logger):
+            with TimeContext(f'QPS: query with {len(image_paths)}', logger=f.logger):
                 f.search(input_fn=query_generator(image_paths, text_queries), on_done=print_result)
 
 
