@@ -11,6 +11,7 @@ from jina.flow import Flow
 from jina import Document
 from jina.clients.sugary_io import _input_files
 from jina.logging import default_logger as logger
+from jina.logging.profile import TimeContext
 from jina.types.document.multimodal import MultimodalDocument
 
 num_docs = 100
@@ -94,11 +95,13 @@ def main(task, data_path, num_docs, batch_size, image_path, text_query, overwrit
             clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
-            f.index(index_generator(data_path, num_docs), batch_size=batch_size)
+            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+                f.index(index_generator(data_path, num_docs), batch_size=batch_size)
     elif task == 'query':
         f = Flow.load_config('flow-query.yml')
         with f:
-            f.search(input_fn=query_generator(image_paths, text_queries), on_done=print_result)
+            with TimeContext(f'QPS: query', logger=f.logger):
+                f.search(input_fn=query_generator(image_paths, text_queries), on_done=print_result)
 
 
 if __name__ == '__main__':
