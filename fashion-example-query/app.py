@@ -12,7 +12,7 @@ import webbrowser
 import random
 
 from jina.flow import Flow
-from jina.logging.profile import ProgressBar
+from jina.logging.profile import ProgressBar, TimeContext
 from jina.helper import colored
 from jina.logging import default_logger
 from jina.proto import jina_pb2
@@ -139,14 +139,16 @@ def query_generator(num_doc: int, target: dict):
 def index(num_doc, target: dict):
     f = Flow.load_config('flows/index.yml')
     with f:
-        f.index(index_generator(num_doc, target), request_size=2048)
+        with TimeContext(f'QPS: indexing {num_doc}', logger=f.logger):
+            f.index(index_generator(num_doc, target), request_size=2048)
 
 
 def query(num_doc, target: dict):
     f = Flow.load_config('flows/query.yml')
     with f:
-        f.search(query_generator(num_doc, target), shuffle=True, size=128,
-                 on_done=print_result, request_size=32, top_k=TOP_K)
+        with TimeContext(f'QPS: query with {num_doc}', logger=f.logger):
+            f.search(query_generator(num_doc, target), shuffle=True, size=128,
+                     on_done=print_result, request_size=32, top_k=TOP_K)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
