@@ -36,6 +36,7 @@ def index(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
+        num_docs = min(num_docs, len(open(data_path).readlines()))
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
             f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
 
