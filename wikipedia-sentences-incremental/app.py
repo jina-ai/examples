@@ -39,12 +39,14 @@ def index(num_docs):
     with f:
         print(f'Indexing {os.environ["JINA_DATA_FILE_1"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None))
+        num_docs = min(num_docs, len(open(data_path).readlines()))
         with TimeContext(f'QPS: indexing {num_docs} (1)', logger=f.logger):
             f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
     with f:
         print(f'Indexing {os.environ["JINA_DATA_FILE_2"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None))
+        num_docs = min(num_docs, len(open(data_path).readlines()))
         with TimeContext(f'QPS: indexing {num_docs} (2)', logger=f.logger):
             f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
@@ -60,13 +62,15 @@ def index_rest(num_docs):
             print(f'Indexing {data_path}')
             url = f'http://0.0.0.0:{f.port_expose}/index'
 
+            actual_num_docs = min(num_docs, len(open(data_path).readlines()))
+
             input_docs = _input_lines(
                 filepath=data_path,
                 size=num_docs,
                 read_mode='r',
             )
             data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-            with TimeContext(f'QPS: indexing restful {num_docs} ({i+1})', logger=f.logger):
+            with TimeContext(f'QPS: indexing restful {actual_num_docs} ({i+1})', logger=f.logger):
                 r = requests.post(url, json=data_json)
             if r.status_code != 200:
                 raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
