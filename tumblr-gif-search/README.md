@@ -47,13 +47,14 @@ pip install --upgrade -r requirements.txt
 
 ### Download the data
 
-The full dataset consists of 125,781 GIFs downloaded from Tumblr, with the URLs stored in [`data/tgif-v-1.0.tsv`](data/tgif-v-1.0.tsv). You may want to edit this to reduce the filecount and speed up your indexing.
+The full dataset consists of 125,781 GIFs downloaded from Tumblr, with the URLs stored in [`data/tgif-v-1.0.tsv`](data/tgif-v-1.0.tsv).
 
 To download the data, just run:
 
 ```bash
-python gif_download.py
+python gif_download.py -l 1000
 ```
+You can limit the number of downloaded GIFs with the `-l` parameter.
 
 ## Run Index Flow
 
