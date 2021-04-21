@@ -7,6 +7,7 @@ from glob import glob
 
 import click
 from jina.flow import Flow
+from jina.logging.profile import TimeContext
 
 GIF_BLOB = 'data/*.gif'
 # TODO test w 2
@@ -28,15 +29,17 @@ def config():
 
 def index(num_docs: int):
     f = Flow.load_config('flow-index.yml')
-
+    num_docs = min(num_docs, len(glob(GIF_BLOB)))
     with f:
-        f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=num_docs)
 
 
 def query_restful():
     f = Flow.load_config('flow-query.yml')
     f.use_rest_gateway()
 
+    # no perf measure, as it opens a REST api and blocks
     with f:
         f.block()
 
