@@ -5,6 +5,7 @@ import os
 import sys
 from glob import glob
 
+import click
 from jina.flow import Flow
 
 GIF_BLOB = 'data/*.gif'
@@ -13,6 +14,7 @@ SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
 SHARDS_INDEXER = 2
 JINA_TOPK = 11
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 
 
 def config():
@@ -24,51 +26,56 @@ def config():
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
-# for index
-def index():
+def index(num_docs: int):
     f = Flow.load_config('flow-index.yml')
 
     with f:
-        f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True)
+        f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=num_docs)
 
 
-# for search
-def search():
+def query_restful():
     f = Flow.load_config('flow-query.yml')
+    f.use_rest_gateway()
 
     with f:
-        # waiting for input via REST gateway
         f.block()
 
 
-# for test before put into docker
 def dryrun():
     f = Flow.load_config('flow-query.yml')
-
     with f:
         pass
 
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('choose between "index" and "search" mode')
-        exit(1)
-    if sys.argv[1] == 'index':
-        config()
-        workspace = os.environ['JINA_WORKSPACE']
+@click.command()
+@click.option(
+    "--task",
+    "-t",
+    type=click.Choice(
+        ["index", "query"], case_sensitive=False
+    ),
+)
+@click.option("--num-docs", "-n", default=MAX_DOCS)
+def main(task: str, num_docs: int):
+    config()
+    workspace = os.environ['JINA_WORKSPACE']
+
+    if task == "index":
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
+                       \n |                                   🤖🤖🤖                                        | \
+                       \n | The directory {workspace} already exists. Please remove it before indexing again. | \
+                       \n |                                   🤖🤖🤖                                        | \
+                       \n +---------------------------------------------------------------------------------+')
             sys.exit(1)
-        index()
-    elif sys.argv[1] == 'search':
-        config()
-        search()
-    elif sys.argv[1] == 'dryrun':
-        config()
+        index(num_docs)
+    if task == "query":
+        if not os.path.exists(workspace):
+            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+        query()
+    if task == "dryrun":
         dryrun()
-    else:
-        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
+
+
+if __name__ == '__main__':
+    main()
