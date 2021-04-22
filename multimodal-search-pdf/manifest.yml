@@ -1,0 +1,15 @@
+manifest_version: 1
+name: pdf-search
+description: 'Jina App on searching text, image, and partial PDF in PDF files'
+author: "Jina AI Dev-Team (dev-team@jina.ai)"
+url: https://github.com/jina-ai/examples/tree/master/multimodal-search-pdf
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/examples/tree/master/multimodal-search-pdf
+version: 0.0.1
+license: apache-2.0
+keywords: [PDF, example]
+type: app
+kind: example
+avatar: None
+platform: "linux/amd64"
+update: "None"
