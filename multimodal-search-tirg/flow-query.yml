@@ -4,6 +4,7 @@ with:
   prefetch: 10
   read_only: true  # better add this in the query time
   port_expose: $JINA_PORT
+  restful: True
 pods:
   - name: image_read
     uses: pods/image-read.yml

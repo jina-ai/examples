@@ -85,6 +85,21 @@ This will start the server, where you can then run your query and see the result
 python app.py --task query --image_path path_to_image --text_query 'change color to red'
 ```
 
+### With REST API
+
+```sh
+python app.py -t query_restful
+```
+
+Then:
+
+```sh
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
+````
+
+Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
+
+
 ## Troubleshooting
 
 ### Memory Issues
