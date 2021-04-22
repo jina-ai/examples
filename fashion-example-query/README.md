@@ -70,6 +70,21 @@ Now for the query time, run:
 python app.py -t query
 ```
 
+### With REST API
+
+```sh
+python app.py -t query_restful
+```
+
+Then:
+
+```sh
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
+````
+
+Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
+
+
 ## Results
 
 So if we run this as it is, we will see our results filtered by pullovers like this:

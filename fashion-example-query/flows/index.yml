@@ -2,6 +2,7 @@
 version: '1'
 with:
   compress_hwm: 1024
+  restful: True
 pods:
   - name: encode
     uses: pods/encode.yml

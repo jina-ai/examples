@@ -2,23 +2,23 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import sys
 import click
+import requests
 from collections import defaultdict
-
 
 import urllib.request
 import gzip
-import numpy as np
 import webbrowser
 import random
 
 from jina.flow import Flow
+from jina import Document
+from jina.clients.sugary_io import _input_lines
+
 from jina.logging.profile import ProgressBar
 from jina.helper import colored
 from jina.logging import default_logger
-from jina.proto import jina_pb2
-from jina import Document
-
 
 from pkg_resources import resource_filename
 from components import *
@@ -27,7 +27,6 @@ result_html = []
 TOP_K = 10
 num_docs_evaluated = 0
 evaluation_value = defaultdict(float)
-
 
 label_id = {
     0: 'T-shirt/top',
@@ -71,9 +70,9 @@ def write_html(html_path: str):
         t = fp.read()
         t = t.replace('{% RESULT %}', '\n'.join(result_html))
         t = t.replace('{% PRECISION_EVALUATION %}',
-            '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
+                      '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
         t = t.replace('{% RECALL_EVALUATION %}',
-            '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
+                      '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
         t = t.replace('{% TOP_K %}', str(TOP_K))
         fw.write(t)
 
@@ -121,7 +120,7 @@ def download_data(target: dict, download_proxy=None):
 def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
-        if label_int < 3: #We are using only 3 categories, no need to index the rest
+        if label_int < 3:  # We are using only 3 categories, no need to index the rest
             with Document() as d:
                 d.content = target['index']['data'][j]
                 category = get_mapped_label(label_int)
@@ -131,9 +130,9 @@ def index_generator(num_doc: int, target: dict):
 
 def query_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        n = random.randint(0, 9999) #there are 10000 query examples, so that's the limit
-        label_int = target['query-labels']['data'][n][0] 
-        category = get_mapped_label(label_int) 
+        n = random.randint(0, 9999)  # there are 10000 query examples, so that's the limit
+        label_int = target['query-labels']['data'][n][0]
+        category = get_mapped_label(label_int)
         if category == 'Pullover':
             d = Document(content=(target['query']['data'][n]))
             d.tags['label'] = category
@@ -154,6 +153,39 @@ def query(num_doc, target: dict):
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
+def index_restful(num_docs):
+    f = Flow().load_config('flows/index.yml')
+
+    with f:
+        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
+        print(f'Indexing {data_path}')
+        url = f'http://0.0.0.0:{f.port_expose}/index'
+
+        input_docs = _input_lines(
+            filepath=data_path,
+            size=num_docs,
+            read_mode='r',
+        )
+        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
+        print(f'#### {len(data_json["data"])}')
+        r = requests.post(url, json=data_json)
+        if r.status_code != 200:
+            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
+
+
+def query_restful():
+    f = Flow().load_config("flows/query.yml")
+    f.use_rest_gateway()
+    with f:
+        f.block()
+
+
+def dryrun():
+    f = Flow().load_config("flows/index.yml")
+    with f:
+        pass
+
+
 def config(task):
     shards_encoder = 2 if task == 'index' else 1
     shards_indexer = 1
@@ -166,12 +198,13 @@ def config(task):
 
 
 @click.command()
-@click.option('--task', '-t')
+@click.option('--task', '-t',
+              type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False))
 @click.option('--num_docs_query', '-n', default=100)
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
     config(task)
-        
+
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
@@ -191,6 +224,19 @@ def main(task, num_docs_query, num_docs_index):
         }
     }
     download_data(targets, None)
+    workspace = os.environ["JINA_WORKSPACE"]
+    if 'index' in task:
+        if os.path.exists(workspace):
+            print(
+                f'\n +------------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n +------------------------------------------------------------------------------------+'
+            )
+            sys.exit(1)
+
+    print(f'### task = {task}')
     if task == 'index':
         config(task)
         workspace = os.environ['JINA_WORKDIR']
@@ -201,9 +247,17 @@ def main(task, num_docs_query, num_docs_index):
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
         index(num_docs_index, targets)
+    elif task == 'index_restful':
+        index_restful(num_docs_index)
     elif task == 'query':
         config(task)
         query(num_docs_query, targets)
+    elif task == 'query_restful':
+        if not os.path.exists(workspace):
+            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+        query_restful()
+    elif task == 'dryrun':
+        dryrun()
     else:
         raise NotImplementedError(
             f'unknown task: {task}. A valid task is either `index` or `query`.')
