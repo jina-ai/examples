@@ -1,4 +1,4 @@
-jina[hub,http]==1.0.7
+jina[hub,http]==1.1.0
 torch==1.7.1
 transformers==4.1.1
 requests~=2.24
