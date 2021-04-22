@@ -2,8 +2,12 @@ __copyright__ = "Copyright (c) 2020 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import sys
 
 import click
+import requests
+from jina import Document
+from jina.clients.sugary_io import _input_lines
 from jina.flow import Flow
 
 
@@ -11,9 +15,7 @@ MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 
 
 def config():
-    os.environ["JINA_DATA_FILE"] = os.environ.get(
-        "JINA_DATA_FILE", "data/toy-input.txt"
-    )
+    os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", "data/toy-input.txt")
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
 
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
@@ -28,6 +30,26 @@ def print_topk(resp, sentence):
             if score < 0.0:
                 continue
             print(f'> {idx:>2d}({score:.2f}). {match.text}')
+
+
+def index_restful(num_docs):
+    f = Flow().load_config('flows/index.yml')
+
+    with f:
+        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
+        print(f'Indexing {data_path}')
+        url = f'http://0.0.0.0:{f.port_expose}/index'
+
+        input_docs = _input_lines(
+            filepath=data_path,
+            size=num_docs,
+            read_mode='r',
+        )
+        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
+        print(f'#### {len(data_json["data"])}')
+        r = requests.post(url, json=data_json)
+        if r.status_code != 200:
+            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
 
 
 def index(num_docs):
@@ -49,7 +71,14 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
+            f.search_lines(
+                lines=[
+                    text,
+                ],
+                line_format='text',
+                on_done=ppr,
+                top_k=top_k,
+            )
 
 
 def query_restful():
@@ -69,32 +98,38 @@ def dryrun():
 @click.option(
     "--task",
     "-t",
-    type=click.Choice(
-        ["index", "query", "query_restful", "dryrun"], case_sensitive=False
-    ),
+    type=click.Choice(["index", "index_restful", "query", "query_restful", "dryrun"], case_sensitive=False),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option("--top_k", "-k", default=5)
 def main(task, num_docs, top_k):
     config()
     workspace = os.environ["JINA_WORKSPACE"]
-    if task == "index":
+    if 'index' in task:
         if os.path.exists(workspace):
-            print(f'\n +----------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                         | \
+            print(
+                f'\n +------------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                           | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                         | \
-                    \n +----------------------------------------------------------------------------------+')
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n +------------------------------------------------------------------------------------+'
+            )
+            sys.exit(1)
+
+    print(f'### task = {task}')
+    if task == "index":
         index(num_docs)
-    if task == "query":
+    elif task == "index_restful":
+        index_restful(num_docs)
+    elif task == "query":
         if not os.path.exists(workspace):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
         query(top_k)
-    if task == "query_restful":
+    elif task == "query_restful":
         if not os.path.exists(workspace):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
         query_restful()
-    if task == "dryrun":
+    elif task == "dryrun":
         dryrun()
 
 
