@@ -116,6 +116,15 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
   </tr>
   <tr>
     <td>
+      <h1>🖼️📄</h1>
+    </td>
+    <td>
+      <h4><a href="./multimodal-search-pdf">PDF Search: Search PDF with text, image or PDF in the query</a></h4>
+      Use different modalities (image, text or PDF) to search PDF
+    </td>
+  </tr>
+  <tr>
+    <td>
       <h1>🗂️</h1>
     </td>
     <td>
