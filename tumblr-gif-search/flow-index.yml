@@ -2,6 +2,7 @@
 version: '1'
 with:
   show_exc_info: true
+  restful: True
 pods:
   - name: chunk_seg
     uses: segment/segment.yml
