@@ -9,6 +9,7 @@ import os
 
 from collections import defaultdict
 from functools import partial
+import requests
 
 from jina.flow import Flow
 from jina import Document
@@ -66,7 +67,7 @@ def index_generator(db_file_path: str):
 
 
 def index_restful(num_docs):
-    f = Flow().load_config('flows/index.yml')
+    f = Flow().load_config('flow-index.yml')
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
