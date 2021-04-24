@@ -3,22 +3,11 @@ __license__ = "Apache-2.0"
 
 import os
 import sys
-from glob import glob
 import click
 import requests
-import matplotlib.pyplot as plt
-from collections import defaultdict
-
-
-import urllib.request
-import gzip
-import numpy as np
-import webbrowser
-import random
 
 from jina.flow import Flow
 from jina import Document
-from jina.clients.sugary_io import _input_files
 from jina.clients.sugary_io import _input_lines
 
 
@@ -41,7 +30,6 @@ def config():
 
 # for index
 def index():
-    config()
     f = Flow.load_config('flow-index.yml')
 
     with f:
@@ -50,7 +38,6 @@ def index():
 
 # for search
 def query():
-    config()
     f = Flow.load_config('flow-query.yml')
 
     with f:
@@ -59,7 +46,6 @@ def query():
 
 
 def index_restful(num_docs):
-    config()
     f = Flow().load_config('flow-index.yml')
 
     with f:
@@ -80,15 +66,14 @@ def index_restful(num_docs):
 
 
 def query_restful():
-    config()
-    f = Flow().load_config("flow-query.yml")
+    f = Flow().load_config('flow-query.yml')
     f.use_rest_gateway()
     with f:
         f.block()
 
 # for test before put into docker
 def dryrun():
-    f = Flow().load_config("flow-index.yml")
+    f = Flow().load_config('flow-index.yml')
     with f:
         pass
 
@@ -99,9 +84,8 @@ def dryrun():
 @click.option('--num_docs_query', '-n', default=100)
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
-    config(task)
-
-    workspace = os.environ["JINA_WORKSPACE"]
+    config()
+    workspace = os.environ['JINA_WORKSPACE']
     if 'index' in task:
         if os.path.exists(workspace):
             print(
@@ -112,26 +96,22 @@ def main(task, num_docs_query, num_docs_index):
                     \n +------------------------------------------------------------------------------------+'
             )
             sys.exit(1)
-
     print(f'### task = {task}')
     if task == 'index':
-        config(task)
-        workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
-        index(num_docs_index)
+        index()
     elif task == 'index_restful':
         index_restful(num_docs_index)
     elif task == 'query':
-        config(task)
-        query(num_docs_query)
+        query()
     elif task == 'query_restful':
         if not os.path.exists(workspace):
-            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+            print(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
         query_restful()
     elif task == 'dryrun':
         dryrun()
