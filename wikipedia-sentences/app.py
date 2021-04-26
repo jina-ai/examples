@@ -52,8 +52,9 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            with TimeContext(f'QPS: query', logger=f.logger):
-                f.search_lines(lines=[text, ], line_format='text', on_done=ppr, top_k=top_k)
+            lines = [text]
+            with TimeContext(f'QPS: querying {len(lines)}', logger=f.logger):
+                f.search_lines(lines=lines, line_format='text', on_done=ppr, top_k=top_k)
 
 
 def query_restful():
