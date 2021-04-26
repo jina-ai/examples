@@ -3,7 +3,6 @@ version: '1'
 with:
   read_only: true
   port_expose: $JINA_PORT
-  restful: True
 pods:
   - name: encoder
     uses: pods/encode.yml
