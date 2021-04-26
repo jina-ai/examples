@@ -42,7 +42,6 @@ def index_restful(num_docs):
             read_mode='r',
         )
         data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        print(f'#### {len(data_json["data"])}')
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
             r = requests.post(url, json=data_json)
             if r.status_code != 200:
