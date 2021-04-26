@@ -16,8 +16,7 @@ IMAGE_SRC = 'toy-input/*.jpg'
 
 
 def config():
-    os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", "data/toy-data")
-    os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
+    os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", IMAGE_SRC)
     os.environ['PARALLEL'] = str(1)
     os.environ['SHARDS'] = str(1)
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
