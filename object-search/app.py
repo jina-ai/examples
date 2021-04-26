@@ -5,12 +5,10 @@ import os
 import shutil
 import sys
 import requests
-import matplotlib.pyplot as plt
 
 import click
 from jina.flow import Flow
 from jina import Document
-from jina.clients.sugary_io import _input_files
 from jina.clients.sugary_io import _input_lines
 from jina.logging import default_logger as logger
 
@@ -33,6 +31,7 @@ def config():
     os.environ['SHARDS'] = str(shards)
     os.environ['WORKDIR'] = './workspace'
     os.makedirs(os.environ['WORKDIR'], exist_ok=True)
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'data/**/*.jpg')
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
