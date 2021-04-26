@@ -5,6 +5,7 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
   show_exc_info: true
+  restful: True
 pods:
   - name: chunk_seg
     uses: segment/segment.yml
