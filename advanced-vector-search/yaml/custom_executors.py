@@ -9,4 +9,4 @@ class MyEncoder(BaseNumericEncoder):
         super().__init__(*args, **kwargs)
 
     def encode(self, content: 'np.ndarray', *args, **kwargs):
-        return data
+        return content
