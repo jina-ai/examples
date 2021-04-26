@@ -69,6 +69,8 @@ def main(task: str, return_image: str, num_docs: int):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
             sys.exit(1)
         query(return_image)
+    if task == 'dry':
+        dryrun()
 
 
 if __name__ == '__main__':
