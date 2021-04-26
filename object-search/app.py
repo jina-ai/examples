@@ -12,7 +12,7 @@ from jina.logging import default_logger as logger
 from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
-IMAGE_SRC = 'data/**/*.jpg'
+IMAGE_SRC = 'toy-input/*.jpg'
 
 
 def config():
