@@ -10,7 +10,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] 
         python-version: [3.7]
-        path: [multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, pokedex-with-bit, audio-search, object-search, multimodal-search-pdf]
+        path: [multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, pokedex-with-bit, audio-search, object-search, multimodal-search-pdf, multimodal-search-tirg, cross-modal-search, chinese-text-search]
 
     steps:
       - uses: actions/checkout@v2
