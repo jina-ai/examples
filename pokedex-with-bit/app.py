@@ -65,6 +65,7 @@ def main(task: str, num_docs: int):
     if task == "query":
         if not os.path.exists(workspace):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+            sys.exit(1)
         query()
 
 
