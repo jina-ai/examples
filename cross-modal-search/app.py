@@ -23,8 +23,8 @@ def config(model_name):
     os.environ['JINA_PORT'] = '45678'
     os.environ['JINA_USE_REST_API'] = 'true'
     if model_name == 'clip':
-        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7')
-        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7')
+        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.1.0')
+        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.2-1.1.0')
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/clip/text-encoder.yml'
     elif model_name == 'vse':
         os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7')
@@ -72,7 +72,7 @@ def dryrun():
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
 def main(task, num_docs, request_size, data_set, model_name):
     config(model_name)
-    workspace = os.environ["JINA_WORKSPACE"]
+    workspace = os.environ['JINA_WORKSPACE']
     if 'index' in task:
         if os.path.exists(workspace):
             print(
