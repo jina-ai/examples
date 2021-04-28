@@ -134,6 +134,8 @@ IndexRequest:
 
 The key is the ```!FilterQL```, here we are filtering with some specific label, like pullover in this example.
 
+You can read more about [QueryLanguage](https://hanxiao.io/2020/08/28/What-s-New-in-Jina-v0-5/#new-query-language-driver) here if you need more details. 
+
 ## 💫 Deploy with Docker
 
 In order to build the docker image please run:
