@@ -3,10 +3,15 @@
 **Table of Contents**
 
 - [Run the Hello World example using query language](#run-the-hello-world-example-using-query-language)
-  - [🗝️ Key Concepts](#️-key-concepts)
-  - [🏃 Run the Flows](#-run-the-flows)
+  - [🗝️ Expected knowledge](#Expected-knowledges)
+  - [🔮 Overview of the files](#Overview-of-the-files)
+  - [🏃 Run the Flows](#run-the-flows)
+  - [🌀 Flow Diagram](#flow-diagram)
   - [🌟 Results](#results)
   - [🧞‍QueryLanguage](#querylanguage)
+  - [💫 Deploy with Docker](#Deploy-with-docker)
+  - [Next steps](#next-steps)
+  - [Community](#community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -20,7 +25,7 @@ We will use the FashionMNIST dataset to index and query. The dataset has differe
 
 1. Read up on [Jina 101](http://101.jina.ai). 
 2. Python knowledge.
-3. [Hello World Example](https://docs.jina.ai/chapters/helloworld/index.html) understanding.
+3. You have already run the [Hello World Example](https://docs.jina.ai/chapters/helloworld/index.html) successfully.
 
 
 ### Install requirements
@@ -30,6 +35,8 @@ There are some requirements to run this example, to download everything you need
 ```
 pip install -r requirements.txt
 ```
+
+## 🔮 Overview of the files
 
 ## 🏃 Run the Flows
 
@@ -52,13 +59,13 @@ There are 10 categories in the fashion-mnist-data, but to simplify this example 
     1	        Trouser
     2	        Pullover
  
- We will create a separate index per category, so each category will have its own Yaml file. We can then index the data updating its label
+ We will create a separate index per category, so each category will have its own YAML file. We can then index the data updating its label
  
  ```python
 d.tags.update({'label': get_mapped_label(label_int)})
 ```
  
-This is where you could tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do something like this
+This is where you could tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do something like this:
  
  ![alt text](.github/images/filter.png "Pullover filter")
  
@@ -90,6 +97,8 @@ To query just run:
 python app.py -t query
 ```
 
+## 🌀 Flow diagram
+
 ## 🌟 Results
 
 If you run this code as it is, you will see the results filtered by pullovers like this:
@@ -110,3 +119,32 @@ IndexRequest:
 ```
 
 The key is the ```!FilterQL```, here we are filtering with some specific label, like pullover in this example.
+
+## 💫 Deploy with Docker
+
+Add instructions on how to run with Docker:
+
+For a one line deployment, check out docker instructions here.
+
+Pre requirements:
+
+1. You have Docker installed and working.
+2. You have at least 8GB of free space on your hard drive.
+
+## Next steps
+
+Check the tutorial for [My first Jina app](https://docs.jina.ai/chapters/my_first_jina_app).
+
+## Community
+
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina.
+- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina.
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
+- [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
+
+## License
+
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
+
+Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
