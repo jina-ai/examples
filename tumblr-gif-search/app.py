@@ -91,7 +91,6 @@ def main(task, num_docs_index):
                     \n +------------------------------------------------------------------------------------+'
             )
             sys.exit(1)
-    print(f'### task = {task}')
     if task == 'index':
         index(num_docs_index)
     elif task == 'index_restful':
