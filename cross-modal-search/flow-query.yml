@@ -4,6 +4,7 @@ with:
   prefetch: 10
   rest_api: $JINA_USE_REST_API
   port_expose: 45678
+  restful: True
 pods:
   - name: loader
     uses: yaml/image-load.yml
