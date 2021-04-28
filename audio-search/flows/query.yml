@@ -4,6 +4,7 @@ with:
   read_only: true
   rest_api: true
   port_expose: $JINA_PORT
+  restful: True
 pods:
   - name: segmenter
     uses: pods/segment.yml

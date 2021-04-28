@@ -1,4 +1,4 @@
-jina[hub, http]==1.0.8
+jina[hub, http]==1.1.0
 nltk==3.5
 pycocotools==2.0.2
 torchvision

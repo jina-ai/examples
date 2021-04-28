@@ -1,10 +1,11 @@
-!MyEncoder #Custom encoder name. It's defined in components.py
+jtype: MyEncoder #Custom encoder name. It's defined in components.py
 metas:
   name: myenc  # a customized name for this encoder
-  workspace: $JINA_WORKDIR
+  py_modules:
+    - components.py
 requests: #The requests keyword defines how the behave with different types of requests
-  on:     #In Jina requests types can be index, search, update, delete and control.
-    [IndexRequest, SearchRequest]: #Especify which requests to use. Index & Search in this case
+  on: #In Jina requests types can be index, search, update, delete and control.
+    [IndexRequest, SearchRequest]:
       - !Blob2PngURI 
         with:
           height: 28

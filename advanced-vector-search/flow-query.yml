@@ -4,6 +4,7 @@ env:
   OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
 with:
   read_only: true
+  restful: True
 pods:
   - name: encoder
     show_exc_info: true
