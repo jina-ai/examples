@@ -41,14 +41,10 @@ pip install -r requirements.txt
 
 Add a list with all files in the example:
 
-* data/core/ - contains stories for Rasa Core.
-* data/nlu_data.md - contains example NLU training data.
-* actions.py - contains custom action/api code.
-* domain.yml - the domain file for Core.
-* nlu_config.yml - the NLU config file.
-* core_config.yml - the Core config file.
-* credentials.yml - contains credentials for the use with Telegram.
-* endpoints.yml - contains url for endpoint.
+* index.yml: YAML file for indexing
+* query.yml: YAML file for querying
+* encoder.yml: YAML file for encoder pod
+* /workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
 
 ## 🏃 Run the Flows
 
