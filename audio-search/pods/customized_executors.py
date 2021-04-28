@@ -34,9 +34,9 @@ class VggishEncoder(BaseTFEncoder):
         self.post_processor = Postprocessor(self.pca_path)
 
     @batching
-    def encode(self, data: Any, *args, **kwargs) -> Any:
+    def encode(self, content: Any, *args, **kwargs) -> Any:
         [embedding_batch] = self.sess.run([self.embedding_tensor],
-                                          feed_dict={self.feature_tensor: data})
+                                          feed_dict={self.feature_tensor: content})
         result = self.post_processor.postprocess(embedding_batch)
         return (np.float32(result) - 128.) / 128.
 
