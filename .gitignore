@@ -137,4 +137,5 @@ models
 result.html # genreated in pokedex example
 /advanced-vector-search/siftsmall/
 /southpark-search/data/character-lines.csv
+/pokedex-with-bit/pretrained
 **/metrics.txt
