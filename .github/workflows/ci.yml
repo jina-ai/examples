@@ -1,42 +1,18 @@
 name: CI
-on:
-  pull_request:
+
+
+on: [pull_request]
 
 jobs:
-  examples-test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest] 
-        python-version: [3.7]
-        path: [multires-lyrics-search, advanced-vector-search, fashion-example-query, tumblr-gif-search, pokedex-with-bit, audio-search, object-search, multimodal-search-pdf, multimodal-search-tirg, cross-modal-search, chinese-text-search]
-
+  example-tests:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - uses: actions/checkout@v2
-        with:
-          repository: 'jina-ai/jina-hub'
-          path: 'jinahub'
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r ${{ matrix.path }}/requirements.txt --no-cache-dir
-          pip uninstall -y jina
-          pip install jina[cicd,test,http,hub] requests --no-cache-dir
-      - name: Test examples with pytest
-        run: |
-          jina check
-          export JINA_LOG_VERBOSITY="ERROR"
-          cd ${{ matrix.path }}
-          pytest -s -v .
-        timeout-minutes: 30
+      - name: Checkout
+        uses: actions/checkout@v2
+      - id: changed-files
+        uses: jitterbit/get-changed-files@v1
+        continue-on-error: true
+      - name: ci
+        run: ./.github/ci.sh
         env:
-          JINAHUB_USERNAME: ${{ secrets.JINAHUB_USERNAME }}
-          JINAHUB_PASSWORD: ${{ secrets.JINAHUB_PASSWORD }}
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all }}
