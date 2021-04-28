@@ -48,7 +48,6 @@ def index_restful(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        print(f'Indexing {data_path}')
         url = f'http://0.0.0.0:{f.port_expose}/index'
 
         input_docs = _input_lines(
@@ -57,7 +56,6 @@ def index_restful(num_docs):
             read_mode='r',
         )
         data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        print(f'#### {len(data_json["data"])}')
         r = requests.post(url, json=data_json)
         if r.status_code != 200:
             raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
@@ -97,7 +95,6 @@ def main(task, num_docs_query, num_docs_index):
             )
             sys.exit(1)
 
-    print(f'### task = {task}')
     if task == 'index':
         config(task)
         workspace = os.environ['JINA_WORKDIR']
