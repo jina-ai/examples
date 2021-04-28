@@ -1,0 +1,172 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "advanced-vector-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "advanced-vector-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "audio-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "audio-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "chinese-text-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "cross-modal-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "cross-modal-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "fashion-example-query"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "fashion-example-query"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "multimodal-search-tirg"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "multires-lyrics-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "multires-lyrics-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "object-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "object-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "pokedex-with-bit"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "docker"
+    schedule:
+      interval: daily
+    directory: "pokedex-with-bit"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "tumblr-gif-search"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "wikipedia-sentences"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
+
+  - package-ecosystem: "pip"
+    schedule:
+      interval: daily
+    directory: "wikipedia-sentences-incremental"
+    allow:
+      - dependency-name: "jina"
+        dependency-type: "direct"
+    open-pull-requests-limit: 1
