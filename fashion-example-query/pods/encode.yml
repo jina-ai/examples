@@ -1,7 +1,8 @@
-!MyEncoder
+jtype: MyEncoder
 metas:
   name: myenc  # a customized name
-  workspace: $JINA_WORKDIR
+  py_modules:
+    - components.py
 requests:
   on:
     [IndexRequest, SearchRequest]:
