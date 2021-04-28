@@ -6,7 +6,6 @@
   - [🗝️ Expected knowledge](#Expected-knowledges)
   - [🔮 Overview of the files](#Overview-of-the-files)
   - [🏃 Run the Flows](#run-the-flows)
-  - [🌀 Flow Diagram](#flow-diagram)
   - [🌟 Results](#results)
   - [🧞‍QueryLanguage](#querylanguage)
   - [💫 Deploy with Docker](#Deploy-with-docker)
@@ -38,6 +37,13 @@ pip install -r requirements.txt
 
 ## 🔮 Overview of the files
 
+* flows/index.yml: YAML file for indexing.
+* flows/query.yml: YAML file for querying.
+* pods/encoder.yml: YAML file for encoder pod.
+* pods/indexer-pullover.yml: Indexer for each specific category.
+* /workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
+* Dockerfile: Dockerfile to run the example.
+
 ## 🏃 Run the Flows
 
 We usually need at least two Flows in Jina. One for Indexing and one for Querying. 
@@ -59,15 +65,25 @@ There are 10 categories in the fashion-mnist-data, but to simplify this example 
     1	        Trouser
     2	        Pullover
  
- We will create a separate index per category, so each category will have its own YAML file. We can then index the data updating its label
+ We will create a separate index per category, so each category will have its own YAML file. We can then index the data updating its label:
  
  ```python
 d.tags.update({'label': get_mapped_label(label_int)})
 ```
  
-This is where you could tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do something like this:
- 
- ![alt text](.github/images/filter.png "Pullover filter")
+This is where you could tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do this:
+
+```python 
+def query_generator(num_doc: int, target: dict):
+    for j in range(num_doc):
+        n = random.randint(0, 9999) #there are 10000 query examples, so that's the limit
+        label_int = target['query-labels']['data'][n][0] 
+        category = get_mapped_label(label_int) 
+        if category == 'Pullover':
+            d = Document(content=(target['query']['data'][n]))
+            d.tags['label'] = category
+            yield d
+```
  
  Then we have ready all the indexes!
 
@@ -97,8 +113,6 @@ To query just run:
 python app.py -t query
 ```
 
-## 🌀 Flow diagram
-
 ## 🌟 Results
 
 If you run this code as it is, you will see the results filtered by pullovers like this:
@@ -122,18 +136,15 @@ The key is the ```!FilterQL```, here we are filtering with some specific label, 
 
 ## 💫 Deploy with Docker
 
-Add instructions on how to run with Docker:
+In order to build the docker image please run:
 
-For a one line deployment, check out docker instructions here.
-
-Pre requirements:
-
-1. You have Docker installed and working.
-2. You have at least 8GB of free space on your hard drive.
+```bash
+docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
+```
 
 ## Next steps
 
-Check the tutorial for [My first Jina app](https://docs.jina.ai/chapters/my_first_jina_app).
+Check the tutorial for [My first Jin app](https://docs.jina.ai/chapters/my_first_jina_app).
 
 ## Community
 
