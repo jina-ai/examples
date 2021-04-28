@@ -1,4 +1,4 @@
-jina[hub,http]==1.1.0
+jina[hub,http]==1.1.10
 aiofiles
 aiohttp
 tensorflow_cpu >= 2.0
