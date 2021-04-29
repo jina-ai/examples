@@ -1,5 +1,8 @@
 import pytest
-from jina.excepts import NoAvailablePortError
+
+
+class NoAvailablePortError(Exception):
+    """When no available random port could be found"""
 
 
 @pytest.fixture(scope='function', autouse=True)

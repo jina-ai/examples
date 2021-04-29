@@ -75,6 +75,35 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 ```
 
 
+## 🏃 Run the Flows
+Now that we've got the code to load our data, we're going to dive into writing our app and running our Flows!
+### Index Flow
+To run the index you type:
+```bash
+python app.py -t index
+```
+First up we need to build up an index and then search through this index when we use the query Flow later.
+Then we have ready all the indexes!
+### Query Flow
+Now for the query time, run:
+```bash
+python app.py -t query
+```
+
+### With REST API
+
+```sh
+python app.py -t query_restful
+```
+
+Then:
+
+```sh
+curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
+````
+
+Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
+
 ## License
 
 Copyright (c) 2020-2021 Han Xiao. All rights reserved.
