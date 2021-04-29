@@ -1,2 +1,2 @@
 tensorflow-cpu==2.1
-jina[hub,http,cv]==1.0.5
+jina[hub,http,cv]==1.2.0
