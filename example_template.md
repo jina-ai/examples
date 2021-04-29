@@ -1,7 +1,7 @@
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 - [Run the EXAMPLE NAME](#run-the-example-name)
-  - [🗝️ Expected knowledge](#Expected-knowledges)
+  - [🗝️ Pre requirements](#Pre-requirements)
   - [🔮 Overview of the files](#Overview-of-the-files)
   - [🏃 Run the Flows](#run-the-flows)
   - [🌀 Flow Diagram](#flow-diagram)
@@ -22,16 +22,17 @@ Write a short description of
 
 If you want to run the example with Docker, check the instruction at the end of this README.  
 
-## 🗝️ Expected knowledge
+## 🗝️ Pre requirements
 
-Write a list of whatever the user is expected to know.
+Outline in bullet points anything the user is expected to have before diving in. For example:
 
-1. Read up on [Jina 101](http://101.jina.ai).
-2. Python knowledge.
+1. You have a working Python 3.8 environment. 
+2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
+3. You have at least 8GB of free space on your hard drive. 
 
 ### Install requirements
 
-There are some requirements to run this example, to download everything you need, just run in your terminal:
+In order to install all the Python libraries required you can run the following in your terminal:
 
 ```
 pip install -r requirements.txt
@@ -41,20 +42,20 @@ pip install -r requirements.txt
 
 Add a list with all files in the example:
 
-* index.yml: YAML file for indexing
-* query.yml: YAML file for querying
-* encoder.yml: YAML file for encoder pod
-* /workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
+* `index.yml`: YAML file for indexing
+* `query.yml`: YAML file for querying
+* `encoder.yml`: YAML file for encoder pod
+* `/workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
 
 ## 🏃 Run the Flows
 
-We usually need at least two Flows in Jina. One for Indexing and one for Querying.
+Most Jina applications will use two Flows. One for Indexing and one for Querying.
 
-### Index Flow
+### Step 1: Index your data
 
 Describe the Index Flow. Be as specific as possible. You are encouraged to user code snippets, images, or whatever helps to clarify.
 
-### Query Flow
+### Step 2: Search your data
 
 Describe the Query Flow. Be as specific as possible. You are encouraged to user code snippets, images, or whatever helps to clarify.
 
@@ -66,22 +67,23 @@ Show the Flow for this example.
 
 Short description of the results and how to interpret them if needed.
 
+## 🧞 Optional: Extra information useful for the user
 
-## 🧞 OPTIONAL: EXTRA KNOWLEDGE FROM THIS EXAMPLEs
-
-You can use this section if you feel extra knowledge could be useful.
-QueryLanguage for example.
+You can use this section to add extra information you think the user could benefit from.
+QueryLanguage, Faiss, Annoy for example. 
 
 ## 💫 Deploy with Docker
-
-Add instructions on how to run with Docker:
-
-For a one line deployment, check out docker instructions here.
 
 Pre requirements:
 
 1. You have Docker installed and working.
 2. You have at least 8GB of free space on your hard drive.
+
+In order to build the docker image please run:
+
+```bash
+docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
+```
 
 ## Next steps
 
