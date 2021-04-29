@@ -3,9 +3,10 @@
 **Table of Contents**
 
 - [Run the Hello World example using query language](#run-the-hello-world-example-using-query-language)
-  - [🗝️ Expected knowledge](#Expected-knowledges)
+  - [🗝️ Pre requirements](#Pre-requirements)
   - [🔮 Overview of the files](#Overview-of-the-files)
   - [🏃 Run the Flows](#run-the-flows)
+  - [🌀 Flow Diagram](#flow-diagram)
   - [🌟 Results](#results)
   - [🧞‍QueryLanguage](#querylanguage)
   - [💫 Deploy with Docker](#Deploy-with-docker)
@@ -20,35 +21,55 @@ This is an extension of the Hello World example using QueryLanguage.
 We will use the FashionMNIST dataset to index and query. The dataset has different categories such as t-shirts, trousers, and pullovers. We will use QueryLanguage to create a different index per each category so we can query through them. 
 
 
-## 🗝️ Expected knowledge 
+## 🗝️ Pre requirements
 
-1. Read up on [Jina 101](http://101.jina.ai). 
-2. Python knowledge.
-3. You have already run the [Hello World Example](https://docs.jina.ai/chapters/helloworld/index.html) successfully.
+Before running this example, we recommend you meet the following requirements.
 
+1. You have a working Python 3.8 environment. 
+2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
+3. You have at least 8GB of free space on your hard drive.
 
 ### Install requirements
 
-There are some requirements to run this example, to download everything you need, just run in your terminal:
+Begin by cloning the repo so you can get the required files and datasets:
 
+```sh
+git clone https://github.com/jina-ai/examples
+````
+
+And enter the correct folder:
+
+```sh
+cd examples/fashion-example-query
 ```
+
+On your terminal, you should now be located in you the fashion-example-query folder. Let's install Jina and the other required python libraries. For further information on installing Jina check out [documentation](https://docs.jina.ai/chapters/core/setup/).
+
+```sh
 pip install -r requirements.txt
 ```
 
 ## 🔮 Overview of the files
 
-* flows/index.yml: YAML file for indexing.
-* flows/query.yml: YAML file for querying.
-* pods/encoder.yml: YAML file for encoder pod.
-* pods/indexer-pullover.yml: Indexer for each specific category.
-* /workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
-* Dockerfile: Dockerfile to run the example.
+This are the files you will see in this example:
+
+* `components.py`: Python file with the custom encoder to use.
+* `app.py`: Main Python file to run this example.
+* `flows/index.yml`: YAML file for indexing.
+* `flows/query.yml`: YAML file for querying.
+* `pods/encoder.yml`: YAML file for encoder pod.
+* `pods/indexer-pullover.yml`: Indexer for each specific category.
+* `/workspace`: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
+* `/tests`: Directory with tests for this example.
+* `Dockerfile`: Dockerfile to run the example.
+* `requirements.txt`: Text file to install requirements
 
 ## 🏃 Run the Flows
 
-We usually need at least two Flows in Jina. One for Indexing and one for Querying. 
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building skips and just run the app, check out the [Docker section below](#Deploy-with-docker).
+Most Jina applications will use two Flows. One for Indexing and one for Querying.
 
-### Index Flow
+### Step 1: Index your data
 
 First thing we need is to index our data, and we need a Flow to manage this. 
 
@@ -71,7 +92,7 @@ There are 10 categories in the fashion-mnist-data, but to simplify this example 
 d.tags.update({'label': get_mapped_label(label_int)})
 ```
  
-This is where you could tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do this:
+This is where you tweak the code if you would like to see only one category. For example if you would like to see only pullovers, you could do this:
 
 ```python 
 def query_generator(num_doc: int, target: dict):
@@ -84,9 +105,17 @@ def query_generator(num_doc: int, target: dict):
             d.tags['label'] = category
             yield d
 ```
- 
- Then we have ready all the indexes!
 
+But in the `category` you can change the label and get results for T-shirt, Trouser and so on, for example:
+
+```python 
+if category == 'Trouser':
+    d = Document(content=(target['query']['data'][n]))
+    d.tags['label'] = category
+    yield d
+```
+ 
+Then we have ready all the indexes!
 
 You can run all this with the command:
 
@@ -94,7 +123,7 @@ You can run all this with the command:
 python app.py -t index
 ```
 
-### Query Flow
+### Step 2: Search your data
 
 The query Flow is similar but it uses the  `query.yml ` file instead of `index.yml`
 
@@ -138,6 +167,12 @@ You can read more about [QueryLanguage](https://hanxiao.io/2020/08/28/What-s-New
 
 ## 💫 Deploy with Docker
 
+If you want to run this example quickly you can do so with Docker.
+
+Pre requirements:
+1. You have Docker installed and working.
+2. You have at least 8GB of free space on your hard drive.
+
 In order to build the docker image please run:
 
 ```bash
@@ -146,7 +181,7 @@ docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
 
 ## Next steps
 
-Check the tutorial for [My first Jin app](https://docs.jina.ai/chapters/my_first_jina_app).
+Check the tutorial for [My first Jina app](https://docs.jina.ai/chapters/my_first_jina_app).
 
 ## Community
 
