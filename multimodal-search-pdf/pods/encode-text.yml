@@ -1,0 +1,9 @@
+jtype: TransformerTorchEncoder # this is the pod to encode the text
+requests:
+  use_default: true
+  on:
+    [SearchRequest, IndexRequest]:
+      with:
+        traversal_paths: ['c','cc'] # we will encode both the chunks level (C) and chunks of chunks level (CC), because we segment text into C and CC levels
+      drivers:
+        - jtype: EncodeDriver {}    # we need EncodeDriver for encoder

@@ -1,0 +1,16 @@
+!SimpleAggregateRanker # this is the ranker used in the end to Aggregate chunks of images and text into docs
+with:
+  aggregate_function: 'min' # this will choose the 'min' score matches
+  inverse_score: true  # this will reverse the score of matches, so the smallest score will become the highest
+requests:
+  on:
+    SearchRequest:
+      - jtype: Chunk2DocRankDriver  # use Chunk2DocRankDriver for SimpleAggregateRanker
+        with:
+          traversal_paths: ['r']   #  get results for the root level with the results from the chunks
+      #- jtype: LogInfoDriver {} #this can be used to format the output
+      - jtype: ExcludeQL
+        with:
+          fields:
+            - buffer
+          traversal_paths: [ 'cm', 'm' ]

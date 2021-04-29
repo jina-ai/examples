@@ -1,0 +1,15 @@
+jtype: ImageTorchEncoder # this is the pod to encode the image
+with:
+  channel_axis: -1   # this is the param that we set for the constructor
+requests:
+  use_default: true
+  on:
+    [IndexRequest, SearchRequest]:  # we can combine the 2 requests in a list if they have the same configurations
+      with:
+        traversal_paths: ['c']      # the images are in chunks level so we traverse on 'c'
+      drivers:
+        - jtype: EncodeDriver {}    # we need EncodeDriver for encoder
+        - jtype: ExcludeQL          # this driver can help us to remove the blob(raw data) at chunks level, so we only keep the embeddings
+          with:
+            fields:
+              - blob

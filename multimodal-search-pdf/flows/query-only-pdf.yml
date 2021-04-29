@@ -1,0 +1,49 @@
+jtype: Flow  # this is a flow only for querying text data
+version: '1'
+with:
+  read_only: true
+  rest_api: true
+  port_expose: $JINA_PORT
+  show_exc_info: true
+pods:
+  - name: segmentpdf
+    uses: pods/segment-pdf.yml
+  # first pathway
+  - name: filter_text
+    uses: pods/filter.yml
+    env:
+      filter_mime: text/plain
+    needs: segmentpdf
+  - name: textSegmenter
+    uses: pods/segment-text-customized.yml
+  - name: textEncoder
+    uses: pods/encode-text.yml
+  - name: textModIndexerCC
+    uses: pods/index-comp-text-cc.yml
+    env:
+      indexer_name: textCC
+  - name: rankCCToC
+    uses: pods/rankc.yml
+  - name: chunkmetaIndexer
+    uses: pods/index-chunkmeta.yml
+  # second pathway, in parallel
+  - name: filter_image
+    uses: pods/filter.yml
+    env:
+      filter_mime: image/png
+    needs: segmentpdf
+  - name: imageCrafter
+    uses: pods/craft-image.yml
+  - name: imageEncoder
+    uses: pods/encode-image.yml
+  - name: imageModIndexer
+    uses: pods/index-comp.yml
+    env:
+      indexer_name: image
+  # join
+  - needs: [imageModIndexer, chunkmetaIndexer]
+    name: joiner
+  - name: rankCToR
+    uses: pods/rank.yml
+  - name: docIndexer
+    uses: pods/index-doc.yml
