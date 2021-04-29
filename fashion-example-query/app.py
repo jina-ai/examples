@@ -28,7 +28,6 @@ from jina.proto import jina_pb2
 
 
 from pkg_resources import resource_filename
-from components import *
 
 result_html = []
 TOP_K = 10

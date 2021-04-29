@@ -73,10 +73,10 @@ python app.py -t query
 This will create a Docker image with pre-indexed data and an open port for REST queries.
 
 1. Run all the steps in setup and index first. Don't run anything in the search step!
-2. If you want to [push to Jina Hub](#push-to-jina-hub) be sure to edit the `LABEL`s in `Dockerfile` and fields in `manifest.yml` to avoid clashing with other images
+2. If you want to [push to Jina Hub](https://github.com/jina-ai/jina-hub) be sure to edit the `LABEL`s in `Dockerfile` and fields in `manifest.yml` to avoid clashing with other images
 3. Run `docker build -t <your_image_name> .` in the root directory of this repo
 5. Run it with `docker run -p 45678:45678 <your_image_name>`
-6. Search using instructions from [Search section](#search) above
+6. Search using instructions from Search section above
 
 ### Image name format
 

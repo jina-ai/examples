@@ -5,6 +5,7 @@ with:
   rest_api: true
   port_expose: $JINA_PORT
   timeout_ready: 600000
+  restful: True
 pods:
   - name: normalizer
     method: add
