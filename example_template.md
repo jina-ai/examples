@@ -32,9 +32,21 @@ Outline in bullet points anything the user is expected to have before diving in.
 
 ### Install requirements
 
-In order to install all the Python libraries required you can run the following in your terminal:
+Begin by cloning the repo so you can get the required files and datasets:
 
+```sh
+git clone https://github.com/jina-ai/examples
+````
+
+And enter the correct folder:
+
+```sh
+cd examples/example_to_use
 ```
+
+On your terminal, you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required python libraries. For futher information on installing Jina check out [documentation](https://docs.jina.ai/chapters/core/setup/).
+
+```sh
 pip install -r requirements.txt
 ```
 
@@ -48,6 +60,7 @@ Add a list with all files in the example:
 * `/workspace: Directory that stores indexed files (embeddings and documents). Automatically created after the first indexing.
 
 ## 🏃 Run the Flows
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building skips and just run the app, check out the [Docker section below](#Deploy-with-docker).
 
 Most Jina applications will use two Flows. One for Indexing and one for Querying.
 
