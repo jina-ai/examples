@@ -5,7 +5,6 @@ import os
 import click
 from collections import defaultdict
 
-
 import urllib.request
 import gzip
 import numpy as np
@@ -19,14 +18,12 @@ from jina.logging import default_logger
 from jina.proto import jina_pb2
 from jina import Document
 
-
 from pkg_resources import resource_filename
 
 result_html = []
 TOP_K = 10
 num_docs_evaluated = 0
 evaluation_value = defaultdict(float)
-
 
 label_id = {
     0: 'T-shirt/top',
@@ -38,10 +35,10 @@ label_id = {
 def get_mapped_label(label_int: str):
     """
     Get a label_int and return the description of that label
-    label_int	Description
-    0	        T-shirt/top
-    1	        Trouser
-    2	        Pullover
+    label_int   Description
+    0           T-shirt/top
+    1           Trouser
+    2           Pullover
     """
     return label_id.get(label_int, "Invalid tag")
 
@@ -65,14 +62,14 @@ def write_html(html_path: str):
     global num_docs_evaluated
     global evaluation_value
 
-    with open(resource_filename('jina', '/'.join(('resources', 'helloworld.html'))), 'r') as fp, \
+    with open(resource_filename('jina', '/'.join(('resources', 'fashion/helloworld.html'))), 'r') as fp, \
             open(html_path, 'w') as fw:
         t = fp.read()
         t = t.replace('{% RESULT %}', '\n'.join(result_html))
         t = t.replace('{% PRECISION_EVALUATION %}',
-            '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
+                      '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
         t = t.replace('{% RECALL_EVALUATION %}',
-            '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
+                      '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
         t = t.replace('{% TOP_K %}', str(TOP_K))
         fw.write(t)
 
@@ -120,7 +117,7 @@ def download_data(target: dict, download_proxy=None):
 def index_generator(num_doc: int, target: dict):
     for j in range(num_doc):
         label_int = target['index-labels']['data'][j][0]
-        if label_int < 3: #We are using only 3 categories, no need to index the rest
+        if label_int < 3:  # We are using only 3 categories, no need to index the rest
             with Document() as d:
                 d.content = target['index']['data'][j]
                 category = get_mapped_label(label_int)
@@ -130,9 +127,9 @@ def index_generator(num_doc: int, target: dict):
 
 def query_generator(num_doc: int, target: dict):
     for j in range(num_doc):
-        n = random.randint(0, 9999) #there are 10000 query examples, so that's the limit
-        label_int = target['query-labels']['data'][n][0] 
-        category = get_mapped_label(label_int) 
+        n = random.randint(0, 9999)  # there are 10000 query examples, so that's the limit
+        label_int = target['query-labels']['data'][n][0]
+        category = get_mapped_label(label_int)
         if category == 'Pullover':
             d = Document(content=(target['query']['data'][n]))
             d.tags['label'] = category
@@ -170,7 +167,7 @@ def config(task):
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
     config(task)
-        
+
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
