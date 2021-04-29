@@ -46,6 +46,8 @@ To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentence
 5. Delete the old index: `rm -rf workspace`
 6. Index your new dataset: `python app.py -t index`
 
+If you are using a subset of the data (less then 30,000 documents) we recommend you shuffle the data to prevent only indexing a specific letter of the alphabet. On linux on you can use the `shuf` command. 
+
 ## 🔍 Search
 
 ### With REST API
@@ -80,7 +82,7 @@ This will create a Docker image with pre-indexed data and an open port for REST 
 
 ### Image name format
 
-Please use the following name format for your Docker image, otherwise it will be rejected if you want to push it to Jina Hub. 
+Please use the following name format for your Docker image, otherwise it will be rejected if you want to push it to Jina Hub.
 
 ```
 jinahub/type.kind.image-name:image-version-jina_version
