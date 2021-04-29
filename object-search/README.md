@@ -65,25 +65,41 @@ Lets start with indexing 1000 images. This can take some time. If it is taking t
 python app.py -task index -n 1000 -overwrite True
 ```
 
-To index the entire dataset simply run
+To index the entire dataset simply run: (This could take a lot longer)
 ```
 python app.py -task index -n 8000 -overwrite True
 ```
-This will take a lot longer so feel free to leave it running in the background.
+
+The Indexing process for this example is as follows:
+1. Go through all of the images and identify various objects contained.
+2. Identify the cropped sub images and their labels.
+3. Store all of the occurences for each object type
+![image](https://user-images.githubusercontent.com/23415764/116535968-b190d180-a8e4-11eb-9197-5f20ddf2682b.png)
 
 ## Step 3. Start the server
-You can test this example with 2 different Query Flows; Object and Original.
+You can test this example with 2 different Query Flows; object and original.
 
-The `flow-query-object.yml` will return a cropped image containing the `object` that it identified in the query image. To start the `flow-query-object.yml` run the following
+The object Query Flow works as follows:
+1. Identify the object in the query image
+2. Find all other images that contain this object
+3. Order the images by best match
+
+The `flow-query-object.yml` will return a cropped image containing the `object` identified in the query image. To start the `flow-query-object.yml` run the following
 ```
 python app.py -task query -r object
 ```
+
+![image](https://user-images.githubusercontent.com/23415764/116536115-d422ea80-a8e4-11eb-934b-503fe5cfe296.png)
 
 The `flow-query-original.yml` Flow will search all indexed object images and return the original parent image in which the object was found. Start the server which returns the `original` images by running
 
 ```sh
 python app.py -task query -r original
 ```
+The original Query Flow works as follows:
+1. Find the maching cropped images as with the object Flow
+2. Identify the parent images and return them as the result of the query
+![image](https://user-images.githubusercontent.com/23415764/116536214-f0bf2280-a8e4-11eb-9ec3-92ca1aa7e167.png)
 
 ## Step 4. 🔍 Search your data
 Jina offers several different ways to search (query) your data. In this example, we show two of the most common ones. 
@@ -92,7 +108,7 @@ Jina offers several different ways to search (query) your data. In this example,
 ### Option 1: Using Jina REST API
 Begin by running the following command to open the REST API interface.
 
-When the REST gateway is enabled, Jina uses the  [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme)  to represent multimedia data such as images and allow them to be transfered using HTTP. 2
+When the REST gateway is enabled, Jina uses the  [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme)  to represent multimedia data such as images and allow them to be transfered using HTTP.
 
 In order to query using the REST API:
 1. Pick the images that you want to inlcude in your query.
