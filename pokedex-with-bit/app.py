@@ -6,10 +6,8 @@ import sys
 import click
 import requests
 
-from jina import Document
+from jina import Document, Flow
 from jina.clients.sugary_io import _input_lines
-
-from jina.flow import Flow
 
 num_docs = int(os.environ.get('JINA_MAX_DOCS', 50000))
 image_src = 'data/**/*.png'
@@ -81,7 +79,6 @@ def dryrun():
 @click.option('--num_docs_query', '-n', default=100)
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
-    config(task)
 
     workspace = os.environ["JINA_WORKSPACE"]
     if 'index' in task:
@@ -108,7 +105,6 @@ def main(task, num_docs_query, num_docs_index):
     elif task == 'index_restful':
         index_restful(num_docs_index)
     elif task == 'query':
-        config(task)
         query()
     elif task == 'query_restful':
         if not os.path.exists(workspace):
