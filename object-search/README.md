@@ -4,35 +4,13 @@
 # Overview
 | Parameter | Description |
 | ------------- | ------------- |
-| Learnings | how Jina can help you with Object search |
-| Used for indexing | dataset of images |
-| Used for querying | an image |
+| Learnings | How Jina can help you with Object search |
+| Used for indexing | Dataset of images |
+| Used for querying | An image |
 | Dataset used | [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k) |
 | Model used | [fasterrcnn_resnet50_fpn](https://pytorch.org/vision/stable/_modules/torchvision/models/detection/faster_rcnn.html), [MobileNetV2](https://keras.io/api/applications/mobilenet/) |
 
-In this example, we use [`fasterrcnn_resnet50_fpn`](https://pytorch.org/vision/stable/_modules/torchvision/models/detection/faster_rcnn.html) for object detection and then index these cropped object images with [`MobileNetV2`](https://keras.io/api/applications/mobilenet/). This example will show you how to index an image dataset and query for the most similar objects in those images.
-
-### About the Models
-[`fasterrcnn_resnet50_fpn`](https://pytorch.org/vision/stable/_modules/torchvision/models/detection/faster_rcnn.html) - is a model that given an image finds the bounding boxes of Objects and their labels
-[`MobileNetV2`](https://keras.io/api/applications/mobilenet/) - is a model that allows for 
-
-# Download the Dataset
-
-### Use Flickr8k
-
-We will run this example with the [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k)  object detection dataset. 
-
-Flickr8k is a dataset of 8,000 images each paired with a short description of entities and objects contained in this image.
-
-In order to download the Flickr8k from Kaggle run the following instructions:
-```
-kaggle datasets download adityajn105/flickr8k
-unzip flickr8k.zip 
-rm flickr8k.zip
-mv Images data/f8k/images
-```
-Note: We are using Flickr8k here due to its small size which means the example can run faster. Feel free to experiment with other datasets like  [COCO](https://cocodataset.org/#home)  &  [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview) or many other image datasets you can find online.
-
+In this example, we use [`fasterrcnn_resnet50_fpn`](https://pytorch.org/vision/stable/_modules/torchvision/models/detection/faster_rcnn.html) for object detection (finding the bounding boxes of objects in the image) and then index these cropped object images with [`MobileNetV2`](https://keras.io/api/applications/mobilenet/). This example will show you how to index an image dataset and query for the most similar objects in those images.
 
 # 🐍 Build yourself and deploy with Python
 You can build this example yourself and deploy it with Python. This allows you to see each step in the process better. 
@@ -56,28 +34,46 @@ On your terminal,  you should now be located in you the `object-search` folder. 
 ```sh
 pip install -r requirements.txt
 ```
+## Step 2. Download the dataset
+
+We will run this example with the [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k)  object detection dataset. 
+
+Flickr8k is a dataset of 8,000 images each paired with a short description of entities and objects contained in this image.
+
+1. Create a [Kaggle](https://www.kaggle.com/) account
+2. Set up Kaggle API keys according to the instructions [here](https://github.com/Kaggle/kaggle-api)
+3. Download the Flickr8k from [Kaggle](https://www.kaggle.com/)
+```
+kaggle datasets download adityajn105/flickr8k
+unzip flickr8k.zip 
+rm flickr8k.zip
+mkdir -p data/f8k/
+mv Images data/f8k/images
+```
+Note: We are using Flickr8k here due to its small size which means the example can run faster. Feel free to experiment with other datasets like  [COCO](https://cocodataset.org/#home)  &  [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview) or many other image datasets you can find online.
+
 
 ## Step 2. Indexing your data
 
-Lets start with indexing 1000 images. This can take some time. If it is taking too long you can try a smaller number as well but keep in mind this will affect the quality of results.
+Let's start with by indexing only 1000 images to save time. If it still takes too much time, you can reduce the number even more but keep in mind this will affect the quality of results.
 
 ```
 python app.py -task index -n 1000 -overwrite True
 ```
 
-To index the entire dataset simply run: (This could take a lot longer)
+To index the entire dataset simply run: (This will take a lot longer)
 ```
 python app.py -task index -n 8000 -overwrite True
 ```
 
-The Indexing process for this example is as follows:
-1. Go through all of the images and identify various objects contained.
-2. Identify the cropped sub images and their labels.
-3. Store all of the occurences for each object type
+During Indexing, our Flow logic is performing the following steps.
+1. Iterate through all images and identify various objects contained.
+2. Identify the bounding boxes of objects contained in the image and their labels.
+3. Store all of the occurences for each object type.
 ![image](https://user-images.githubusercontent.com/23415764/116535968-b190d180-a8e4-11eb-9197-5f20ddf2682b.png)
 
 ## Step 3. Start the server
-You can test this example with 2 different Query Flows; object and original.
+You can test this example with two different Query Flows; object and original.
 
 The object Query Flow works as follows:
 1. Identify the object in the query image
