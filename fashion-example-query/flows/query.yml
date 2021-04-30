@@ -3,7 +3,7 @@ version: '1'
 with:
   read_only: true  # better add this in the query time
   compress_hwm: 1024
-pods:
+pods:  #Specify all pods to be used
   - name: encode
     uses: pods/encode.yml
     shards: $JINA_SHARDS_ENCODER
