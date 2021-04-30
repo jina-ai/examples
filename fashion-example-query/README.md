@@ -142,6 +142,20 @@ To query just run:
 python app.py -t query
 ```
 
+## 🌀 Flow diagram
+
+This is how your Flow will look like:
+
+<p align="center">
+  <img src="res/index_flow.png?raw=true" alt="Index Flow" width="90%">
+</p>
+
+If you want to plot the Flow of your app yourself, you can do by adding the following just after creating your Flow:
+
+````python
+f.plot('your_name_for_flow.jpg')
+````
+
 ## 🌟 Results
 
 If you run this code as it is, you will see the results filtered by pullovers like this:
