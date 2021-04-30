@@ -25,7 +25,7 @@ We will use the FashionMNIST dataset to index and query. The dataset has differe
 
 Before running this example, we recommend you meet the following requirements.
 
-1. You have a working Python 3.8 environment. 
+1. You have a working Python 3.7 environment. 
 2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
 3. You have at least 8GB of free space on your hard drive.
 
@@ -51,7 +51,7 @@ pip install -r requirements.txt
 
 ## 🔮 Overview of the files
 
-This are the files you will see in this example:
+These are the files you will see in this example:
 
 * `components.py`: Python file with the custom encoder to use.
 * `app.py`: Main Python file to run this example.
