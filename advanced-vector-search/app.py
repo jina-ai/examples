@@ -68,29 +68,6 @@ def index_generator(db_file_path: str):
         yield doc
 
 
-def index_restful(num_docs):
-    f = Flow().load_config('flow-index.yml')
-    dataset_name = os.environ['JINA_DATASET_NAME']
-    data_dir = os.path.join(dataset_name, os.environ['JINA_TMP_DATA_DIR'])
-
-    with f:
-        data_path = os.path.join(data_dir, f'{dataset_name}_base.fvecs')
-
-        print(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{f.port_expose}/index'
-
-        input_docs = _input_lines(
-            filepath=data_path,
-            size=num_docs,
-            read_mode='r',
-        )
-        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        print(f'#### {len(data_json["data"])}')
-        r = requests.post(url, json=data_json)
-        if r.status_code != 200:
-            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
-
-
 def evaluate_generator(db_file_path: str, groundtruth_path: str):
     documents = fvecs_read(db_file_path)
     groundtruths = ivecs_read(groundtruth_path)
@@ -123,9 +100,6 @@ def run(task, top_k, num_docs, indexer_query_type):
         with Flow.load_config('flow-index.yml') as flow:
             with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
                 flow.index(input_fn=data_func_list, request_size=request_size)
-
-    elif task == 'index_restful':
-        index_restful(num_docs)
 
     elif task == 'query':
         evaluation_results = defaultdict(float)
