@@ -1,19 +1,15 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-from copy import copy
-from itertools import tee
 
 import click
 import os
 
 from collections import defaultdict
 from functools import partial
-import requests
 
 from jina.flow import Flow
 from jina import Document
-from jina.clients.sugary_io import _input_lines
 from jina.logging.profile import TimeContext
 
 from read_vectors_files import fvecs_read, ivecs_read
@@ -84,7 +80,7 @@ def evaluate_generator(db_file_path: str, groundtruth_path: str):
         yield doc, groundtruth
 
 
-def run(task, top_k, num_docs, indexer_query_type):
+def run(task, top_k, indexer_query_type):
     general_config()
     query_config(indexer_query_type)
 
@@ -99,7 +95,7 @@ def run(task, top_k, num_docs, indexer_query_type):
 
         with Flow.load_config('flow-index.yml') as flow:
             with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
-                flow.index(input_fn=data_func_list, request_size=request_size)
+                flow.index(inputs=data_func_list, request_size=request_size)
 
     elif task == 'query':
         evaluation_results = defaultdict(float)
@@ -117,7 +113,7 @@ def run(task, top_k, num_docs, indexer_query_type):
 
         with Flow.load_config('flow-query.yml') as flow:
             with TimeContext(f'QPS: query with {len(query_input)}', logger=flow.logger):
-                flow.search(input_fn=query_input, request_size=request_size,
+                flow.search(inputs=query_input, request_size=request_size,
                             on_done=get_evaluation_results,
                             top_k=top_k)
 
@@ -134,11 +130,10 @@ def run(task, top_k, num_docs, indexer_query_type):
 @click.command()
 @click.option('--task', '-t')
 @click.option('--top_k', '-k', default=100)
-@click.option('--num_docs', '-n', default=500)
 @click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy', 'numpy'], case_sensitive=False),
               default='faiss')
-def main(task, top_k, num_docs, indexer_query_type):
-    run(task, top_k, num_docs, indexer_query_type)
+def main(task, top_k, indexer_query_type):
+    run(task, top_k, indexer_query_type)
 
 
 if __name__ == '__main__':
