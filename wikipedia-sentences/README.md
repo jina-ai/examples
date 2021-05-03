@@ -88,7 +88,7 @@ You should open another terminal window and paste the following command.
 curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
 ```
 
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the 'data' parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a understand of the parameter see the table below. 
+Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar Wikipedia sentences to the text input you provided in the 'data' parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a better understanding of the parameters see the table below. 
 |  |  |
 |--|--|
 | `top_k` | Integer determining the number of sentences to return |
