@@ -33,11 +33,11 @@ This example shows you how to build a simple semantic search app powered by [Jin
 
 # 🐍 Build the app with Python
 
-These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building skips and just run the app, check out the Docker section below.  
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the app, check out the Docker section below.  
 
 ## Pre requirements:
 1. You have a working Python 3.8 environment. 
-2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
+2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
 3. You have at least 8GB of free space on your hard drive. 
 
 
@@ -62,12 +62,12 @@ To make life a little easier for you, you can begin by indexing a very [small da
 ```sh
 python app.py -t index
 ```
-If you see the following command, it means your data has been correctly indexed. 
+If you see the following output, it means your data has been correctly indexed. 
 ```sh
 Flow@5162[S]:flow is closed and all resources are released, current build level is 0
 ```
 
-We recommend you come back to this step later and index the full wikipedia sentence for better results. 
+We recommend you come back to this step later and index the full wikipedia dataset for better results. 
 
 To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB) follow these steps:
 
@@ -94,7 +94,7 @@ You should open another terminal window and paste the following command. For a q
 curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
 ```
 
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the data field. Feel free to alter the text in the data field and play around with other queries!
+Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the 'data' parameter. Feel free to alter the text in the 'data' parameter and play around with other queries!
 
 
 ### Using JinaBox; our frontend search interface
@@ -105,7 +105,7 @@ Once you run this command, you should see a JSON output returned to you. This co
 python app.py -t query_restful
 ```
 
-In your browser, open up the hosted JinaBox  on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/).  In the configuration bar on the left hand side, choose a custom endpoint and enter the following information  `http://127.0.0.1:45678/search` . You can type in search queries into the text box on the right hand side!
+In your browser, open up the hosted JinaBox on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search` . You can type in search queries into the text box on the right hand side!
 
 
 ### Directly from terminal
@@ -141,7 +141,7 @@ Did you like this example and are you interested in building your own? For a det
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
 # 🐳 Deploy the prebuild application using Docker
-If you want to run this example quickly without installing Jina, you can do so via Docker. If you'd rather build the example yourself, skip to the Python instructions below.  
+If you want to run this example quickly without installing Jina, you can do so via Docker. If you'd rather build the example yourself, return to the Python instructions above.  
 
 ## Pre-requirements:
 1. You have Docker installed and working. 
@@ -157,7 +157,7 @@ docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.10-1.0
 If the command has worked correctly, you should see the following output....TODO
 
 ## Step 2. Query the data
-There are several ways for you to query data in Jina; for this example, we will use a CURL command interface. You should open another terminal window and paste the following command. F
+There are several ways for you to query data in Jina; for this example, we will use a CURL command interface. You should open another terminal window and paste the following command.
 
 ```sh
 curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
