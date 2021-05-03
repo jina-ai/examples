@@ -142,14 +142,22 @@ python app.py -t query
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 
 `data/toy-input.txt` - contains a small number of sentences to test the example without downloading anything. `flows/index.yml` - contains the configuration details for indexing data. 
+
 `flow/query.yml` - contains the configuration details for querying data. 
+
 `pods/encode.yml` - specifies which executor should be used to encode the data. 
+
 `pods/index.yml` - specifies which executor should be used to index and store the data. 
+
 `test/*` - various maintenance tests to keep the example running. 
-`app.py`  - the gateway code to combine the index and query flow 
+
+`app.py`  - the gateway code to combine the index and query flow.
+
 `get_data.sh` - downloads the Kaggle dataset.
-`manifest.yml` - needed to deploy to Jina Hub
-`requirements.txt` - contains all required python libraries
+
+`manifest.yml` - needed to deploy to Jina Hub.
+
+`requirements.txt` - contains all required python libraries.
 
 
 
