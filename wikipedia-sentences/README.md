@@ -72,8 +72,29 @@ We recommend you come back to this step later and index the full wikipedia datas
 6. Delete the old index: `rm -rf workspace`
 7. Index your new dataset: `python app.py -t index`
 
+If you are using a subset of the data (less then 30,000 documents) we recommend you shuffle the data. This is because the input file is ordered alphabetically, and Jina indexes from the top down. So without shuffling, your index may contain unrepresentative data, like this:
+
+```
+0.000123, which corresponds to a distance of 705 Mly, or 216 Mpc.
+000webhost is a free web hosting service, operated by Hostinger.
+0010x0010 is a Dutch-born audiovisual artist, currently living in Los Angeles.
+0-0-1-3 is an alcohol abuse prevention program developed in 2004 at Francis E. Warren Air Force Base based on research by the National Institute on Alcohol Abuse and Alcoholism regarding binge drinking in college students.
+0.01 is the debut studio album of H3llb3nt, released on February 20, 1996 by Fifth Colvmn Records.
+001 of 3 February 1997, which was signed between the Government of the Republic of Rwanda, and FAPADER.
+003230 is a South Korean food manufacturer.
+```
+
+On Linux, you can shuffle using the [`shuf` command](https://linuxhint.com/bash_shuf_command/):
+
+```bash
+shuf input.txt > input.txt
+```
+
+To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
+
 ## Step 3. 🔍 Search your data
 Jina offers several different ways to search (query) your data. In this example, we show three of the most common ones. All three are optional, in a production environment, you would only choose one which suits your use case best. 
+
 
 ### Using a REST API
 Begin by running the following command to open the REST API interface.

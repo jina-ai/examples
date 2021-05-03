@@ -17,6 +17,7 @@ num_docs = os.environ.get('MAX_DOCS', 16)
 data_path = 'data/**/*.jpg'
 batch_size = 16
 
+
 def clean_workdir():
     if os.path.exists(os.environ['WORKDIR']):
         shutil.rmtree(os.environ['WORKDIR'])
@@ -69,8 +70,15 @@ def dryrun():
 
 
 @click.command()
-@click.option('--task', '-task', '-t', type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False))
-@click.option('--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False))
+@click.option(
+    '--task',
+    '-task',
+    '-t',
+    type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False),
+)
+@click.option(
+    '--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False)
+)
 @click.option('--data_path', '-p', default=data_path)
 @click.option('--num_docs', '-n', default=num_docs)
 @click.option('--batch_size', '-b', default=batch_size)
@@ -80,26 +88,23 @@ def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspac
     workspace = os.environ['WORKDIR']
     if 'index' in task:
         if os.path.exists(workspace):
-            print(
-                f'\n +------------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n +------------------------------------------------------------------------------------+'
-            )
-            sys.exit(1)
+            if overwrite_workspace:
+                clean_workdir()
+            else:
+                print(
+                    f'\n +------------------------------------------------------------------------------------+ \
+                        \n |                                   🤖🤖🤖                                           | \
+                        \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                        \n |                                   🤖🤖🤖                                           | \
+                        \n +------------------------------------------------------------------------------------+'
+                )
+                sys.exit(1)
 
-    print(f'### task = {task}')
+    elif 'query' in task:
+        if not os.path.exists(workspace):
+            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+
     if task == 'index':
-        workspace = os.environ['WORKDIR']
-        if os.path.exists(workspace):
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
-        if overwrite_workspace:
-            clean_workdir()
         f = Flow.load_config('flow-index.yml')
         with f:
             f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)
@@ -110,8 +115,6 @@ def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspac
         with f:
             f.block()
     elif task == 'query_restful':
-        if not os.path.exists(workspace):
-            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
         query_restful(return_image)
     elif task == 'dryrun':
         dryrun()
