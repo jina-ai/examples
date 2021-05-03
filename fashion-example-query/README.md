@@ -66,7 +66,7 @@ These are the files you will see in this example:
 
 ## 🏃 Run the Flows
 
-These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building skips and just run the app, check out the [Docker section below](#Deploy-with-docker).
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building step and just run the app, check out the [Docker section below](#Deploy-with-docker).
 Most Jina applications will use two Flows. One for Indexing and one for Querying.
 
 ### Step 1: Index your data
