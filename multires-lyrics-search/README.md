@@ -63,7 +63,7 @@ bash get_data.sh
 
 ## Step 3. Index your data
 
-In this step we will index our data. When we run the following command, we call our index Flow and pass our data through it. The Flow begin by breaking each song into sentences, and then encoding those sentences using a language model. The data is then stored in an Indexer. 
+In this step, we will index our data. When we run the following command, we call our index Flow and pass our data through it. The Flow begins by breaking each song into sentences and then encoding those sentences using a language model. The data is then stored in an Index. 
 
 ```sh
 python app.py index
@@ -168,7 +168,6 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
-
 
 
 
