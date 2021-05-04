@@ -5,8 +5,8 @@ import os
 import sys
 import click
 import requests
+from glob import glob
 
-import click
 from jina.flow import Flow
 from jina.logging.profile import TimeContext
 from jina import Document
@@ -14,7 +14,6 @@ from jina.clients.sugary_io import _input_lines
 
 
 GIF_BLOB = 'data/*.gif'
-# TODO test w 2
 SHARDS_DOC = 2
 SHARDS_CHUNK_SEG = 2
 SHARDS_INDEXER = 2
@@ -75,6 +74,7 @@ def dryrun():
         pass
 
 
+@click.command()
 @click.option('--task', '-t',
               type=click.Choice(['index', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False))
 @click.option('--num_docs_index', '-n', default=600)
