@@ -3,8 +3,7 @@
 TEST_DATA_DIR=data/
 
 rm -rf ${TEST_DATA_DIR} && \
-pip install gdown && \
-gdown https://drive.google.com/uc\?id\=1j0Z79PtHGDfzmb-0kdY3D7vP4-I3mJ2P && \
+python ../util/pull_dataset.py -d multimodal-search-tirg/fashion200k.zip -p ../ && \
 unzip fashion200k.zip && \
 rm fashion200k.zip && \
 mkdir -p ${TEST_DATA_DIR} && \
