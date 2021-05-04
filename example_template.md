@@ -1,5 +1,4 @@
-# Run EXAMPLE NAME
-
+# Run the EXAMPLE NAME
 | About this example: |  |
 | ------------- | ------------- |
 | Learnings | *Descibe what the user will learn after running this example* |
@@ -8,24 +7,35 @@
 | Dataset used | *Link to the datasets* |
 | Model used | *Link to the model* |
 
-Write a short description of
-1. What is this?
-2. What is the expected outcome?
-3. What will the user learn?
+<p></p>
+This example shows you how to...
 
-If you want to run the example with Docker, check [the instruction at the end of this README](#-deploy-with-docker).
+*Add a short description of*
+1. *What is this example?*
+2. *What is the expected outcome of this example?*
+3. *What the user will learn in this example?*
 
-## 🗝️ Prerequisites
+*You can also include a gif with a full demo of the example*
+_____
 
-Outline in bullet points anything the user is expected to have before diving in. For example:
+## 🐍 Build the app with Python
+
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the example with Docker, check [the Docker deployment instructions at the end of this README](#deploy-with-docker)  
+
+
+### 🗝️ Pre requirements
+
+*Here outline in bullet points anything the user is expected to have before diving in.* 
+
+For example:
 
 1. You have a working Python 3.8 environment. 
-2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.
-3. You have at least 8GB of free space on your hard drive. 
+2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
+3. You have at least 2GB of free space on your hard drive. 
 
-### Install requirements
+### 👾 Step 1. Clone the repo and install Jina
 
-Begin by cloning the repo so you can get the required files and datasets:
+Begin by cloning the repo so you can get the required files and datasets. (If you already have the examples repository on your machine make sure to fetch the most recent version)
 
 ```sh
 git clone https://github.com/jina-ai/examples
@@ -34,29 +44,73 @@ git clone https://github.com/jina-ai/examples
 And enter the correct folder:
 
 ```sh
-cd examples/example_to_use
+cd examples/example_to_use (replace as necessary)
 ```
 
-In your terminal, you should now be located in the `wikipedia-sentences` folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
+In your terminal, you should now be located in you the *enter example name* folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### Download data (optional)
+### 📥 Step 2. Download your data to search (Optional)
 
-In this example we use a subset of the [Wikipedia Sentences dataset from Kaggle](https://www.kaggle.com/mikeortman/wikipedia-sentences). It is stored in the `data` folder.
+There are two different options here. You can either use the toy-data we provide in this repo, which is quick to index but will give very poor results. Alternatively you can download a larger dataset, which takes longer to index, but will have better results.
 
-You also have the option to download the full dataset and get a better search experience. To do that, follow these steps:
+**Toy dataset**<p>
+Skip to step 3. No action needed here.
+
+**Full dataset**<p>
+In order to get the full dataset follow the instructions below:
 
 1. Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
 2. Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
 3. Run `pip install kaggle`
 4. Run `sh get_data.sh`
 
+### 🏃 Step 3. Index your data
+In this step, we will index our data.
+
+*Here describe the Index Flow. Be as specific as possible in describing how this Index Flow works and what is its input. You are encouraged to user code snippets, images, or whatever helps to clarify.*
+
+```
+python app.py index (replace as necessary)
+```
+
+If you see the following output, it means your data has been correctly indexed.
+
+```
+Flow@5162[S]:flow is closed and all resources are released, current build level is 0
+```
+
+### 🔎 Step 4: Query your data
+Next, we will deploy our query Flow.
+
+*Here describe the Query Flow. Be as specific as possible in describing how this Query Flow works and what is its input. You are encouraged to user code snippets, images, or whatever helps to clarify.*
+
+Run the query Flow in your terminal like this:
+
+```
+python app.py search (replace as necessary)
+``` 
+______
+
+## 📉 Understanding your results
+*Here include a short description of the results and how to interpret them if needed.*
+
+## 🌀 Flow diagram
+This diagram provides a visual representation of the Flows in this example; Showing which executors are used in which order.
+
+*Here Show the Flow for this example.*
+
+## 📖 Optional: Extra information useful for the user
+
+*Use this section to add extra information you think the user could benefit from.
+QueryLanguage, Faiss, Annoy for example.*
+
 ## 🔮 Overview of the files
 
-Add a list with all files in the example:
+*Add a list with all folders/files in the example:*
 
 |                      |                                                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -67,59 +121,43 @@ Add a list with all files in the example:
 | --- 📃 `encoder.yml`   | YAML file to configure encoder Pod                                                                               |
 | 📂 `workspace/`      | Folder to store indexed files (embeddings and documents). Automatically created after the first indexing   |
 
+_____
 
-## 🏃 Run the Flows
-These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the app, check out the [Docker section below](#-deploy-with-docker).
+## 🐋 Deploy with Docker
+To make it easier for you, we have built and published the Docker image for this example.
 
-Most Jina applications will use two Flows: One for indexing and one for querying.
-
-### Step 1: Index your data
-
-Describe the index Flow. Be as specific as possible. You are encouraged to use code snippets, images, or whatever helps to clarify.
-
-### Step 2: Search your data
-
-Describe the query Flow. Be as specific as possible. You are encouraged to use code snippets, images, or whatever helps to clarify.
-
-## 🌀 Flow diagram
-
-Show the Flow for this example.
-
-## 🌟 Results
-
-Short description of the results and how to interpret them if needed.
-
-## 🧞 Optional: Extra information useful for the user
-
-You can use this section to add extra information you think the user could benefit from.
-QueryLanguage, Faiss, Annoy for example. 
-
-## 🐋  Deploy with Docker
-
-Prerequisites:
+### ☑️ Pre requirements:
 
 1. You have Docker installed and working.
 2. You have at least 8GB of free space on your hard drive.
 
-In order to build the Docker image please run:
+### 🏃🏿‍♂️ Pull and run the image
+Running the following command will pull the Docker image and run it.
+
+*Replace below with the command to run the Docker image of this example*
 
 ```bash
-docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
+docker .
 ```
+
+_______
 
 ## ⏭️ Next steps
 
-Check the tutorial for [My first Jina app](https://docs.jina.ai/chapters/my_first_jina_app).
+Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
-## 🧑‍🤝‍🧑 Community
+If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
-- [Slack channel](https://slack.jina.ai) - a communication platform for developers to discuss Jina.
+## 👩‍👩‍👧‍👦 Community
+
+- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina.
+- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
-## ⚖️ License
+## 🦄 License
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE.md) for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
