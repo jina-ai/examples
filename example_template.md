@@ -23,7 +23,7 @@ _____
 These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the example with Docker, check [the Docker deployment instructions at the end of this README](#deploy-with-docker)  
 
 
-### 🗝️ Pre-requirements
+### 🗝️ Requirements
 
 *Here outline in bullet points anything the user is expected to have before diving in.* 
 
@@ -57,16 +57,14 @@ pip install -r requirements.txt
 
 There are two different options here. You can either use the toy data we provide in this repo, which is quick to index but will give very poor results. Alternatively, you can download a larger dataset, which takes longer to index, but will have better results.
 
-**Toy dataset**<p>
-Skip to step 3. No action is needed here.
+1. **Toy dataset:** Skip to step 3. No action is needed here.
 
-**Full dataset**<p>
-In order to get the full dataset, follow the instructions below:
-
-1. Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
-2. Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
-3. Run `pip install kaggle`
-4. Run `sh get_data.sh`
+2. **Full dataset:**
+  In order to get the full dataset, follow the instructions below:
+  - Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
+  - Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
+  - Run `pip install kaggle`
+  - Run `sh get_data.sh`
 
 ### 🏃 Step 3. Index your data
 In this step, we will index our data.
@@ -74,7 +72,7 @@ In this step, we will index our data.
 *Here describe the Index Flow. Be as specific as possible in describing how this Index Flow works and what is its input. You are encouraged to use code snippets, images, or whatever helps to clarify.*
 
 ```
-python app.py index (replace as necessary)
+python app.py -t index (replace as necessary)
 ```
 
 If you see the following output, it means your data has been correctly indexed.
@@ -91,7 +89,7 @@ Next, we will deploy our query Flow.
 Run the query Flow in your terminal like this:
 
 ```
-python app.py search (replace as necessary)
+python app.py -t query (replace as necessary)
 ``` 
 ______
 
@@ -126,7 +124,7 @@ _____
 ## 🐋 Deploy with Docker
 To make it easier for you, we have built and published the Docker image for this example.
 
-### ☑️ Pre-requirements:
+### ☑️ Requirements:
 
 1. You have Docker installed and working.
 2. You have at least 8GB of free space on your hard drive.
@@ -150,8 +148,7 @@ If you have any issues following this guide, you can always get support from our
 
 ## 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina.
-- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina.
+- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
