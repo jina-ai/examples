@@ -106,14 +106,14 @@ The example also allows for more complex, multi sentence queries. If you input t
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 
 * `toy-data/lyrics-toy-data1000.csv` - contains a small number of songs to test the example 
-* `flows/index.yml` - contains the configuration details for indexing data
-* `flow/query.yml` - contains the configuration details for querying data
+* `flows/index.yml` - determines which executors should index the data, and the configuration details of these executors
+* `flow/query.yml` - determines which executors should query the data, and the configuration details of these executors
 * `pods/encode.yml` - specifies which executor should be used to encode the data
 * `pods/chunk.yml` - specifies which executor should be used to chunk the data
-* `pods/chunk_merger.yml` - specifies which executor should be used to chunk the data
-* `pods/doc.yml` - specifies which executor should be used for indexing and config values for this executor. 
-* `pods/ranker.yml` - specifies which executor should be used to rank the matches, and config values for this executor
-* `pods/segment.yml` - specifies config values for the segmeneting of chunks
+* `pods/chunk_merger.yml` - specifies how the chunks should be merged during indexing and querying
+* `pods/doc.yml` - specifies which executor should be used for indexing and the configuration details for this executor
+* `pods/ranker.yml` - specifies which executor should be used to rank the matches, the configuration details for this executor
+* `pods/segment.yml` - specifies the configuration values for the segmeneting of chunks
 * `static/*` - contains the frontend interface
 * `test/*` - various maintenance tests to keep the example running. 
 * `app.py`  - the gateway code to combine the index and query flow 
