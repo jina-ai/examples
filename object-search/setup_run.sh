@@ -1,5 +1,16 @@
 #!/bin/bash
-# these scripts will contain everything that needs to be run before the example
-# downloading data, model, preprocessing etc.
-rm -rf workspace
-python app.py -t index | tee metrics.txt
+EXAMPLE='object-search'
+DATA_DIR='data'
+DATA_FILE='f8k.zip'
+
+rm -rf ${DATA_DIR} && \
+mkdir -p ${DATA_DIR}/f8k/images && \
+python ../util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
+unzip ${DATA_FILE} -d ${DATA_DIR} && \
+rm ${DATA_FILE} && \
+mv ${DATA_DIR}/Images/* ${DATA_DIR}/f8k/images && \
+rm -rf workspace && \
+export JINA_DATA_FILE="$DATA_DIR/f8k/images/*.jpg" && \
+python app.py -t index -n 5000 | tee metrics.txt && \
+python app.py -t query <<< 'some text from stdin' | tee >> metrics.txt && \
+rm -rf ${DATA_DIR}
