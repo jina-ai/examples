@@ -1,9 +1,9 @@
 # Run the EXAMPLE NAME
 | About this example: |  |
 | ------------- | ------------- |
-| Learnings | *Descibe what the user will learn after running this example* |
+| Learnings | *Describe what the user will learn after running this example* |
 | Used for indexing | *What is the datatype of the indexing input* |
-| Used for querying | *What is the datatype of the query input* |
+| Used for querying | *What is the data type of the query input* |
 | Dataset used | *Link to the datasets* |
 | Model used | *Link to the model* |
 
@@ -23,7 +23,7 @@ _____
 These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the example with Docker, check [the Docker deployment instructions at the end of this README](#deploy-with-docker)  
 
 
-### 🗝️ Pre requirements
+### 🗝️ Pre-requirements
 
 *Here outline in bullet points anything the user is expected to have before diving in.* 
 
@@ -55,13 +55,13 @@ pip install -r requirements.txt
 
 ### 📥 Step 2. Download your data to search (Optional)
 
-There are two different options here. You can either use the toy-data we provide in this repo, which is quick to index but will give very poor results. Alternatively you can download a larger dataset, which takes longer to index, but will have better results.
+There are two different options here. You can either use the toy data we provide in this repo, which is quick to index but will give very poor results. Alternatively, you can download a larger dataset, which takes longer to index, but will have better results.
 
 **Toy dataset**<p>
-Skip to step 3. No action needed here.
+Skip to step 3. No action is needed here.
 
 **Full dataset**<p>
-In order to get the full dataset follow the instructions below:
+In order to get the full dataset, follow the instructions below:
 
 1. Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
 2. Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
@@ -71,7 +71,7 @@ In order to get the full dataset follow the instructions below:
 ### 🏃 Step 3. Index your data
 In this step, we will index our data.
 
-*Here describe the Index Flow. Be as specific as possible in describing how this Index Flow works and what is its input. You are encouraged to user code snippets, images, or whatever helps to clarify.*
+*Here describe the Index Flow. Be as specific as possible in describing how this Index Flow works and what is its input. You are encouraged to use code snippets, images, or whatever helps to clarify.*
 
 ```
 python app.py index (replace as necessary)
@@ -86,7 +86,7 @@ Flow@5162[S]:flow is closed and all resources are released, current build level 
 ### 🔎 Step 4: Query your data
 Next, we will deploy our query Flow.
 
-*Here describe the Query Flow. Be as specific as possible in describing how this Query Flow works and what is its input. You are encouraged to user code snippets, images, or whatever helps to clarify.*
+*Here describe the Query Flow. Be as specific as possible in describing how this Query Flow works and what is its input. You are encouraged to use code snippets, images, or whatever helps to clarify.*
 
 Run the query Flow in your terminal like this:
 
@@ -126,7 +126,7 @@ _____
 ## 🐋 Deploy with Docker
 To make it easier for you, we have built and published the Docker image for this example.
 
-### ☑️ Pre requirements:
+### ☑️ Pre-requirements:
 
 1. You have Docker installed and working.
 2. You have at least 8GB of free space on your hard drive.
@@ -144,7 +144,7 @@ _______
 
 ## ⏭️ Next steps
 
-Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
+Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
