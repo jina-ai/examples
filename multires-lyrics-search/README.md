@@ -74,7 +74,7 @@ Flow@5162[S]:flow is closed and all resources are released, current build level 
 ```
 ## Step 4. Query your indexed data
 
-Next, we will deploy our query Flow. This Flow will accept a search input, break in down into sentences and encode it using the same language model as above. It then performs a nearest neighbor search and find the most similar sentences in our indexer compared to the one you entered in the search input. 
+Next, we will deploy our query Flow. This Flow will accept a search input, break it down into sentences and encode it using the same language model as above. It then performs a nearest neighbor search and finds sentences in the index which are most similar to your query sentence. 
 
 Run the following command and leave it open and running in your terminal. 
 
@@ -168,7 +168,6 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
-
 
 
 
