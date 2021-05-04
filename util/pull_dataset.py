@@ -22,13 +22,15 @@ def _check_credentials_exist():
     "--data-set",
     "-d",
     type=str,
-    required=True
+    required=True,
+    help='Path to the data-set in the S3 bucket relative to the root.'
 )
 @click.option(
     "--pull-to-dir",
     "-p",
     type=click.Path(exists=False),
-    required=True
+    required=True,
+    help='Directory to download the data to. Must exist beforehand.'
 )
 def main(data_set: str, pull_to_dir: str):
     _check_credentials_exist()
