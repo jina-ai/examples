@@ -44,7 +44,7 @@ If this command runs without any error messages, you can then move onto step two
 
 ## Step 2. Download your data to search 
 
-You have two different options here. You can either use the toy-data we provide in this repo, which is quick to index but will give very poor results, or you can download a larger dataset, which takes longer to index, but you will see better results.  
+You have two different options here. You can either use the toy-data we provide in this repo, which is quick to index but will give very poor results. Alternatively you can download a larger dataset, which takes longer to index, but you will see better results.  
 
 ### Toy dataset
 Skip to step 3. No action needed here. 
