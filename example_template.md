@@ -52,7 +52,7 @@ pip install -r requirements.txt
 
 ### Download data (optional)
 
-In this example we use a subset of the [Wikipedia Sentences dataset from Kaggle]. It is stored in the `data` folder.
+In this example we use a subset of the [Wikipedia Sentences dataset from Kaggle](https://www.kaggle.com/mikeortman/wikipedia-sentences). It is stored in the `data` folder.
 
 You also have the option to download the full dataset and get a better search experience. To do that, follow these steps:
 
