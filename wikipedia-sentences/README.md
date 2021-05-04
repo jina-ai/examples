@@ -5,13 +5,14 @@
 
 
 ## Table of contents: 
+- [Semantic Wikipedia Search with Transformers and DistilBERT](#semantic-wikipedia-search-with-transformers-and-distilbert)
 - [Overview](#overview)
-- [🐍 Build it yourself and deploy with Python](#---build-it-yourself-and-deploy-with-python)
-- [Overview of the files in this example](#overview-of-the-files-in-this-example)
-- [Flow diagram](#flow-diagram)
-- [Next steps, building your own app](#next-steps--building-your-own-app)
+- [🐍 Build the app with Python](#---build-the-app-with-python)
+- [📁 Overview of the files in this example](#---overview-of-the-files-in-this-example)
+- [🌊 Flow diagram](#---flow-diagram)
+- [🔨 Next steps, building your own app](#---next-steps--building-your-own-app)
 - [🐳 Deploy the prebuild application using Docker](#---deploy-the-prebuild-application-using-docker)
-- [Community](#community)
+- [🙍 Community](#---community)
 - [License](#license)
 
 # Overview
@@ -31,7 +32,7 @@ These instructions explain how to build the example yourself and deploy it with 
 
 ## Pre requirements:
 1. You have a working Python 3.7 or 3.8 environment. 
-2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
+2. We recommend creating a [new ython virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
 3. You have at least 2GB of free space on your hard drive. 
 
 
@@ -44,7 +45,7 @@ git clone https://github.com/jina-ai/examples
 cd examples/wikipedia-sentences
 ```
 
-On your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required python libraries. For futher information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
+On your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
 
 ```sh
 pip install -r requirements.txt
@@ -120,9 +121,9 @@ Once you run this command, you should see a JSON output returned to you. This co
 
 
 
-### Using JinaBox; our frontend search interface
+### Using Jina Box; our frontend search interface
 
-**JinaBox** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
+**Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
 
 ```sh
 python app.py -t query_restful
@@ -138,37 +139,29 @@ You can also easily search (query) your data directly from the terminal. Using t
 python app.py -t query
 ```
 
-# Overview of the files in this example
+# 📁 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
-
-`data/toy-input.txt` - contains a small number of sentences to test the example without downloading anything. `flows/index.yml` - contains the configuration details for indexing data. 
-
-`flow/query.yml` - contains the configuration details for querying data. 
-
-`pods/encode.yml` - specifies which executor should be used to encode the data. 
-
-`pods/index.yml` - specifies which executor should be used to index and store the data. 
-
-`test/*` - various maintenance tests to keep the example running. 
-
-`app.py`  - the gateway code to combine the index and query flow.
-
-`get_data.sh` - downloads the Kaggle dataset.
-
-`manifest.yml` - needed to deploy to Jina Hub.
-
-`requirements.txt` - contains all required python libraries.
+|File   | Explanation  |
+|---|---|
+| `data/toy-input.txt`  |contains a small number of sentences to test the example without downloading anything. `flows/index.yml` - contains the configuration details for indexing data.   |
+| `flow/query.yml`  | contains the configuration details for querying data.   |
+| `pods/encode.yml`  | specifies which executor should be used to encode the data.   |
+| `pods/index.yml`  |  specifies which executor should be used to index and store the data.  |
+| `test/*`  | various maintenance tests to keep the example running.   |
+| `app.py`   | the gateway code to combine the index and query flow.  |
+| `get_data.sh`  |  downloads the Kaggle dataset.|
+| `manifest.yml`   |needed to deploy to Jina Hub.|
+| `requirements.txt`  |  contains all required python libraries.|
 
 
-
-# Flow diagram
+# 🌊 Flow diagram
 
 This diagram provides a visual representation of the two Flows in this example. Showing which executors are used in which order. 
 
 ![116664240-7bad2500-a998-11eb-90fa-1d1268806602](https://user-images.githubusercontent.com/59612379/116871566-bde29a80-ac14-11eb-84d8-26b5b48dee81.jpeg)
 
 
-# Next steps, building your own app
+# 🔨 Next steps, building your own app
 
 Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
@@ -198,7 +191,7 @@ For a quick explanation of what some of these parameters mean, `top_k` tells the
 
 Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the data field. Feel free to alter the text in the data field and play around with other queries!
 
-# Community
+# 🙍 Community
 
 - [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
