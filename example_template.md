@@ -1,19 +1,12 @@
-**Table of Contents**
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-- [Run EXAMPLE NAME](#run-the-example-name)
-  - [🗝️ Pre requirements](#Pre-requirements)
-  - [🔮 Overview of the files](#Overview-of-the-files)
-  - [🏃 Run the Flows](#run-the-flows)
-  - [🌀 Flow Diagram](#flow-diagram)
-  - [🌟 Results](#results)
-  - [🧞 OPTIONAL: EXTRA KNOWLEDGE FROM THIS EXAMPLE](#optional)
-  - [🐋 Deploy with Docker](#Deploy-with-docker)
-  - [Next steps](#next-steps)
-  - [Community](#community)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # Run EXAMPLE NAME
+
+| About this example: |  |
+| ------------- | ------------- |
+| Learnings | *Descibe what the user will learn after running this example* |
+| Used for indexing | *What is the datatype of the indexing input* |
+| Used for querying | *What is the datatype of the query input* |
+| Dataset used | *Link to the datasets* |
+| Model used | *Link to the model* |
 
 Write a short description of
 1. What is this?
