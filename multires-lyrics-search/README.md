@@ -14,7 +14,7 @@
 - [License](#license)
 
 
-This example shows you how to build a semantic search app powered by [Jina AI](http://www.jina.ai)'s neural search framework.  You can index and search song lyrics using state of art machine learning language models. This example helps teach you about the concept of chunking and it's importance in search systems. Once you've built the example, you can visual how the system is matching inputs to output via a custom website we have built. 
+This example shows you how to build a semantic search app powered by [Jina AI](http://www.jina.ai)'s neural search framework.  You can index and search song lyrics using state of art machine learning language models. This example helps teach you about the concept of chunking and its importance in search systems. Once you've built the example, you can visualize how the system is matching inputs to output via a custom website we have built. 
 
 # 🐍 Build the app with Python
 
@@ -168,7 +168,6 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
-
 
 
 
