@@ -39,7 +39,7 @@ def index(num_docs: int):
             f.index_files(GIF_BLOB, request_size=10, read_mode='rb', skip_dry_run=True, size=num_docs)
 
 
-def query():
+def query_restful():
     f = Flow.load_config('flow-query.yml')
     f.use_rest_gateway()
 
