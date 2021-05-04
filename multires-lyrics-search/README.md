@@ -90,7 +90,7 @@ python -m http.server
 Now you can open `http://0.0.0.0:8000/` in your browser and you should see a web interface. See the next section to understand your results. 
 
 # Using the search interface and understanding your results
-Let's begin by starting with a simple one-sentence query. For example, if you add the sentence 'I am very happy today; you should see a similar result. Each of these boxes you see on the right-hand side is a song in your dataset. Each highlighted sentence is a 'match.'  A match is a similar sentence, determined by how parallel two vectors are in embedding space.  If you don't understand the concept of embedding spaces, we suggest you check out this guide [here](https://towardsdatascience.com/neural-network-embeddings-explained-4d028e6f0526) and then return to this example after. 
+Let's begin by starting with a simple one-sentence query. For example, if you add the sentence 'I am very happy today; you should see a similar result. Each of these boxes you see on the right-hand side is a song in your dataset. Each highlighted sentence is a 'match.'  A match is a similar sentence, determined by how close two vectors are in embedding space.  If you don't understand the concept of embedding spaces, we suggest you check out this guide [here](https://towardsdatascience.com/neural-network-embeddings-explained-4d028e6f0526) and then return to this example after. 
 
 <img width="300" alt="Screenshot 2021-04-30 at 11 56 08" src="https://user-images.githubusercontent.com/59612379/116891772-67cf2080-ac2f-11eb-9fc6-faaaa30e70bb.png">
 
@@ -99,7 +99,7 @@ Similarity can be adjusted using the breakdown slider on the left-hand side. As 
 
 The relevance score you see at the bottom of the song box summarizes all the matches. Each match has a numeric value, determining how close it is to the original input in the vector space. The average of these match values is the relevance score. This means that a song with a lot of matches will be ranked as highly relevant. 
 
-The example get's a little more complex if you use two or three sentences in the query box. In this case, the query Flow breaks the total input down into 'chunks', which are sentences, but you can adjust this when your building Jina yourself. Finding the relevance score also becomes more complex, but the same basic principle applies. A song with many similar matches will be ranked as relevant, and those without matches will not be.  
+The example also allows for more complex, multi sentence queries. If you input two or three sentences when querying, the query Flow will break down the total input into individual 'chunks'. Which in this example are sentences, but you can determine what is a chunk for your own data when building Jina. To calculate the relevance score, we aggregate all the match scores using a (SimpleAggregateRanker)[https://hub.jina.ai/#/package/6]. 
 
 
 # Overview of the files in this example
