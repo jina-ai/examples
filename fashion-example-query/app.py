@@ -14,7 +14,7 @@ import random
 from jina.flow import Flow
 from jina.logging.profile import ProgressBar, TimeContext
 from jina.helper import colored
-from jina.logging import default_logger
+from jina.logging import default_logger, JinaLogger
 from jina.proto import jina_pb2
 from jina import Document
 
@@ -169,7 +169,7 @@ def config(task):
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
     config(task)
-
+    logger = JinaLogger('fashion-example-query')
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
@@ -193,7 +193,7 @@ def main(task, num_docs_query, num_docs_index):
         config(task)
         workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
-            print(f'\n +---------------------------------------------------------------------------------+ \
+            logger.error(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
