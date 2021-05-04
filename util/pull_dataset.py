@@ -11,10 +11,14 @@ log = logging.getLogger(__name__)
 
 
 def _check_credentials_exist():
-    assert os.environ.get('AWS_ACCESS_KEY_ID') is not None, 'Missing access key'
-    assert len(os.environ['AWS_ACCESS_KEY_ID']) > 0, 'Empty access key'
-    assert os.environ.get('AWS_SECRET_ACCESS_KEY') is not None, 'Missing secret key'
-    assert len(os.environ['AWS_SECRET_ACCESS_KEY']) > 0, 'Empty secret key'
+    assert os.environ.get('AWS_ACCESS_KEY_ID') is not None,\
+        'AWS_ACCESS_KEY_ID is not present in the environment variables but required for this script.'
+    assert len(os.environ['AWS_ACCESS_KEY_ID']) > 0, \
+        'AWS_ACCESS_KEY_ID was set in the environment but has length zero.'
+    assert os.environ.get('AWS_SECRET_ACCESS_KEY') is not None,\
+        'AWS_SECRET_ACCESS_KEY is not present in the environment variables but required for this script.'
+    assert len(os.environ['AWS_SECRET_ACCESS_KEY']) > 0,\
+        'AWS_SECRET_ACCESS_KEY was set in the environment but has length zero.'
 
 
 @click.command()
