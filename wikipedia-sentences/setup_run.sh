@@ -4,7 +4,7 @@ DATA_FILE='input.txt'
 
 if [ ! -f "$DATA_DIR/$DATA_FILE" ]; then
   echo 'no data file found. starting download, this may take a while...'
-  python ../pull_dataset.py -d ${DATA_FILE} -p ${DATA_DIR}
+  python ../util/pull_dataset.py -d ${DATA_FILE} -p ${DATA_DIR}
 fi
 
 rm -rf workspace && \
