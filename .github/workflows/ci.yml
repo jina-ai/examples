@@ -16,3 +16,5 @@ jobs:
         run: ./.github/ci.sh
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all }}
+          AWS_ACCESS_KEY_ID: AKIAWB5UZPEQHHYDKVUC
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DEVBOT_AKIAWB5UZPEQHHYDKVUC }}
