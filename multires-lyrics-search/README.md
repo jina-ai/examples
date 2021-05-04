@@ -55,7 +55,7 @@ Begin by installing the Kaggle library if you haven't already done so.  You will
 pip install kaggle
 ```
 
-Running the following bash script should perform all the steps you need to download the full dataset. 
+Running the following bash script should perform all the steps needed to download the full dataset. 
 
 ```bash
 bash get_data.sh
@@ -168,7 +168,6 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
-
 
 
 
