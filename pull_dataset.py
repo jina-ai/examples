@@ -6,7 +6,7 @@ import click
 from jinacld_tools.aws.services.s3 import S3
 
 
-BUCKET_NAME = "kaggle-data-set-bucket"
+BUCKET_NAME = "jina-examples-datasets"
 log = logging.getLogger(__name__)
 
 
