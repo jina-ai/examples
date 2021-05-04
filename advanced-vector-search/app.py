@@ -9,9 +9,11 @@ import os
 
 from collections import defaultdict
 from functools import partial
+import requests
 
 from jina.flow import Flow
 from jina import Document
+from jina.clients.sugary_io import _input_lines
 from jina.logging.profile import TimeContext
 
 from read_vectors_files import fvecs_read, ivecs_read
@@ -22,6 +24,7 @@ def general_config():
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '2')
     os.environ['JINA_DATASET_NAME'] = os.environ.get('JINA_DATASET_NAME', 'siftsmall')
     os.environ['JINA_TMP_DATA_DIR'] = os.environ.get('JINA_TMP_DATA_DIR', './')
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_TMP_DATA_DIR', './')
     os.environ['JINA_REQUEST_SIZE'] = os.environ.get('JINA_REQUEST_SIZE', '100')
     os.environ['OMP_NUM_THREADS'] = os.environ.get('OMP_NUM_THREADS', '1')
 
@@ -29,7 +32,7 @@ def general_config():
 def query_config(indexer_query_type: str):
     if indexer_query_type == 'faiss':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_FAISS',
-                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.15-1.0.6')
+                                                 'docker://jinahub/pod.indexer.faissindexer:0.0.17-1.1.0')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/faiss-indexer.yml'
         os.environ['JINA_FAISS_INDEX_KEY'] = os.environ.get('JINA_FAISS_INDEX_KEY',
                                                             'IVF10,PQ4')
@@ -41,7 +44,7 @@ def query_config(indexer_query_type: str):
                                                          '1')
     elif indexer_query_type == 'annoy':
         os.environ['JINA_USES'] = os.environ.get('JINA_USES_ANNOY',
-                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.16-1.0.6')
+                                                 'docker://jinahub/pod.indexer.annoyindexer:0.0.17-1.1.0')
         os.environ['JINA_USES_INTERNAL'] = 'yaml/annoy-indexer.yml'
         os.environ['JINA_ANNOY_METRIC'] = os.environ.get('JINA_ANNOY_METRIC',
                                                          'euclidean')
@@ -65,6 +68,29 @@ def index_generator(db_file_path: str):
         yield doc
 
 
+def index_restful(num_docs):
+    f = Flow().load_config('flow-index.yml')
+    dataset_name = os.environ['JINA_DATASET_NAME']
+    data_dir = os.path.join(dataset_name, os.environ['JINA_TMP_DATA_DIR'])
+
+    with f:
+        data_path = os.path.join(data_dir, f'{dataset_name}_base.fvecs')
+
+        print(f'Indexing {data_path}')
+        url = f'http://0.0.0.0:{f.port_expose}/index'
+
+        input_docs = _input_lines(
+            filepath=data_path,
+            size=num_docs,
+            read_mode='r',
+        )
+        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
+        print(f'#### {len(data_json["data"])}')
+        r = requests.post(url, json=data_json)
+        if r.status_code != 200:
+            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
+
+
 def evaluate_generator(db_file_path: str, groundtruth_path: str):
     documents = fvecs_read(db_file_path)
     groundtruths = ivecs_read(groundtruth_path)
@@ -81,7 +107,7 @@ def evaluate_generator(db_file_path: str, groundtruth_path: str):
         yield doc, groundtruth
 
 
-def run(task, top_k, indexer_query_type):
+def run(task, top_k, num_docs, indexer_query_type):
     general_config()
     query_config(indexer_query_type)
 
@@ -97,6 +123,9 @@ def run(task, top_k, indexer_query_type):
         with Flow.load_config('flow-index.yml') as flow:
             with TimeContext(f'QPS: indexing {len(list(data_func_list))}', logger=flow.logger):
                 flow.index(input_fn=data_func_list, request_size=request_size)
+
+    elif task == 'index_restful':
+        index_restful(num_docs)
 
     elif task == 'query':
         evaluation_results = defaultdict(float)
@@ -130,10 +159,11 @@ def run(task, top_k, indexer_query_type):
 @click.command()
 @click.option('--task', '-t')
 @click.option('--top_k', '-k', default=100)
+@click.option('--num_docs', '-n', default=500)
 @click.option('--indexer-query-type', '-i', type=click.Choice(['faiss', 'annoy', 'numpy'], case_sensitive=False),
               default='faiss')
-def main(task, top_k, indexer_query_type):
-    run(task, top_k, indexer_query_type)
+def main(task, top_k, num_docs, indexer_query_type):
+    run(task, top_k, num_docs, indexer_query_type)
 
 
 if __name__ == '__main__':

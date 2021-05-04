@@ -1,30 +1,30 @@
-!CompoundIndexer
+!CompoundIndexer #The CompoundIndexer combines NumpyIndexer and BinaryPbIndexer
 components:
-  - !NumpyIndexer
-    with:
+  - !NumpyIndexer # NumpyIndexer stores vector indexer
+    with: # The arguments are defined with the "with" keyword
       index_filename: vec.gz
     metas:
-      name: vecidx  # a customized name
+      name: vecidx  # A customized name for this NumpyIndexer
       workspace: $JINA_WORKDIR/Pullover
-  - !BinaryPbIndexer
+  - !BinaryPbIndexer #BinaryPbIndexer stores meta information
     with:
-      index_filename: chunk.gz
+      index_filename: chunk.gz # File name of the stored meta information
     metas:
-      name: chunkidx
-      workspace: $JINA_WORKDIR/Pullover
+      name: chunkidx # A customized name for this BinaryPbIndexer
+      workspace: $JINA_WORKDIR/Pullover # Directory where the data will be stored
 metas:
   name: chunk_indexer_pullover
   workspace: $JINA_WORKDIR/Pullover
-requests:
-  on:
+requests: #The requests keyword defines how the behave with different types of requests
+  on:     #In Jina requests types can be index, search, update, delete and control.
     IndexRequest:
-      - !FilterQL
+      - !FilterQL # Filter with label information on the IndexRequest
         with:
           lookups: {'tags__label': 'Pullover'}
       - !VectorIndexDriver
         with:
           executor: vecidx
-      - !ExcludeQL
+      - !ExcludeQL #Excludes unnecessary data before storing
         with:
           fields:
             - chunks
@@ -33,7 +33,7 @@ requests:
         with:
           executor: chunkidx
     SearchRequest:
-      - !FilterQL
+      - !FilterQL  # Filter with label information on the SearchRequest
         with:
           lookups: {'tags__label': 'Pullover'}
       - !VectorSearchDriver
