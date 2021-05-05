@@ -104,7 +104,7 @@ This breaks down into the following steps:
 ## Run Query Flow
 
 ```bash
-python app.py search
+python app.py -t query_restful
 ```
 
 You can then open [Jinabox](https://jina.ai/jinabox.js/) with the custom endpoint `http://localhost:45678/api/search`. Here you can drag one of the gifs under the `Videos` tab into the search box. It will then return the top matching results. You can adjust `Top K` in the web interface as well.
