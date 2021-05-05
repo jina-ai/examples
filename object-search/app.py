@@ -20,8 +20,8 @@ IMAGE_SRC = 'data/f8k/images/*.jpg'
 
 def config():
     os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", IMAGE_SRC)
-    os.environ['PARALLEL'] = str(1)
-    os.environ['SHARDS'] = str(1)
+    os.environ['PARALLEL'] = '1'
+    os.environ['SHARDS'] = '1'
     os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
     os.environ['WORKDIR'] = './workspace'
 
