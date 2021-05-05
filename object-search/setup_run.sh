@@ -12,5 +12,4 @@ mv ${DATA_DIR}/Images/* ${DATA_DIR}/f8k/images && \
 rm -rf workspace && \
 export JINA_DATA_FILE="$DATA_DIR/f8k/images/*.jpg" && \
 python app.py -t index -n 5000 | tee metrics.txt && \
-python app.py -t query <<< 'some text from stdin' | tee >> metrics.txt && \
 rm -rf ${DATA_DIR}
