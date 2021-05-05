@@ -1,13 +1,15 @@
 #!/bin/bash
+EXAMPLE='wikipedia-sentences'
 DATA_DIR='data'
-DATA_FILE='input.txt'
+DATA_FILE='input.zip'
 
-if [ ! -f "$DATA_DIR/$DATA_FILE" ]; then
-  echo 'no data file found. starting download, this may take a while...'
-  python ../util/pull_dataset.py -d ${DATA_FILE} -p ${DATA_DIR}
-fi
-
+rm -rf ${DATA_DIR} && \
+mkdir -p ${DATA_DIR} && \
+python ../util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
+unzip ${DATA_FILE} -d ${DATA_DIR} && \
+rm ${DATA_FILE} && \
 rm -rf workspace && \
-export JINA_DATA_FILE="$DATA_DIR/$DATA_FILE" && \
-python app.py -t index -n 5000 | tee metrics.txt && \
+export JINA_DATA_FILE="$DATA_DIR/input.txt" && \
+python app.py -t index -n 10000 | tee metrics.txt && \
 python app.py -t query <<< 'some text from stdin' | tee >> metrics.txt
+rm -rf ${DATA_DIR}
