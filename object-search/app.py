@@ -71,7 +71,7 @@ def dryrun():
 @click.option(
     '--task',
     '-t',
-    type=click.Choice(['index', 'index-restful', 'query-restful', 'dry'], case_sensitive=False))
+    type=click.Choice(['index', 'index_restful', 'query_restful', 'dry'], case_sensitive=False))
 @click.option(
     '--return_image',
     '-r',
@@ -91,13 +91,13 @@ def main(task: str, return_image: str, num_docs: int):
             sys.exit(1)
     if task == 'index':
         index(num_docs)
-    if task == 'index-restful':
+    if task == 'index_restful':
         index_restful(num_docs)
-    if task == 'query-restful':
+    if task == 'query_restful':
         if not os.path.exists(workspace):
             logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
             sys.exit(1)
-        query(return_image)
+        query_restful(return_image)
     if task == 'dry':
         dryrun()
 
