@@ -9,6 +9,7 @@ import requests
 from jina import Document
 from jina.clients.sugary_io import _input_lines
 from jina.flow import Flow
+from jina.logging import default_logger as logger
 from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
@@ -24,27 +25,27 @@ def config():
 
 def print_topk(resp, sentence):
     for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
+        logger.info(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
 
             score = match.score.value
             if score < 0.0:
                 continue
-            print(f'> {idx:>2d}({score:.2f}). {match.text}')
+            logger.info(f'> {idx:>2d}({score:.2f}). {match.text}')
 
 
 def index(num_docs):
     f = Flow().load_config('flows/index.yml')
 
     with f:
-        print(f'Indexing {os.environ["JINA_DATA_FILE_1"]}')
+        f.logger.info(f'Indexing {os.environ["JINA_DATA_FILE_1"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None))
         num_docs = min(num_docs, len(open(data_path).readlines()))
         with TimeContext(f'QPS: indexing {num_docs} (1)', logger=f.logger):
             f.index_lines(filepath=data_path, request_size=16, read_mode='r', size=num_docs)
 
     with f:
-        print(f'Indexing {os.environ["JINA_DATA_FILE_2"]}')
+        f.logger.info(f'Indexing {os.environ["JINA_DATA_FILE_2"]}')
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None))
         num_docs = min(num_docs, len(open(data_path).readlines()))
         with TimeContext(f'QPS: indexing {num_docs} (2)', logger=f.logger):
@@ -59,7 +60,7 @@ def index_rest(num_docs):
             os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_1', None)),
             os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE_2', None)),
         ]):
-            print(f'Indexing {data_path}')
+            f.logger.info(f'Indexing {data_path}')
             url = f'http://0.0.0.0:{f.port_expose}/index'
 
             actual_num_docs = min(num_docs, len(open(data_path).readlines()))
@@ -118,7 +119,7 @@ def main(task, num_docs, top_k):
     workspace = os.environ['JINA_WORKSPACE']
     if 'index' in task:
         if os.path.exists(workspace):
-            print(
+            logger.error(
                 f'\n +----------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                         | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
@@ -126,18 +127,17 @@ def main(task, num_docs, top_k):
                     \n +----------------------------------------------------------------------------------+'
             )
             sys.exit()
-
+    if 'query' in task:
+        if not os.path.exists(workspace):
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+            sys.exit(1)
     if task == 'index':
         index(num_docs)
     if task == 'index_restful':
         index_rest(num_docs)
     if task == 'query':
-        if not os.path.exists(workspace):
-            print(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
         query(top_k)
     if task == 'query_restful':
-        if not os.path.exists(workspace):
-            print(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
         query_restful()
 
 
