@@ -13,9 +13,9 @@ TOP_K = 3
 
 @pytest.fixture
 def config(tmpdir):
-    import os
-    os.system('pip uninstall -y tensorflow-cpu')
-    os.system('pip install tensorflow-cpu==2.1')
+    # import os
+    # os.system('pip uninstall -y tensorflow-cpu')
+    # os.system('pip install tensorflow-cpu==2.1')
     os.environ['JINA_DATA'] = 'tests/test-data/*.png'
     os.environ['JINA_PORT'] = str(45680)
     os.environ['JINA_SHARDS'] = str(1)
