@@ -14,15 +14,15 @@ from jina.clients.sugary_io import _input_lines
 from jina.logging import default_logger as logger
 from jina.logging.profile import TimeContext
 
-MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
+MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 IMAGE_SRC = 'data/f8k/images/*.jpg'
 
 
 def config():
-    os.environ["JINA_DATA_FILE"] = os.environ.get("JINA_DATA_FILE", IMAGE_SRC)
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', IMAGE_SRC)
     os.environ['PARALLEL'] = '1'
     os.environ['SHARDS'] = '1'
-    os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
+    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
     os.environ['WORKDIR'] = './workspace'
 
 
@@ -62,7 +62,7 @@ def query_restful(return_image):
 
 
 def dryrun():
-    f = Flow().load_config("flow-index.yml")
+    f = Flow().load_config('flow-index.yml')
     with f:
         pass
 
@@ -95,7 +95,7 @@ def main(task: str, return_image: str, num_docs: int):
         index_restful(num_docs)
     if task == 'query-restful':
         if not os.path.exists(workspace):
-            logger.error(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
             sys.exit(1)
         query(return_image)
     if task == 'dry':
