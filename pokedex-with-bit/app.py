@@ -32,7 +32,7 @@ def index(num_docs: int):
             f.index_files(IMAGE_SRC, request_size=64, read_mode='rb', size=num_docs)
 
 
-def query():
+def query_restful():
     f = Flow.load_config('flows/query.yml')
     f.use_rest_gateway()
 
@@ -46,7 +46,7 @@ def query():
     "--task",
     "-t",
     type=click.Choice(
-        ["index", "query"], case_sensitive=False
+        ["index", "query_restful"], case_sensitive=False
     ),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
@@ -62,11 +62,11 @@ def main(task: str, num_docs: int):
                     \n +----------------------------------------------------------------------------------+')
             sys.exit(1)
         index(num_docs)
-    if task == "query":
+    if task == "query_restful":
         if not os.path.exists(workspace):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
             sys.exit(1)
-        query()
+        query_restful()
 
 
 if __name__ == '__main__':
