@@ -95,25 +95,13 @@ def dryrun():
 @click.command()
 @click.option('--task', '-t',
               type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False))
-@click.option('--num_docs_query', '-n', default=100)
 @click.option('--num_docs_index', '-n', default=600)
-def main(task, num_docs_query, num_docs_index):
-    config(task)
+def main(task, num_docs_index):
+    config()
     workspace = os.environ["JINA_WORKSPACE"]
-    if 'index' in task:
-        if os.path.exists(workspace):
-            print(
-                f'\n +------------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n +------------------------------------------------------------------------------------+'
-            )
-            sys.exit(1)
 
-    print(f'### task = {task}')
     if task == 'index':
-        config(task)
+        config()
         workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             print(f'\n +---------------------------------------------------------------------------------+ \
@@ -121,12 +109,12 @@ def main(task, num_docs_query, num_docs_index):
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
-        index(num_docs_index)
+        index()
     elif task == 'index_restful':
         index_restful(num_docs_index)
     elif task == 'query':
-        config(task)
-        query(num_docs_query)
+        config()
+        query()
     elif task == 'query_restful':
         if not os.path.exists(workspace):
             print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")

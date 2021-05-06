@@ -45,9 +45,9 @@ pip install -r requirements.txt
 
 | Command | Description |
 | :--- | :--- |
-| ``python app.py index`` | To index files/data |
-| ``python app.py search`` | To run query on the index |
-| ``python app.py dryrun`` | Sanity check on the topology |
+| ``python app.py -t index`` | To index files/data |
+| ``python app.py -t query`` | To run query on the index |
+| ``python app.py -t dryrun`` | Sanity check on the topology |
 
 ## View in Browser
 
