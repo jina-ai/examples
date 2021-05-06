@@ -12,7 +12,7 @@ from jina import Flow
 
 from dataset import input_index_data
 
-
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -66,7 +66,7 @@ def dryrun():
 
 @click.command()
 @click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query', 'query_restful', 'dryrun'], case_sensitive=False), default='query')
-@click.option('--num_docs', '-n', default=50)
+@click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
