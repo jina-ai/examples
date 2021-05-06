@@ -2,6 +2,8 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import sys
+
 import click
 from collections import defaultdict
 
@@ -159,7 +161,6 @@ def config(task):
     os.environ['JINA_SHARDS_INDEXER'] = str(shards_indexer)
     os.environ['JINA_SHARDS_ENCODER'] = str(shards_encoder)
     os.environ['JINA_WORKDIR'] = './workspace'
-    os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
 
@@ -170,27 +171,27 @@ def config(task):
 def main(task, num_docs_query, num_docs_index):
     config(task)
     logger = JinaLogger('fashion-example-query')
+    os.makedirs('./data', exist_ok=True)
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./workspace', 'index-labels')
+            'filename': os.path.join('./data', 'index-labels')
         },
         'query-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./workspace', 'query-labels')
+            'filename': os.path.join('./data', 'query-labels')
         },
         'index': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
-            'filename': os.path.join('./workspace', 'index')
+            'filename': os.path.join('./data', 'index')
         },
         'query': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
-            'filename': os.path.join('./workspace', 'query')
+            'filename': os.path.join('./data', 'query')
         }
     }
     download_data(targets, None)
     if task == 'index':
-        config(task)
         workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             logger.error(f'\n +---------------------------------------------------------------------------------+ \
@@ -198,9 +199,9 @@ def main(task, num_docs_query, num_docs_index):
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
+            sys.exit(1)
         index(num_docs_index, targets)
     elif task == 'query':
-        config(task)
         query(num_docs_query, targets)
     else:
         raise NotImplementedError(
