@@ -4,7 +4,7 @@ TEST_DATA_DIR=data/
 
 rm -rf ${TEST_DATA_DIR} && \
 python ../util/pull_dataset.py -d multimodal-search-tirg/fashion200k.zip -p ../ && \
-unzip fashion200k.zip && \
+unzip -o fashion200k.zip && \
 rm fashion200k.zip && \
 mkdir -p ${TEST_DATA_DIR} && \
 mv women ${TEST_DATA_DIR}/images && \

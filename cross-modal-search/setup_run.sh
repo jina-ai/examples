@@ -5,7 +5,7 @@ TEST_DATA_DIR=data/
 rm -rf ${TEST_DATA_DIR} && \
 mkdir -p ${TEST_DATA_DIR}/f8k/images && \
 python ../util/pull_dataset.py -d cross-modal-search/f8k.zip -p ../ && \
-unzip f8k.zip -d ${TEST_DATA_DIR} && \
+unzip -o f8k.zip -d ${TEST_DATA_DIR} && \
 rm f8k.zip && \
 mv ${TEST_DATA_DIR}/Images/* ${TEST_DATA_DIR}/f8k/images && \
 mv ${TEST_DATA_DIR}/captions.txt data/f8k/captions.txt && \

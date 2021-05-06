@@ -105,6 +105,7 @@ def dryrun():
 def main(task, num_docs_index):
     config()
     workspace = os.environ["JINA_WORKSPACE"]
+    logger = JinaLogger('multires-lyrics-search')
 
     if task == 'index':
         config()
