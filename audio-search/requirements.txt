@@ -1,4 +1,4 @@
-jina[hub,http]==1.1.0
+jina[hub,http]==1.2.1
 resampy==0.2.2
 tensorflow_cpu==2.1.0
 tf_slim==1.1.0
