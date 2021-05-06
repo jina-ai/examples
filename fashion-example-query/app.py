@@ -12,9 +12,9 @@ import webbrowser
 import random
 
 from jina.flow import Flow
-from jina.logging.profile import ProgressBar
+from jina.logging.profile import ProgressBar, TimeContext
 from jina.helper import colored
-from jina.logging import default_logger
+from jina.logging import default_logger, JinaLogger
 from jina.proto import jina_pb2
 from jina import Document
 
@@ -139,14 +139,16 @@ def query_generator(num_doc: int, target: dict):
 def index(num_doc, target: dict):
     f = Flow.load_config('flows/index.yml')
     with f:
-        f.index(index_generator(num_doc, target), request_size=2048)
+        with TimeContext(f'QPS: indexing {num_doc}', logger=f.logger):
+            f.index(index_generator(num_doc, target), request_size=2048)
 
 
 def query(num_doc, target: dict):
     f = Flow.load_config('flows/query.yml')
     with f:
-        f.search(query_generator(num_doc, target), shuffle=True, size=128,
-                 on_done=print_result, request_size=32, top_k=TOP_K)
+        with TimeContext(f'QPS: query with {num_doc}', logger=f.logger):
+            f.search(query_generator(num_doc, target), shuffle=True, size=128,
+                     on_done=print_result, request_size=32, top_k=TOP_K)
     write_html(os.path.join('./workspace', 'hello-world.html'))
 
 
@@ -167,7 +169,7 @@ def config(task):
 @click.option('--num_docs_index', '-n', default=600)
 def main(task, num_docs_query, num_docs_index):
     config(task)
-
+    logger = JinaLogger('fashion-example-query')
     targets = {
         'index-labels': {
             'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
@@ -191,7 +193,7 @@ def main(task, num_docs_query, num_docs_index):
         config(task)
         workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
-            print(f'\n +---------------------------------------------------------------------------------+ \
+            logger.error(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
