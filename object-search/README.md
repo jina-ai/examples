@@ -57,6 +57,7 @@ Download the Flickr8k from Kaggle
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
+mkdir -p data/f8k/images
 mv Images data/f8k/images
 ```
 
@@ -75,7 +76,7 @@ pip install -r requirements.txt
 Index 1000 images. This can take some time and you can try a smaller number as well.
 
 ``` bash
-python app.py -task index -n 1000 -overwrite True
+python app.py --task index -n 1000 -overwrite True
 ```
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
