@@ -172,7 +172,7 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 
 # 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
@@ -181,7 +181,7 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples/blob/master/LICENSE) for the full license text.
 
 
 
