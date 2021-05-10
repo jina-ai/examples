@@ -1,0 +1,24 @@
+!NumpyIndexer
+with:
+  index_filename: vec.gz
+metas:
+  name: vec_idx  # a customized name
+  workspace: $JINA_WORKSPACE
+requests:
+  on:
+    ControlRequest:
+      - !ControlReqDriver {}
+    SearchRequest:
+      - !VectorSearchDriver
+        with:
+          traversal_paths: ['r']
+    IndexRequest:
+      - !ExcludeQL
+        with:
+          traversal_paths: ['r']
+          fields:
+            - buffer
+            - chunks
+      - !VectorIndexDriver
+        with:
+          traversal_paths: ['r']
