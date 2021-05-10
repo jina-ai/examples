@@ -6,16 +6,12 @@ import asyncio
 import os
 import time
 
+import click
 import aiofiles
 import aiohttp
 
-batch_size = 30
-
-with open('data/tgif-v1.0.tsv') as fp:
-    all_urls = [v.split('\t')[0] for v in fp]
-    print('%d urls' % len(all_urls))
-    all_urls = [v for v in all_urls if not os.path.exists('data/%s' % v.split('/')[-1])]
-    print('%d urls' % len(all_urls))
+BATCH_SIZE = 30
+DEFAULT_MAX_GIFS = 2000
 
 
 async def download(url):
@@ -29,11 +25,25 @@ async def download(url):
             await fp.write(gif_data)
 
 
-async def main(urls):
+async def task_trigger(urls):
     tasks = [asyncio.create_task(download(u)) for u in urls]
     await asyncio.gather(*tasks)
 
 
-for _ in range(0, len(all_urls), batch_size):
-    asyncio.run(main(all_urls[_:(_ + batch_size)]))
-    time.sleep(1)
+@click.command()
+@click.option("--limit", "-l", default=DEFAULT_MAX_GIFS)
+def main(limit: int):
+    with open('data/tgif-v1.0.tsv') as fp:
+        all_urls = [v.split('\t')[0] for v in fp]
+        if len(all_urls) > limit:
+            all_urls = all_urls[:limit]
+        print('%d urls' % len(all_urls))
+        all_urls = [v for v in all_urls if not os.path.exists('data/%s' % v.split('/')[-1])]
+
+    for _ in range(0, len(all_urls), BATCH_SIZE):
+        asyncio.run(task_trigger(all_urls[_:(_ + BATCH_SIZE)]))
+        time.sleep(1)
+
+
+if __name__ == '__main__':
+    main()
