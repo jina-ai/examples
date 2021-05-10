@@ -17,6 +17,7 @@ echo will run tests on ${changedExamples[@]}
 
 EXIT_CODE=0
 
+pwd
 # install reqs and run the tests
 for example_dir in ${changedExamples[@]}; do
   cd $example_dir
