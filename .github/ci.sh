@@ -15,7 +15,6 @@ done
 
 echo will run tests on ${changedExamples[@]}
 
-pip install pytest pytest-mock
 
 EXIT_CODE=0
 
@@ -25,9 +24,13 @@ for example_dir in ${changedExamples[@]}; do
   echo running tests in $example_dir
   if test -f "requirements.txt"; then
     if [[ -d "tests/" ]]; then
+      python -m venv .venv
+      source .venv/bin/activate
+      pip install pytest pytest-mock
       pip install -r requirements.txt
       pytest -s -v tests/
       local_exit_code=$?
+      deactivate
       if [[ ! $local_exit_code == 0 ]]; then
         EXIT_CODE=$local_exit_code
         echo this one failed. local_exit_code = $local_exit_code, exit = $EXIT_CODE
