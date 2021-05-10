@@ -2,11 +2,9 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import sys
 from click.testing import CliRunner
 
-sys.path.append('..')
-from app import main
+from ..app import main
 
 
 def config(tmpdir):
