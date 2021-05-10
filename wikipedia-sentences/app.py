@@ -12,7 +12,7 @@ MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 
 
 def config():
-    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'data/toy-input.txt')
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'tests/toy-input.txt')
     os.environ['JINA_WORKSPACE'] = os.environ.get('JINA_WORKSPACE', 'workspace')
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
