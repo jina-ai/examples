@@ -21,7 +21,7 @@ EXIT_CODE=0
 for example_dir in ${changedExamples[@]}; do
   cd $example_dir
   echo running tests in $example_dir
-  echo pwd
+  pwd
   if test -f "requirements.txt"; then
     if [[ -d "tests/" ]]; then
       python -m venv .venv
