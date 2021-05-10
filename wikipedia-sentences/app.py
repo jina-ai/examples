@@ -6,7 +6,6 @@ import sys
 
 import click
 from jina.flow import Flow
-from jina.logging import default_logger as logger
 from jina.logging.profile import TimeContext
 
 
@@ -21,13 +20,13 @@ def config():
 
 def print_topk(resp, sentence):
     for d in resp.search.docs:
-        logger.info(f'Ta-Dah🔮, here are what we found for: {sentence}')
+        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
 
             score = match.score.value
             if score < 0.0:
                 continue
-            logger.info(f'> {idx:>2d}({score:.2f}). {match.text}')
+            print(f'> {idx:>2d}({score:.2f}). {match.text}')
 
 
 def index(num_docs):
