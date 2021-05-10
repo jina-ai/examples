@@ -172,7 +172,7 @@ docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
 
 # 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina
+- [Slack channel](https://slack.jina.ai) - a communication platform for developers to discuss Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
