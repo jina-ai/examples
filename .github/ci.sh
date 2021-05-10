@@ -15,7 +15,6 @@ done
 
 echo will run tests on ${changedExamples[@]}
 
-
 EXIT_CODE=0
 
 # install reqs and run the tests
