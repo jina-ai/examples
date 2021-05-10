@@ -40,7 +40,6 @@ The code can of course run natively on your local machine, please [read the Jina
 - [Install](#install)
 - [Index Image Data](#index-image-data)
 - [Start the Server](#start-the-server)
-- [Query via REST API](#query-via-rest-api)
 - [Troubleshooting](#troubleshooting)
 - [Documentation](#documentation)
 - [Community](#community)
@@ -58,6 +57,7 @@ Download the Flickr8k from Kaggle
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
+mkdir -p data/f8k/images
 mv Images data/f8k/images
 ```
 
@@ -76,7 +76,7 @@ pip install -r requirements.txt
 Index 1000 images. This can take some time and you can try a smaller number as well.
 
 ``` bash
-python app.py -task index -n 1000 -overwrite True
+python app.py --task index -n 1000 -overwrite True
 ```
 
 If it's running successfully, you should be able to see logs scrolling in the console and in the dashboard:
@@ -92,9 +92,13 @@ If it's running successfully, you should be able to see logs scrolling in the co
 </p>
 
 Start server which returns `original` images. The matching of query happens with all indexed object images and returns the original parent image in which the indexed object was found.
-
 ``` bash
-python app.py -task query -r original
+python app.py -task query_restful -r original
+```
+
+When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
+``` bash
+curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
 ```
 
 <p align="center">
@@ -102,10 +106,10 @@ python app.py -task query -r original
   <img src=".github/.README_images/dog-results.png?raw=true" alt="Jina banner" width="45%">
 </p>
 
-Start server which returns `object` images. The matching of query happens with all indexed object images and returns them.
+Alternatively, start the server which returns `object` images. The matching of query happens with all indexed object images and returns them.
 
 ``` bash
-python app.py -task query -r object
+python app.py -task query_restful -r object
 ```
 
 <p align="center">
@@ -113,32 +117,7 @@ python app.py -task query -r object
   <img src=".github/.README_images/cycle-results.png?raw=true" alt="Jina banner" width="45%">
 </p>
 
-## Query via REST API
-
-When the REST gateway is enabled, Jina uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. Simply organize your picture(s) into this scheme and send a POST request to `http://0.0.0.0:45678/api/search`, e.g.:
-
-``` bash
-curl --verbose --request POST -d '{"top_k": 10, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AvdGjTZeOlQq07xSYPgJjlWRwfWEBx2+CgAVrPrP+O5ghhOa+a0cocoWnaMJFAsBuCQCgiJOKDBcIQTiLieOrPD/cp/6iZ/Iu4HqAh5dGzggIQVJI3WqTxwVTDjs5XJOy38AlgHoaKgY+xJEXeFTyR7FOfF7JNWjs3b8evQE6B2dTDvQZx3n3Rz6rgOtVlaZRLvR9geCAxuY3G+0mepEAhrTISES3bwPWYYi48OUrQOc//IaJeij9xZGGmDIG9kc73fNI7eA8VMBAAD//0SxXMMT90UdAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
-```
-
-[JSON payload syntax and spec can be found in the docs](https://docs.jina.ai/chapters/restapi/#).
-
-This example shows you how to feed data into Jina via REST gateway. By default, Jina uses a gRPC gateway, which has much higher performance and rich features. If you are interested in that, go ahead and check out our [other examples](https://learn.jina.ai) and [read our documentation on Jina IO](https://docs.jina.ai/chapters/io/#).
-
-
-### With REST API
-
-```sh
-python app.py -t query_restful
-```
-
-Then:
-
-```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
-````
-
-Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
+You can also use [Jinabox](https://jina.ai/jinabox.js/) with the `http://127.0.0.1:45678/search` endpoint.
 
 
 ## Troubleshooting

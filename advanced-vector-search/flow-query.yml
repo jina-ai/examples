@@ -4,7 +4,6 @@ env:
   OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
 with:
   read_only: true
-  restful: True
 pods:
   - name: encoder
     show_exc_info: true
@@ -31,5 +30,4 @@ pods:
         JINA_ANNOY_SEARCH_K: $JINA_ANNOY_SEARCH_K
         OMP_NUM_THREADS: ${{OMP_NUM_THREADS}}
   - name: evaluate
-    show_exc_info: true
     uses: yaml/evaluate.yml
