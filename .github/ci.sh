@@ -17,10 +17,10 @@ echo will run tests on ${changedExamples[@]}
 
 EXIT_CODE=0
 
-pwd
+root_dir=$(pwd)
 # install reqs and run the tests
 for example_dir in ${changedExamples[@]}; do
-  cd $example_dir
+  cd $root_dir/$example_dir
   echo running tests in $example_dir
   pwd
   if test -f "requirements.txt"; then
@@ -42,7 +42,6 @@ for example_dir in ${changedExamples[@]}; do
   else
     echo 'this is not an example. skipping...'
   fi
-  cd ..
 done
 
 echo final exit code = $EXIT_CODE
