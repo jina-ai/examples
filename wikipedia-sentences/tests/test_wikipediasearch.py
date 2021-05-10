@@ -22,5 +22,4 @@ def test_wikipediasearch_index(tmpdir):
     assert 'done in' in result.stdout
     result = runner.invoke(main, ['-t', 'query', '-k', '100'], input='Their land was taken back by the Spanish Crown')
     assert 'California became part of the United States' in result.stdout
-    print(result.stdout)
     assert '> 49(' in result.stdout  # Only 50 docs in the toy-input.txt
