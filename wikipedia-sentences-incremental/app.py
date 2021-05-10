@@ -19,7 +19,6 @@ def config():
     os.environ['JINA_DATA_FILE_1'] = os.environ.get('JINA_DATA_FILE_1', 'data/input-1.txt')
     os.environ['JINA_DATA_FILE_2'] = os.environ.get('JINA_DATA_FILE_2', 'data/input-2.txt')
     os.environ['JINA_WORKSPACE'] = os.environ.get('JINA_WORKSPACE', 'workspace')
-
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
