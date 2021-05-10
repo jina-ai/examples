@@ -15,7 +15,7 @@
 - [🙍 Community](#---community)
 - [🦄 License](#---license)
 
-# Overview
+## Overview
 |  |  |
 | ------------- | ------------- |
 | Summary | This showcases a semantic text search app |
@@ -24,20 +24,20 @@
 | Dataset used |  [Kaggle Wikipedia corpus](kaggle.com/mikeortman/wikipedia-sentences)     |
 | ML model used |  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) |
 
-This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state of art machine learning  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) language model from the [Transformers](https://huggingface.co) library.
+This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state-of-the-art machine learning  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) language model from the [Transformers](https://huggingface.co) library.
 
-# 🐍 Build the app with Python
+## 🐍 Build the app with Python
 
-These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the app, check out the Docker section below.  
+These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the app, check out the  [Docker section](#---deploy-the-prebuild-application-using-docker) below.
 
 
-## 🗝️ Requirements
+### 🗝️ Requirements
 1. You have a working Python 3.7 or 3.8 environment. 
-2. We recommend creating a [new ython virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
+2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
 3. You have at least 2GB of free space on your hard drive. 
 
 
-## 👾 Step 1. Clone the repo and install Jina
+### 👾 Step 1. Clone the repo and install Jina
 
 
 Begin by cloning the repo so you can get the required files and datasets. If you already have the examples repository on your machine make sure to fetch the most recent version.
@@ -47,14 +47,14 @@ git clone https://github.com/jina-ai/examples
 cd examples/wikipedia-sentences
 ```
 
-On your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
+In your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
 
 ```sh
 pip install -r requirements.txt
 ```
 If this command runs without any error messages, you can then move onto step two. 
 
-## 🏃 Step 2. Indexing your data
+### 🏃 Step 2. Indexing your data
 To quickly get started, you can index a [small dataset of 50 sentences](data/toy-input.txt)  to make sure everything is working correctly. 
 
 ```sh
@@ -95,11 +95,11 @@ shuf input.txt > input.txt
 
 To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
 
-## Step 3. 🔍 Search your data
+### Step 3. 🔍 Search your data
 Jina offers several different ways to search (query) your data. In this example, we show three of the most common ones. All three are optional, in a production environment, you would only choose one which suits your use case best. 
 
 
-### Using a REST API
+#### Using a REST API
 Begin by running the following command to open the REST API interface.
 
 ```sh
@@ -112,7 +112,7 @@ You should open another terminal window and paste the following command.
 curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
 ```
 
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar Wikipedia sentences to the text input you provided in the 'data' parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a better understanding of the parameters see the table below. 
+Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar Wikipedia sentences to the text input you provided in the `data` parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a better understanding of the parameters see the table below. 
 |  |  |
 |--|--|
 | `top_k` | Integer determining the number of sentences to return |
@@ -123,7 +123,7 @@ Once you run this command, you should see a JSON output returned to you. This co
 
 
 
-### Using Jina Box; our frontend search interface
+#### Using Jina Box; our frontend search interface
 
 **Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
 
@@ -131,17 +131,17 @@ Once you run this command, you should see a JSON output returned to you. This co
 python app.py -t query_restful
 ```
 
-In your browser, open up the hosted JinaBox on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search` . You can type in search queries into the text box on the right hand side!
+In your browser, open up the hosted Jina Box on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search` . You can type search queries into the text box on the right hand side!
 
 
-### Directly from terminal
+#### Directly from terminal
 You can also easily search (query) your data directly from the terminal. Using the following command will open an interface directly in your terminal window. 
 
 ```sh
 python app.py -t query
 ```
 
-# 🔮 Overview of the files in this example
+## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 |File   | Explanation  |
 |--|--|
@@ -149,8 +149,8 @@ Here is a small overview if you're interested in understanding what each file in
 |--- 📃 `flows/index.yml`  | Contains the details of which executors should be used for indexing your data. |
 |--- 📃 `flows/query.yml`  | Contains the details of which executors should be used for querying your data. |
 |📂 `pods/` | Folder to store Pod configurations|
-|--- 📃 `pods/encode.yml`  | Specifies the configurations values for the encoding executor.   |
-|--- 📃 `[pods/index.yml`  | Specifies the configurations values for the encoding executor.   |
+|--- 📃 `pods/encode.yml`  | Specifies the configurations values for the encoding Executor.   |
+|--- 📃 `pods/index.yml`  | Specifies the configurations values for the encoding Executor.   |
 |📂 `test/*`  | Various maintenance tests to keep the example running.   |
 |📃 `app.py`   | The gateway code to combine the index and query flow.  |
 |📃 `get_data.sh`  |  Downloads the Kaggle dataset.|
@@ -158,34 +158,34 @@ Here is a small overview if you're interested in understanding what each file in
 |📃 `requirements.txt`  |  Contains all required python libraries.|
 
 
-# 🌀 Flow diagram
+## 🌀 Flow diagram
 
-This diagram provides a visual representation of the two Flows in this example. Showing which executors are used in which order. 
+This diagram provides a visual representation of the two Flows in this example, showing which Executors are used in which order.
 
 ![116664240-7bad2500-a998-11eb-90fa-1d1268806602](https://user-images.githubusercontent.com/59612379/116871566-bde29a80-ac14-11eb-84d8-26b5b48dee81.jpeg)
 
 
-# 🔨 Next steps, building your own app
+## 🔨 Next steps, building your own app
 
 Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
-# 🐳 Deploy the prebuild application using Docker
+## 🐳 Deploy the prebuild application using Docker
 If you want to run this example quickly without installing Jina, you can do so via Docker. If you'd rather build the example yourself, return to the Python instructions above.  
 
-## Pre-requirements:
+### Requirements:
 1. You have Docker installed and working. 
 2. You have at least 8GB of free space on your hard drive. 
 
-## Step 1. Pull the prebuild image from Docker hub and run
-We begin by running the following Docker command in the terminal. This will pull the prebuilt Docker image from Docker Hub and begin downloading the required file and data. To increase speed, this example only has 30,000 sentences indexed. 
+### Step 1. Pull the prebuild image from Docker hub and run
+We begin by running the following Docker command in the terminal. This will pull the prebuilt Docker image from Docker Hub and begin downloading the required files and data. To increase speed, this example only has 30,000 sentences indexed. 
 
 ```sh
 docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.10-1.0.10
 ```
 
-## Step 2. Query the data
+### Step 2. Query the data
 There are several ways for you to query data in Jina; for this example, we will use a CURL command interface. You should open another terminal window and paste the following command.
 
 ```sh
@@ -195,7 +195,7 @@ For a quick explanation of what some of these parameters mean, `top_k` tells the
 
 Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the data field. Feel free to alter the text in the data field and play around with other queries!
 
-# 🙍 Community
+## 🙍 Community
 
 - [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
@@ -203,7 +203,7 @@ Once you run this command, you should see a JSON output returned to you. This co
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
-# 🦄 License
+## 🦄 License
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
