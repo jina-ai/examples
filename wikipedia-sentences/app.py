@@ -6,26 +6,28 @@ import sys
 
 import click
 from jina.flow import Flow
+from jina.logging import default_logger as logger
+from jina.logging.profile import TimeContext
 
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 
 
 def config():
-    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'tests/toy-input.txt')
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'data/toy-input.txt')
     os.environ['JINA_WORKSPACE'] = os.environ.get('JINA_WORKSPACE', 'workspace')
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
 def print_topk(resp, sentence):
     for d in resp.search.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
+        logger.info(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
 
             score = match.score.value
             if score < 0.0:
                 continue
-            print(f'> {idx:>2d}({score:.2f}). {match.text}')
+            logger.info(f'> {idx:>2d}({score:.2f}). {match.text}')
 
 
 def index(num_docs):
@@ -33,7 +35,9 @@ def index(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
+        num_docs = min(num_docs, len(open(data_path).readlines()))
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_lines(filepath=data_path, batch_size=16, read_mode='r', size=num_docs)
 
 
 def query(top_k):
@@ -75,9 +79,10 @@ def query_restful(return_flow=False):
 def main(task, num_docs, top_k):
     config()
     workspace = os.environ['JINA_WORKSPACE']
+
     if 'index' in task:
         if os.path.exists(workspace):
-            print(
+            logger.error(
                 f'\n +------------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                           | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
@@ -97,5 +102,6 @@ def main(task, num_docs, top_k):
         query_restful()
 
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()

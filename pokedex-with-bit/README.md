@@ -63,7 +63,7 @@ sh ./download.sh
 ### Index Data
 
 ```sh
-python app.py index
+python app.py -t index
 ```
 
 After this you should see a new `workspace` folder, which contains all the encoded data generated during indexing. 
@@ -71,7 +71,7 @@ After this you should see a new `workspace` folder, which contains all the encod
 ### Query Data
 
 ```python
-python app.py search
+python app.py -t query_restful
 ```
 
 And then follow the Jinabox instructions from the [Query from Docker](#query-from-docker) section above.

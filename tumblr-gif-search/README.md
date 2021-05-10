@@ -47,13 +47,14 @@ pip install --upgrade -r requirements.txt
 
 ### Download the data
 
-The full dataset consists of 125,781 GIFs downloaded from Tumblr, with the URLs stored in [`data/tgif-v-1.0.tsv`](data/tgif-v-1.0.tsv). You may want to edit this to reduce the filecount and speed up your indexing.
+The full dataset consists of 125,781 GIFs downloaded from Tumblr, with the URLs stored in [`data/tgif-v-1.0.tsv`](data/tgif-v-1.0.tsv).
 
 To download the data, just run:
 
 ```bash
-python gif_download.py
+python gif_download.py -l 1000
 ```
+You can limit the number of downloaded GIFs with the `-l` parameter.
 
 ## Run Index Flow
 
@@ -103,7 +104,7 @@ This breaks down into the following steps:
 ## Run Query Flow
 
 ```bash
-python app.py search
+python app.py -t query_restful
 ```
 
 You can then open [Jinabox](https://jina.ai/jinabox.js/) with the custom endpoint `http://localhost:45678/api/search`. Here you can drag one of the gifs under the `Videos` tab into the search box. It will then return the top matching results. You can adjust `Top K` in the web interface as well.
