@@ -17,3 +17,5 @@ This directory contains examples for both text and image search, using the same 
 ## Notes
 
 - Image search uses same command line args as text search (i.e. with `-t`, `query` instead of `search`)
+- Dockerfiles, manifests, tests not updated yet. Still reflect Wiki/Pokedex search
+- Text results are rubbish. Perhaps due to very short Documents
