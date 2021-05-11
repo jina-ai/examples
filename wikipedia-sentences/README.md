@@ -219,5 +219,5 @@ Once you run this command, you should see a JSON output returned to you. This co
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples#license) for the full license text.
 
