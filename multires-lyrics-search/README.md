@@ -107,7 +107,7 @@ Similarity can be adjusted using the breakdown slider on the left-hand side. As 
 
 The relevance score you see at the bottom of the song box summarizes all the matches. Each match has a numeric value, determining how close it is to the original input in the vector space. The average of these match values is the relevance score. This means that a song with a lot of matches will be ranked as highly relevant. 
 
-The example also allows for more complex, multi sentence queries. If you input two or three sentences when querying, the query Flow will break down the total input into individual 'chunks'. Which in this example are sentences, but you can determine what is a chunk for your own data when building Jina. To calculate the relevance score, we aggregate all the match scores using a (SimpleAggregateRanker)[https://hub.jina.ai/#/package/6]. 
+The example also allows for more complex, multi sentence queries. If you input two or three sentences when querying, the query Flow will break down the total input into individual 'chunks'. Which in this example are sentences, but you can determine what is a chunk for your own data when building Jina. To calculate the relevance score, we aggregate all the match scores using a [SimpleAggregateRanker](https://hub.jina.ai/#/package/6). 
 
 
 # 🔮 Overview of the files in this example
