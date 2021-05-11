@@ -149,8 +149,6 @@ You can also easily search (query) your data directly from the terminal. Using t
 python app.py -t query
 ```
 
-
-
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 |File   | Explanation  |
@@ -178,6 +176,9 @@ This diagram provides a visual representation of the two Flows in this example, 
 ## 🔨 Next steps, building your own app
 
 Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
+
+- [Enable incremental indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences/README.incremental.md)
+- [Developer Guide: Build a similar text search app](https://docs.jina.ai/chapters/my_first_jina_app/)
 
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
