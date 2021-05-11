@@ -7,14 +7,12 @@ import sys
 import click
 from collections import defaultdict
 
-import gzip
-import numpy as np
 import random
 
 from jina import Document, Flow
 from jina.logging.profile import TimeContext
 from jina.logging import JinaLogger
-from jina.helloworld.helper import download_data, write_html, print_result, load_mnist, load_labels
+from jina.helloworld.helper import download_data, write_html, print_result
 
 from pkg_resources import resource_filename
 
