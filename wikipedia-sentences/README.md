@@ -6,6 +6,7 @@
 
 ## Table of contents: 
 
+
 - [Overview](#overview)
 - [🐍 Build the app with Python](#---build-the-app-with-python)
 - [🔮 Overview of the files in this example](#---overview-of-the-files-in-this-example)
@@ -48,6 +49,9 @@ cd examples/wikipedia-sentences
 ```
 
 In your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
+=======
+## 🐍 Setup
+>>>>>>> master
 
 ```sh
 pip install -r requirements.txt
@@ -141,6 +145,7 @@ You can also easily search (query) your data directly from the terminal. Using t
 python app.py -t query
 ```
 
+
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 |File   | Explanation  |
@@ -172,6 +177,8 @@ Did you like this example and are you interested in building your own? For a det
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
 ## 🐳 Deploy the prebuild application using Docker
+Warning! This section is not maintained so we can't guarantee it works! 
+ 
 If you want to run this example quickly without installing Jina, you can do so via Docker. If you'd rather build the example yourself, return to the Python instructions above.  
 
 ### Requirements:
@@ -197,7 +204,7 @@ Once you run this command, you should see a JSON output returned to you. This co
 
 ## 🙍 Community
 
-- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
+- [Slack channel](https://slack.jina.ai/) - a communication platform for developers to discuss Jina
 - [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
@@ -208,3 +215,4 @@ Once you run this command, you should see a JSON output returned to you. This co
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+
