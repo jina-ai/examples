@@ -1,12 +1,10 @@
 !Flow
 version: '1'
-with:
-  read_only: true
-  port_expose: $JINA_PORT
 pods:
   - name: encoder
     uses: pods/encode.yml
-    timeout_ready: 60000
+    timeout_ready: 1200000
     read_only: true
   - name: indexer
+    uses_before: pods/index_cache.yml
     uses: pods/index.yml

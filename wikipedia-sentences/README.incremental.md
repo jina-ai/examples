@@ -35,7 +35,7 @@ In order to adapt the Wikipedia sentence search example to support incremental i
 
 ### Edit Flows
 
-Change `indexer` entry in `flows/index.yml` and `flows/query.yml` to use `DocCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
+Change `indexer` entry in `flows/index_incremental.yml` and `flows/query.yml` to use `DocCache` as a filter (in the `uses_before` field). This ensures that we prevent duplicates.
 
 In this example the `DocCache` is separated into its own `.yml` file, in `pods/index_cache.yml`:
 
@@ -64,9 +64,9 @@ This might look complicated, but it basically first checks the cache for any mat
 
 ### Adapt Dataset
 
-We split the dataset into two files: `input-1.txt` and `input-2.txt`. This way we can index one, close the `Flow` object, and then index the other.
+We split the dataset into two files: `toy-input.txt` and `toy-input-incremental.txt`. This way we can index one, close the `Flow` object, and then index the other.
 
-The environment variable `JINA_DATA_FILE` has also been split, with `JINA_DATA_FILE_1` and `JINA_DATA_FILE_2` pointing to the two files above.
+The environment variable `JINA_DATA_FILE` has also been split, with `JINA_DATA_FILE` and `JINA_DATA_FILE_INC` pointing to the two files above.
 
 ### Adapt `app.py`
 
@@ -78,14 +78,14 @@ When running `python app.py -t index` we would usually only index one file. We n
 f = Flow().load_config("flows/index.yml")
 
 with f:
-    print(f'Indexing file {os.environ["JINA_DATA_FILE_1"]}')
+    print(f'Indexing file {os.environ["JINA_DATA_FILE"]}')
     f.index_lines(
     ...
     )
 
 # we then re-use the same index to append new data
 with f:
-    print(f'Indexing file {os.environ["JINA_DATA_FILE_2"]}')
+    print(f'Indexing file {os.environ["JINA_DATA_FILE_INC"]}')
     f.index_lines(
        ...
     )
