@@ -1,7 +1,5 @@
 !Flow
 version: '1'
-with:
-  restful: True
 pods:
   - name: encoder
     uses: yaml/encode.yml

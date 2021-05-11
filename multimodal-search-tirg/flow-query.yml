@@ -34,5 +34,5 @@ pods:
     polling: all
     shards: $JINA_SHARDS
     timeout_ready: 100000 # larger timeout as in query time will read all the data
-    uses_after: yaml/merge_matches_sort_topk.yml
+    uses_after: _merge_matches
     remove_uses_ba: true

@@ -86,8 +86,6 @@ Flow@5162[S]:flow is closed and all resources are released, current build level 
 
 Next, we will deploy our query Flow. This Flow will accept a search input, break it down into sentences and encode it using the same language model as above. It then performs a nearest neighbor search and finds sentences in the index which are most similar to your query sentence. 
 
-Run the following command and leave it open and running in your terminal. 
-
 ```sh
 python app.py search
 ```

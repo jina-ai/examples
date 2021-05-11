@@ -17,11 +17,11 @@ def sift_data():
 
 @pytest.fixture(scope='session')
 def index():
-    run(task='index', top_k=100, num_docs=500, indexer_query_type='numpy')
+    run(task='index', top_k=100, indexer_query_type='numpy')
     yield
 
 
 @pytest.mark.parametrize('index_type, expected', [('numpy', 90), ('annoy', 43), ('faiss', 30)])
 def test_advanced_search_example(sift_data, index, index_type, expected):
-    evaluation = run(task='query', top_k=100, num_docs=500, indexer_query_type=index_type)
+    evaluation = run(task='query', top_k=100, indexer_query_type=index_type)
     assert int(evaluation) >= expected
