@@ -1,3 +1,4 @@
+click==7.1.2
 jina[hub,http]==1.2.0
 aiofiles
 aiohttp

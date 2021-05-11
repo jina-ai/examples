@@ -9,10 +9,12 @@ import requests
 from jina import Document
 from jina.clients.sugary_io import _input_lines
 from jina import Flow
+from jina.logging import JinaLogger
+from jina.logging.profile import TimeContext
 
 from dataset import input_index_data
 
-
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -37,7 +39,7 @@ def index_restful(num_docs):
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        print(f'Indexing {data_path}')
+        f.logger.info(f'Indexing {data_path}')
         url = f'http://0.0.0.0:{f.port_expose}/index'
 
         input_docs = _input_lines(
@@ -46,7 +48,6 @@ def index_restful(num_docs):
             read_mode='r',
         )
         data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        print(f'#### {len(data_json["data"])}')
         r = requests.post(url, json=data_json)
         if r.status_code != 200:
             raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
@@ -66,16 +67,17 @@ def dryrun():
 
 @click.command()
 @click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query', 'query_restful', 'dryrun'], case_sensitive=False), default='query')
-@click.option('--num_docs', '-n', default=50)
+@click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
 def main(task, num_docs, request_size, data_set, model_name):
     config(model_name)
     workspace = os.environ['JINA_WORKSPACE']
+    logger = JinaLogger('cross-modal-search')
     if 'index' in task:
         if os.path.exists(workspace):
-            print(
+            logger.error(
                 f'\n +------------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                           | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
@@ -84,13 +86,14 @@ def main(task, num_docs, request_size, data_set, model_name):
             )
             sys.exit(1)
 
-    print(f'### task = {task}')
+    logger.info(f'### task = {task}')
     if task == 'index':
         with Flow.load_config('flow-index.yml') as f:
-            f.index(
-                input_fn=input_index_data(num_docs, request_size, data_set),
-                request_size=request_size
-            )
+            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+                f.index(
+                    input_fn=input_index_data(num_docs, request_size, data_set),
+                    request_size=request_size
+                )
     elif task == 'index_restful':
         index_restful(num_docs)
     elif task == 'query':
@@ -99,7 +102,7 @@ def main(task, num_docs, request_size, data_set, model_name):
             f.block()
     elif task == 'query_restful':
         if not os.path.exists(workspace):
-            print(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+            logger.warning(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
         query_restful()
     elif task == 'dryrun':
         dryrun()

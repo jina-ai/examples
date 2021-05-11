@@ -152,6 +152,7 @@ The dataset is provided with the `-d` parameter with the valid options of `30k` 
 If you want to index your own dataset,
 check `dataset.py` to see how `data` is provided and adapt to your own data source.
 If you want to switch to `VSE++` model, replace `-m clip` with `-m vse`
+Request size can be configured with `-s` flag.
 
 Jina normalizes the images needed before entering them in the encoder.
 `QueryLanguageDriver` is used to redirect (filtering) documents based on modality.

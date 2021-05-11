@@ -50,8 +50,10 @@ cd examples/wikipedia-sentences
 
 In your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
 =======
+=======
+
 ## 🐍 Setup
->>>>>>> master
+
 
 ```sh
 pip install -r requirements.txt
@@ -144,6 +146,7 @@ You can also easily search (query) your data directly from the terminal. Using t
 ```sh
 python app.py -t query
 ```
+
 
 
 ## 🔮 Overview of the files in this example
