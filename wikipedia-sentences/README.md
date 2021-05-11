@@ -49,10 +49,6 @@ cd examples/wikipedia-sentences
 ```
 
 In your terminal,  you should now be located in you the wikipedia-sentences folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
-=======
-=======
-
-## 🐍 Setup
 
 
 ```sh
@@ -73,6 +69,9 @@ Flow@5162[S]:flow is closed and all resources are released, current build level 
 
 We recommend you come back to this step later and index the full wikipedia dataset for better results. To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB) follow these steps:
 
+<details>
+  <summary>Click to expand!</summary>
+  
 1. Set up a [Kaggle.com](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication) account
 2. Install the [Kaggle Python library](https://github.com/Kaggle/kaggle-api#installation) and set up your [API credentials](https://github.com/Kaggle/kaggle-api#api-credentials)
 3. Run the script: `sh ./get_data.sh`
@@ -100,6 +99,9 @@ shuf input.txt > input.txt
 ```
 
 To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
+
+</details>
+
 
 ### Step 3. 🔍 Search your data
 Jina offers several different ways to search (query) your data. In this example, we show three of the most common ones. All three are optional, in a production environment, you would only choose one which suits your use case best. 
