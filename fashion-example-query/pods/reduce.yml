@@ -1,7 +1,7 @@
 !BaseExecutor
 with: {}
 metas:
-  name: top50
+  name: top20
 requests:
   on:
     [SearchRequest]:

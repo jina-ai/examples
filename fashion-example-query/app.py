@@ -7,18 +7,14 @@ import sys
 import click
 from collections import defaultdict
 
-import urllib.request
 import gzip
 import numpy as np
-import webbrowser
 import random
 
-from jina.flow import Flow
-from jina.logging.profile import ProgressBar, TimeContext
-from jina.helper import colored
-from jina.logging import default_logger, JinaLogger
-from jina.proto import jina_pb2
-from jina import Document
+from jina import Document, Flow
+from jina.logging.profile import TimeContext
+from jina.logging import JinaLogger
+from jina.helloworld.helper import download_data, write_html, print_result, load_mnist, load_labels
 
 from pkg_resources import resource_filename
 
@@ -45,83 +41,32 @@ def get_mapped_label(label_int: str):
     return label_id.get(label_int, "Invalid tag")
 
 
-def print_result(resp):
-    for d in resp.search.docs:
-        data_uri = d.uri
-        result_html.append(f'<tr><td><img src="{data_uri}"/></td><td>')
-        for match in d.matches:
-            match_uri = match.uri
-            result_html.append(f'<img src="{match_uri}"/>')
-        result_html.append('</td></tr>\n')
-
-        # update evaluation values
-        # as evaluator set to return running avg, here we can simply replace the value
-        for evaluation in d.evaluations:
-            evaluation_value[evaluation.op_name] = evaluation.value
-
-
-def write_html(html_path: str):
-    global num_docs_evaluated
-    global evaluation_value
-
-    with open(resource_filename('jina', '/'.join(('resources', 'fashion/helloworld.html'))), 'r') as fp, \
-            open(html_path, 'w') as fw:
-        t = fp.read()
-        t = t.replace('{% RESULT %}', '\n'.join(result_html))
-        t = t.replace('{% PRECISION_EVALUATION %}',
-                      '{:.2f}%'.format(evaluation_value['PrecisionEvaluator'] * 100.0))
-        t = t.replace('{% RECALL_EVALUATION %}',
-                      '{:.2f}%'.format(evaluation_value['RecallEvaluator'] * 100.0))
-        t = t.replace('{% TOP_K %}', str(TOP_K))
-        fw.write(t)
-
-    url_html_path = 'file://' + os.path.abspath(html_path)
-
-    try:
-        webbrowser.open(url_html_path, new=2)
-    except:
-        pass
-    finally:
-        default_logger.success(f'You should see a "hello-world.html" opened in your browser, '
-                               f'if not you may open {url_html_path} manually')
-
-    colored_url = colored('https://opensource.jina.ai', color='cyan', attrs='underline')
-    default_logger.success(
-        f'🤩 Intrigued? Play with "jina hello-world --help" and learn more about Jina at {colored_url}')
+def download_fashionmnist():
+    target_tuple = [
+        ('index-labels', 'train-labels-idx1-ubyte.gz'),
+        ('query-labels', 't10k-labels-idx1-ubyte.gz'),
+        ('index', 'train-images-idx3-ubyte.gz'),
+        ('query', 't10k-images-idx3-ubyte.gz')
+    ]
+    data_dir = './data'
+    url_str = 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/'
+    os.makedirs(data_dir, exist_ok=True)
+    targets = {
+        k: {
+            'url': url_str + fn,
+            'filename': os.path.join(data_dir, k)
+        } for k, fn in target_tuple
+    }
+    download_data(targets)
+    return targets
 
 
-def load_mnist(path: str):
-    with gzip.open(path, 'rb') as fp:
-        return np.frombuffer(fp.read(), dtype=np.uint8, offset=16).reshape([-1, 784])
-
-
-def load_labels(path: str):
-    with gzip.open(path, 'rb') as fp:
-        return np.frombuffer(fp.read(), dtype=np.uint8, offset=8).reshape([-1, 1])
-
-
-def download_data(target: dict, download_proxy=None):
-    opener = urllib.request.build_opener()
-    if download_proxy:
-        proxy = urllib.request.ProxyHandler({'http': download_proxy, 'https': download_proxy})
-        opener.add_handler(proxy)
-    urllib.request.install_opener(opener)
-    with ProgressBar(task_name='download fashion-mnist', batch_unit='') as t:
-        for k, v in target.items():
-            if not os.path.exists(v['filename']):
-                urllib.request.urlretrieve(v['url'], v['filename'], reporthook=lambda *x: t.update(1))
-            if k == 'index-labels' or k == 'query-labels':
-                v['data'] = load_labels(v['filename'])
-            if k == 'index' or k == 'query':
-                v['data'] = load_mnist(v['filename'])
-
-
-def index_generator(num_doc: int, target: dict):
+def index_generator(num_doc: int, doc_dict: dict):
     for j in range(num_doc):
-        label_int = target['index-labels']['data'][j][0]
+        label_int = doc_dict['index-labels']['data'][j][0]
         if label_int < 3:  # We are using only 3 categories, no need to index the rest
             with Document() as d:
-                d.content = target['index']['data'][j]
+                d.content = doc_dict['index']['data'][j]
                 category = get_mapped_label(label_int)
                 d.tags['label'] = category
             yield d
@@ -171,28 +116,9 @@ def config(task):
 def main(task, num_docs_query, num_docs_index):
     config(task)
     logger = JinaLogger('fashion-example-query')
-    os.makedirs('./data', exist_ok=True)
-    targets = {
-        'index-labels': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./data', 'index-labels')
-        },
-        'query-labels': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz',
-            'filename': os.path.join('./data', 'query-labels')
-        },
-        'index': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz',
-            'filename': os.path.join('./data', 'index')
-        },
-        'query': {
-            'url': 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz',
-            'filename': os.path.join('./data', 'query')
-        }
-    }
-    download_data(targets, None)
+    targets = download_fashionmnist()
+    workspace = os.environ['JINA_WORKDIR']
     if task == 'index':
-        workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
             logger.error(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
@@ -202,6 +128,9 @@ def main(task, num_docs_query, num_docs_index):
             sys.exit(1)
         index(num_docs_index, targets)
     elif task == 'query':
+        if not os.path.exists(workspace):
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+            sys.exit(1)
         query(num_docs_query, targets)
     else:
         raise NotImplementedError(
