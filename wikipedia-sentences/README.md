@@ -76,7 +76,7 @@ python app.py -t query
 
 ### Next Steps
 
-- [Enable incremental indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-incremental)
+- [Enable incremental indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences/README.incremental.md)
 - [Developer Guide: Build a similar text search app](https://docs.jina.ai/chapters/my_first_jina_app/)
 
 
