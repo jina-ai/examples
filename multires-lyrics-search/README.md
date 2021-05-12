@@ -3,16 +3,17 @@
 
 [![](demo.gif)](https://www.youtube.com/watch?v=GzufeV8AY_w)
 
+  * [Overview](#overview)
+  * [🐍 Build the app with Python](#---build-the-app-with-python)
+  * [📉 Using the search interface and understanding your results](#---using-the-search-interface-and-understanding-your-results)
+  * [🔮 Overview of the files in this example](#---overview-of-the-files-in-this-example)
+  * [🌀 Flow diagram](#---flow-diagram)
+  * [⏭️ Next steps, building your own app](#---next-steps--building-your-own-app)
+  * [🐳 Deploy the prebuild application using Docker](#---deploy-the-prebuild-application-using-docker)
+  * [👩‍👩‍👧‍👦 Community](#------------community)
+  * [🦄 License](#---license)
 
-- [🐍 Build the app with Python](#---build-the-app-with-python)
-- [Using the search interface and understanding your results](#using-the-search-interface-and-understanding-your-results)
-- [Overview of the files in this example](#overview-of-the-files-in-this-example)
-- [Flow diagram](#flow-diagram)
-- [Next steps, building your own app](#next-steps--building-your-own-app)
-- [🐳 Deploy the prebuild application using Docker](#---deploy-the-prebuild-application-using-docker)
-- [Community](#community)
-- [License](#license)
-- 
+
 ## Overview
 |  |  |
 | ------------- | ------------- |
@@ -32,7 +33,7 @@ These instructions explain how to build the example yourself and deploy it with 
 
 ### 🗝️ Requirements
 1. You have a working Python 3.7 or 3.8 environment. 
-2. We recommend creating a [new python virtual envoriment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
+2. We recommend creating a [new python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency clashing.   
 3. You have at least 2GB of free space on your hard drive. 
 
 
@@ -45,7 +46,7 @@ git clone https://github.com/jina-ai/examples
 cd examples/multires-lyrics-search
 ```
 
-On your terminal,  you should now be located in the multires-lyrics-search folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
+On your terminal,  you should now be located in the `multires-lyrics-search` folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out our [documentation](https://docs.jina.ai/chapters/core/setup/). 
 
 ```sh
 pip install -r requirements.txt
