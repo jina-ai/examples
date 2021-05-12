@@ -62,12 +62,47 @@ To quickly get started, you can index a [small dataset of 50 sentences](data/toy
 ```sh
 python app.py -t index
 ```
-If you see the following output, it means your data has been correctly indexed. 
+The relevant Jina code to index data given your flow's YAML definition breaks down to
+```python
+with Flow().load_config('flows/index.yml'):
+    f.index_lines(filepath='data/toy-input.txt', read_mode='r', batch_size=16, num_docs=10)
+```
+The flow will interpret each line in the txt file as one Document.
+You can limit the number of indexed Documents with the `num_docs`
+argument.
+If you see the following output, it means your data has been correctly indexed.
 ```sh
 Flow@5162[S]:flow is closed and all resources are released, current build level is 0
 ```
 
-We recommend you come back to this step later and index the full wikipedia dataset for better results. To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB) follow these steps:
+#### What if new data arrives that needs to be indexed?
+Many applications will require incremental indexing, i.e. a way to re-use an index to add new data.  
+Of course, we don't want to re-calculate our index for all our data every time we add a couple of new Documents. 
+For this case, Jina provides a simple and intuitive solution which we will demonstrate using a second [small dataset](data/toy-input-incremental.txt).
+Just as before, index the [first dataset](data/toy-input.txt) and then *incrementally* the [second dataset](data/toy-input-incremental.txt)
+```python
+with Flow().load_config('flows/index.yml'):
+    f.index_lines(filepath='data/toy-input.txt', read_mode='r', batch_size=16, num_docs=10)
+    f.index_lines(filepath='data/toy-input-incremental.txt', read_mode='r', batch_size=16, num_docs=10)
+```
+One challenge we need to address when incrementally adding to the index is duplication of Documents.
+Jina provides a [DocCache](pods/index_cache.yml) pod that is pre-configured for you and takes care of detecting duplicates 
+when adding to the index. Add one line to your [index flow](flows/index_incremental.yml) and incremental indexing works.
+```yaml
+!Flow
+version: '1'
+pods:
+  - name: encoder
+    uses: pods/encode.yml
+    timeout_ready: 1200000
+    read_only: true
+  - name: indexer
+    uses_before: pods/index_cache.yml  # use before indexing to detect duplicates 
+    uses: pods/index.yml
+```
+
+
+We recommend you come back to the indexing step later and run the full wikipedia dataset for better results. To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB) follow these steps:
 
 <details>
   <summary>Click to expand!</summary>
