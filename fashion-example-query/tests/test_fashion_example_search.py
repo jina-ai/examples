@@ -144,9 +144,11 @@ __license__ = "Apache-2.0"
 #     m.assert_called()
 
 import os
+import sys
 from pkg_resources import resource_filename
 
-from ..app import main
+sys.path.append('..')
+from app import main
 
 
 def config(tmpdir):

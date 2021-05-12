@@ -8,6 +8,7 @@ import click
 from collections import defaultdict
 
 import random
+import numpy as np
 
 from jina import Document, Flow
 from jina.logging.profile import TimeContext
@@ -28,7 +29,7 @@ label_id = {
 }
 
 
-def get_mapped_label(label_int: str):
+def get_mapped_label(label_int: int):
     """
     Get a label_int and return the description of that label
     label_int   Description
@@ -48,37 +49,44 @@ def download_fashionmnist():
     ]
     data_dir = './data'
     url_str = 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/'
-    os.makedirs(data_dir, exist_ok=True)
     targets = {
         k: {
             'url': url_str + fn,
             'filename': os.path.join(data_dir, k)
         } for k, fn in target_tuple
     }
-    download_data(targets)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir, exist_ok=True)
+        download_data(targets)
+    else:
+        from jina.helloworld.helper import load_mnist, load_labels
+        for k, v in targets.items():
+            if k == 'index-labels' or k == 'query-labels':
+                v['data'] = load_labels(v['filename'])
+            if k == 'index' or k == 'query':
+                v['data'] = load_mnist(v['filename'])
     return targets
 
 
+def _doc_generator(num_doc: int, doc_dict: dict, selected_label_id: []):
+    selected_doc_dict = []
+    for data, label in zip(doc_dict['query']['data'], doc_dict['query-labels']['data']):
+        label = label[0]
+        if selected_label_id and label in selected_label_id:
+            d = Document(content=data)
+            d.tags['label'] = label_id[label]  # selected_label  get_mapped_label(label)
+            selected_doc_dict.append(d)
+    selected_id = np.random.permutation(range(len(selected_doc_dict)))
+    for idx in selected_id[:num_doc]:
+        yield selected_doc_dict[idx]
+
+
 def index_generator(num_doc: int, doc_dict: dict):
-    for j in range(num_doc):
-        label_int = doc_dict['index-labels']['data'][j][0]
-        if label_int < 3:  # We are using only 3 categories, no need to index the rest
-            with Document() as d:
-                d.content = doc_dict['index']['data'][j]
-                category = get_mapped_label(label_int)
-                d.tags['label'] = category
-            yield d
+    return _doc_generator(num_doc, doc_dict, [0, 1, 2])
 
 
-def query_generator(num_doc: int, target: dict):
-    for j in range(num_doc):
-        n = random.randint(0, 9999)  # there are 10000 query examples, so that's the limit
-        label_int = target['query-labels']['data'][n][0]
-        category = get_mapped_label(label_int)
-        if category == 'Pullover':
-            d = Document(content=(target['query']['data'][n]))
-            d.tags['label'] = category
-            yield d
+def query_generator(num_doc: int, doc_dict: dict):
+    return _doc_generator(num_doc, doc_dict, [2, ])
 
 
 def index(num_doc, target: dict):

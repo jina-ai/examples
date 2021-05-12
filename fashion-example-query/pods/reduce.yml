@@ -4,7 +4,7 @@ metas:
   name: top20
 requests:
   on:
-    [SearchRequest]:
+    SearchRequest:
       - !ReduceAllDriver
         with:
           traversal_paths: ['m']
