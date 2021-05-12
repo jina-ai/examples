@@ -134,9 +134,10 @@ def _path_size(dump_path):
 
 def _dump_roll_update(dbms_flow_id: str, query_flow_id: str):
     docs = _docs_from_file(DATA_FILE)
-    logger.info(f'starting _dump_roll_update thread')
+    logger.info(f'starting _dump_roll_update process')
     round = 0
     while True:
+        logger.info(f'round {round}:')
         _index_docs(docs, round)
         this_dump_path = os.path.join(DUMP_PATH, str(round))
 
@@ -160,7 +161,7 @@ def _dump_roll_update(dbms_flow_id: str, query_flow_id: str):
             this_dump_path,
             f'http://{JINAD_HOST}:{JINAD_PORT}/flows/{query_flow_id}',
         )
-        logger.info(f'rolling update done!')
+        logger.info(f'rolling update done. sleeping...')
         time.sleep(DUMP_RELOAD_INTERVAL)
         round += 1
 
@@ -187,13 +188,13 @@ def main(task: str):
                 shutil.rmtree(DUMP_PATH, ignore_errors=False)
 
             # dependencies required by JinaD in order to start DBMS (Index) Flow
-            dbms_deps = ['pods/encode.yml', 'pods/dbms_indexer.yml']
+            dbms_deps = ['pods/encoder.yml', 'pods/dbms_indexer.yml']
             # we need to keep track of the Flow id
             dbms_flow_id = _serve_flow('flows/dbms.yml', dbms_deps)
             logger.info(f'created DBMS Flow with id {dbms_flow_id}')
 
             # dependencies required by JinaD in order to start Query Flow
-            query_deps = ['pods/encode.yml', 'pods/query_indexer.yml']
+            query_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
             query_flow_id = _serve_flow('flows/query.yml', query_deps)
             logger.info(f'created Query Flow with id {query_flow_id}')
