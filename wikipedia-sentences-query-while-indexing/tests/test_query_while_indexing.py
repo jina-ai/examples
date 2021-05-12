@@ -1,3 +1,4 @@
+import os
 import subprocess
 import sys
 import time
@@ -43,31 +44,26 @@ def rolling_update_done(flow_process):
 
 def test_query_while_indexing():
     try:
-        jinad_process = subprocess.Popen('jinad', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        flow_process = subprocess.Popen(
-            [sys.executable, '-u', 'app.py', '-t', 'flows'],
-            shell=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            bufsize=1,
-        )
-        while processes_alive([jinad_process, flow_process]):
-            time.sleep(15)
-            logger.info('rolling update done in process')
-            # add query testing
-            query_doc = Document()
-            query_doc.text = 'hello world'
-            response = _query_docs([query_doc.dict()])
-            assert response.json()['search']['docs'][0].get('matches')
-            break
+        logger.info('starting jinad...')
+        os.system('nohup jinad > jinad.log 2> jinaderr.log &')
+        time.sleep(2)
+        logger.info('starting app.py...')
+        os.system(f'nohup {sys.executable} -u app.py -t flows > flow.log 2> flowerr.log &')
+        time.sleep(15)
+        logger.info('rolling update done in process')
+        # add query testing
+        query_doc = Document()
+        query_doc.text = 'hello world'
+        response = _query_docs([query_doc.dict()])
+        matches = response['search']['docs'][0].get('matches')
+        logger.info(f'got {len(matches)} matches')
+        assert matches
 
-        raise RuntimeError(
-            f'processes crashed/ended. jinad stderr: {jinad_process.stderr.readlines()}; app.py stderr: {flow_process.stderr.readlines()}'
-        )
     except (Exception, KeyboardInterrupt):
         raise
     finally:
-        print(jinad_process.stdout.readlines())
-        print(flow_process.stdout.readlines())
-        jinad_process.kill()
-        flow_process.kill()
+        logger.warning('entering finally...')
+        os.system('pkill jinad')
+        os.system(f'pkill {sys.executable}')
+        logger.warning('following is output from .log files:')
+        os.system(f'cat *.log')
