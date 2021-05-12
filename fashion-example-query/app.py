@@ -88,7 +88,7 @@ def query(num_doc, target: dict):
         with TimeContext(f'QPS: query with {num_doc}', logger=f.logger):
             f.search(query_generator(num_doc, target), shuffle=True, size=128,
                      on_done=print_result, request_size=32, top_k=TOP_K)
-    write_html(os.path.join('./workspace', 'hello-world.html'))
+    write_html(os.path.join(os.getenv('JINA_WORKDIR'), 'hello-world.html'))
 
 
 def config(task):
