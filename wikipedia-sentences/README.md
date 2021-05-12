@@ -62,12 +62,12 @@ To quickly get started, you can index a [small dataset of 50 sentences](data/toy
 ```sh
 python app.py -t index
 ```
-The relevant Jina code to index data given your flow's YAML definition breaks down to
+The relevant Jina code to index data given your Flow's YAML definition breaks down to
 ```python
 with Flow().load_config('flows/index.yml'):
     f.index_lines(filepath='data/toy-input.txt', read_mode='r', batch_size=16, num_docs=10)
 ```
-The flow will interpret each line in the txt file as one Document.
+The Flow will interpret each line in the txt file as one Document.
 You can limit the number of indexed Documents with the `num_docs`
 argument.
 If you see the following output, it means your data has been correctly indexed.
@@ -86,8 +86,8 @@ with Flow().load_config('flows/index.yml'):
     f.index_lines(filepath='data/toy-input-incremental.txt', read_mode='r', batch_size=16, num_docs=10)
 ```
 One challenge we need to address when incrementally adding to the index is duplication of Documents.
-Jina provides a [DocCache](pods/index_cache.yml) pod that is pre-configured for you and takes care of detecting duplicates 
-when adding to the index. Add one line to your [index flow](flows/index_incremental.yml) and incremental indexing works.
+Jina provides a [DocCache](pods/index_cache.yml) Pod that is pre-configured for you and takes care of detecting duplicates 
+when adding to the index. Add one line to your [index Flow](flows/index_incremental.yml) and incremental indexing works.
 ```yaml
 !Flow
 version: '1'
@@ -189,13 +189,13 @@ Here is a small overview if you're interested in understanding what each file in
 |File   | Explanation  |
 |--|--|
 |📂 `flows/`  | Folder to store Flow configuration    |
-|--- 📃 `flows/index.yml`  | Contains the details of which executors should be used for indexing your data. |
-|--- 📃 `flows/query.yml`  | Contains the details of which executors should be used for querying your data. |
+|--- 📃 `flows/index.yml`  | Contains the details of which Executors should be used for indexing your data. |
+|--- 📃 `flows/query.yml`  | Contains the details of which Executors should be used for querying your data. |
 |📂 `pods/` | Folder to store Pod configurations|
 |--- 📃 `pods/encode.yml`  | Specifies the configurations values for the encoding Executor.   |
 |--- 📃 `pods/index.yml`  | Specifies the configurations values for the encoding Executor.   |
 |📂 `test/*`  | Various maintenance tests to keep the example running.   |
-|📃 `app.py`   | The gateway code to combine the index and query flow.  |
+|📃 `app.py`   | The gateway code to combine the index and query Flow.  |
 |📃 `get_data.sh`  |  Downloads the Kaggle dataset.|
 |📃 `manifest.yml`   |Needed to deploy to Jina Hub.|
 |📃 `requirements.txt`  |  Contains all required python libraries.|
