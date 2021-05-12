@@ -7,7 +7,6 @@ import sys
 import click
 from collections import defaultdict
 
-import random
 import numpy as np
 
 from jina import Document, Flow
@@ -17,27 +16,9 @@ from jina.helloworld.helper import download_data, write_html, print_result
 
 from pkg_resources import resource_filename
 
-result_html = []
 TOP_K = 10
 num_docs_evaluated = 0
 evaluation_value = defaultdict(float)
-
-label_id = {
-    0: 'T-shirt/top',
-    1: 'Trouser',
-    2: 'Pullover'
-}
-
-
-def get_mapped_label(label_int: int):
-    """
-    Get a label_int and return the description of that label
-    label_int   Description
-    0           T-shirt/top
-    1           Trouser
-    2           Pullover
-    """
-    return label_id.get(label_int, "Invalid tag")
 
 
 def download_fashionmnist():
@@ -47,7 +28,7 @@ def download_fashionmnist():
         ('index', 'train-images-idx3-ubyte.gz'),
         ('query', 't10k-images-idx3-ubyte.gz')
     ]
-    data_dir = './data'
+    data_dir = os.path.join(os.environ['JINA_WORKDIR'], 'data')
     url_str = 'http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/'
     targets = {
         k: {
@@ -69,12 +50,17 @@ def download_fashionmnist():
 
 
 def _doc_generator(num_doc: int, doc_dict: dict, selected_label_id: []):
+    label_id = {
+        0: 'T-shirt/top',
+        1: 'Trouser',
+        2: 'Pullover'
+    }
     selected_doc_dict = []
     for data, label in zip(doc_dict['query']['data'], doc_dict['query-labels']['data']):
         label = label[0]
         if selected_label_id and label in selected_label_id:
             d = Document(content=data)
-            d.tags['label'] = label_id[label]  # selected_label  get_mapped_label(label)
+            d.tags['label'] = label_id[label]
             selected_doc_dict.append(d)
     selected_id = np.random.permutation(range(len(selected_doc_dict)))
     for idx in selected_id[:num_doc]:
@@ -109,9 +95,9 @@ def config(task):
     shards_encoder = 2 if task == 'index' else 1
     shards_indexer = 1
     os.environ['JINA_RESOURCE_DIR'] = resource_filename('jina', 'resources')
-    os.environ['JINA_SHARDS_INDEXER'] = str(shards_indexer)
-    os.environ['JINA_SHARDS_ENCODER'] = str(shards_encoder)
-    os.environ['JINA_WORKDIR'] = './workspace'
+    os.environ['JINA_SHARDS_INDEXER'] = os.getenv('JINA_SHARDS_INDEXER', str(shards_indexer))
+    os.environ['JINA_SHARDS_ENCODER'] = os.getenv('JINA_SHARDS_ENCODER', str(shards_encoder))
+    os.environ['JINA_WORKDIR'] = os.environ.get('JINA_WORKDIR', './workspace')
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45683))
 
 
@@ -122,7 +108,6 @@ def config(task):
 def main(task, num_docs_query, num_docs_index):
     config(task)
     logger = JinaLogger('fashion-example-query')
-    targets = download_fashionmnist()
     workspace = os.environ['JINA_WORKDIR']
     if task == 'index':
         if os.path.exists(workspace):
@@ -132,6 +117,8 @@ def main(task, num_docs_query, num_docs_index):
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
             sys.exit(1)
+    targets = download_fashionmnist()
+    if task == 'index':
         index(num_docs_index, targets)
     elif task == 'query':
         if not os.path.exists(workspace):
