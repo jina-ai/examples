@@ -1,5 +1,4 @@
 import os
-import subprocess
 import sys
 import time
 from typing import List, Dict
@@ -26,22 +25,6 @@ def _send_rest_request(port_expose: str, endpoint: str, method: str, data: List[
     return r.json()
 
 
-def processes_alive(processes):
-    for p in processes:
-        if p.poll() is not None:
-            return False
-    return True
-
-
-def rolling_update_done(flow_process):
-    for l in iter(flow_process.stdout.readline, b''):
-        l = l.decode()
-        print(l)
-        if 'rolling update done.' in l:
-            return True
-    return False
-
-
 def test_query_while_indexing():
     try:
         logger.info('starting jinad...')
@@ -49,7 +32,7 @@ def test_query_while_indexing():
         time.sleep(2)
         logger.info('starting app.py...')
         os.system(f'nohup {sys.executable} -u app.py -t flows > flow.log 2> flowerr.log &')
-        time.sleep(15)
+        time.sleep(20)
         logger.info('rolling update done in process')
         # add query testing
         query_doc = Document()
