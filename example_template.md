@@ -1,4 +1,10 @@
 # Run the EXAMPLE NAME
+*You can also include a gif with a full demo of the example*
+
+
+ *ADD A TABLE OF CONTENTS HERE *
+
+## Overview
 | About this example: |  |
 | ------------- | ------------- |
 | Learnings | *Describe what the user will learn after running this example* |
@@ -8,8 +14,6 @@
 | Model used | *Link to the model* |
 
 
- *ADD A TABLE OF CONTENTS HERE *
-
 This example shows you how to...
 
 *Add a short description of*
@@ -17,8 +21,7 @@ This example shows you how to...
 2. *What is the expected outcome of this example?*
 3. *What the user will learn in this example?*
 
-*You can also include a gif with a full demo of the example*
-_____
+
 
 ## 🐍 Build the app with Python
 
