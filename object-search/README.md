@@ -69,6 +69,8 @@ Note: Flickr8k is not an ideal dataset but we are using due to its small size.
 pip install -r requirements.txt
 ```
 
+To run this example, you will also need the package `lib-magic`. One way to install this package is via [homebrew](https://formulae.brew.sh/formula/libmagic).
+
 ## Index Image Data
 <p align="center">
   <img src=".github/.README_images/index.png?raw=true" alt="Jina banner" width="90%">
