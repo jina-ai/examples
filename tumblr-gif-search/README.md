@@ -59,7 +59,7 @@ You can limit the number of downloaded GIFs with the `-l` parameter.
 ## Run Index Flow
 
 ```bash
-python app.py index
+python app.py -t index
 ```
 
 The index Flow is defined as follows:
