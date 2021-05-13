@@ -10,7 +10,7 @@ from jina import Flow
 from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
-PDF_DATA_PATH = 'data'
+PDF_DATA_PATH = 'toy_data'
 
 def config():
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
