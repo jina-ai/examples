@@ -58,7 +58,6 @@ pip install -r requirements.txt
 | ``python app.py -t query_image`` | To run a query Flow for searching image |
 | ``python app.py -t query_pdf`` | To run a query Flow for searching PDF |
 | ``python app.py -t query_restful`` | To expose the restful API of the query Flow for searching text, image, and PDF|
-| ``python app.py -t dryrun`` | Sanity check on the topology |
 
 ## Start the Server
 

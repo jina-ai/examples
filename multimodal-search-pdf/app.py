@@ -5,12 +5,12 @@ import os
 import sys
 import glob
 import click
-from jina import Document
-from jina import Flow
+from jina import Document, Flow
 from jina.logging.profile import TimeContext
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 PDF_DATA_PATH = 'toy_data'
+
 
 def config():
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
@@ -30,12 +30,6 @@ def search_generator(data_path):
     d = Document()
     d.content = data_path
     yield d
-
-
-def dryrun():
-    f = Flow().load_config("flows/index.yml")
-    with f:
-        pass
 
 
 def get_pdf(resp):
@@ -105,7 +99,7 @@ def query_pdf():
     "--task",
     "-t",
     type=click.Choice(
-        ["index", "query", "query_text", "query_image", "query_pdf", "query_restful", "dryrun"], case_sensitive=False
+        ["index", "query", "query_text", "query_image", "query_pdf", "query_restful"], case_sensitive=False
     ),
 )
 @click.option("--num_docs", "-n", default=MAX_DOCS)
@@ -134,8 +128,6 @@ def main(task, num_docs):
         f = Flow.load_config('flows/query-multimodal.yml')
         with f:
             f.block()
-    if task == "dryrun":
-        dryrun()
 
 
 if __name__ == "__main__":
