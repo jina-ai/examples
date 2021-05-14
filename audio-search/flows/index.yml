@@ -1,7 +1,5 @@
-!Flow
+jtype: Flow
 version: '1'
-with:
-  restful: True
 pods:
   - name: crafter
     uses: pods/segment.yml

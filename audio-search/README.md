@@ -166,6 +166,6 @@ The best way to learn Jina in-depth is to read our documentation. Documentation 
 
 ## License
 
-Copyright (c) 2020 Jina AI. All rights reserved.
+Copyright (c) 2021 Jina AI. All rights reserved.
 
 
