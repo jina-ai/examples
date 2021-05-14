@@ -20,5 +20,10 @@ def test_multimodal_search_pdf(tmpdir):
     assert 'done in' in result.stdout
     assert '🔴' not in result.stdout
     assert '⚪' not in result.stdout
-    result = runner.invoke(main, ['-t', 'query'])
+    result = runner.invoke(main, ['-t', 'query_text'])
     assert result.stderr_bytes is None
+    result = runner.invoke(main, ['-t', 'query_image'])
+    assert result.stderr_bytes is None
+    result = runner.invoke(main, ['-t', 'query_pdf'])
+    assert result.stderr_bytes is None
+    # TODO: `query_restful` is not covered
