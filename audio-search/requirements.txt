@@ -1,6 +1,6 @@
 jina[hub,http]==1.2.0
 resampy==0.2.2
-tensorflow_cpu==2.1.0
+tensorflow_cpu==2.2.0
 tf_slim==1.1.0
 six==1.15.0
 soundfile==0.10.3.post1
