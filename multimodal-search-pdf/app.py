@@ -61,11 +61,11 @@ def query():
             d.text = search_text
             # There are three ways to search.
             print('text search:')
-            f.search(input_fn=d, on_done=get_pdf)
+            f.search(inputs=d, on_done=get_pdf)
             print('image search:')
-            f.search(input_fn=search_generator(data_path='toy_data/photo-1.png'), read_mode='r', on_done=get_pdf)
+            f.search(inputs=search_generator(data_path='toy_data/photo-1.png'), read_mode='r', on_done=get_pdf)
             print('pdf search:')
-            f.search(input_fn=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
+            f.search(inputs=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
 
 
 def query_text():
@@ -77,21 +77,21 @@ def query_text():
         # search_text = 'Developing a Jina app often means writing YAML configs.'#blog3
         d.text = search_text
         print('text search:')
-        f.search(input_fn=d, on_done=get_pdf)
+        f.search(inputs=d, on_done=get_pdf)
 
 
 def query_image():
     f = Flow.load_config('flows/query-only-image.yml')
     with f:
         print('image search:')
-        f.search(input_fn=search_generator(data_path='toy_data/photo-1.png'), read_mode='r', on_done=get_pdf)
+        f.search(inputs=search_generator(data_path='toy_data/photo-1.png'), read_mode='r', on_done=get_pdf)
 
 
 def query_pdf():
     f = Flow.load_config('flows/query-only-pdf.yml')
     with f:
         print('pdf search:')
-        f.search(input_fn=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
+        f.search(inputs=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
 
 
 @click.command()
