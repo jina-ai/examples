@@ -1,8 +1,8 @@
-!Flow
+jtype: Flow
 version: '1'
 with:
   compress_hwm: 1024
-pods:
+pods: #Specify all pods to be used
   - name: encode
     uses: pods/encode.yml
     shards: $JINA_SHARDS_ENCODER

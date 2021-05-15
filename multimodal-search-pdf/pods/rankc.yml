@@ -1,4 +1,4 @@
-!SimpleAggregateRanker # this is the ranker for text path, it's used to Aggregate CC to C
+jtype: SimpleAggregateRanker # this is the ranker for text path, it's used to Aggregate CC to C
 with:
   aggregate_function: 'min'
   inverse_score: false # note that we need to set this to false, if not we won't get correct results. The ranker should only set this to true if it is the final ranker

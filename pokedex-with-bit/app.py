@@ -3,11 +3,15 @@ __license__ = "Apache-2.0"
 
 import os
 import sys
+from glob import glob
 
+import click
 from jina.flow import Flow
+from jina.logging import default_logger as logger
+from jina.logging.profile import TimeContext
 
-num_docs = int(os.environ.get('JINA_MAX_DOCS', 50000))
-image_src = 'data/**/*.png'
+MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50000))
+IMAGE_SRC = 'data/**/*.png'
 
 
 def config():
@@ -20,39 +24,50 @@ def config():
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
-# for index
-def index():
+def index(num_docs: int):
     f = Flow.load_config('flows/index.yml')
-
+    num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC), recursive=True)))
     with f:
-        f.index_files(image_src, request_size=64, read_mode='rb', size=num_docs)
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index_files(IMAGE_SRC, request_size=64, read_mode='rb', size=num_docs)
 
 
-# for search
-def search():
+def query_restful():
     f = Flow.load_config('flows/query.yml')
+    f.use_rest_gateway()
 
+    # no perf measure, as it opens a REST api and blocks
     with f:
         f.block()
 
 
-if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('choose between "index" and "search" mode')
-        exit(1)
-    if sys.argv[1] == 'index':
-        config()
-        workspace = os.environ['JINA_WORKSPACE']
+@click.command()
+@click.option(
+    '--task',
+    '-t',
+    type=click.Choice(
+        ['index', 'query_restful'], case_sensitive=False
+    ),
+)
+@click.option('--num_docs', '-n', default=MAX_DOCS)
+def main(task: str, num_docs: int):
+    config()
+    workspace = os.environ['JINA_WORKSPACE']
+    if task == 'index':
         if os.path.exists(workspace):
-            print(f'\n +---------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again. | \
-                    \n |                                   🤖🤖🤖                                        | \
-                    \n +---------------------------------------------------------------------------------+')
-            sys.exit()
-        index()
-    elif sys.argv[1] == 'search':
-        config()
-        search()
-    else:
-        raise NotImplementedError(f'unsupported mode {sys.argv[1]}')
+            logger.error(f'\n +----------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                         | \
+                    \n +----------------------------------------------------------------------------------+')
+            sys.exit(1)
+        index(num_docs)
+    if task == 'query_restful':
+        if not os.path.exists(workspace):
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+            sys.exit(1)
+        query_restful()
+
+
+if __name__ == '__main__':
+    main()

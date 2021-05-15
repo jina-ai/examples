@@ -161,12 +161,3 @@ updates:
       - dependency-name: "jina"
         dependency-type: "direct"
     open-pull-requests-limit: 1
-
-  - package-ecosystem: "pip"
-    schedule:
-      interval: daily
-    directory: "wikipedia-sentences-incremental"
-    allow:
-      - dependency-name: "jina"
-        dependency-type: "direct"
-    open-pull-requests-limit: 1
