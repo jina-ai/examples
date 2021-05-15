@@ -5,13 +5,16 @@ on: [pull_request]
 jobs:
   example-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: [3.7, 3.8]
+          python-version: ${{ matrix.python-version }}
       - id: changed-files
         uses: jitterbit/get-changed-files@v1
         continue-on-error: true
