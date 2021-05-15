@@ -56,28 +56,29 @@ pip install -r requirements.txt
 
 ## Download Model
 
-- In this example, we use the Vggish model to encode the sound files. You can find more details about the model at [https://github.com/tensorflow/models/tree/master/research/audioset/vggish](https://github.com/tensorflow/models/tree/master/research/audioset/vggish). Use the following cmd to download the models. For downloading the audioset data, we adapt the codes from the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). We provide the following script, it will download 10 audio files from the audioset dataset.
+- In this example, we use the Vggish model to encode the sound files. You can find more details about the model at [https://github.com/tensorflow/models/tree/master/research/audioset/vggish](https://github.com/tensorflow/models/tree/master/research/audioset/vggish). Use the following cmd to download the models. For downloading the audioset data, we adapt the codes from the `runme.sh` script at [https://github.com/qiuqiangkong/audioset_tagging_cnn ](https://github.com/qiuqiangkong/audioset_tagging_cnn). 
 
 ```bash
 bash download_model.sh
-bash download_data.sh
 ```
 
+## Download Data
+`get_data.sh` script downloads a few Beethoven symphonies from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:WAV_files). This is a small dataset so indexes quickly. Just run
+
+```sh
+sh ./get_data.sh
+```
+You can also use you own `.wav` files. Make sure the files are under `data/`. 
 
 After preparing the data, here is how the folder looks like,
-
 ```
 .
 ├── Dockerfile
 ├── README.md
 ├── app.py
 ├── data
-├── ├── metadata
-│   │   └── eval_segments.csv
-│   ├── YjmN-c5mDxfw.wav
 │   ├── Yjo9lFbGXf_0.wav
 │   └── Yjzij1UX73kU.wav
-├── download_data.sh
 ├── download_model.sh
 ├── flows
 │   ├── index.yml
@@ -109,12 +110,6 @@ After preparing the data, here is how the folder looks like,
     └── test_audio_search.py
 ```
 
-
-- Alternatively, you can also use you own `.wav` files. Make sure the files are under `data/`. For example, our `get_data.sh` script downloads a few Beethoven symphonies from [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:WAV_files). This is a small dataset so indexes quickly. Just run
-
-```sh
-sh ./get_data.sh
-```
 
 ## Run
 
