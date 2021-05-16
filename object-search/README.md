@@ -24,16 +24,18 @@ You can build this example yourself and deploy it with Python. This allows you t
 ## Step 1. Clone the repo and install Jina
 
 Begin by cloning the repo so you can get the required files and datasets. 
-```sh
+
+```shell
 git clone https://github.com/jina-ai/examples
 cd examples/object-search
 ```
 
 On your terminal,  you should now be located in you the `object-search` folder. Let's install Jina and the other required python libraries. 
 
-```sh
+```shell
 pip install -r requirements.txt
 ```
+
 ## Step 2. Download the dataset
 
 We will run this example with the [Flickr8k](https://www.kaggle.com/adityajn105/flickr8k)  object detection dataset. 
@@ -43,13 +45,15 @@ Flickr8k is a dataset of 8,000 images each paired with a short description of en
 1. Create a [Kaggle](https://www.kaggle.com/) account
 2. Set up Kaggle API keys according to the instructions [here](https://github.com/Kaggle/kaggle-api)
 3. Download the Flickr8k from [Kaggle](https://www.kaggle.com/)
-```
+
+```shell
 kaggle datasets download adityajn105/flickr8k
 unzip flickr8k.zip 
 rm flickr8k.zip
 mkdir -p data/f8k/
 mv Images data/f8k/images
 ```
+
 Note: We are using Flickr8k here due to its small size which means the example can run faster. Feel free to experiment with other datasets like  [COCO](https://cocodataset.org/#home)  &  [Open Images 2019](https://www.kaggle.com/c/open-images-2019-object-detection/overview) or many other image datasets you can find online.
 
 
@@ -57,13 +61,14 @@ Note: We are using Flickr8k here due to its small size which means the example c
 
 Let's start with by indexing only 1000 images to save time. If it still takes too much time, you can reduce the number even more but keep in mind this will affect the quality of results.
 
-```
-python app.py -task index -n 1000 -overwrite True
+```shell
+python app.py -t index -n 1000 -overwrite True
 ```
 
 To index the entire dataset simply run: (This will take a lot longer)
-```
-python app.py -task index -n 8000 -overwrite True
+
+```shell
+python app.py -t index -n 8000 -overwrite True
 ```
 
 During Indexing, our Flow logic is performing the following steps.
@@ -81,16 +86,17 @@ The object Query Flow works as follows:
 3. Order the images by best match
 
 The `flow-query-object.yml` will return a cropped image containing the `object` identified in the query image. To start the `flow-query-object.yml` run the following
-```
-python app.py -task query -r object
+
+```shell
+python app.py -t query -r object
 ```
 
 ![image](https://user-images.githubusercontent.com/23415764/116536115-d422ea80-a8e4-11eb-934b-503fe5cfe296.png)
 
 The `flow-query-original.yml` Flow will search all indexed object images and return the original parent image in which the object was found. Start the server which returns the `original` images by running
 
-```sh
-python app.py -task query -r original
+```shell
+python app.py -t query -r original
 ```
 The original Query Flow works as follows:
 1. Find the maching cropped images as with the object Flow
