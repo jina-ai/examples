@@ -96,6 +96,7 @@ def main(task, return_image, num_docs, batch_size, overwrite_workspace, query_fi
         shutil.rmtree(workspace)
 
     if task == 'index':
+        logger.info(f'indexing {data_path}')
         index(data_path, batch_size, num_docs)
 
     if 'query' in task and not os.path.exists(workspace):
