@@ -38,25 +38,6 @@ def index(num_docs: int):
             f.index_files(IMAGE_SRC, request_size=10, read_mode='rb', size=num_docs)
 
 
-def index_restful(num_docs):
-    f = Flow().load_config('flow-index.yml')
-
-    with f:
-        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.logger.info(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{f.port_expose}/index'
-
-        input_docs = _input_lines(
-            filepath=data_path,
-            size=num_docs,
-            read_mode='r',
-        )
-        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        r = requests.post(url, json=data_json)
-        if r.status_code != 200:
-            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
-
-
 def query_restful(return_image):
     f = Flow().load_config(f'flow-query-{return_image}.yml')
     f.use_rest_gateway()
@@ -64,17 +45,11 @@ def query_restful(return_image):
         f.block()
 
 
-def dryrun():
-    f = Flow().load_config('flow-index.yml')
-    with f:
-        pass
-
-
 @click.command()
 @click.option(
     '--task',
     '-t',
-    type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False),
+    type=click.Choice(['index', 'query', 'query_restful'], case_sensitive=False),
 )
 @click.option(
     '--return_image', '-r', default='original', type=click.Choice(['original', 'object'], case_sensitive=False)
@@ -86,40 +61,33 @@ def dryrun():
 def main(task, return_image, data_path, num_docs, batch_size, overwrite_workspace):
     config()
     workspace = os.environ['WORKDIR']
-    if 'index' in task:
-        if os.path.exists(workspace):
-            if not overwrite_workspace:
-                logger.info(
-                    f'\n +------------------------------------------------------------------------------------+ \
-                        \n |                                   🤖🤖🤖                                           | \
-                        \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                        \n |                                   🤖🤖🤖                                           | \
-                        \n +------------------------------------------------------------------------------------+'
-                )
-                sys.exit(1)
-            else:
-                logger.info('deleting workspace...')
-                shutil.rmtree(workspace)
-
-    elif 'query' in task:
-        if not os.path.exists(workspace):
-            logger.info(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+    if 'index' in task and os.path.exists(workspace):
+        if not overwrite_workspace:
+            logger.info(
+                f'\n +------------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n +------------------------------------------------------------------------------------+'
+            )
             sys.exit(1)
+        logger.info('deleting workspace...')
+        shutil.rmtree(workspace)
+
+    if 'query' in task and not os.path.exists(workspace):
+        logger.info(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+        sys.exit(1)
 
     if task == 'index':
         f = Flow.load_config('flow-index.yml')
         with f:
             f.index_files(data_path, batch_size=batch_size, read_mode='rb', size=num_docs)
-    elif task == 'index_restful':
-        index_restful(num_docs)
     elif task == 'query':
         f = Flow.load_config(f'flow-query-{return_image}.yml')
         with f:
             f.block()
     elif task == 'query_restful':
         query_restful(return_image)
-    elif task == 'dryrun':
-        dryrun()
 
 
 if __name__ == '__main__':
