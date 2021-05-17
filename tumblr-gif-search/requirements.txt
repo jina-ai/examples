@@ -1,5 +1,5 @@
 click==7.1.2
-jina[hub,http]==1.2.0
+jina[hub,http]==1.2.4
 aiofiles
 aiohttp
 tensorflow_cpu >= 2.0
