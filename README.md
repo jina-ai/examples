@@ -93,6 +93,15 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
+      <h4><a href="./wikipedia-sentences-query-while-indexing">Querying While Indexing in the Wikipedia Search Example</a></h4>
+      Support both querying and indexing simultaneously in our Wikipedia Search Example
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
       <h4><a href="./advanced-vector-search">Index and query with FAISS</a></h4>
       Build a vector search engine that finds the closest vector in the database to a query.
     </td>
