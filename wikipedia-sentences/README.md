@@ -7,12 +7,14 @@
 ## Table of contents: 
 
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+- [Overview](#overview)
+- [🐍 Build the app with Python](#---build-the-app-with-python)
+- [🔮 Overview of the files in this example](#---overview-of-the-files-in-this-example)
+- [🌀 Flow diagram](#---flow-diagram)
+- [🔨 Next steps, building your own app](#---next-steps--building-your-own-app)
+- [🐳 Deploy the prebuild application using Docker](#---deploy-the-prebuild-application-using-docker)
+- [🙍 Community](#---community)
+- [🦄 License](#---license)
 
 ## Overview
 |  |  |
@@ -210,8 +212,9 @@ This diagram provides a visual representation of the two Flows in this example, 
 
 ## 🔨 Next steps, building your own app
 
-Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
-If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
+Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation.
+
+- [Enable querying while indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-query-while-indexing)
 
 ## 🐳 Deploy the prebuild application using Docker
 Warning! This section is not maintained, so we can't guarantee it works! 
