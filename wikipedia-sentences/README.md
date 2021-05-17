@@ -15,7 +15,6 @@
 - [🙍 Community](#-community)
 - [🦄 License](#-license)
 
-#-step-1-clone-the-repo-and-install-jina
 ## Overview
 |  |  |
 | ------------- | ------------- |
