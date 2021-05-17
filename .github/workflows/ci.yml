@@ -20,6 +20,7 @@ jobs:
         continue-on-error: true
       - name: ci
         run: ./.github/ci.sh
+        timeout-minutes: 15
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all }}
           AWS_ACCESS_KEY_ID: AKIAWB5UZPEQHHYDKVUC

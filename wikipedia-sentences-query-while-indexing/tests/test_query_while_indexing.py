@@ -29,7 +29,7 @@ def test_query_while_indexing():
     try:
         logger.info('starting jinad...')
         os.system('nohup jinad > jinad.log 2> jinaderr.log &')
-        time.sleep(2)
+        time.sleep(5)
         logger.info('starting app.py...')
         os.system(f'nohup {sys.executable} -u app.py -t flows > flow.log 2> flowerr.log &')
         time.sleep(20)
