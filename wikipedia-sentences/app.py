@@ -6,8 +6,11 @@ import sys
 
 import click
 from jina.flow import Flow
+from jina.logging import JinaLogger
 from jina.logging.profile import TimeContext
 from jina.logging import default_logger as logger
+
+logger = JinaLogger('wikipedia-example')
 
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
@@ -62,18 +65,18 @@ def query(top_k):
             if not text:
                 break
             f.search_lines(
-                lines=[text,],
+                lines=[
+                    text,
+                ],
                 line_format='text',
                 on_done=ppr,
                 top_k=top_k
             )
 
 
-def query_restful(return_flow=False):
+def query_restful():
     f = Flow().load_config('flows/query.yml')
     f.use_rest_gateway()
-    if return_flow:
-        return f
     with f:
         f.block()
 

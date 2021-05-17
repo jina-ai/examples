@@ -1,4 +1,20 @@
 # Run the EXAMPLE NAME
+*You can also include a gif with a full demo of the example*
+
+
+ *ADD A TABLE OF CONTENTS HERE *
+ 
+ - [Overview](#overview)
+- [🐍 Build the app with Python](#-build-the-app-with-python)
+- [🔮 Overview of the files in this example](#-overview-of-the-files-in-this-example)
+- [🌀 Flow diagram](#-flow-diagram)
+- [🔨 Next steps, building your own app](#-next-steps-building-your-own-app)
+- [🐳 Deploy the prebuild application using Docker](#-deploy-the-prebuild-application-using-docker)
+- [🙍 Community](#-community)
+- [🦄 License](#-license)
+
+
+## Overview
 | About this example: |  |
 | ------------- | ------------- |
 | Learnings | *Describe what the user will learn after running this example* |
@@ -7,16 +23,6 @@
 | Dataset used | *Link to the datasets* |
 | Model used | *Link to the model* |
 
-<p></p>
-This example shows you how to...
-
-*Add a short description of*
-1. *What is this example?*
-2. *What is the expected outcome of this example?*
-3. *What the user will learn in this example?*
-
-*You can also include a gif with a full demo of the example*
-_____
 
 ## 🐍 Build the app with Python
 
@@ -148,7 +154,7 @@ If you have any issues following this guide, you can always get support from our
 
 ## 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
+- [Slack channel](https://slack.jina.ai/) - a communication platform for developers to discuss Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
@@ -157,4 +163,4 @@ If you have any issues following this guide, you can always get support from our
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples/blob/master/LICENSE) for the full license text.

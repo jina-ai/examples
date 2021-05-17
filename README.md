@@ -34,15 +34,6 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./wikipedia-sentences-incremental">Add Incremental Indexing to Wikipedia Search</a></h4>
-      Index more effectively by adding incremental indexing to your Wikipedia search
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>📄</h1>
-    </td>
-    <td>
       <h4><a href="./multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a></h4>
       Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
     </td>
@@ -88,6 +79,15 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
 ## 🚀  Advanced Examples
 
 <table>
+  <tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="./wikipedia-sentences-query-while-indexing">Querying While Indexing in the Wikipedia Search Example</a></h4>
+      Support both querying and indexing simultaneously in our Wikipedia Search Example
+    </td>
+  </tr>
   <tr>
     <td>
       <h1>📄</h1>
