@@ -24,15 +24,6 @@
 | Model used | *Link to the model* |
 
 
-This example shows you how to...
-
-*Add a short description of*
-1. *What is this example?*
-2. *What is the expected outcome of this example?*
-3. *What the user will learn in this example?*
-
-
-
 ## 🐍 Build the app with Python
 
 These instructions explain how to build the example yourself and deploy it with Python. If you want to skip the building steps and just run the example with Docker, check [the Docker deployment instructions at the end of this README](#deploy-with-docker)  
