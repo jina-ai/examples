@@ -45,7 +45,7 @@ class Flickr30kDataset(data.Dataset):
         return len(self.ids)
 
 
-class Flickr8kDataset(data.Dataset):
+class FlickrDataset(data.Dataset):
     """
     Dataset loader for Flickr8k full datasets.
     """
@@ -68,6 +68,8 @@ class Flickr8kDataset(data.Dataset):
         return int(len(self.lines)/5)
 
 
+FlickrToyDataset = FlickrDataset
+
 def collate_fn(data):
     # Not sure this is actually needed
     images, captions = zip(*data)
@@ -80,8 +82,8 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
 
     if dataset_type == 'f30k':
         dataset = Flickr30kDataset(images_root=root, split=split, json=captions)
-    elif dataset_type == 'f8k':
-        dataset = Flickr8kDataset(images_root=root, captions_file_path=captions)
+    elif dataset_type == 'f8k' or dataset_type == 'toy-data':
+        dataset = FlickrDataset(images_root=root, captions_file_path=captions)
     else:
         raise NotImplementedError(f'Not valid dataset type {dataset_type}')
     # Data loader

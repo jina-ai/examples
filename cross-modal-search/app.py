@@ -27,15 +27,15 @@ def config(model_name):
     if model_name == 'clip':
         os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.1.0')
         os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.2-1.1.0')
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/clip/text-encoder.yml'
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
     elif model_name == 'vse':
         os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7')
         os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7')
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/vse/text-encoder.yml'
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/vse/text-encoder.yml'
 
 
 def index_restful(num_docs):
-    f = Flow().load_config('flow-index.yml')
+    f = Flow().load_config('flows/flow-index.yml')
 
     with f:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
@@ -54,22 +54,23 @@ def index_restful(num_docs):
 
 
 def query_restful():
-    f = Flow().load_config('flow-query.yml')
+    f = Flow().load_config('flows/flow-query.yml')
     f.use_rest_gateway()
     with f:
+        f.plot()
         f.block()
 
 def dryrun():
-    f = Flow().load_config('flow-index.yml')
+    f = Flow().load_config('flows/flow-index.yml')
     with f:
         pass
 
 
 @click.command()
-@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query', 'query_restful', 'dryrun'], case_sensitive=False), default='query')
+@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False), default='index')
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
-@click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
+@click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
 def main(task, num_docs, request_size, data_set, model_name):
     config(model_name)
@@ -85,10 +86,14 @@ def main(task, num_docs, request_size, data_set, model_name):
                     \n +------------------------------------------------------------------------------------+'
             )
             sys.exit(1)
+    if 'query' in task:
+        if not os.path.exists(workspace):
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+            sys.exit(1)
 
     logger.info(f'### task = {task}')
     if task == 'index':
-        with Flow.load_config('flow-index.yml') as f:
+        with Flow.load_config('flows/flow-index.yml') as f:
             with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
                 f.index(
                     input_fn=input_index_data(num_docs, request_size, data_set),
@@ -96,13 +101,7 @@ def main(task, num_docs, request_size, data_set, model_name):
                 )
     elif task == 'index_restful':
         index_restful(num_docs)
-    elif task == 'query':
-        with Flow.load_config('flow-query.yml') as f:
-            f.use_rest_gateway()
-            f.block()
     elif task == 'query_restful':
-        if not os.path.exists(workspace):
-            logger.warning(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
         query_restful()
     elif task == 'dryrun':
         dryrun()

@@ -7,11 +7,11 @@ with:
   restful: True
 pods:
   - name: loader
-    uses: yaml/image-load.yml
+    uses: pods/image-load.yml
     shards: $JINA_PARALLEL
     read_only: true
   - name: normalizer
-    uses: yaml/image-normalize.yml
+    uses: pods/image-normalize.yml
     shards: $JINA_PARALLEL
     read_only: true
   - name: image_encoder
@@ -22,9 +22,9 @@ pods:
     read_only: true
   - name: text_indexer
     polling: all
-    uses: yaml/index-text.yml
+    uses: pods/index-text.yml
     shards: $JINA_SHARDS
-    uses_after: yaml/merge_matches_sort_topk.yml
+    uses_after: pods/merge_matches_sort_topk.yml
     remove_uses_ba: true
   - name: text_encoder
     uses: $JINA_TEXT_ENCODER
@@ -35,15 +35,15 @@ pods:
     needs: [gateway]
   - name: image_vector_indexer
     polling: all
-    uses: yaml/index-image-vector.yml
+    uses: pods/index-image-vector.yml
     shards: $JINA_SHARDS
     uses_after: _merge_matches
     remove_uses_ba: true
   - name: image_kv_indexer
     polling: all
-    uses: yaml/index-image-kv.yml
+    uses: pods/index-image-kv.yml
     shards: $JINA_SHARDS
-    uses_after: yaml/merge_matches_sort_topk.yml
+    uses_after: pods/merge_matches_sort_topk.yml
     remove_uses_ba: true
   - name: join_all
     uses: _merge_root
