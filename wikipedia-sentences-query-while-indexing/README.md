@@ -1,4 +1,4 @@
-# Run the Querying While Indexing Wikipedia Search Example
+# Querying While Indexing in the Wikipedia Search Example
 
 | About this example: |  |
 | ------------- | ------------- |
@@ -9,6 +9,19 @@
 | Model used | [distilbert-base-cased](https://huggingface.co/distilbert-base-cased) |
 
 This is an example of using [Jina](http://www.jina.ai) to support both querying and indexing simultaneously in our [Wikipedia sentence search example](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences). 
+
+## Table of contents: 
+
+  * [Prerequisites](#prerequisites)
+  * [What is querying while indexing?](#what-is-querying-while-indexing)
+  * [Configuration changes](#configuration-changes)
+  * [🐍 Build the app with Python](#---build-the-app-with-python)
+  * [Flow diagrams](#flow-diagrams)
+  * [🔮 Overview of the files](#---overview-of-the-files)
+  * [Troubleshooting](#troubleshooting)
+  * [⏭️ Next steps](#---next-steps)
+  * [👩‍👩‍👧‍👦 Community](#------------community)
+  * [🦄 License](#---license)
 
 ## Prerequisites
 
@@ -40,7 +53,7 @@ These instructions explain how to run the example yourself and deploy it with Py
 
 ### 🗝️ Requirements
 
-1. Have a working Python 3.7 environment.
+1. Have a working Python 3.7 or 3.8 environment.
 1. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
 1. Have at least 2 GB of free space on your hard drive.
 
@@ -70,13 +83,13 @@ In order to run the example you will need to do the following:
 
 ### 📥 Step 2. Download your data to search (Optional)
 
-The example repo includes a small subset of the Wikipedia dataset, for quick testing. You can just use that. 
+The repo includes a small subset of the Wikipedia dataset, for quick testing. You can just use that. 
 
 If you want to use the entire dataset, run `bash get_data.sh` and then modify the `DATA_FILE` constant (in `app.py`) to point to that file.
 
 ### 🏃 Step 3. Running the Flows
 
-1. In one terminal session, run `jinad`.
+1. In one terminal session, run the command `jinad`.
 
     `JinaD` is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. In this example, we use `JinaD` to serve the two Flows (Index and Query). You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
 
@@ -84,9 +97,9 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 
     This will create the two Flows, and then repeatedly do the following, every 20 seconds:
 
-    1. index 5 Documents
-    2. send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
-    3. send a `ROLLING_UPDATE` request to the Query Flow to take down its Indexers and start them again, with the new data located at the respective path
+    1. Index 5 Documents
+    2. Send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
+    3. Send a `ROLLING_UPDATE` request to the Query Flow to take down its Indexers and start them again, with the new data located at the respective path
     
     **Notice** the logs of the operations.
 
@@ -94,7 +107,7 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 
 ### 🔎 Step 4: Query your data
 
-Finally, in another terminal, run `python app.py -t client`
+Finally, in a third terminal, run `python app.py -t client`
 
 This will prompt you for a query, send the query to the Query Flow, and then show you the results.
 
@@ -113,9 +126,25 @@ Optionally, if you have [`jq`](https://stedolan.github.io/jq/), you can just get
 curl -X POST -d '{"data": [{"text":"hello world"}]}' http://0.0.0.0:9001/search | jq -r '.search.docs[] | .matches[] | .text'
 ```
 
-## 🔮 Overview of the files
+## Flow diagrams
 
-*Add a list with all folders/files in the example:*
+Below you can see a graphical representation of the Flow pipeline:
+
+#### DBMS Flow
+
+![](.github/images/DBMS.png)
+
+#### Query Flow
+
+![](.github/images/QUERY.png)
+
+Notice the following:
+
+- the encoder has the same configuration
+- the Query Flow uses replicas. One replica continues to serve requests while the other is being reloaded.
+- the Indexer in the Query Flow is actually made up of two Indexers: one for vectors, one for Document metadata. On the DBMS Flow, this data is stored into one DBMS Indexer.
+
+## 🔮 Overview of the files
 
 | File or folder |  Contents |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -129,6 +158,11 @@ curl -X POST -d '{"data": [{"text":"hello world"}]}' http://0.0.0.0:9001/search 
 | --- 📃 `query_indexer.yml`   | YAML file to configure the Query Indexer                                                                               |
 | 🐍 `app.py`      | Code file for the example   |
 
+
+## Troubleshooting
+
+1. When running `jinad` from a virtual environment, make sure it points to the same installation as `jina`.
+2. On some Mac machines, you may have to run `jinad` with `sudo` command.
 
 _________
 

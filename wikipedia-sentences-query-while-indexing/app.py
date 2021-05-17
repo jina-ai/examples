@@ -20,7 +20,7 @@ logger = JinaLogger('jina')
 curdir = os.getcwd()
 
 JINAD_HOST = 'localhost'  # change this if you are using remote jinad
-JINAD_PORT = '8000'  # change this if you set a different port
+JINAD_PORT = '8001'  # change this if you set a different port
 DUMP_PATH = '/tmp/jina_dump'  # the path where to dump
 SHARDS = 3  # change this if you change pods/query_indexer.yml
 DUMP_RELOAD_INTERVAL = 20  # time between dump - rolling update calls
