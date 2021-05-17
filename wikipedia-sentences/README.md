@@ -7,13 +7,13 @@
 ## Table of contents: 
 
 - [Overview](#overview)
-- [🐍 Build the app with Python](#🐍-build-the-app-with-python)
-- [🔮 Overview of the files in this example](#🔮-overview-of-the-files-in-this-example)
-- [🌀 Flow diagram](#🌀-flow-diagram)
-- [🔨 Next steps, building your own app](#🔨-next-steps-building-your-own-app)
-- [🐳 Deploy the prebuild application using Docker](#🐳-deploy-the-prebuild-application-using-docker)
-- [🙍 Community](#🙍-community)
-- [🦄 License](#🦄-license)
+- [🐍 Build the app with Python](#-🐍-build-the-app-with-python)
+- [🔮 Overview of the files in this example](#-🔮-overview-of-the-files-in-this-example)
+- [🌀 Flow diagram](#-🌀-flow-diagram)
+- [🔨 Next steps, building your own app](#-🔨-next-steps-building-your-own-app)
+- [🐳 Deploy the prebuild application using Docker](#-🐳-deploy-the-prebuild-application-using-docker)
+- [🙍 Community](#-🙍-community)
+- [🦄 License](#-🦄-license)
 
 
 ## Overview
