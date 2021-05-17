@@ -68,8 +68,6 @@ class FlickrDataset(data.Dataset):
         return int(len(self.lines)/5)
 
 
-FlickrToyDataset = FlickrDataset
-
 def collate_fn(data):
     # Not sure this is actually needed
     images, captions = zip(*data)
@@ -99,9 +97,13 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
 
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
+    if dataset_type == 'toy-data':
+        base_folder = '.'
+    else:
+        base_folder = 'data'
     data_loader = get_data_loader(
-        root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
-        captions=os.path.join(cur_dir, f'data/{dataset_type}/{captions}'),
+        root=os.path.join(cur_dir, f'{base_folder}/{dataset_type}/images'),
+        captions=os.path.join(cur_dir, f'{base_folder}/{dataset_type}/{captions}'),
         split='test',
         batch_size=batch_size,
         dataset_type=dataset_type

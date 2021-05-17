@@ -7,7 +7,7 @@ if [ -d ${DATA_DIR} ]; then
   exit 1
 fi
 
-mkdir -dp ${DATA_DIR}
+mkdir -p ${DATA_DIR}
 kaggle datasets download -d ${DATASET}
 unzip flickr8k.zip && \
 rm flickr8k.zip && \

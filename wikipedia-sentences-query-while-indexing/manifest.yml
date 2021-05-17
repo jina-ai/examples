@@ -1,0 +1,15 @@
+manifest_version: 1
+name: wikipedia-sentences-30k-query-while-indexing
+description: 'Example Jina app for searching 30,000 sentences from Wikipedia'
+author: Cristian Mitroi (cristian.mitroi@jina.ai)
+url: https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-query-while-indexing
+vendor: Jina AI Limited
+documentation: https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-query-while-indexing
+version: 0.1
+license: apache-2.0
+keywords: [NLP, wikipedia, text, distilbert, example, transformers]
+type: app
+kind: example
+avatar: None
+platform: "linux/amd64"
+update: "None"
