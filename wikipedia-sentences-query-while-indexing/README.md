@@ -15,13 +15,13 @@ This is an example of using [Jina](http://www.jina.ai) to support both querying 
   * [Prerequisites](#prerequisites)
   * [What is querying while indexing?](#what-is-querying-while-indexing)
   * [Configuration changes](#configuration-changes)
-  * [🐍 Build the app with Python](#---build-the-app-with-python)
+  * [🐍 Build the app with Python](#-build-the-app-with-python)
   * [Flow diagrams](#flow-diagrams)
-  * [🔮 Overview of the files](#---overview-of-the-files)
+  * [🔮 Overview of the files](#-overview-of-the-files)
   * [Troubleshooting](#troubleshooting)
-  * [⏭️ Next steps](#---next-steps)
-  * [👩‍👩‍👧‍👦 Community](#------------community)
-  * [🦄 License](#---license)
+  * [⏭️ Next steps](#-next-steps)
+  * [👩‍👩‍👧‍👦 Community](#-community)
+  * [🦄 License](#-license)
 
 ## Prerequisites
 
