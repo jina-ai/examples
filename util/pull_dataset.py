@@ -3,7 +3,7 @@ import logging
 import os
 
 import click
-from jinacld_tools.aws.services.s3 import S3
+from jinacld_tools.aws.services.s3 import S3Bucket
 
 
 BUCKET_NAME = "jina-examples-datasets"
