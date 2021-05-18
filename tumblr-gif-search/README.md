@@ -62,6 +62,8 @@ You can limit the number of downloaded GIFs with the `-l` parameter.
 python app.py index
 ```
 
+If your index hangs, check out the fix suggested in [this issue](https://github.com/jina-ai/examples/issues/613).
+
 The index Flow is defined as follows:
 ```yaml
 !Flow
