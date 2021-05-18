@@ -23,7 +23,7 @@ _____
 ## 🐍 Build the app with Python
 
 These instructions explain how to build the example yourself and deploy it with Python. 
-If you want to skip the building steps and just run the example with Docker, check [the Docker deployment instructions at the end of this README](#deploy-with-docker)  
+If you want to skip the building steps and just run the example with Docker, check out the  [Docker section](#-deploy-the-prebuild-application-using-docker) below. 
 
 
 ### 🗝️ Requirements
@@ -200,7 +200,7 @@ for encoding image and text respectively.
 
 _____
 
-## 🐋 Deploy with Docker
+## 🐋 Deploy the prebuild application using Docker
 To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.crossmodalsearch) with the indexed documents.
 Just be aware that the image weights 11 GB. Make sure that your docker lets you allocate a sufficient amount of memory. 
 
