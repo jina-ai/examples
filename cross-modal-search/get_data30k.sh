@@ -3,7 +3,7 @@ pip install kaggle
 kaggle datasets download hsankesara/flickr-image-dataset && \
 unzip flickr-image-dataset.zip && \
 rm flickr-image-dataset.zip && \
-wget http://www.cs.toronto.edu/~faghri/vsepp/data.tar && \
+wget -q http://www.cs.toronto.edu/~faghri/vsepp/data.tar && \
 tar -xvf data.tar && \
 rm -rf data.tar && \
 rm -rf data/coco* && \
