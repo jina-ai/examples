@@ -144,7 +144,9 @@ but come from different distributions,
 for them to have different modalities.
 **Example**: In an article or web page, 
 the body text and the title are from the same mime type (text),
-but can be considered of different modalities (distributions).
+but will differ in statistical properties (like expected length or frequency of certain key-words) and should therefore be modeled separately.
+If that is the case, we consider them as different modalities.
+
 
 Different Encoders map different modalities to a common embedding space.
 They need to extract semantic information from the documents. 
