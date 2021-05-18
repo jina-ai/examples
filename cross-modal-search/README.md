@@ -123,6 +123,7 @@ As you can see, the Flow that Indexes the data contains three parallel branches:
 - Lower: transformations to get from text descriptions to vectors
 To have low latency at query time, we store the computed vectors on disk.
 
+### Querying
 ![](visualizations/query-flow.png)
 This Flow shows what happens when a user queries our data. First, the provided text description is passed through the text Encoder which turns
 it into a vector. Now, we use our image vector index to find the most similar image encodings to the previously computed text vector from the user.
