@@ -180,8 +180,6 @@ for encoding image and text respectively.
 
 ## 🔮 Overview of the files
 
-*Add a list with all folders/files in the example:*
-
 |                      |                                                                                                                  |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | 📂 `flows/`          | Folder to store Flow configuration                                                                               |
