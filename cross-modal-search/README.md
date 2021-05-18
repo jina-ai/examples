@@ -150,7 +150,7 @@ Different Encoders map different modalities to a common embedding space.
 They need to extract semantic information from the documents. 
 
 In this embedding space,
-documents that are semantically relevant to each other from different modalities are expected to be close to another - Metric Learning
+documents that are semantically relevant to each other from different modalities are expected to be close to another - [Metric Learning](https://en.wikipedia.org/wiki/Similarity_learning#:~:text=Metric%20learning%20is%20the%20task,(or%20the%20triangle%20inequality).)
 
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
