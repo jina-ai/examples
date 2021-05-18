@@ -14,7 +14,7 @@
 
 In this example, Jina is used to implement a cross-modal search system.
 This example allows the user to search for images given a caption description.
-We encode images and its captions (any descriptive text of the image) in separate indexes.
+We encode images and its captions (any descriptive text of the image) in separate Indexes.
 The `image index` is later queried using the `text embeddings`.
 It is also possible to do it the other way around and use the `image encoding` to search for similar `text-embeddings` (captions).
 
@@ -117,12 +117,12 @@ Remember, our goal is to compare vectors representing the semantics of images wi
 
 ### Indexing
 ![](visualizations/index-flow.png)
-As you can see, the Flow that indexes the data contains three parallel branches: 
+As you can see, the Flow that Indexes the data contains three parallel branches: 
 - Upper: a key-value indexer for the images that we use as a lookup (like a Dictionary in Python).
 - Middle: transformations to get from the JPG to image vectors
 - Lower: transformations to get from text descriptions to vectors
 To have low latency at query time, we store the computed vectors on disk.
-   
+
 ![](visualizations/query-flow.png)
 This Flow shows what happens when a user queries our data. First, the provided text description is passed through the text Encoder which turns
 it into a vector. Now, we use our image vector index to find the most similar image encodings to the previously computed text vector from the user.
