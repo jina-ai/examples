@@ -1,4 +1,4 @@
-# Build a CrossModal Search System to look for Images from Captions
+# Build a Cross-modal Search System to Look for Images from Captions
 
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/visualizations/cross-modal-result.jpg)
 
