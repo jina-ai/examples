@@ -8,7 +8,7 @@
 | ------------- | ------------- |
 | Learnings | How to use image captions (short descriptions of the image content) to search for images. |
 | Used for indexing | Images + captions. |
-| Used for querying | Image caption, e.g. "A boy playing basketball". |
+| Used for querying | Image caption e.g. "A boy playing basketball". |
 | Dataset used | [Flickr 8k](https://www.kaggle.com/adityajn105/flickr8k) containing 8k image caption pairs. |
 | Model used | Both [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) and [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf) are demonstrated. |
 
