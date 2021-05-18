@@ -57,6 +57,7 @@ def query_restful():
     f = Flow().load_config('flows/flow-query.yml')
     f.use_rest_gateway()
     with f:
+        f.plot()
         f.block()
 
 def dryrun():

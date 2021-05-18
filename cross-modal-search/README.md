@@ -194,7 +194,7 @@ for encoding image and text respectively.
 | --- 📃 `index-image-kv.yml`   | YAML file to configure the key-value image index                                                                           |
 | --- 📃 `index-image-vector.yml`   | YAML file to configure the vector image index                                                                           |
 | --- 📃 `index-text.yml`   | YAML file to configure the index for the text vectors                                                                            |
-| --- 📃 `merge_matche_sort_topk.yml`   | YAML file to configure the ranking of matches                                                                        |
+| --- 📃 `merge_matche_sort_topk.yml`   | YAML file to configure the merging ranking of matches in the final result.                                                                     |
 | 📂 `workspace/`      | Folder to store indexed files (embeddings and documents). Automatically created after the first indexing   |
 | 📂 `visualizations/`      | Folder to store images used for documentation  |
 | 📂 `data/`      | Folder to store the toy-data for the example  |
