@@ -217,14 +217,6 @@ To run the application with the pre-indexed documents and ready to be used from 
 ```bash
 docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 ```
-### Build the docker image yourself
-Download the data (if not done already) and build the docker image:
-
-```bash
-./get_data.sh
-docker build -f Dockerfile -t cross-modal-search .
-```
-_______
 
 ## ⏭️ Next steps
 
@@ -243,4 +235,4 @@ If you have any issues following this guide, you can always get support from our
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
-Jina is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.
