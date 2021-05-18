@@ -134,7 +134,7 @@ As an exercise, you can think of the required steps for that and check against o
 
 ## 📖 Optional: Extra information useful for the user
 <details>
-  <summary>Click to expand more details on cross-modal retrieval!</summary>
+  <summary>Click to see more details on cross-modal retrieval</summary>
 
 **Motive behind Cross Modal Retrieval**
 
