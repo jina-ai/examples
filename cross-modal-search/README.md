@@ -14,9 +14,9 @@
 
 In this example, Jina is used to implement a cross-modal search system.
 This example allows the user to search for images given a caption description.
-We encode images and its captions (any descriptive text of the image) in separate Indexes.
-The `image index` is later queried using the `text embeddings`.
-It is also possible to do it the other way around and use the `image encoding` to search for similar `text-embeddings` (captions).
+First, we encode all images in our dataset into vectors and create an index of these vectors.
+When we search with text inputs, we compute the vector representation of this text and compare it to the previously calculated image vector index to find the most similar image. 
+It is also possible to do it the other way around and use the image encoding to search for similar text-embeddings (captions).
 
 _____
 
