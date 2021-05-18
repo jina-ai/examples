@@ -18,50 +18,6 @@ We encode images and its captions (any descriptive text of the image) in separat
 The `image index` is later queried using the `text embeddings`.
 It is also possible to do it the other way around and use the `image encoding` to search for similar `text-embeddings` (captions).
 
-
-<details>
-  <summary>Click to expand more details on cross-modal retrieval!</summary>
-
-**Motive behind Cross Modal Retrieval**
-
-Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
-
-Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
-It is possible that documents may be of the same mime type,
-but come from different distributions,
-for them to have different modalities.
-**Example**: In an article or web page, 
-the body text and the title are from the same mime type (text),
-but can be considered of different modalities (distributions).
-
-Different Encoders map different modalities to a common embedding space.
-They need to extract semantic information from the documents. 
-
-In this embedding space,
-documents that are semantically relevant to each other from different modalities are expected to be close to another - Metric Learning
-
-In the example, we expect images embeddings to be nearby their captions’ embeddings.
-
-**Research for Cross Modal Retrieval**
-
-The models used for the example are cited from the paper, you can try our example with one of them:
-
-1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
-2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
-
-Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
-
-**CLIP Encoders in Jina for Cross Modal Search**
-
-Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
-for encoding image and text respectively.
-
-**VSE Encoders in Jina for Cross Modal Search**
-
-Two Encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
-for encoding image and text respectively.
-</details>
-
 _____
 
 ## 🐍 Build the app with Python
@@ -172,6 +128,52 @@ it into a vector. Now, we use our image vector index to find the most similar im
 Because the user does not want to see the vector as a result, but the image this vector belongs to we use the key-value lookup to get from image vector to human-interpretable JPG image.
 Note, that this Flow only shows how to search for images using text. The example actually support searching for text using images as well. 
 As an exercise, you can think of the required steps for that and check against our [Flow configuration](flows/flow-query.yml).
+
+
+## 📖 Optional: Extra information useful for the user
+<details>
+  <summary>Click to expand more details on cross-modal retrieval!</summary>
+
+**Motive behind Cross Modal Retrieval**
+
+Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
+
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
+It is possible that documents may be of the same mime type,
+but come from different distributions,
+for them to have different modalities.
+**Example**: In an article or web page, 
+the body text and the title are from the same mime type (text),
+but can be considered of different modalities (distributions).
+
+Different Encoders map different modalities to a common embedding space.
+They need to extract semantic information from the documents. 
+
+In this embedding space,
+documents that are semantically relevant to each other from different modalities are expected to be close to another - Metric Learning
+
+In the example, we expect images embeddings to be nearby their captions’ embeddings.
+
+**Research for Cross Modal Retrieval**
+
+The models used for the example are cited from the paper, you can try our example with one of them:
+
+1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
+2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
+
+Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
+
+**CLIP Encoders in Jina for Cross Modal Search**
+
+Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
+for encoding image and text respectively.
+
+**VSE Encoders in Jina for Cross Modal Search**
+
+Two Encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
+for encoding image and text respectively.
+</details>
+
 
 ## 🔮 Overview of the files
 
