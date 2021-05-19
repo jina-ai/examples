@@ -3,7 +3,7 @@ import logging
 import os
 
 import click
-from jinacld_tools.aws.services.s3 import S3
+from jinacld_tools.aws.services.s3 import S3Bucket
 
 
 BUCKET_NAME = "jina-examples-datasets"
@@ -40,7 +40,7 @@ def main(data_set: str, pull_to_dir: str):
     _check_credentials_exist()
     assert os.path.isdir(pull_to_dir), "The pull dir parameter must be an existing directory"
     save_path = os.path.join(pull_to_dir, data_set)
-    s3 = S3(BUCKET_NAME)
+    s3 = S3Bucket(BUCKET_NAME)
     try:
         s3.get(data_set, save_path)
     except Exception as e:
