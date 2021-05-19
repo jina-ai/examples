@@ -68,7 +68,7 @@ def dryrun():
 @click.command()
 @click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query', 'query_restful', 'dryrun'], case_sensitive=False), default='query')
 @click.option("--num_docs", "-n", default=MAX_DOCS)
-@click.option('--request_size', '-s', default=16)
+@click.option('--request_size', '-s', default=12)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
 @click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
 def main(task, num_docs, request_size, data_set, model_name):
@@ -106,6 +106,7 @@ def main(task, num_docs, request_size, data_set, model_name):
         query_restful()
     elif task == 'dryrun':
         dryrun()
+
 
 if __name__ == '__main__':
     main()

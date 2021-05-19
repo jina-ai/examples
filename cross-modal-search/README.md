@@ -145,6 +145,11 @@ Index is run with the following command, where `request_size` can be chosen by t
 python app.py -t index -n $num_docs -s $request_size -d 'f8k' -m clip
 ```
 
+If your index hangs, please remove the workspace,
+reduce the `request_size` and re-run the above command to index.
+The default `request_size` is 12. 
+Check out the fix suggested in [this issue](https://github.com/jina-ai/examples/issues/613).
+
 Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use.
 If you decide to index the complete datasets,
 it is recommendable to increase the number of shards and parallelization.
