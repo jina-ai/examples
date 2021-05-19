@@ -119,7 +119,7 @@ Remember, our goal is to compare vectors representing the semantics of images wi
 ![](visualizations/index-flow.png)
 As you can see, the Flow that Indexes the data contains three parallel branches: 
 - Upper: a key-value indexer for the images that we use as a lookup (like a Dictionary in Python).
-- Middle: transformations to get from the JPG to image vectors
+- Middle: transformations to get from the JPG to vectors
 - Lower: transformations to get from text descriptions to vectors
 To have low latency at query time, we store the computed vectors on disk.
 
