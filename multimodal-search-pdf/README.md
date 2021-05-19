@@ -44,6 +44,7 @@ What's included in this example:
  
  ```bash
  git clone --depth 1 --filter=blob:none --sparse https://github.com/jina-ai/examples
+ cd examples
  git sparse-checkout set multimodal-search-pdf
  ```
 </details>
