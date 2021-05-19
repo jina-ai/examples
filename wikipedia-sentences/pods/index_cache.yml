@@ -1,18 +1,18 @@
-!DocCache
-with:
-  index_path: cache.tmp
-metas:
-  name: cache
-  workspace: $JINA_WORKSPACE
-requests:
+!DocCache                                                         # Cache the indexed files to detect duplicates when incrementally adding files
+with:                                                             # The arguments are defined with the "with" keyword
+  index_path: cache.tmp                                           # Path for the cache file
+metas:                                                            # Meta info for the DocCache
+  name: cache                                                     # Custom name
+  workspace: $JINA_WORKSPACE                                      # Folder to store the cache
+requests:                                                         # Configure what is done on specific request types
   on:
-    [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:
-      - !RouteDriver {}
-    IndexRequest:
-      - !TaggingCacheDriver
-        with:
-          tags:
-            is_indexed: true
-      - !FilterQL
-        with:
-          lookups: {tags__is_indexed__neq: true}
+    [SearchRequest, TrainRequest, IndexRequest, ControlRequest]:  # List of request types to run the next driver on
+      - !RouteDriver {}                                           # This driver forward-passes the requests and does load-balancing
+    IndexRequest:                                                 # Define tasks for IndexRequests specifically
+      - !TaggingCacheDriver                                       # This driver sets tags on all cache hits
+        with:                                                     # Set parameters for the TaggingCacheDriver
+          tags:                                                   # These tags will be set on all cache hits in the index request
+            is_indexed: true                                      # Set is_indexed to true on all cache hits
+      - !FilterQL                                                 # Filter driver filtering all incoming documents
+        with:                                                     # The arguments are defined with the "with" keyword
+          lookups: {tags__is_indexed__neq: true}                  # All documents with the tag "is_indexed" not equal to true are forwarded to avoid duplicates in the indexing
