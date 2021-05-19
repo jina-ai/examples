@@ -133,8 +133,6 @@ As an exercise, you can think of the required steps for that and check against o
 
 
 ## 📖 Optional: Extra information useful for the user
-<details>
-  <summary>Click to see more details on cross-modal retrieval</summary>
 
 **Motive behind Cross-Modal Retrieval**
 
@@ -176,7 +174,6 @@ for encoding image and text respectively.
 
 Two Encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
 for encoding image and text respectively.
-</details>
 
 
 ## 🔮 Overview of the files
