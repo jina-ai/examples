@@ -333,11 +333,12 @@ class FileQueryIndexer(Executor, FileWriterMixin):
         return sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
 
 class NumpyFileQueryIndexer(Executor):
-    def __init__(self, source_path, *args, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, docs, source_path, *args, **kwargs):
+        #super().__init__(**kwargs)
+        print(f'docs{docs}')
         self._vec_indexer = NumpyIndexer(source_path=source_path, *args, **kwargs)
         self._kv_indexer = FileQueryIndexer(source_path=source_path, *args, **kwargs)
-        self._add_metas({'workspace':'./workspace'})
+        #self._add_metas({'workspace':'./workspace'})
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict = None, **kwargs):
@@ -438,13 +439,19 @@ def print_topk(resp, sentence):
 def index(num_docs):
     f = Flow.load_config('flows/index.yml')
     #f = Flow().add(uses=NumpyFileQueryIndexer)
-
-    with f:
-        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        num_docs = min(num_docs, len(open(data_path).readlines()))
+    data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
+    #import glob
+    with f, open(data_path) as fp:
+        print(f'type: {type(fp)}')
+        num_docs = min(num_docs, len(fp.readlines()))
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.post(on='index', metas={'workspace':'./workspace'}, parameters={'source_path':'./workspace', 'index_filename': 'vec.gz',
-      'metric': 'cosine'}, request_size=16, inputs=Document(content=data_path))
+            f.post(on='index', request_size=16, inputs=Document.from_ndarray(np.array(fp.readlines())))
+
+            '''
+            metas = {'workspace': './workspace'}, parameters = {'source_path': './workspace',
+                                                                'index_filename': 'vec.gz',
+                                                                'metric': 'cosine'},'''
+            #Document(content=fp.readlines()))
         # request_size = number of Documents per request
 
 def query(top_k):
