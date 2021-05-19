@@ -1,4 +1,4 @@
-# Build a Cross-modal Search System to Look for Images from Captions
+# Build A Cross-Modal Search System To Look For Images From Captions
 
 ![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/visualizations/cross-modal-result.jpg)
 
@@ -136,7 +136,7 @@ As an exercise, you can think of the required steps for that and check against o
 <details>
   <summary>Click to see more details on cross-modal retrieval</summary>
 
-**Motive behind Cross Modal Retrieval**
+**Motive behind Cross-Modal Retrieval**
 
 Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
 
@@ -158,7 +158,7 @@ documents that are semantically relevant to each other from different modalities
 
 In the example, we expect images embeddings to be nearby their captions’ embeddings.
 
-**Research for Cross Modal Retrieval**
+**Research for Cross-Modal Retrieval**
 
 The models used for the example are cited from the paper, you can try our example with one of them:
 
@@ -167,12 +167,12 @@ The models used for the example are cited from the paper, you can try our exampl
 
 Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
 
-**CLIP Encoders in Jina for Cross Modal Search**
+**CLIP Encoders in Jina for Cross-Modal Search**
 
 Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
 for encoding image and text respectively.
 
-**VSE Encoders in Jina for Cross Modal Search**
+**VSE Encoders in Jina for Cross-Modal Search**
 
 Two Encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
 for encoding image and text respectively.
