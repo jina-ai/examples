@@ -2,7 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Build a CrossModal Search System to look for Images from Captions and viceversa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
+- [Build a CrossModal Search System to look for Images from Captions and vice versa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
   - [Prerequisites](#prerequisites)
   - [Prepare the data](#prepare-the-data)
   - [Build the docker images](#build-the-docker-images)
@@ -126,15 +126,15 @@ To save your time when doing indexing, you could pull the docker images to your 
 To use CLIP model:
 
 ```bash
-docker pull jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7
-docker pull jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7
+docker pull jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0
+docker pull jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2
 ```
 
 Or use VSE model:
 
 ```bash
-docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7
-docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7
+docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.2.0
+docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.2.0
 ```
 
 ### Index 

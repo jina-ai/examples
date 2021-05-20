@@ -99,6 +99,7 @@ def main(index_num_docs, evaluate_num_docs, request_size, data_set, model_name, 
     config(model_name)
     if index_num_docs > 0:
         with Flow.load_config('flow-index.yml') as f:
+            f.use_rest_gateway()
             f.index(
                 input_fn=input_index_data(index_num_docs, request_size, data_set),
                 request_size=request_size
