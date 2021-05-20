@@ -1,9 +1,9 @@
-!Flow
+!Flow                             # Define the flow used for indexing in this file
 version: '1'
-pods:
-  - name: encoder
-    uses: pods/encode.yml
+pods:                             # All pods that are executed in this flow are listed here
+  - name: encoder                 # Name for the encoder pod
+    uses: pods/encode.yml         # The configuration file for the encoder pod
     timeout_ready: 1200000
     read_only: true
-  - name: indexer
-    uses: pods/index.yml
+  - name: indexer                 # Name for the indexer pod
+    uses: pods/index.yml          # The configuration file for the indexer pod
