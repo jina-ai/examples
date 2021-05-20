@@ -2,7 +2,6 @@
 version: '1'
 with:
   prefetch: 10
-  restful: True
 pods:
   - name: loader
     uses: yaml/image-load.yml
