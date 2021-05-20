@@ -1,4 +1,4 @@
-jina[hub, http]==1.2.0
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub, http]
 nltk==3.5
 pycocotools==2.0.2
 torchvision==0.8.1
