@@ -30,8 +30,28 @@ def config(model_name):
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/vse/text-encoder.yml'
 
 
+def index(data_set, num_docs, request_size):
+    f = Flow.load_config('flow-index.yml')
+    with f:
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index(
+                inputs=input_index_data(num_docs, request_size, data_set),
+                request_size=request_size
+            )
+
+
+def query_restful():
+    f = Flow.load_config('flow-query.yml')
+    f.use_rest_gateway()
+    with f:
+        f.block()
+
+
 @click.command()
-@click.option('--task', '-t', type=click.Choice(['index', 'query', 'query_restful'], case_sensitive=False), default='query')
+@click.option('--task',
+              '-t',
+              type=click.Choice(['index', 'query_restful'], case_sensitive=False),
+              default='query_restful')
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=12)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k'], case_sensitive=False), default='f8k')
@@ -50,19 +70,14 @@ def main(task, num_docs, request_size, data_set, model_name):
                     \n +------------------------------------------------------------------------------------+'
             )
             sys.exit(1)
-
+    if 'query' in task and not os.path.exists(workspace):
+        logger.info(f"The directory {workspace} does not exist. Please index first via `python app.py -t index`")
+        sys.exit(1)
     logger.info(f'### task = {task}')
     if task == 'index':
-        with Flow.load_config('flow-index.yml') as f:
-            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-                f.index(
-                    input_fn=input_index_data(num_docs, request_size, data_set),
-                    request_size=request_size
-                )
-    elif task == 'query_restful':
-        with Flow.load_config('flow-query.yml') as f:
-            f.use_rest_gateway()
-            f.block()
+        index(data_set, num_docs, request_size)
+    if task == 'query_restful':
+        query_restful()
 
 
 if __name__ == '__main__':
