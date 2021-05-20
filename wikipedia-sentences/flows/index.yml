@@ -1,12 +1,16 @@
 jtype: Flow
+version: '1'
 with:
   restful: True
-  source_path: './workspace'
   workspace: $JINA_WORKSPACE
-executors:
-  name: NumpyFileQueryIndexer
-  uses:
-    jtype: NumpyFileQueryIndexer
+pods:
+  - name: NumpyFileQueryIndexer
+    uses:
+      jtype: NumpyFileQueryIndexer
+      with:
+        source_path: '../data'
+  #    requests:
+  #      /index: index
 
 
 
