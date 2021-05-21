@@ -36,7 +36,7 @@ def import_metas(path: str, pea_id: str):
     :param pea_id: the id of the pea (as part of the shards)
     :return: the generators for the ids and for the metadata
     """
-    logger.info(f'Importing ids and metadata from {path} for pea_id {pea_id}')
+    logger.info(f'Importing ids and metadata from {path} for pea {name}')
     path = os.path.join(path, pea_id)
     ids_gen = _ids_gen(path)
     metas_gen = _metas_gen(path)
@@ -109,6 +109,59 @@ class _WriteHandler:
             self.body.flush()
         if not self.header.closed:
             self.header.flush()
+
+class _ReadHandler:
+    """
+    Read file handler.
+    :param path: Path of the file.
+    :param key_length: Length of key.
+    """
+
+    def __init__(self, path, key_length):
+        self.path = path
+        self.header = {}
+        if os.path.exists(self.path + '.head'):
+            with open(self.path + '.head', 'rb') as fp:
+                tmp = np.frombuffer(
+                    fp.read(),
+                    dtype=[
+                        ('', (np.str_, key_length)),
+                        ('', np.int64),
+                        ('', np.int64),
+                        ('', np.int64),
+                    ],
+                )
+                for r in tmp:
+                    signature = (r[1], r[2], r[3])
+                    if np.array_equal(signature, HEADER_NONE_ENTRY):
+                        del self.header[r[0]]
+                    else:
+                        self.header[r[0]] = signature
+
+            if os.path.exists(self.path):
+                self._body = open(self.path, 'r+b')
+                self.body = self._body.fileno()
+            else:
+                raise FileNotFoundError(
+                    f'Path not found {self.path}. Querying will not work'
+                )
+        else:
+            raise FileNotFoundError(
+                f'Path not found {self.path + ".head"}. Querying will not work'
+            )
+
+    def size(self):
+        return len(self.header)
+
+    @property
+    def total_bytes(self):
+        return max(p + m for p, _, m in self.header.values())
+
+    def close(self):
+        """Close the file."""
+        if hasattr(self, '_body'):
+            if not self._body.closed:
+                self._body.close()
 
 class FileWriterMixin:
     """Mixing for providing the binarypb writing and reading methods"""
@@ -222,7 +275,6 @@ class FileQueryIndexer(Executor, FileWriterMixin):
 
     def __init__(
         self,
-        source_path: str,
         index_filename: Optional[str] = None,
         key_length: int = 36,
         *args,
@@ -238,7 +290,7 @@ class FileQueryIndexer(Executor, FileWriterMixin):
         self._page_size = mmap.ALLOCATIONGRANULARITY
         self.logger = JinaLogger(self.__class__.__name__)
 
-        self._load_dump(source_path)
+        self._load_dump('./workspace')
         self.query_handler = self.get_query_handler()
 
     def __enter__(self):
@@ -275,7 +327,7 @@ class FileQueryIndexer(Executor, FileWriterMixin):
     def _load_dump(self, path):
         """Load the dump at the path
         :param path: the path of the dump"""
-        ids, metas = import_metas(path, str(self.metas.pea_id))
+        ids, metas = import_metas(path, str(self.metas.name))
         with self.get_create_handler() as write_handler:
             self._add(list(ids), list(metas), write_handler)
 
@@ -327,21 +379,20 @@ class FileQueryIndexer(Executor, FileWriterMixin):
         root_directory = Path(directory)
         return sum(f.stat().st_size for f in root_directory.glob('**/*') if f.is_file())
 
+'''
 class NumpyFileQueryIndexer(Executor):
-    def __init__(self, source_path, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         #print(f'docs{docs}')
         self._docs = DocumentArray()
-        self._vec_indexer = NumpyIndexer(source_path=source_path, *args, **kwargs)
-        self._kv_indexer = FileQueryIndexer(source_path=source_path, *args, **kwargs)
-        #self._add_metas({'workspace':'./workspace'})
+        self._vec_indexer = NumpyIndexer(*args, **kwargs)
+        self._kv_indexer = FileQueryIndexer(*args, **kwargs)
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', parameters: Dict = None, **kwargs):
-        '''
-        self._vec_indexer.(docs, parameters)
-        self._kv_indexer.'''
-        self._docs = docs
+        # self._vec_indexer.(docs, parameters)
+        # self._kv_indexer.
+        self._docs.extend(docs)
         print('**************************')
         self._docs.save('./data/toy-output.txt')
 
@@ -355,56 +406,43 @@ class NumpyFileQueryIndexer(Executor):
             path + 'm' for path in kv_parameters.get('traversal_paths', ['r'])
         ]
 
-        self._kv_indexer.search(docs, kv_parameters)
+        self._kv_indexer.search(docs, kv_parameters)'''
+
 
 class NumpyIndexer(Executor):
-    def __init__(self, source_path: str, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        ids, vecs = import_vectors(source_path, str(self.metas.pea_id))
+
+        '''
+        ids, vecs = import_vectors('./workspace', str(self.metas.pea_id))
         self._ids = np.array(list(ids))
         self._vecs = np.array(list(vecs))
-        self._ids_to_idx = {}
+        self._ids_to_idx = {}'''
+        self._docs = DocumentArray()
 
-    def _get_ones(x, y):
-        return np.ones((x, y))
+    @requests(on='/index')
+    def index(self, docs: 'DocumentArray', **kwargs):
+        self._docs.extend(docs)
+        print(f'self doc in index {self._docs}')
 
-    def _ext_A(A):
-        nA, dim = A.shape
-        A_ext = _get_ones(nA, dim * 3)
-        A_ext[:, dim : 2 * dim] = A
-        A_ext[:, 2 * dim :] = A ** 2
-        return A_ext
-
-    def _ext_B(B):
-        nB, dim = B.shape
-        B_ext = _get_ones(dim * 3, nB)
-        B_ext[:dim] = (B ** 2).T
-        B_ext[dim : 2 * dim] = -2.0 * B.T
-        del B
-        return B_ext
-
-    def _euclidean(A_ext, B_ext):
-        sqdist = A_ext.dot(B_ext).clip(min=0)
-        return np.sqrt(sqdist)
-
-    def _norm(A):
-        return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
-
-    def _cosine(A_norm_ext, B_norm_ext):
-        return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
+    
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict = None, **kwargs):
         if parameters is None:
             parameters = {'top_k': 5}
+        # docs is from query
+        # self._docs is from index
+        print(f'self doc in search {self._docs}')
+
         doc_embeddings = np.stack(docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(doc_embeddings))
-        d_emb = _ext_B(_norm(self._vecs))
+        d_emb = _ext_B(_norm(self._docs.get_attributes('embedding')))
         dists = _cosine(q_emb, d_emb)
         positions, dist = self._get_sorted_top_k(dists, int(parameters['top_k']))
         for _q, _positions, _dists in zip(docs, positions, dist):
             for position, _dist in zip(_positions, _dists):
-                d = Document(id=self._ids[position], embedding=self._vecs[position])
+                d = Document(self._docs[int(position)])
                 d.score.value = 1 - _dist
                 _q.matches.append(d)
 
@@ -423,3 +461,31 @@ class NumpyIndexer(Executor):
             dist = np.take_along_axis(dist, idx_fs, axis=1)
 
         return idx, dist
+    
+def _get_ones(x, y):
+    return np.ones((x, y))
+
+def _ext_A(A):
+    nA, dim = A.shape
+    A_ext = _get_ones(nA, dim * 3)
+    A_ext[:, dim : 2 * dim] = A
+    A_ext[:, 2 * dim :] = A ** 2
+    return A_ext
+
+def _ext_B(B):
+    nB, dim = B.shape
+    B_ext = _get_ones(dim * 3, nB)
+    B_ext[:dim] = (B ** 2).T
+    B_ext[dim : 2 * dim] = -2.0 * B.T
+    del B
+    return B_ext
+
+def _euclidean(A_ext, B_ext):
+    sqdist = A_ext.dot(B_ext).clip(min=0)
+    return np.sqrt(sqdist)
+
+def _norm(A):
+    return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
+
+def _cosine(A_norm_ext, B_norm_ext):
+    return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2

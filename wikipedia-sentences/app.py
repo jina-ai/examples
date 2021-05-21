@@ -7,12 +7,13 @@ import sys
 import copy
 import click
 import shutil
-from jina import Flow, Document
+import numpy as np
+from jina import Flow, Document, DocumentArray
 from jina.logging.profile import TimeContext
 
 
-
-from executor import NumpyFileQueryIndexer
+from transformer import MyTransformer
+from indexer import NumpyIndexer
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 
@@ -23,7 +24,8 @@ def config():
 
 
 def print_topk(resp, sentence):
-    for d in resp.search.docs:
+    print(f'resp:{resp}')
+    for d in resp.data.docs:
         print(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
 
@@ -34,40 +36,59 @@ def print_topk(resp, sentence):
 
 def index(num_docs):
     #f = Flow.load_config('flows/index.yml')
-    f = Flow().add(uses=NumpyFileQueryIndexer)
-    data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-    #import glob
-    with f, open(data_path) as fp:
-        print(f'type: {type(fp)}')
-        print(f'lines: {type(np.array(fp.readlines()))}')
-        d = Document.from_ndarray(np.array(fp.readlines()))
-        num_docs = min(num_docs, len(fp.readlines()))
-        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.post(on='/index', request_size=16, docs=d, parameters={'source_path': './data'}, inputs=d)
 
-            # parameters={'docs': d, 'source_path': './data'}
+    f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
+    data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
+
+    with f, open(data_path) as fp:
+        d = DocumentArray.from_ndarray(np.array(fp.readlines()))
+        num_docs = min(num_docs, len(fp.readlines()))
+        for dd in d:
+            print(f'dddddd {dd}')
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            #f.post(on='/index', request_size=16, docs=d, parameters={'source_path': './data'}, inputs=d)
+            f.index(d)
+            #f.search()
             '''
+            
             metas = {'workspace': './workspace'}, parameters = {'source_path': './workspace',
                                                                 'index_filename': 'vec.gz',
                                                                 'metric': 'cosine'},'''
             #Document(content=fp.readlines()))
         # request_size = number of Documents per request
+            text = input('please type a sentence: ')
+            '''
+            if not text:
+                break'''
+
+            d = Document(content=text)
+
+            def ppr(x):
+                print_topk(x, text)
+
+            f.search(d,
+                     parameters={},
+                     line_format='text',
+                     on_done=ppr,
+                     top_k=1,
+                     )
 
 def query(top_k):
     #f = Flow().load_config('flows/query.yml')
-    f = Flow().add(uses=NumpyFileQueryIndexer)
+    f = Flow(restful=True).add(uses=MyTransformer).add(uses=NumpyIndexer)
     with f:
         while True:
             text = input('please type a sentence: ')
             if not text:
                 break
 
+            d = Document(content=text)
+
             def ppr(x):
                 print_topk(x, text)
 
-            f.search(
-                #lines=[text,],
-                parameters={'query':text},
+            f.search(d,
+                parameters={},
                 line_format='text',
                 on_done=ppr,
                 top_k=top_k,
