@@ -1,5 +1,7 @@
 # Search Pokemon Images with Jina
 
+ATTENTION: There is some WIP in this example and it is not currently working.
+
 In this example, we use [BiT (Big Transfer)](https://github.com/google-research/big_transfer), to build an end-to-end **neural image search** system. You can use this demo to index an image dataset and query the most similar image from it. 
 
 Features that come out of the box:
@@ -11,7 +13,7 @@ Features that come out of the box:
 
 To save you from dependency hell, we'll use the containerized version in these instructions. That means you only need to have [Docker installed](https://docs.docker.com/get-docker/). No Python virtualenv, no Python package (un)install.
 
-**NOTE** Use Python 3.7 for this example. 
+**NOTE** Use Python 3.8 for this example. 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
