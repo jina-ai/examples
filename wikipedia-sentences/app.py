@@ -24,7 +24,6 @@ def config():
 
 
 def print_topk(resp, sentence):
-    print(f'resp:{resp}')
     for d in resp.data.docs:
         print(f'Ta-Dah🔮, here are what we found for: {sentence}')
         for idx, match in enumerate(d.matches):
@@ -35,31 +34,16 @@ def print_topk(resp, sentence):
             print(f'> {idx:>2d}({score:.2f}). {match.text}')
 
 def index(num_docs):
-    #f = Flow.load_config('flows/index.yml')
-
     f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
 
     with f, open(data_path) as fp:
         d = DocumentArray.from_ndarray(np.array(fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
-        for dd in d:
-            print(f'dddddd {dd}')
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            #f.post(on='/index', request_size=16, docs=d, parameters={'source_path': './data'}, inputs=d)
             f.index(d)
-            #f.search()
-            '''
-            
-            metas = {'workspace': './workspace'}, parameters = {'source_path': './workspace',
-                                                                'index_filename': 'vec.gz',
-                                                                'metric': 'cosine'},'''
-            #Document(content=fp.readlines()))
-        # request_size = number of Documents per request
+
             text = input('please type a sentence: ')
-            '''
-            if not text:
-                break'''
 
             d = Document(content=text)
 
@@ -67,14 +51,12 @@ def index(num_docs):
                 print_topk(x, text)
 
             f.search(d,
-                     parameters={},
+                     parameters={'top_k': 1},
                      line_format='text',
                      on_done=ppr,
-                     top_k=1,
                      )
 
 def query(top_k):
-    #f = Flow().load_config('flows/query.yml')
     f = Flow(restful=True).add(uses=MyTransformer).add(uses=NumpyIndexer)
     with f:
         while True:
