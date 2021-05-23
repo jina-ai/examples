@@ -16,7 +16,7 @@ pods:
     read_only: true
     needs: [gateway]
   - name: encode
-    uses: docker://jinahub/pod.encoder.tirgmultimodalencoder:0.0.6-1.0.7
+    uses: docker://jinahub/pod.encoder.tirgmultimodalencoder:0.0.7-1.2.2
     uses_internal: pods/encode-tirg-multimodal.yml
     shards: $JINA_PARALLEL
     timeout_ready: 600000
