@@ -7,7 +7,7 @@
 | Input  | 1 text file with 1 sentence per line             |
 | Output | *top_k* number of sentences that match input query |
 
-This is an example of using [Jina](http://www.jina.ai)'s neural search framework to search through a [selection of individual Wikipedia sentences](https://www.kaggle.com/mikeortman/wikipedia-sentences) downloaded from Kaggle. It uses the [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) language model from [Transformers](https://huggingface.co).
+This is an example of using [Jina](http://www.jina.ai)'s neural search framework to search through a [selection of individual Wikipedia sentences](https://www.kaggle.com/mikeortman/wikipedia-sentences) downloaded from Kaggle. It uses the [`distilbert-base-nli-stsb-mean-tokens `](https://huggingface.co/sentence-transformers/distilbert-base-nli-stsb-mean-tokens) language model from [Transformers](https://huggingface.co).
 
 ## 🐍 Setup
 
@@ -15,13 +15,23 @@ This is an example of using [Jina](http://www.jina.ai)'s neural search framework
 pip install -r requirements.txt
 ```
 
-## 📇 Index
+## 📇 Index & 🔍 Search
 
-We'll start off by indexing a [small dataset of 50 sentences](data/toy-input.txt) to make sure everything is working:
+By default, we'll start off by indexing a [small dataset of 50 sentences](data/toy-input.txt) :
 
 ```sh
 python app.py -t index
 ```
+And a search prompt will follow for you to search for example "What is ROMEO" :
+
+```
+please type a sentence: What is ROMEO
+         
+Ta-Dah🔮, here are what we found for: What is ROMEO
+>  0(0.36). The ROMEO website, iOS app and Android app are commonly used by the male gay community to find friends, dates, love or get informed about LGBT+ topics.
+
+```
+
 
 To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB):
 
@@ -29,8 +39,7 @@ To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentence
 2. Run the script: `sh ./get_data.sh`
 3. Set the input file: `export JINA_DATA_FILE='data/input.txt'`
 4. Set the number of docs to index `export JINA_MAX_DOCS=30000` (or whatever number you prefer. The default is `50`)
-5. Delete the old index: `rm -rf workspace`
-6. Index your new dataset: `python app.py -t index`
+5. Index your new dataset: `python app.py -t index`
 
 If you are using a subset of the data (less then 30,000 documents) we recommend you shuffle the data. This is because the input file is ordered alphabetically, and Jina indexes from the top down. So without shuffling, your index may contain unrepresentative data, like this:
 
@@ -51,7 +60,7 @@ shuf input.txt > input.txt
 ```
 
 To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
-
+<!---
 ## 🔍 Search
 
 ### With REST API
@@ -73,7 +82,7 @@ Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45
 ```sh
 python app.py -t query
 ```
-
+-->
 ### Next Steps
 
 - [Enable incremental indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-incremental)
