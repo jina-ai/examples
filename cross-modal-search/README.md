@@ -159,7 +159,7 @@ This diagram provides a visual representation of the Flows in this example; Show
 Remember, our goal is to compare vectors representing the semantics of images with vectors encoding the semantics of short text descriptions.
 
 ### Indexing
-![](visualizations/index-flow.png)
+![](visualizations/cross-modal-index-flow.png)
 As you can see, the Flow that Indexes the data contains three parallel branches: 
 - Upper: a key-value indexer for the images that we use as a lookup (like a Dictionary in Python).
 - Middle: transformations to get from the JPG to vectors
@@ -167,7 +167,7 @@ As you can see, the Flow that Indexes the data contains three parallel branches:
 To have low latency at query time, we store the computed vectors on disk.
 
 ### Querying
-![](visualizations/query-flow.png)
+![](visualizations/cross-modal-query-flow.png)
 This Flow shows what happens when a user queries our data. First, the provided text description is passed through the text Encoder which turns
 it into a vector. Now, we use our image vector index to find the most similar image encodings to the previously computed text vector from the user.
 Because the user does not want to see the vector as a result, but the image this vector belongs to we use the key-value lookup to get from image vector to human-interpretable JPG image.
