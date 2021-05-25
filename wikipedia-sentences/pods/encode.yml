@@ -1,5 +1,5 @@
-!TransformerTorchEncoder
-with:
-  pooling_strategy: auto
-  pretrained_model_name_or_path: distilbert-base-cased
-  max_length: 192
+!TransformerTorchEncoder                                  # Use a pytorch transformer from huggingface - expects an array of strings with size B and transforms it into an array of size B x D
+with:                                                     # The arguments are defined with the "with" keyword
+  pooling_strategy: cls                                   # We use pooling based on bert CLS tokens
+  pretrained_model_name_or_path: distilbert-base-cased    # This is the model name of the model from huggingface that is used
+  max_length: 192                                         # The max length to truncate the tokenized sequences

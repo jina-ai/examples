@@ -1,7 +1,39 @@
 # Build A Cross-Modal Search System To Look For Images From Captions
 
-![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/visualizations/cross-modal-result.jpg)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
 
+- [Build a CrossModal Search System to look for Images from Captions and vice versa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
+  - [Prerequisites](#prerequisites)
+  - [Prepare the data](#prepare-the-data)
+  - [Build the docker images](#build-the-docker-images)
+  - [Run the Flows](#run-the-flows)
+  - [Results](#results)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<p align="center">
+ 
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
+
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-hello-world-badge.svg "Run Jina 'Hello, World!' without installing anything")](https://github.com/jina-ai/jina#jina-hello-world-)
+[![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/license-badge.svg "Jina is licensed under Apache-2.0")](#license)
+[![Jina Docs](https://github.com/jina-ai/jina/blob/master/.github/badges/docs-badge.svg "Checkout our docs and learn Jina")](https://docs.jina.ai)
+[![We are hiring](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-corp-badge-hiring.svg "We are hiring full-time position at Jina")](https://jobs.jina.ai)
+<a href="https://twitter.com/intent/tweet?text=%F0%9F%91%8DCheck+out+Jina%3A+the+New+Open-Source+Solution+for+Neural+Information+Retrieval+%F0%9F%94%8D%40JinaAI_&url=https%3A%2F%2Fgithub.com%2Fjina-ai%2Fjina&hashtags=JinaSearch&original_referer=http%3A%2F%2Fgithub.com%2F&tw_p=tweetbutton" target="_blank">
+  <img src="https://github.com/jina-ai/jina/blob/master/.github/badges/twitter-badge.svg"
+       alt="tweet button" title="👍Share Jina with your friends on Twitter"></img>
+</a>
+[![Python 3.7 3.8](https://github.com/jina-ai/jina/blob/master/.github/badges/python-badge.svg "Jina supports Python 3.7 and above")](#)
+[![Docker](https://github.com/jina-ai/jina/blob/master/.github/badges/docker-badge.svg "Jina is multi-arch ready, can run on differnt architectures")](https://hub.docker.com/r/jinaai/jina/tags)
+
+</p>
+
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/visualizations/cross-modal-result.jpg)
 
 ## Overview
 |  |  |
@@ -48,10 +80,21 @@ pip install -r requirements.txt
 
 ### 🏃 Step 2. Index your data
 To quickly get started, you can index a [small dataset](data/toy-data) to make sure everything is working correctly. 
+You can pre-fetch the Pods containing the machine learning models required to calculate the embeddings of the data using [docker](https://docs.docker.com/get-docker/).
+```bash
+docker pull jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0
+docker pull jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2
 ```
+Or for the VSE model:
+
+```bash
+docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.2.0
+docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.2.0
+```
+Once the images are downloaded, run
+```bash
 python app.py -t index
 ```
-
 If you see the following output, it means your data has been correctly indexed.
 
 ```
@@ -132,11 +175,32 @@ Note, that this Flow only shows how to search for images using text. The example
 As an exercise, you can think of the required steps for that and check against our [Flow configuration](flows/flow-query.yml).
 
 
+
 ## 📖 Optional: Extra information useful for the user
 
 **Motive behind Cross-Modal Retrieval**
 
-Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
+Cross-modal retrieval tries to effectively search for documents of one modality (text) in an index storing data of another modality (images). An example of this is google image search.
+```bash
+python app.py -t index -n $num_docs -s $request_size -d 'f8k' -m clip
+```
+
+If your index hangs, please remove the workspace,
+reduce the `request_size` and re-run the above command to index.
+The default `request_size` is 12. 
+Check out the fix suggested in [this issue](https://github.com/jina-ai/examples/issues/613).
+
+Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use.
+If you decide to index the complete datasets,
+it is recommendable to increase the number of shards and parallelization.
+The dataset is provided with the `-d` parameter with the valid options of `30k` and `8k`.
+If you want to index your own dataset,
+check `dataset.py` to see how `data` is provided and adapt to your own data source.
+If you want to switch to `VSE++` model, replace `-m clip` with `-m vse`
+Request size can be configured with `-s` flag.
+
+Jina normalizes the images needed before entering them in the encoder.
+`QueryLanguageDriver` is used to redirect (filtering) documents based on modality.
 
 Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
 It is possible that documents may be of the same mime type,

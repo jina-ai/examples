@@ -37,6 +37,19 @@ What's included in this example:
   * [Community](#community)
   * [License](#license)
     
+<details>
+ <summary>How to clone this repo❓</summary>
+ 
+ Because this repo contains many [more example projects](https://github.com/jina-ai/examples/), if you want to clone only this example, you can do this as following
+ 
+ ```bash
+ git clone --depth 1 --filter=blob:none --sparse https://github.com/jina-ai/examples
+ cd examples
+ git sparse-checkout set multimodal-search-pdf
+ ```
+</details>
+
+----
 
 ## Data preparation
 

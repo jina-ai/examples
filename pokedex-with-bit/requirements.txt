@@ -1,3 +1,3 @@
+git+https://github.com/jina-ai/jina.git@v1.0.5#egg=jina[hub,http,cv]
 click==7.1.2
 tensorflow-cpu==2.1
-jina[hub,http,cv]==1.0.5

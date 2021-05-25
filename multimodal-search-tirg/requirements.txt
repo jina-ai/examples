@@ -1,4 +1,4 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub, http]
 click==7.1.2
-jina[python-magic]==1.2.1
 matplotlib==3.3.3
 pillow==8.1.1

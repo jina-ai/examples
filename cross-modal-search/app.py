@@ -5,9 +5,6 @@ import os
 import sys
 
 import click
-import requests
-from jina import Document
-from jina.clients.sugary_io import _input_lines
 from jina import Flow
 from jina.logging import JinaLogger
 from jina.logging.profile import TimeContext
@@ -23,14 +20,13 @@ def config(model_name):
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
     os.environ['JINA_PORT'] = '45678'
-    os.environ['JINA_USE_REST_API'] = 'true'
     if model_name == 'clip':
-        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.1.0')
-        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.2-1.1.0')
+        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0')
+        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2')
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
     elif model_name == 'vse':
-        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7')
-        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7')
+        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.2.0')
+        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.2.0')
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/vse/text-encoder.yml'
 
 
@@ -53,11 +49,22 @@ def index_restful(num_docs):
             raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
 
 
+def index(data_set, num_docs, request_size):
+    f = Flow.load_config('flows/flow-index.yml')
+    with f:
+        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+            f.index(
+                inputs=input_index_data(num_docs, request_size, data_set),
+                request_size=request_size
+            )
+
+
 def query_restful():
     f = Flow().load_config('flows/flow-query.yml')
     f.use_rest_gateway()
     with f:
         f.block()
+
 
 def dryrun():
     f = Flow().load_config('flows/flow-index.yml')
@@ -90,20 +97,15 @@ def main(task, num_docs, request_size, data_set, model_name):
             logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
             sys.exit(1)
 
-    logger.info(f'### task = {task}')
     if task == 'index':
-        with Flow.load_config('flows/flow-index.yml') as f:
-            with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-                f.index(
-                    input_fn=input_index_data(num_docs, request_size, data_set),
-                    request_size=request_size
-                )
+        index(data_set, num_docs, request_size)
     elif task == 'index_restful':
         index_restful(num_docs)
     elif task == 'query_restful':
         query_restful()
     elif task == 'dryrun':
         dryrun()
+
 
 if __name__ == '__main__':
     main()
