@@ -137,7 +137,7 @@ Feel free to alter the text in the 'data' parameter and play around with other q
 | `data` | Text input to query |
  
 #### Using Jina Box; our frontend search interface
-
+#### Warning: The browser version of JinaBox is currently not working because of issues with https. We are working on a [solution](https://github.com/jina-ai/examples/issues/628)
 **Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
 
 ```sh
