@@ -18,15 +18,15 @@ from indexer import NumpyIndexer
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50))
 
 def config():
-    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'data/toy-input.txt')
+    os.environ['JINA_DATA_FILE'] = os.environ.get('JINA_DATA_FILE', 'data/input.txt')
     os.environ['JINA_WORKSPACE'] = os.environ.get('JINA_WORKSPACE', 'workspace')
     os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
 def print_topk(resp, sentence):
-    for d in resp.data.docs:
-        print(f'Ta-Dah🔮, here are what we found for: {sentence}')
-        for idx, match in enumerate(d.matches):
+    for doc in resp.data.docs:
+        print(f"Ta-Dah🔮, here's what we found for: {sentence}")
+        for idx, match in enumerate(doc.matches):
 
             score = match.score.value
             if score < 0.0:
@@ -36,21 +36,21 @@ def print_topk(resp, sentence):
 def index(num_docs):
     f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-
+    assert(os.environ.get('JINA_DATA_FILE', None)=='data/input.txt')
     with f, open(data_path) as fp:
-        d = DocumentArray.from_ndarray(np.array(fp.readlines()))
+        docs = DocumentArray.from_ndarray(np.array(fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.index(d)
+            f.index(docs)
 
-            text = input('please type a sentence: ')
+            text = input('Please type a sentence: ')
 
-            d = Document(content=text)
+            doc = Document(content=text)
 
             def ppr(x):
                 print_topk(x, text)
 
-            f.search(d,
+            f.search(doc,
                      parameters={'top_k': 1},
                      line_format='text',
                      on_done=ppr,
@@ -60,16 +60,16 @@ def query(top_k):
     f = Flow(restful=True).add(uses=MyTransformer).add(uses=NumpyIndexer)
     with f:
         while True:
-            text = input('please type a sentence: ')
+            text = input('Please type a sentence: ')
             if not text:
                 break
 
-            d = Document(content=text)
+            doc = Document(content=text)
 
             def ppr(x):
                 print_topk(x, text)
 
-            f.search(d,
+            f.search(doc,
                 parameters={},
                 line_format='text',
                 on_done=ppr,
@@ -99,7 +99,7 @@ def main(task, num_docs, top_k):
     workspace = os.environ['JINA_WORKSPACE']
 
     shutil.rmtree('workspace', ignore_errors=True)
-    os.mkdir('workspace')
+    os.makedirs('workspace')
     '''
     if 'index' in task:
         if os.path.exists(workspace):
