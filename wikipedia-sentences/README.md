@@ -60,29 +60,7 @@ shuf input.txt > input.txt
 ```
 
 To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
-<!---
-## 🔍 Search
 
-### With REST API
-
-```sh
-python app.py -t query_restful
-```
-
-Then:
-
-```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
-````
-
-Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
-
-### From the Terminal
-
-```sh
-python app.py -t query
-```
--->
 ### Next Steps
 
 - [Enable incremental indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-incremental)
