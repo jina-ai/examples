@@ -102,9 +102,6 @@ Flow@5162[S]:flow is closed and all resources are released, current build level 
 ```
 
 We recommend you come back to this step later and index the full flickr 8k dataset for better results. To index the [full dataset](https://www.kaggle.com/adityajn105/flickr8k) (8000 images) follow these steps:
-<details>
-  <summary>Click to expand!</summary>
-
 1. Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
 2. Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
 3. Run `pip install kaggle`
@@ -114,7 +111,6 @@ To index the full dataset, run
 ```shell
 python app.py -t index --data_set=f8k
 ```
-</details>
 
 ### 🔎 Step 3: Query your data
 Jina offers several ways to search (query) your data. In this example, we show two of the most common ones. In a production environment, you would only choose one which suits your use case best. 
