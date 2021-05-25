@@ -159,7 +159,7 @@ As you can see, the Flow that Indexes the data contains three parallel branches:
 - Upper: a key-value indexer for the images that we use as a lookup (like a Dictionary in Python).
 - Middle: transformations to get from the JPG to vectors
 - Lower: transformations to get from text descriptions to vectors
-To have low latency at query time, we store the computed vectors on disk.
+To have️ low latency at query time, we store the computed vectors on disk.
 
 ### Querying
 ![](visualizations/cross-modal-query-flow.png)  
@@ -169,6 +169,10 @@ Because the user does not want to see the vector as a result, but the image this
 Note, that this Flow only shows how to search for images using text. The example actually support searching for text using images as well. 
 As an exercise, you can think of the required steps for that and check against our [Flow configuration](flows/flow-query.yml).
 
+
+## 🚑 Troubleshooting
+
+In case a Flow hangs during indexing it often helps to restart the process.
 
 
 ## 📖 Optional: Extra information useful for the user
