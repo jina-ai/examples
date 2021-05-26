@@ -36,7 +36,6 @@ def print_topk(resp, sentence):
 def index(num_docs):
     f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-    assert(os.environ.get('JINA_DATA_FILE', None)=='data/input.txt')
     with f, open(data_path) as fp:
         docs = DocumentArray.from_ndarray(np.array(fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
@@ -78,7 +77,7 @@ def query(top_k):
 
 
 def query_restful(return_flow=False):
-    f = Flow().load_config('flows/query.yml')
+    f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     f.use_rest_gateway()
     if return_flow:
         return f
