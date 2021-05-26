@@ -21,7 +21,7 @@
 | Dataset used |  [Kaggle Wikipedia corpus](kaggle.com/mikeortman/wikipedia-sentences)     |
 | ML model used |  [`distilbert-base-nli-stsb-mean-tokens `](https://huggingface.co/sentence-transformers/distilbert-base-nli-stsb-mean-tokens) |
 
-This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state-of-the-art machine learning  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) language model from the [Transformers](https://huggingface.co) library.
+This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state-of-the-art machine learning  [`distilbert-base-nli-stsb-mean-tokens `](https://huggingface.co/sentence-transformers/distilbert-base-nli-stsb-mean-tokens) language model from the [Transformers](https://huggingface.co) library.
 
 | item   | content                                          |
 |--------|--------------------------------------------------|
@@ -161,8 +161,7 @@ Here is a small overview if you're interested in understanding what each file in
 ## 🌀 Flow diagram
 
 This diagram provides a visual representation of the flow in this example, showing which Executors are used in which order.
-![116664240-7bad2500-a998-11eb-90fa-1d1268806602](https://user-images.githubusercontent.com/59612379/116871566-bde29a80-ac14-11eb-84d8-26b5b48dee81.jpeg)
-
+![wiki_flow](https://user-images.githubusercontent.com/22567795/119640719-7930d480-be4b-11eb-8566-83ba068aa05b.jpeg)
 
 ## 🔨 Next steps, building your own app
 
@@ -207,5 +206,4 @@ Once you run this command, you should see a JSON output returned to you. This co
 ## 🦄 License
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
-
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples#license) for the full license text.
