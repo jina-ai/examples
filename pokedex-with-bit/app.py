@@ -28,22 +28,35 @@ def index(num_docs: int):
     num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC),
                                       recursive=True)))
 
-    f = Flow().add(uses={"jtype": "ImageCrafter",
-                         "with": {"target_size": 96,
-                                  "img_mean": [0.485, 0.456, 0.406],
-                                  "img_std": [0.229, 0.224, 0.225]}})
+    f = Flow(workspace="workspace")\
+        .add(uses={"jtype": "ImageCrafter",
+                   "with": {"target_size": 96,
+                            "img_mean": [0.485, 0.456, 0.406],
+                            "img_std": [0.229, 0.224, 0.225]}})
+    f = f.add(uses=BigTransferEncoder)
+    f = f.add(uses={"jtype": "DocVectorIndexer",
+                    "with": {"index_file_name": "image.json"}})
+    f = f.add(uses=KeyValueIndexer)
 
     with f:
-        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.index_files(IMAGE_SRC, request_size=64, read_mode='rb', size=num_docs)
+        f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
+                request_size=64, read_mode='rb')
 
 
 def query_restful():
-    #f = Flow.load_config('flows/query.yml')
-    #f.use_rest_gateway()
-    #with f:
-    #    f.block()
-    pass
+    f = Flow(workspace="workspace",
+             port_expose=os.environ.get('JINA_PORT', str(45678)))\
+        .add(uses={"jtype": "ImageCrafter",
+                   "with": {"target_size": 96,
+                            "img_mean": [0.485, 0.456, 0.406],
+                            "img_std": [0.229, 0.224, 0.225]}})
+    f = f.add(uses=BigTransferEncoder)
+    f = f.add(uses={"jtype": "DocVectorIndexer",
+                    "with": {"index_file_name": "image.json"}})
+    f = f.add(uses=KeyValueIndexer)
+    f.use_rest_gateway()
+    with f:
+        f.block()
 
 
 @click.command()
