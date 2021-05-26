@@ -63,7 +63,7 @@ By default, we'll start off by indexing a [small dataset of 50 sentences](data/t
 ```sh
 python app.py -t index
 ```
-And a search prompt will follow for you to search for example "What is ROMEO" :
+Once indexing is completed, a search prompt will appear in your terminal. See the image below for an example search query and response.
 
 ```
 please type a sentence: What is ROMEO
