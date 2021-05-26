@@ -12,11 +12,11 @@ ENV JINA_IMAGE_ENCODER='yaml/clip/hub-image-encoder.yml'
 ENV JINA_TEXT_ENCODER='yaml/clip/hub-text-encoder.yml'
 ENV JINA_SHARDS='2'
 
-RUN ./prepare_data.sh && python app.py -t index -n 20000 && rm -rf data
+RUN rm -rf workspace && python app.py -t index -n 20000 && rm -rf data
 
 EXPOSE 45678
 
-ENTRYPOINT ["python", "app.py", "-t", "query"]
+ENTRYPOINT ["python", "app.py", "-t", "query_restful"]
 
 LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
 LABEL type="app"

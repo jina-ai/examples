@@ -23,11 +23,11 @@ def config(model_name):
     if model_name == 'clip':
         os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7'
         os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7'
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/clip/text-encoder.yml'
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
     elif model_name == 'vse':
         os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7'
         os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7'
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/vse/text-encoder.yml'
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/vse/text-encoder.yml'
     else:
         msg = f'Unsupported model {model_name}.'
         msg += 'Expected `clip` or `vse`.'
