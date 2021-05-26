@@ -4,6 +4,9 @@ with:
   workspace: "workspace"
   py_modules:
     - executors.py
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
 executors:
   - name: crafter
     uses:
