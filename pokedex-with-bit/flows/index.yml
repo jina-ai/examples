@@ -20,9 +20,13 @@ executors:
       jtype: DocVectorIndexer
       with:
         index_file_name: "image.json"
+      metas:
+        name: vec_idx
   - name: doc_idx
     uses:
       jtype: KeyValueIndexer
+      metas:
+        name: doc_idx
     needs: [gateway]
   - name: join_all
     #uses: _merge

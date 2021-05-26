@@ -35,8 +35,10 @@ def index(num_docs: int):
                             "img_std": [0.229, 0.224, 0.225]}})
     f = f.add(uses=BigTransferEncoder)
     f = f.add(uses={"jtype": "DocVectorIndexer",
-                    "with": {"index_file_name": "image.json"}})
-    f = f.add(uses=KeyValueIndexer)
+                    "with": {"index_file_name": "image.json"},
+                    "metas": {"name": "vec_idx"}})
+    f = f.add(uses={"jtype": "KeyValueIndexer",
+                    "metas": {"name": "doc_idx"}})
 
     with f:
         f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
@@ -52,8 +54,10 @@ def query_restful():
                             "img_std": [0.229, 0.224, 0.225]}})
     f = f.add(uses=BigTransferEncoder)
     f = f.add(uses={"jtype": "DocVectorIndexer",
-                    "with": {"index_file_name": "image.json"}})
-    f = f.add(uses=KeyValueIndexer)
+                    "with": {"index_file_name": "image.json"},
+                    "metas": {"name": "vec_idx"}})
+    f = f.add(uses={"jtype": "KeyValueIndexer",
+                    "metas": {"name": "doc_idx"}})
     f.use_rest_gateway()
     with f:
         f.block()
