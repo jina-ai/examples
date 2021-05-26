@@ -34,13 +34,13 @@ def print_topk(resp, sentence):
             print(f'> {idx:>2d}({score:.2f}). {match.text}')
 
 def index(num_docs):
-    f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
+    flow = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-    with f, open(data_path) as fp:
+    with flow, open(data_path) as fp:
         docs = DocumentArray.from_ndarray(np.array(fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
         with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.index(docs)
+            flow.index(docs)
 
             text = input('Please type a sentence: ')
 
@@ -49,15 +49,15 @@ def index(num_docs):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search(doc,
+            flow.search(doc,
                      parameters={'top_k': 1},
                      line_format='text',
                      on_done=ppr,
                      )
 
 def query(top_k):
-    f = Flow(restful=True).add(uses=MyTransformer).add(uses=NumpyIndexer)
-    with f:
+    flow = Flow(restful=True).add(uses=MyTransformer).add(uses=NumpyIndexer)
+    with flow:
         while True:
             text = input('Please type a sentence: ')
             if not text:
@@ -68,7 +68,7 @@ def query(top_k):
             def ppr(x):
                 print_topk(x, text)
 
-            f.search(doc,
+            flow.search(doc,
                 parameters={},
                 line_format='text',
                 on_done=ppr,
@@ -77,12 +77,12 @@ def query(top_k):
 
 
 def query_restful(return_flow=False):
-    f = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
-    f.use_rest_gateway()
+    flow = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
+    flow.use_rest_gateway()
     if return_flow:
-        return f
-    with f:
-        f.block()
+        return flow
+    with flow:
+        flow.block()
 
 
 @click.command()
