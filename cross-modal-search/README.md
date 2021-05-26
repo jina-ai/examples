@@ -60,7 +60,7 @@ If you want to skip the building steps and just run the example with Docker, che
 
 ### 🗝️ Requirements
 
-1. You have a working Python 3.7 or 3.8 environment. 
+1. You have a working Python 3.7 or 3.8 environment and a installation of [Docker](https://docs.docker.com/get-docker/). 
 2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
 3. You have at least 2 GB of free space on your hard drive. 
 
@@ -80,7 +80,7 @@ pip install -r requirements.txt
 
 ### 🏃 Step 2. Index your data
 To quickly get started, you can index a [small dataset](data/toy-data) to make sure everything is working correctly. 
-You can pre-fetch the Pods containing the machine learning models required to calculate the embeddings of the data using [docker](https://docs.docker.com/get-docker/).
+You can pre-fetch the Pods containing the machine learning models required to calculate the embeddings of the data using Docker.
 ```bash
 docker pull jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0
 docker pull jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2
