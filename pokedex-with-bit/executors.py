@@ -37,7 +37,7 @@ class ImageCrafter(Executor):
     def craft(self, docs: DocumentArray, fn):
         chunks = DocumentArray(
             list(
-                filter(lambda d: d.mime_type == 'image/png', docs.traverse_flat(['c']))
+                filter(lambda d: d.mime_type == 'image/png', docs)
             )
         )
         for doc in chunks:
@@ -64,7 +64,6 @@ class ImageCrafter(Executor):
         img -= self.img_mean
         img /= self.img_std
         return img
-
 
 
 class BigTransferEncoder(Executor):
@@ -143,7 +142,7 @@ class BigTransferEncoder(Executor):
         :param docs: an array in size `B`
         :return: an ndarray in size `B x D`.
         """
-        data = np.zeros((docs.__len__,) + docs[0].blob.shape)
+        data = np.zeros((docs.__len__(),) + docs[0].blob.shape)
         for index, doc in enumerate(docs):
             data[index] = doc.blob
         if self.channel_axis != -1:
@@ -184,12 +183,13 @@ class DocVectorIndexer(Executor):
         q_emb = _ext_A(_norm(a))
         d_emb = _ext_B(_norm(b))
         dists = _cosine(q_emb, d_emb)
-        idx, dist = self._get_sorted_top_k(dists, int(parameters['top_k']))
+        top_k = parameters.get('top_k', 5)
+        idx, dist = self._get_sorted_top_k(dists, top_k)
         for _q, _ids, _dists in zip(docs, idx, dist):
             for _id, _dist in zip(_ids, _dists):
-                d = Document(self._docs[int(_id)], copy=True)
-                d.score.value = 1 - _dist
-                _q.matches.append(d)
+                doc = Document(self._docs[int(_id)], copy=True)
+                doc.score.value = 1 - _dist
+                _q.matches.append(doc)
 
     @staticmethod
     def _get_sorted_top_k(
