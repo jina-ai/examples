@@ -1,11 +1,9 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import io
 import os
-from typing import Tuple, Dict, Union, Iterable, Optional, Any
+from typing import Tuple, Dict, Union, Iterable, Optional
 import numpy as np
-from abc import abstractmethod
 
 from jina import Document, DocumentArray, Executor, requests
 from helper import _load_image, _move_channel_axis, _crop_image, _resize_short
@@ -103,7 +101,6 @@ class BigTransferEncoder(Executor):
             channel info at the last axis. If given other, then `
             `np.moveaxis(data, channel_axis, -1)`` is performed before :meth:`encode`.
     """
-
     def __init__(self,
                  model_path: Optional[str] = 'pretrained',
                  channel_axis: int = 1,
@@ -124,8 +121,7 @@ class BigTransferEncoder(Executor):
             if self.on_gpu and len(gpus) > 0:
                 cpus.append(gpus[0])
             tf.config.experimental.set_visible_devices(devices=cpus)
-            self.logger.info(f'model_path: {self.model_path}')
-            #_model = tf.saved_model.load(self.model_path)
+            self.logger.info(f'BiT model path: {self.model_path}')
             from tensorflow.python.keras.models import load_model
             _model = load_model(self.model_path)
             self.model = _model.signatures['serving_default']

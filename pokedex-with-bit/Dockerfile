@@ -1,4 +1,4 @@
-FROM jinaai/jina:1.0.5
+FROM jinaai/jina:2.0.0rc2-py38
 
 # setup the workspace
 COPY . /workspace
@@ -7,9 +7,9 @@ WORKDIR /workspace
 RUN apt-get update && apt-get install --no-install-recommends -y git curl libmagic1 wget tar \
     && pip uninstall -y jina && pip install -r requirements.txt
 
-RUN bash get_data.sh && bash download.sh && python app.py index
+RUN bash get_data.sh && bash download.sh && python app.py -t index
 
-ENTRYPOINT ["python", "app.py", "search"]
+ENTRYPOINT ["python", "app.py", "-t", "query_restful"]
 
 LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
 LABEL type="app"
