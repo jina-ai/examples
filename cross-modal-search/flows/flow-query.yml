@@ -1,4 +1,4 @@
-!Flow
+jtype: Flow
 version: '1'
 with:
   prefetch: 10
@@ -43,7 +43,7 @@ pods:
     shards: $JINA_SHARDS
     uses_after: pods/merge_matches_sort_topk.yml
     remove_uses_ba: true
-  - name: join_all
-    uses: _merge_root
-    needs: [text_indexer, image_kv_indexer]
-    read_only: true
+#  - name: join_all
+#    uses: _merge_root
+#    needs: [text_indexer, image_kv_indexer]
+#    read_only: true

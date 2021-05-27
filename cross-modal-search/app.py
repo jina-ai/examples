@@ -31,11 +31,11 @@ def config(model_name):
 
 
 def index_restful(num_docs):
-    f = Flow().load_config('flows/flow-index.yml')
+    flow = Flow().load_config('flows/flow-index.yml')
 
-    with f:
+    with flow:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.logger.info(f'Indexing {data_path}')
+        flow.logger.info(f'Indexing {data_path}')
         url = f'http://0.0.0.0:{f.port_expose}/index'
 
         input_docs = _input_lines(
@@ -50,25 +50,25 @@ def index_restful(num_docs):
 
 
 def index(data_set, num_docs, request_size):
-    f = Flow.load_config('flows/flow-index.yml')
-    with f:
-        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
-            f.index(
+    flow = Flow.load_config('flows/flow-index.yml')
+    with flow:
+        with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
+            flow.index(
                 inputs=input_index_data(num_docs, request_size, data_set),
                 request_size=request_size
             )
 
 
 def query_restful():
-    f = Flow().load_config('flows/flow-query.yml')
-    f.use_rest_gateway()
-    with f:
-        f.block()
+    flow = Flow().load_config('flows/flow-query.yml')
+    flow.use_rest_gateway()
+    with flow:
+        flow.block()
 
 
 def dryrun():
-    f = Flow().load_config('flows/flow-index.yml')
-    with f:
+    flow = Flow().load_config('flows/flow-index.yml')
+    with flow:
         pass
 
 

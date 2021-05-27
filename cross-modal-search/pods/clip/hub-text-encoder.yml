@@ -1,4 +1,4 @@
-!CLIPTextEncoder
+jtype: CLIPTextEncoder
 requests:
   on:
     IndexRequest:

@@ -1,4 +1,4 @@
-!VSETextEncoder
+jtype: VSETextEncoder
 metas:
   py_modules:
     - workspace/vocab.py

@@ -1,4 +1,4 @@
-!VSETextEncoder
+jtype: VSETextEncoder
 requests:
   on:
     IndexRequest:
