@@ -39,7 +39,7 @@ def index(num_docs):
     with flow, open(data_path) as fp:
         docs = DocumentArray.from_ndarray(np.array(fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
-        with TimeContext(f'QPS: indexing {num_docs}', logger=f.logger):
+        with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(docs)
 
             text = input('Please type a sentence: ')
@@ -95,25 +95,6 @@ def query_restful(return_flow=False):
 @click.option('--top_k', '-k', default=5)
 def main(task, num_docs, top_k):
     config()
-    workspace = os.environ['JINA_WORKSPACE']
-
-    shutil.rmtree('workspace', ignore_errors=True)
-    os.makedirs('workspace')
-    '''
-    if 'index' in task:
-        if os.path.exists(workspace):
-            logger.error(
-                f'\n +------------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n +------------------------------------------------------------------------------------+'
-            )
-            sys.exit(1)'''
-    if 'query' in task:
-        if not os.path.exists(workspace):
-            print(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
-            sys.exit(1)
     if task == 'index':
         index(num_docs)
     elif task == 'query':
