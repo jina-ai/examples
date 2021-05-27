@@ -1,17 +1,9 @@
-import os
-import sys
-
-import copy
-import mmap
 import numpy as np
-from pathlib import Path
-from typing import Optional, Iterable, Dict, List, Tuple
+from typing import Dict, Tuple
 
 from jina import Document, requests, Executor, DocumentArray
 
 from jina.logging import JinaLogger
-
-from jina.helper import get_readable_size
 
 HEADER_NONE_ENTRY = (-1, -1, -1)
 
