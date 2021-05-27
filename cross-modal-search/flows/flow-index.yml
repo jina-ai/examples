@@ -32,10 +32,11 @@ pods:
     timeout_ready: 600000
     read_only: true
     needs: [gateway]
-#  - name: text_indexer
-#    polling: any
-#    uses: pods/index-text.yml
-#    shards: $JINA_SHARDS
+  - name: text_indexer
+    polling: any
+    #uses: pods/index-text.yml (numpy + binary pb indexer)
+    uses: NumpyIndexer
+    shards: $JINA_SHARDS
   - !NumpyIndexer
     with:
       index_filename: text_embs.gz
@@ -51,3 +52,7 @@ pods:
 #    uses: _merge_root
 #    needs: [image_vector_indexer, image_kv_indexer, text_indexer]
 #    read_only: true
+  - name: join_all
+    uses: RootMerger
+    needs: [ image_vector_indexer, image_kv_indexer, text_indexer ]
+    read_only: true
