@@ -34,11 +34,17 @@ def index(num_docs: int):
                             "img_mean": [0.485, 0.456, 0.406],
                             "img_std": [0.229, 0.224, 0.225]}})
     f = f.add(uses=BigTransferEncoder)
-    f = f.add(uses={"jtype": "DocVectorIndexer",
+    f = f.add(uses={"jtype": "EmbeddingIndexer",
                     "with": {"index_file_name": "image.json"},
-                    "metas": {"name": "vec_idx"}})
+                    "metas": {"name": "vec_idx"}},
+              name="vec_idx")
     f = f.add(uses={"jtype": "KeyValueIndexer",
-                    "metas": {"name": "doc_idx"}})
+                    "metas": {"name": "doc_idx"}},
+              name="kv_idx",
+              needs="gateway")    # to enable parallel running
+    f = f.add(name="join_all",
+              needs=["kv_idx", "vec_idx"],
+              read_only="true")
 
     with f:
         f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
@@ -53,11 +59,17 @@ def query_restful():
                             "img_mean": [0.485, 0.456, 0.406],
                             "img_std": [0.229, 0.224, 0.225]}})
     f = f.add(uses=BigTransferEncoder)
-    f = f.add(uses={"jtype": "DocVectorIndexer",
+    f = f.add(uses={"jtype": "EmbeddingIndexer",
                     "with": {"index_file_name": "image.json"},
-                    "metas": {"name": "vec_idx"}})
+                    "metas": {"name": "vec_idx"}},
+              name="vec_idx")
     f = f.add(uses={"jtype": "KeyValueIndexer",
-                    "metas": {"name": "doc_idx"}})
+                    "metas": {"name": "doc_idx"}},
+              name="kv_idx")
+    f = f.add(uses={"jtype": "MatchImageReader",
+                    "with": {"target_size": 96,
+                             "img_mean": [0.485, 0.456, 0.406],
+                             "img_std": [0.229, 0.224, 0.225]}})
     f.use_rest_gateway()
     with f:
         f.block()

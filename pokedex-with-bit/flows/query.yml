@@ -20,13 +20,20 @@ executors:                                  # List of executors for this flow
       jtype: BigTransferEncoder             # Class of the executor - Use a BigTransferModel
   - name: vec_idx                           # Arbitrary name
     uses:                                   # Define details
-      jtype: DocVectorIndexer               # Indexer that stores the embeddings of the images
+      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
       with:
         index_file_name: "image.json"       # Storage file name for the embeddings
       metas:                                # Metainformation for the executor
         name: vec_idx                       # Folder name inside the workspace
-  - name: doc_idx                           # Arbitrary name
+  - name: kv_idx                            # Arbitrary name
     uses:
       jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
       metas:                                # Executor metainformation
-        name: doc_idx                       # Name for the folder inside the workspace
+        name: kv_idx                        # Name for the folder inside the workspace
+  - name: match_img_read                    # Arbitrary name
+    uses:
+      jtype: MatchImageReader               # Use another image reader that reads the images for the search matches before returning the documents
+      with:                                 # Define parameters for the constructor of the executor
+        target_size: 96                     # Set the image target size
+        img_mean: [ 0.485, 0.456, 0.406 ]   # Set the mean of the images for normalization
+        img_std: [ 0.229, 0.224, 0.225 ]    # Set the standard deviation of the images for normalization

@@ -17,13 +17,17 @@ executors:                                  # List of executors for this flow
       jtype: BigTransferEncoder             # Class of the executor - Use a BigTransferModel
   - name: vec_idx                           # Arbitrary name
     uses:                                   # Define details
-      jtype: DocVectorIndexer               # Indexer that stores the embeddings of the images
+      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
       with:
         index_file_name: "image.json"       # Storage file name for the embeddings
       metas:                                # Metainformation for the executor
         name: vec_idx                       # Folder name inside the workspace
-  - name: doc_idx                           # Arbitrary name
+  - name: kv_idx                            # Arbitrary name
     uses:
       jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
       metas:                                # Executor metainformation
-        name: doc_idx                       # Name for the folder inside the workspace
+        name: kv_idx                        # Name for the folder inside the workspace
+    needs: [gateway]                        # This pod starts directly after the gateways, to enable parallelization
+  - name: join_all                          # Wait until both paths (kv_idx and crafter->encoder->vec_idx) are done
+    needs: [kv_idx, vec_idx]                # Components to wait for
+    read_only: true

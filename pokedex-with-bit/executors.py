@@ -150,7 +150,7 @@ class BigTransferEncoder(Executor):
         return docs
 
 
-class DocVectorIndexer(Executor):
+class EmbeddingIndexer(Executor):
     def __init__(self, index_file_name: str, **kwargs):
         super().__init__(**kwargs)
         self.index_file_name = index_file_name
@@ -170,7 +170,10 @@ class DocVectorIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', **kwargs):
-        self._docs.extend(docs)
+        embedding_docs = DocumentArray()
+        for doc in docs:
+            embedding_docs.append(Document(id=doc.id, embedding=doc.embedding))
+        self._docs.extend(embedding_docs)
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs):
@@ -179,13 +182,15 @@ class DocVectorIndexer(Executor):
         q_emb = _ext_A(_norm(a))
         d_emb = _ext_B(_norm(b))
         dists = _cosine(q_emb, d_emb)
-        top_k = parameters.get('top_k', 5)
+        top_k = int(parameters.get('top_k', 5))
         idx, dist = self._get_sorted_top_k(dists, top_k)
         for _q, _ids, _dists in zip(docs, idx, dist):
             for _id, _dist in zip(_ids, _dists):
                 doc = Document(self._docs[int(_id)], copy=True)
                 doc.score.value = 1 - _dist
+                doc.parent_id = int(_id)
                 _q.matches.append(doc)
+        return docs
 
     @staticmethod
     def _get_sorted_top_k(
@@ -229,8 +234,53 @@ class KeyValueIndexer(Executor):
     def query(self, docs: DocumentArray, **kwargs):
         for doc in docs:
             for match in doc.matches:
-                extracted_doc = self._docs[match.parent_id]
+                extracted_doc = self._docs[int(match.parent_id)]
+                # The id fields should be the same
+                assert match.id == extracted_doc.id
                 match.MergeFrom(extracted_doc)
+        return docs
+
+
+class MatchImageReader(Executor):
+    def __init__(
+        self,
+        target_size: Union[Iterable[int], int] = 224,
+        img_mean: Tuple[float] = (0, 0, 0),
+        img_std: Tuple[float] = (1, 1, 1),
+        resize_dim: int = 256,
+        channel_axis: int = -1,
+        target_channel_axis: int = -1,
+        *args,
+        **kwargs,
+    ):
+        """Set Constructor."""
+        super().__init__(*args, **kwargs)
+        self.target_size = target_size
+        self.resize_dim = resize_dim
+        self.img_mean = np.array(img_mean).reshape((1, 1, 3))
+        self.img_std = np.array(img_std).reshape((1, 1, 3))
+        self.channel_axis = channel_axis
+        self.target_channel_axis = target_channel_axis
+
+    @requests(on='/search')
+    def query(self, docs: DocumentArray, **kwargs):
+        for doc in docs:
+            for match in doc.matches:
+                match.convert_image_uri_to_blob()
+                raw_img = _load_image(match.blob, self.channel_axis)
+                _img = self._normalize(raw_img)
+                # move the channel_axis to target_channel_axis to better fit different models
+                img = _move_channel_axis(_img, -1, self.target_channel_axis)
+                match.blob = img
+        return docs
+
+    def _normalize(self, img):
+        img = _resize_short(img, target_size=self.resize_dim)
+        img, _, _ = _crop_image(img, target_size=self.target_size, how='center')
+        img = np.array(img).astype('float32') / 255
+        img -= self.img_mean
+        img /= self.img_std
+        return img
 
 
 def _get_ones(x, y):
