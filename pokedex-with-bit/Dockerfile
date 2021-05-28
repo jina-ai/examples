@@ -7,9 +7,9 @@ WORKDIR /workspace
 RUN apt-get update && apt-get install --no-install-recommends -y git curl libmagic1 wget tar \
     && pip uninstall -y jina && pip install -r requirements.txt
 
-RUN bash get_data.sh && bash download.sh && python app.py -t index
+RUN bash get_data.sh && bash get_model.sh && python app_yml.py -t index
 
-ENTRYPOINT ["python", "app.py", "-t", "query_restful"]
+ENTRYPOINT ["python", "app_yml.py", "-t", "query_restful"]
 
 LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
 LABEL type="app"
