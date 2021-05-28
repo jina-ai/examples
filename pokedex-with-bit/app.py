@@ -5,9 +5,8 @@ import click
 import sys
 from glob import glob
 
-from jina import Flow, Document, Executor, requests
+from jina import Flow
 from jina.logging import default_logger as logger
-from jina.logging.profile import TimeContext
 from executors import *
 
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50000))
@@ -28,51 +27,51 @@ def index(num_docs: int):
     num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC),
                                       recursive=True)))
 
-    f = Flow(workspace="workspace")\
+    flow = Flow(workspace="workspace")\
         .add(uses={"jtype": "ImageCrafter",
                    "with": {"target_size": 96,
                             "img_mean": [0.485, 0.456, 0.406],
                             "img_std": [0.229, 0.224, 0.225]}})
-    f = f.add(uses=BigTransferEncoder)
-    f = f.add(uses={"jtype": "EmbeddingIndexer",
-                    "with": {"index_file_name": "image.json"},
-                    "metas": {"name": "vec_idx"}},
+    flow = flow.add(uses=BigTransferEncoder)
+    flow = flow.add(uses={"jtype": "EmbeddingIndexer",
+                          "with": {"index_file_name": "image.json"},
+                          "metas": {"name": "vec_idx"}},
               name="vec_idx")
-    f = f.add(uses={"jtype": "KeyValueIndexer",
-                    "metas": {"name": "doc_idx"}},
-              name="kv_idx",
-              needs="gateway")    # to enable parallel running
-    f = f.add(name="join_all",
-              needs=["kv_idx", "vec_idx"],
-              read_only="true")
+    flow = flow.add(uses={"jtype": "KeyValueIndexer",
+                          "metas": {"name": "doc_idx"}},
+                    name="kv_idx",
+                    needs="gateway")    # to enable parallel running
+    flow = flow.add(name="join_all",
+                    needs=["kv_idx", "vec_idx"],
+                    read_only="true")
 
-    with f:
-        f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
-                request_size=64, read_mode='rb')
+    with flow:
+        flow.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
+                   request_size=64, read_mode='rb')
 
 
 def query_restful():
-    f = Flow(workspace="workspace",
+    flow = Flow(workspace="workspace",
              port_expose=os.environ.get('JINA_PORT', str(45678)))\
         .add(uses={"jtype": "ImageCrafter",
                    "with": {"target_size": 96,
                             "img_mean": [0.485, 0.456, 0.406],
+                            "img_std": [0.229, 0.224, 0.225]}})\
+        .add(uses=BigTransferEncoder)\
+        .add(uses={"jtype": "EmbeddingIndexer",
+                   "with": {"index_file_name": "image.json"},
+                   "metas": {"name": "vec_idx"}},
+             name="vec_idx")\
+        .add(uses={"jtype": "KeyValueIndexer",
+                   "metas": {"name": "doc_idx"}},
+             name="kv_idx")\
+        .add(uses={"jtype": "MatchImageReader",
+                   "with": {"target_size": 96,
+                            "img_mean": [0.485, 0.456, 0.406],
                             "img_std": [0.229, 0.224, 0.225]}})
-    f = f.add(uses=BigTransferEncoder)
-    f = f.add(uses={"jtype": "EmbeddingIndexer",
-                    "with": {"index_file_name": "image.json"},
-                    "metas": {"name": "vec_idx"}},
-              name="vec_idx")
-    f = f.add(uses={"jtype": "KeyValueIndexer",
-                    "metas": {"name": "doc_idx"}},
-              name="kv_idx")
-    f = f.add(uses={"jtype": "MatchImageReader",
-                    "with": {"target_size": 96,
-                             "img_mean": [0.485, 0.456, 0.406],
-                             "img_std": [0.229, 0.224, 0.225]}})
-    f.use_rest_gateway()
-    with f:
-        f.block()
+    flow.use_rest_gateway()
+    with flow:
+        flow.block()
 
 
 @click.command()

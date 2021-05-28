@@ -28,18 +28,17 @@ def index(num_docs: int):
     num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC),
                                       recursive=True)))
 
-    f = Flow.load_config('flows/index.yml')
-    with f:
-        f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
+    with Flow.load_config('flows/index.yml') as flow:
+        flow.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
                 request_size=64, read_mode='rb')
 
 
 def query_restful():
     # Starts the restful query API
-    f = Flow.load_config('flows/query.yml')
-    f.use_rest_gateway()
-    with f:
-        f.block()
+    flow = Flow.load_config('flows/query.yml')
+    flow.use_rest_gateway()
+    with flow:
+        flow.block()
 
 
 @click.command()
