@@ -240,8 +240,6 @@ class KeyValueIndexer(Executor):
     def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         for doc in docs:
             for match in doc.matches:
-                print(self._docs.__len__())
-                print(match.parent_id)
                 extracted_doc = self._docs[int(match.parent_id)]
                 # The id fields should be the same
                 assert match.id == extracted_doc.id

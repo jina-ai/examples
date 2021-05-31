@@ -193,7 +193,7 @@ docker build -t image-search .
 ```
 To run the container, execute:
 ```bash
-docker run image-search
+docker run -p 45678:45678 image-search
 ```
 _______
 
