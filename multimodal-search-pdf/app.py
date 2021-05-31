@@ -45,7 +45,7 @@ def index(pdf_files):
     with f:
         with TimeContext(f'QPS: indexing {len(pdf_files)}', logger=f.logger):
             from jina.clients.helper import pprint_routes
-            f.index(input_fn=index_generator(data_path=pdf_files), read_mode='r', on_done=pprint_routes,
+            f.index(inputs=index_generator(data_path=pdf_files), read_mode='r', on_done=pprint_routes,
                     request_size=1)
 
 

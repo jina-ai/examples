@@ -1,12 +1,12 @@
-!Flow
+!Flow                         # Define the flow used for querying/searching data
 version: '1'
-with:
-  read_only: true
+with:                         # Define additional parameters
+  read_only: true             # Make sure not to change any saved data
   port_expose: $JINA_PORT
 pods:
-  - name: encoder
-    uses: pods/encode.yml
+  - name: encoder             # Name for the encoder pod
+    uses: pods/encode.yml     # The configuration file for the encoder pod
     timeout_ready: 60000
     read_only: true
-  - name: indexer
-    uses: pods/index.yml
+  - name: indexer             # Name for the indexer pod
+    uses: pods/index.yml      # The configuration file for the indexer pod
