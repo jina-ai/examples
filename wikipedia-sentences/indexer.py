@@ -3,13 +3,6 @@ from typing import Dict, Tuple
 
 from jina import Document, requests, Executor, DocumentArray
 
-from jina.logging import JinaLogger
-
-HEADER_NONE_ENTRY = (-1, -1, -1)
-
-BYTE_PADDING = 4
-logger = JinaLogger(__name__)
-
 class NumpyIndexer(Executor):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

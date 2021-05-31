@@ -36,7 +36,7 @@ def index(num_docs):
     flow = Flow().add(uses=MyTransformer).add(uses=NumpyIndexer)
     data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
     with flow, open(data_path) as fp:
-        docs = DocumentArray.from_ndarray(np.array(fp.readlines()))
+        docs = DocumentArray((Document(content=line) for line in fp.readlines()))
         num_docs = min(num_docs, len(fp.readlines()))
         with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(docs)
