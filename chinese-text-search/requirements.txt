@@ -1,4 +1,4 @@
+git+https://github.com/jina-ai/jina.git@v1.1.0#egg=jina[hub, http]
 click==7.1.2
 transformers==4.1.1
 torch==1.7.1
-jina[scipy, http]==1.1.0

@@ -36,12 +36,12 @@ These instructions explain how to build the example yourself and deploy it with 
 For example:
 
 1. You have a working Python 3.8 environment. 
-2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
+2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
 3. You have at least 2GB of free space on your hard drive. 
 
 ### 👾 Step 1. Clone the repo and install Jina
 
-Begin by cloning the repo so you can get the required files and datasets. (If you already have the examples repository on your machine make sure to fetch the most recent version)
+Begin by cloning the repo, so you can get the required files and datasets. (If you already have the examples repository on your machine make sure to fetch the most recent version)
 
 ```sh
 git clone https://github.com/jina-ai/examples
@@ -53,7 +53,7 @@ And enter the correct folder:
 cd examples/example_to_use (replace as necessary)
 ```
 
-In your terminal, you should now be located in you the *enter example name* folder. Let's install Jina and the other required Python libraries. For futher information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
+In your terminal, you should now be located in you the *enter example name* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
 
 ```sh
 pip install -r requirements.txt
