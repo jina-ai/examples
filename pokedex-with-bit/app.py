@@ -12,15 +12,8 @@ from executors import *
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50000))
 IMAGE_SRC = 'data/**/*.png'
 
-
-def config():
-    num_encoders = 1 if sys.argv[1] == 'index' else 1
-    shards = 8
-
-    os.environ['JINA_SHARDS'] = str(num_encoders)
-    os.environ['JINA_SHARDS_INDEXERS'] = str(shards)
-    os.environ['JINA_WORKSPACE'] = './workspace'
-    os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
+os.environ['JINA_WORKSPACE'] = './workspace'
+os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
 def index(num_docs: int):
@@ -84,7 +77,6 @@ def query_restful():
 )
 @click.option('--num_docs', '-n', default=MAX_DOCS)
 def main(task: str, num_docs: int):
-    config()
     workspace = os.environ['JINA_WORKSPACE']
     if task == 'index':
         if os.path.exists(workspace):
