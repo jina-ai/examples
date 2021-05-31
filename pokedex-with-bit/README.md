@@ -50,10 +50,10 @@ git clone https://github.com/jina-ai/examples
 And enter the correct folder:
 
 ```sh
-cd examples/image_search
+cd examples/image-search
 ```
 
-In your terminal, you should now be located in the *image_search* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
+In your terminal, you should now be located in the *image-search* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
 
 ```sh
 pip install -r requirements.txt
@@ -71,7 +71,7 @@ In order to get the full dataset, follow the instructions below:
 In order to download the model, follow the instructions below:
 - Run `sh get_model.sh`
 
-### 🏃 Step 3. Index your data
+### 🏃 Step 4. Index your data
 In this step, we will index our data.
 
 There are two different python files that you can use for indexing:
@@ -93,8 +93,9 @@ python app.py -t index -n NUM_DOCS
 The relevant Jina code to index the data given your Flow's YAML definition breaks down to
 ```python
 with Flow.load_config('flows/index.yml') as f:
-    f.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
-            request_size=64, read_mode='rb')
+    document_generator = from_files(IMAGE_SRC, size=num_docs)
+    flow.index(inputs=DocumentArray(document_generator),
+               request_size=64, read_mode='rb')
 ```
 In the indexing process, all images are read and normalized, and then transformed into
 an embedding by the BiT model. This embedding is then stored in the workspace together with some
@@ -105,7 +106,7 @@ If you see the following output, it means your data has been correctly indexed:
 Flow@1234[S]:flow is closed and all resources are released, current build level is 0
 ```
 
-### 🔎 Step 4: Query your data
+### 🔎 Step 5: Query your data
 Next, we will deploy our query Flow.
 
 When querying, you provide an input image to the query Flow and the Flow
@@ -124,7 +125,7 @@ Once the API has started, there are two ways of querying data from it.
 1. **Using cURL:** 
   You can query data directly from the command line using cURL. Jina's REST API uses the [data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) to represent multimedia data. To query your indexed data, simply organize your picture(s) into this scheme and send a POST request via cURL:
 ```bash  
-curl --verbose --request POST -d '{"parameters": {"top_k": 10}, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://localhost:45678/search'
+curl --verbose --request POST -d '{"parameters": {"top_k": 1}, "mode": "search",  "data": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAIAAABLbSncAAAA2ElEQVR4nADIADf/AxWcWRUeCEeBO68T3u1qLWarHqMaxDnxhAEaLh0Ssu6ZGfnKcjP4CeDLoJok3o4aOPYAJocsjktZfo4Z7Q/WR1UTgppAAdguAhR+AUm9AnqRH2jgdBZ0R+kKxAFoAME32BL7fwQbcLzhw+dXMmY9BS9K8EarXyWLH8VYK1MACkxlLTY4Eh69XfjpROqjE7P0AeBx6DGmA8/lRRlTCmPkL196pC0aWBkVs2wyjqb/LABVYL8Xgeomjl3VtEMxAeaUrGvnIawVh/oBAAD///GwU6v3yCoVAAAAAElFTkSuQmCC"]}' -H 'Content-Type: application/json' 'http://localhost:45678/search'
 ```
 2. **Using jinabox.js:**
   You can use jina's frontend interface jinabox.js.

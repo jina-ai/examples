@@ -33,7 +33,7 @@ def index(num_docs: int):
                           "metas": {"name": "vec_idx"}},
               name="vec_idx")
     flow = flow.add(uses={"jtype": "KeyValueIndexer",
-                          "metas": {"name": "doc_idx"}},
+                          "metas": {"name": "kv_idx"}},
                     name="kv_idx",
                     needs="gateway")    # to enable parallel running
     flow = flow.add(name="join_all",
@@ -59,7 +59,7 @@ def query_restful():
                    "metas": {"name": "vec_idx"}},
              name="vec_idx")\
         .add(uses={"jtype": "KeyValueIndexer",
-                   "metas": {"name": "doc_idx"}},
+                   "metas": {"name": "kv_idx"}},
              name="kv_idx")\
         .add(uses={"jtype": "MatchImageReader",
                    "with": {"target_size": 96,

@@ -187,6 +187,7 @@ class EmbeddingIndexer(Executor):
         d_emb = _ext_B(_norm(b))
         dists = _cosine(q_emb, d_emb)
         top_k = int(parameters.get('top_k', 5))
+        assert top_k > 0
         idx, dist = self._get_sorted_top_k(dists, top_k)
         for _q, _ids, _dists in zip(docs, idx, dist):
             for _id, _dist in zip(_ids, _dists):
@@ -239,6 +240,8 @@ class KeyValueIndexer(Executor):
     def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         for doc in docs:
             for match in doc.matches:
+                print(self._docs.__len__())
+                print(match.parent_id)
                 extracted_doc = self._docs[int(match.parent_id)]
                 # The id fields should be the same
                 assert match.id == extracted_doc.id
