@@ -2,11 +2,13 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import shutil
 import click
 import sys
 from glob import glob
 
 from jina import Flow, DocumentArray
+from jina.types.document.generators import from_files
 from jina.logging import default_logger as logger
 
 IMAGE_SRC = 'data/**/*.png'
@@ -22,8 +24,9 @@ def index(num_docs: int):
                                       recursive=True)))
 
     with Flow.load_config('flows/index.yml') as flow:
-        flow.index(inputs=DocumentArray.from_files(IMAGE_SRC, size=num_docs),
-                request_size=64, read_mode='rb')
+        document_generator = from_files(IMAGE_SRC, size=num_docs)
+        flow.index(inputs=DocumentArray(document_generator),
+                   request_size=64, read_mode='rb')
 
 
 def query_restful():
@@ -43,16 +46,20 @@ def query_restful():
     ),
 )
 @click.option('--num_docs', '-n', default=MAX_DOCS)
-def main(task: str, num_docs: int):
+@click.option('--force', '-f', is_flag=True)
+def main(task: str, num_docs: int, force: bool):
     workspace = os.environ['JINA_WORKSPACE']
     if task == 'index':
         if os.path.exists(workspace):
-            logger.error(f'\n +----------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                         | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                         | \
-                    \n +----------------------------------------------------------------------------------+')
-            sys.exit(1)
+            if force:
+                shutil.rmtree(workspace)
+            else:
+                logger.error(f'\n +----------------------------------------------------------------------------------+ \
+                        \n |                                   🤖🤖🤖                                         | \
+                        \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                        \n |                                   🤖🤖🤖                                         | \
+                        \n +----------------------------------------------------------------------------------+')
+                sys.exit(1)
         index(num_docs)
     if task == 'query_restful':
         if not os.path.exists(workspace):
