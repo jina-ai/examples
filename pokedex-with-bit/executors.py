@@ -32,27 +32,28 @@ class ImageCrafter(Executor):
         self.channel_axis = channel_axis
         self.target_channel_axis = target_channel_axis
 
-    def craft(self, docs: DocumentArray, fn):
-        chunks = DocumentArray(
+    def craft(self, docs: DocumentArray, fn) -> DocumentArray:
+        filtered_docs = DocumentArray(
             list(
                 filter(lambda d: d.mime_type == 'image/png', docs)
             )
         )
-        for doc in chunks:
+        for doc in filtered_docs:
             getattr(doc, fn)()
             raw_img = _load_image(doc.blob, self.channel_axis)
             _img = self._normalize(raw_img)
-            # move the channel_axis to target_channel_axis to better fit different models
+            # move the channel_axis to target_channel_axis to better fit
+            # different models
             img = _move_channel_axis(_img, -1, self.target_channel_axis)
             doc.blob = img
-        return chunks
+        return filtered_docs
 
     @requests(on='/index')
-    def craft_index(self, docs: DocumentArray, **kwargs):
+    def craft_index(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         return self.craft(docs, 'convert_image_uri_to_blob')
 
     @requests(on='/search')
-    def craft_search(self, docs: DocumentArray, **kwargs):
+    def craft_search(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         return self.craft(docs, 'convert_image_datauri_to_blob')
 
     def _normalize(self, img):
@@ -127,7 +128,8 @@ class BigTransferEncoder(Executor):
             self.model = _model.signatures['serving_default']
             self._get_input = tf.convert_to_tensor
         else:
-            raise PretrainedModelFileDoesNotExist(f'model at {self.model_path} does not exist')
+            raise PretrainedModelFileDoesNotExist(
+                f'model at {self.model_path} does not exist')
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs) -> DocumentArray:
@@ -169,14 +171,16 @@ class EmbeddingIndexer(Executor):
         self._docs.save(self.save_path)
 
     @requests(on='/index')
-    def index(self, docs: 'DocumentArray', **kwargs):
+    def index(self, docs: 'DocumentArray', **kwargs) -> DocumentArray:
         embedding_docs = DocumentArray()
         for doc in docs:
             embedding_docs.append(Document(id=doc.id, embedding=doc.embedding))
         self._docs.extend(embedding_docs)
+        return docs
 
     @requests(on='/search')
-    def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs):
+    def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs) \
+            -> DocumentArray:
         a = np.stack(docs.get_attributes('embedding'))
         b = np.stack(self._docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(a))
@@ -227,11 +231,12 @@ class KeyValueIndexer(Executor):
         self._docs.save(self.save_path)
 
     @requests(on='/index')
-    def index(self, docs: DocumentArray, **kwargs):
+    def index(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         self._docs.extend(docs)
+        return docs
 
     @requests(on='/search')
-    def query(self, docs: DocumentArray, **kwargs):
+    def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         for doc in docs:
             for match in doc.matches:
                 extracted_doc = self._docs[int(match.parent_id)]
@@ -263,7 +268,7 @@ class MatchImageReader(Executor):
         self.target_channel_axis = target_channel_axis
 
     @requests(on='/search')
-    def query(self, docs: DocumentArray, **kwargs):
+    def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
         for doc in docs:
             for match in doc.matches:
                 match.convert_image_uri_to_blob()
