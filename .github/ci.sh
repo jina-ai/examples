@@ -23,12 +23,12 @@ for example_dir in ${changedExamples[@]}; do
   cd $root_dir/$example_dir
   echo running tests in $example_dir
   pwd
-  if test -f "requirements.txt"; then
+  if test -f "tests/requirements.txt"; then
     if [[ -d "tests/" ]]; then
       python -m venv .venv
       source .venv/bin/activate
       pip install pytest pytest-mock
-      pip install -r requirements.txt
+      pip install -r tests/requirements.txt
       pytest -s -v tests/
       local_exit_code=$?
       deactivate
