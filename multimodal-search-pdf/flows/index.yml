@@ -3,7 +3,7 @@ version: '1'                                # we follow the version '1' YAML sch
 with:
   workspace: './workspace'
   py_modules:
-    - pods/executors.py
+    - flows/executors.py
 executors:                                       # each flow consists of several pods
   - name: craft                           # in this example we will first segment the pdf into image chunks and page text chunks
     uses:
