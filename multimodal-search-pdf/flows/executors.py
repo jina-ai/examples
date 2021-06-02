@@ -5,7 +5,6 @@ import os
 import io
 from typing import Dict, List, Optional, Union, Tuple, Iterable
 
-import toolz
 import fitz
 import numpy as np
 import pdfplumber
@@ -16,6 +15,7 @@ from transformers import AutoModel, AutoTokenizer
 from jina.logging import default_logger as logger
 
 from flows import helper as helper
+from flows.helper import skip_empty_request, filter_docs
 
 
 class PDFCrafter(Executor):
@@ -27,8 +27,8 @@ class PDFCrafter(Executor):
     Text is further split by linebreaks and stored on chunk-chunk level ('cc')
     of the `Documents` with `mime_type` == text/plain.
     """
-
     @requests
+    @filter_docs('application/pdf', traversal_path='r')
     def segment(self, docs: DocumentArray, **kwargs):
         """
         Segements PDF files. Extracts data from them.
@@ -41,15 +41,10 @@ class PDFCrafter(Executor):
         :param docs: Array of Documents.
 
         """
-        filtered_docs = DocumentArray(
-            list(
-                filter(lambda d: d.mime_type == 'application/pdf', docs)
-            )
-        )
-        for doc in filtered_docs:
+        for doc in docs:
+            doc.tags['crafted'] = True
             pdf_img, pdf_text = self._parse_pdf(doc)
 
-            # Extract images
             if pdf_img is not None:
                 images = self._extract_image(pdf_img)
                 doc.chunks += [Document(blob=img, mime_type='image/*') for img in images]
@@ -116,31 +111,44 @@ class PDFCrafter(Executor):
 
 class TextCrafter(Executor):
     @requests(on='/search')
+    @filter_docs('text/plain', traversal_path='r')
     def craft(self, docs: DocumentArray, **kwargs):
         for doc in docs:
+            doc.tags['crafted'] = True
             doc.chunks.append(Document(doc, copy=True, tags={'root_doc_id': doc.id}))
+
+
+class ImageCrafter(Executor):
+    @requests(on='/search')
+    @filter_docs('image', traversal_path='r')
+    def craft(self, docs: DocumentArray, **kwargs):
+        for doc in docs:
+            doc.tags['crafted'] = True
+            doc.convert_image_uri_to_blob()
+            doc.chunks.append(Document(blob=doc.blob, mime_type='image/*'))
+
+
+class MergeCrafts(Executor):
+    @requests(on='/search')
+    def join_reduce(self, docs_matrix: List[DocumentArray], **kwargs):
+        final_docs = DocumentArray()
+        for doc_arr in docs_matrix:
+            for doc in doc_arr:
+                if doc.tags.get('crafted', False):
+                    logger.info(f'Found crafted document of type {doc.mime_type}')
+                    final_docs.append(doc)
+        return final_docs
 
 
 class TextSegmenter(Executor):
     """ Stores text of `Documents` on chunk level and lines (text split by `\n`) on chunk-chunk level."""
     @requests
+    @filter_docs('text/plain', 'c')
     def segment(self, docs: DocumentArray, **kwargs):
-        filtered_docs = DocumentArray(
-            list(
-                filter(lambda d: d.mime_type == 'text/plain', docs.traverse_flat('c'))
-            )
-        )
-        for doc in filtered_docs:
+        for doc in docs:
             doc.chunks += [
                 Document(text=t, mime_type='text/plain', tags={'root_doc_id': doc.tags['root_doc_id']}) for t in doc.text.split('\n')]
-
-
-class ImageCrafter(Executor):
-    @requests(on='/search')
-    def craft(self, docs: DocumentArray, **kwargs):
-        for doc in docs:
-            doc.convert_image_uri_to_blob()
-            doc.chunks.append(Document(blob=doc.blob, mime_type='image/*'))
+        return docs
 
 
 class ImagePreprocessor(Executor):
@@ -162,18 +170,14 @@ class ImagePreprocessor(Executor):
         self.target_channel_axis = target_channel_axis
 
     @requests
+    @filter_docs('image', traversal_path='c')
     def normalize(self, docs: DocumentArray, **kwargs):
-        chunks = DocumentArray(
-            list(
-                filter(lambda doc: doc.mime_type.startswith('image'), docs.traverse_flat(['c']))
-            )
-        )
-        for doc in chunks:
+        for doc in docs:
             raw_image = helper.load_image(doc.blob, self.channel_axis)
             _img = self._normalize(raw_image)
             _img = helper.move_channel_axis(_img, -1, self.target_channel_axis)
             doc.blob = _img
-        return chunks
+        return docs
 
     def _normalize(self, img):
         img = helper.resize_short(img, target_size=self.resize_dim)
@@ -229,13 +233,12 @@ class TextEncoder(Executor):
         return embeddings.cpu().numpy()
 
     @requests
+    @filter_docs('text/plain', traversal_path='c')
     def encode(self, docs: 'DocumentArray', **kwargs):
-        chunks = DocumentArray(
-            list(
-                filter(lambda d: d.mime_type == 'text/plain', docs.traverse_flat(['cc']))
-            )
-        )
-        texts = chunks.get_attributes('text')
+        if docs is None:
+            return
+
+        texts = docs.get_attributes('text')
 
         with torch.no_grad():
 
@@ -260,10 +263,10 @@ class TextEncoder(Executor):
             hidden_states = outputs.hidden_states
 
             embeds = self._compute_embedding(hidden_states, input_tokens)
-            for doc, embed in zip(chunks, embeds):
+            for doc, embed in zip(docs, embeds):
                 doc.embedding = embed
 
-        return chunks
+        return docs
 
 
 class ImageTorchEncoder(Executor):
@@ -322,23 +325,22 @@ class ImageTorchEncoder(Executor):
         return self.pool_fn(feature_map, axis=(2, 3))
 
     @requests
+    @filter_docs('image', traversal_path='r')
     def encode(self, docs: DocumentArray, **kwargs):
-        chunks = DocumentArray(
-            list(
-                filter(lambda d: d.mime_type.startswith('image'), docs.traverse_flat(['r']))
-            )
-        )
-        images = np.stack(chunks.get_attributes('blob'))
+        if docs is None:
+            return
+
+        images = np.stack(docs.get_attributes('blob'))
         images = self._maybe_move_channel_axis(images)
 
         _input = torch.from_numpy(images)
         features = self._get_features(_input).detach()
         features = self._get_pooling(features.numpy())
 
-        for doc, embed in zip(chunks, features):
+        for doc, embed in zip(docs, features):
             doc.embedding = embed
 
-        return chunks
+        return docs
 
     def _maybe_move_channel_axis(self, images) -> 'np.ndarray':
         if self.channel_axis != self._default_channel_axis:
@@ -399,6 +401,8 @@ class DocVectorIndexer(Executor):
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs):
+        if docs is None:
+            return
         a = np.stack(docs.get_attributes('embedding'))
         b = np.stack(self._docs.get_attributes('embedding'))
         q_emb = helper.ext_A(helper.norm(a))
@@ -430,46 +434,33 @@ class DocVectorIndexer(Executor):
         return idx, dist
 
 
-class SingleModalityRanker(Executor):
-    @requests(on='/search')
-    def rank(self, docs: DocumentArray, parameters: Dict, **kwargs) -> DocumentArray:
-        all_matches = DocumentArray()
-        all_matches = SingleModalityRanker._remove_duplicates(all_matches)
-
-        for doc in docs.traverse_flat(['rm']):
-            all_matches.append(doc)
-
-        all_matches.sort(key=lambda ma: ma.score.value, reverse=True)
-        return DocumentArray([Document(matches=all_matches[: int(parameters.get('top_k', 3))])])
-
-    @staticmethod
-    def _remove_duplicates(docs: DocumentArray) -> DocumentArray:
-        return DocumentArray(toolz.unique(docs, key=lambda doc: doc.text))
-
-
-class WeightedModalityRanker(Executor):
+class DynamicNModalityRanker(Executor):
+    """ This ranker dynamically discovers the number of modalities in the input and ranks them.
+        This is useful when your `Flow` shall support queries with different amounts of modality.
+    """
     @requests(on='/search')
     def rank(self, docs_matrix: List[DocumentArray], parameters: Dict, **kwargs):
-        results = DocumentArray()
+        result = DocumentArray()
+        docs_matrix = [doc_arr for doc_arr in docs_matrix if doc_arr is not None and len(doc_arr) > 0]
+        num_modalities = len(docs_matrix)
 
-        for d_mod1, d_mod2 in zip(*docs_matrix):
+        for single_doc_per_modality in zip(*docs_matrix):
             final_matches = {}
-
-            for m in d_mod1.matches:
-                m.score.value *= d_mod1.weight
-                final_matches[m.tags['root_doc_id']] = Document(m, copy=True)
-
-            for m in d_mod2.matches:
-                if m.tags['root_doc_id'] in final_matches:
-                    final_matches[m.tags['root_doc_id']].score.value += (
-                        m.score.value * d_mod2.weight
-                    )
-                else:
-                    m.score.value *= d_mod2.weight
-                    final_matches[m.tags['root_doc_id']] = Document(m, copy=True)
-
+            for mod in range(num_modalities):
+                doc: Document = single_doc_per_modality[mod]
+                for m in doc.matches:
+                    if m.tags['root_doc_id'] in final_matches:
+                        final_matches[m.tags['root_doc_id']].score.value += (
+                                m.score.value * doc.weight
+                        )
+                    else:
+                        m.score.value *= doc.weight
+                        final_matches[m.tags['root_doc_id']] = Document(m, copy=True)
             da = DocumentArray(list(final_matches.values()))
             da.sort(key=lambda ma: ma.score.value, reverse=True)
             d = Document(matches=da[: int(parameters.get('top_k', 3))])
-            results.append(d)
-        return results
+            result.append(d)
+        return result
+
+
+

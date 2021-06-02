@@ -1,9 +1,28 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-from typing import Union, Tuple
+from typing import Union, Tuple, Callable
 
 import numpy as np
+from jina import Document, DocumentArray
+
+
+def filter_docs(mime_type: str, traversal_path: str):
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            if kwargs['docs']:
+                docs = DocumentArray(
+                    list(
+                        filter(
+                            lambda doc: doc.mime_type.startswith(mime_type),
+                            kwargs['docs'].traverse_flat([traversal_path])
+                        )
+                    )
+                )
+                kwargs['docs'] = docs
+            return function(*args, **kwargs)
+        return wrapper
+    return decorator
 
 
 def move_channel_axis(img: 'np.ndarray', channel_axis_to_move: int, target_channel_axis: int = -1) -> 'np.ndarray':

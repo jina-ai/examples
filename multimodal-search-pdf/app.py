@@ -91,6 +91,27 @@ def query_pdf():
         f.search(inputs=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
 
 
+def query_multi_modal_pdf():
+    f = Flow.load_config('flows/query.yml')
+    with f:
+        f.search(inputs=search_generator(data_path='toy_data/blog2-pages-1.pdf'), read_mode='r', on_done=get_pdf)
+
+
+def query_multi_modal_text():
+    f = Flow.load_config('flows/query.yml')
+    search_text = 'It makes sense to first define what we mean by multimodality before going into more fancy terms.'  # blog1
+    doc = Document(text=search_text)
+
+    with f:
+        f.post('/search', inputs=doc, on_done=get_pdf)
+
+
+def query_multi_modal_image():
+    f = Flow.load_config('flows/query.yml')
+    with f:
+        f.search(inputs=search_generator(data_path='toy_data/photo-1.png'), read_mode='r', on_done=get_pdf)
+
+
 @click.command()
 @click.option(
     "--task",
@@ -116,13 +137,13 @@ def main(task, num_docs):
     if task == 'query':
         query()
     if task == 'query_text':
-        query_text()
+        query_multi_modal_text()
     if task == 'query_image':
-        query_image()
+        query_multi_modal_image()
     if task == 'query_pdf':
-        query_pdf()
+        query_multi_modal_pdf()
     if task == 'query_restful':
-        f = Flow.load_config('flows/query-multimodal.yml')
+        f = Flow.load_config('flows/query.yml')
         f.use_rest_gateway()
         with f:
             f.block()
