@@ -6,7 +6,10 @@ with:
   py_modules:
     - pods/executors.py
 executors:
-  - name: segment                           # in this example we will first segment the pdf into image chunks and page text chunks
+  - name: craft                           # in this example we will first segment the pdf into image chunks and page text chunks
+    uses:
+      jtype: TextCrafter
+  - name: segment
     uses:
       jtype: TextSegmenter
   - name: textEncoder                       # encode the text into embeddings

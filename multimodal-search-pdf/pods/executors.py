@@ -116,7 +116,7 @@ class TextCrafter(Executor):
     @requests(on='/search')
     def craft(self, docs: DocumentArray, **kwargs):
         for doc in docs:
-            doc.chunks.append(Document(doc, copy=True))
+            doc.chunks.append(Document(doc, copy=True, tags={'root_doc_id': doc.id}))
 
 
 class TextSegmenter(Executor):
@@ -129,7 +129,8 @@ class TextSegmenter(Executor):
             )
         )
         for doc in filtered_docs:
-            doc.chunks += [Document(text=t, mime_type='text/plain') for t in doc.text.split('\n')]
+            doc.chunks += [
+                Document(text=t, mime_type='text/plain', tags={'root_doc_id': doc.tags['root_doc_id']}) for t in doc.text.split('\n')]
 
 
 class ImageCrafter(Executor):
