@@ -1,23 +1,26 @@
 jtype: Flow  # this is a flow only for querying text data
 version: '1'
 with:
+  workspace: './workspace'
   read_only: true
-  rest_api: true
-  port_expose: $JINA_PORT
-  show_exc_info: true
-pods:
-  - name: segmentimage
-    uses: pods/segmenter-image.yml
-    needs: gateway
-  - name: imageCrafter
-    uses: pods/craft-image.yml
+  py_modules:
+    - pods/executors.py
+executors:
+  - name: craftImage
+    uses:
+      jtype: ImageCrafter
   - name: imageEncoder
-    uses: pods/encode-image.yml
-  - name: imageModIndexer
-    uses: pods/index-comp.yml
-    env:
-      indexer_name: image
-  - name: rankCToR
-    uses: pods/rank.yml
-  - name: docIndexer
-    uses: pods/index-doc.yml
+    uses:
+      jtype: ImageTorchEncoder
+  - name: imageChunkIndexer
+    uses:
+      jtype: DocVectorIndexer
+      with:
+        index_file_name: 'image.json'
+  - name: singleModalityRanker
+    uses:
+      jtype: SingleModalityRanker
+  - name: KeyValueIndexer
+    uses:
+      jtype: KeyValueIndexer
+    needs: singleModalityRanker

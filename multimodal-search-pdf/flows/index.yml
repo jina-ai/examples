@@ -1,47 +1,39 @@
 jtype: Flow                                 # this YAML file define the index flow, jtype is the YAML tag
 version: '1'                                # we follow the version '1' YAML schema of Jina, details see https://docs.jina.ai/chapters/yaml/
-pods:                                       # each flow consists of several pods
-  - name: segment                           # in this example we will first segment the pdf into image chunks and page text chunks
-    uses: pods/segment-pdf.yml              # YAML configuration, same for the following pods
-    parallel: $JINA_PARALLEL
-  # first pathway
-  - name: filter_text                       # this pod will only filter the text chunks from segment pod
-    uses: pods/filter.yml
-    env:
-      filter_mime: text/plain               # we define the env param so the filter YAML will know which type of data should be filtered
-    needs: segment                          # for parallel sub-flows, we will add 'needs' for the starting pod of this sub-flow, and it should need the pod it follows
-  - name: textSegmenter                     # we use another segmenter to segment text into smaller chunks (lines of text)
-    uses: pods/segment-text-customized.yml
-    parallel: $JINA_PARALLEL
+with:
+  workspace: './workspace'
+  py_modules:
+    - pods/executors.py
+executors:                                       # each flow consists of several pods
+  - name: craft                           # in this example we will first segment the pdf into image chunks and page text chunks
+    uses:
+      jtype: PDFCrafter
+  - name: textSegmenter
+    uses:
+      jtype: TextSegmenter
   - name: textEncoder                       # encode the text into embeddings
-    uses: pods/encode-text.yml
-    parallel: $JINA_PARALLEL
-  - name: chunkmetaIndexer                  # this is a important chunk level indexer, it will store the meta data of chunks, so during search we can find the data and add the data into results
-    uses: pods/index-chunkmeta.yml
-  - name: textModIndexerCC                  # here we index the chunks of chunks ('CC') text (lines), if we want to index higher chunk level, we need to add a new indexer and traversal_paths set to 'c'
-    uses: pods/index-comp-text-cc.yml
-    env:
-      indexer_name: textCC
-  # second pathway, in parallel
-  - name: filter_image                      # this pod will only filter the image chunks from segment pod
-    uses: pods/filter.yml
-    env:
-      filter_mime: image/png
-    needs: segment                          # note that we need to add this for the parallel sub-flow
-  - name: imageCrafter                      # normalize the images and also resize them into same shape
-    uses: pods/craft-image.yml
-    parallel: $JINA_PARALLEL
+    uses:
+      jtype: TextEncoder
+  - name: textChunkIndexer
+    uses:
+      jtype: DocVectorIndexer
+      with:
+        index_file_name: 'text.json'
+  - name: imagePreprocessor
+    uses:
+      jtype: ImagePreprocessor
+    needs: craft
   - name: imageEncoder                      # encode the image into embeddings
-    uses: pods/encode-image.yml
-    parallel: $JINA_PARALLEL
-  - name: imageModIndexer                   # index the images, note that here we will index on chunks level
-    uses: pods/index-comp.yml
-    env:
-      indexer_name: image
-  # third pathway, in parallel
+    uses:
+      jtype: ImageTorchEncoder
+  - name: imageChunkIndexer                  # index the images, note that here we will index on chunks level
+    uses:
+      jtype: DocVectorIndexer
+      with:
+        index_file_name: 'image.json'
   - name: docIndexer                        # this is a key-value indexer where key is the doc_id and value is the doc
-    uses: pods/index-doc.yml
-    needs: segment                          # still we need to 'needs' the segment pod
-  # join all parallel works
+    uses:
+      jtype: KeyValueIndexer
+    needs: craft                          # still we need to 'needs' the segment pod
   - name: joiner                            # in the end we combine the 3 sub-flows, we 'needs' the ending pod of each flow
-    needs: [docIndexer, imageModIndexer, textModIndexerCC]
+    needs: [docIndexer, imageChunkIndexer, textChunkIndexer]

@@ -2,17 +2,7 @@
 
 from jina import Document, DocumentArray
 
-from pods.segmenters import PDFSegmenter, ImageSegmenter, TextIntoLinesSegmenter
-
-
-def test_text_into_line_segmenter() -> None:
-    docs = DocumentArray([Document(content='foo bar\nbar foo'), Document(content='hyper text')])
-    segmenter = TextIntoLinesSegmenter()
-
-    segmenter.segment(docs)
-
-    assert len(docs[0].chunks) == 2
-    assert len(docs[1].chunks) == 1
+from pods.segmenters import PDFSegmenter, ImageSegmenter
 
 
 def test_image_segmenter() -> None:
