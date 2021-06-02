@@ -9,6 +9,9 @@ executors:
   - name: craftImage
     uses:
       jtype: ImageCrafter
+  - name: imagePreprocessor
+    uses:
+      jtype: ImagePreprocessor
   - name: imageEncoder
     uses:
       jtype: ImageTorchEncoder

@@ -6,9 +6,12 @@ with:
   py_module:
     - pods/executors.py
 pods:
-  - name: segment
+  - name: craft
     uses:
-      jtype: PDFSegmenter
+      jtype: PDFCrafter
+  - name: segmentText
+    uses:
+      jtype: TextSegmenter
   - name: textEncoder
     uses:
       jtype: TextEncoder
@@ -17,10 +20,10 @@ pods:
       jtype: DocVectorIndexer
       with:
         index_file_name: 'text.json'
-  - name: craftImage
+  - name: imagePreprocessor
     uses:
-      jtype: ImageCrafter
-    needs: segment
+      jtype: ImagePreprocessor
+    needs: craft
   - name: imageEncoder                      # encode the image into embeddings
     uses:
       jtype: ImageTorchEncoder
