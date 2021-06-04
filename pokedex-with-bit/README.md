@@ -80,10 +80,10 @@ python app.py -t index
 ```
 OR
 ```sh
-python app_yaml.py -t index
+python app_py.py -t index
 ```
-Both files do exactly the same indexing procedure, but `app_yml.py` configures the
-Flow using yml files, while `app.py` configures using python only.
+Both files do exactly the same indexing procedure, but `app.py` configures the
+Flow using yml files, while `app_py.py` configures using python only.
 
 You can optionally limit the number of images to index using the `-n` flag:
 ```sh
@@ -118,7 +118,7 @@ python app.py -t query_restful
 ``` 
 OR
 ```sh
-python app_yml.py -t query_restful
+python app_py.py -t query_restful
 ``` 
 
 Once the API has started, there are two ways of querying data from it.

@@ -1,7 +1,6 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-import os
 import shutil
 import click
 import sys
@@ -10,28 +9,59 @@ from glob import glob
 from jina import Flow, DocumentArray
 from jina.types.document.generators import from_files
 from jina.logging import default_logger as logger
+from executors import *
 
-IMAGE_SRC = 'data/**/*.png'
 MAX_DOCS = int(os.environ.get('JINA_MAX_DOCS', 50000))
+IMAGE_SRC = 'data/**/*.png'
 
 os.environ['JINA_WORKSPACE'] = './workspace'
 os.environ['JINA_PORT'] = os.environ.get('JINA_PORT', str(45678))
 
 
 def index(num_docs: int):
-    # Runs indexing for all images
     num_docs = min(num_docs, len(glob(os.path.join(os.getcwd(), IMAGE_SRC),
                                       recursive=True)))
 
-    with Flow.load_config('flows/index.yml') as flow:
+    flow = Flow(workspace="workspace")\
+        .add(uses={"jtype": "ImageCrafter",
+                   "with": {"target_size": 96,
+                            "img_mean": [0.485, 0.456, 0.406],
+                            "img_std": [0.229, 0.224, 0.225]}})
+    flow = flow.add(uses=BigTransferEncoder)
+    flow = flow.add(uses={"jtype": "EmbeddingIndexer",
+                          "with": {"index_file_name": "image.json"},
+                          "metas": {"name": "vec_idx"}},
+              name="vec_idx")
+    flow = flow.add(uses={"jtype": "KeyValueIndexer",
+                          "metas": {"name": "kv_idx"}},
+                    name="kv_idx",
+                    needs="gateway")    # to enable parallel running
+    flow = flow.add(name="join_all",
+                    needs=["kv_idx", "vec_idx"],
+                    read_only="true")
+
+    with flow:
         document_generator = from_files(IMAGE_SRC, size=num_docs)
         flow.index(inputs=DocumentArray(document_generator),
                    request_size=64, read_mode='rb')
 
 
 def query_restful():
-    # Starts the restful query API
-    flow = Flow.load_config('flows/query.yml')
+    flow = Flow(workspace="workspace",
+             port_expose=os.environ.get('JINA_PORT', str(45678)))\
+        .add(uses={"jtype": "ImageCrafter",
+                   "with": {"target_size": 96,
+                            "img_mean": [0.485, 0.456, 0.406],
+                            "img_std": [0.229, 0.224, 0.225]}})\
+        .add(uses=BigTransferEncoder)\
+        .add(uses={"jtype": "EmbeddingIndexer",
+                   "with": {"index_file_name": "image.json"},
+                   "metas": {"name": "vec_idx"}},
+             name="vec_idx")\
+        .add(uses={"jtype": "KeyValueIndexer",
+                   "metas": {"name": "kv_idx"}},
+             name="kv_idx")\
+        .add(uses={"jtype": "MatchImageReader"})
     flow.use_rest_gateway()
     with flow:
         flow.block()
