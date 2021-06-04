@@ -1,4 +1,4 @@
-jina[hub,http]
+jina[hub,http]==1.2.0
 click==7.1.2
 aiofiles
 aiohttp
