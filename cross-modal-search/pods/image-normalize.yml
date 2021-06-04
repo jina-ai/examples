@@ -7,15 +7,16 @@ with:
   target_channel_axis: 0
 metas:
   name: normalizer
-requests:
-  on:
-    IndexRequest:
-      - !CraftDriver
-        with:
-          executor: normalizer
-    SearchRequest:
-      - !CraftDriver
-        with:
-          executor: normalizer
-    ControRequest:
-      - !ControlReqDriver {}
+  py_modules: ['../executors.py']
+#requests:
+#  on:
+#    IndexRequest:
+#      - !CraftDriver
+#        with:
+#          executor: normalizer
+#    SearchRequest:
+#      - !CraftDriver
+#        with:
+#          executor: normalizer
+#    ControRequest:
+#      - !ControlReqDriver {}

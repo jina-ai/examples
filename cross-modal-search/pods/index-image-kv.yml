@@ -29,3 +29,6 @@
 #          traversal_paths: ['m']
 #          recur_on: matches
 jtype: KeyValueIndexer
+metas:
+  name: kv_indexer
+  py_modules: [ '../executors.py']

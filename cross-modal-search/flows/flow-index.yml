@@ -12,7 +12,7 @@ pods:
     shards: $JINA_PARALLEL
     read_only: true
   - name: image_encoder
-    uses: $JINA_IMAGE_ENCODER
+    uses: pods/clip/image-encoder.yml
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
@@ -26,7 +26,7 @@ pods:
     shards: $JINA_SHARDS
     needs: [gateway]
   - name: text_encoder
-    uses: $JINA_TEXT_ENCODER
+    uses: pods/clip/text-encoder.yml
     uses_internal: $JINA_TEXT_ENCODER_INTERNAL
     shards: $JINA_PARALLEL
     timeout_ready: 600000
@@ -34,8 +34,7 @@ pods:
     needs: [gateway]
   - name: text_indexer
     polling: any
-    #uses: pods/index-text.yml (numpy + binary pb indexer)
-    uses: NumpyIndexer
+    uses: pods/index-text.yml #(numpy + binary pb indexer)
     shards: $JINA_SHARDS
   - !NumpyIndexer
     with:
@@ -43,16 +42,20 @@ pods:
       metric: cosine
     metas:
       name: text_vec_idx  # a customized name
+      py_modules: [ '../executors.py' ]
   - !BinaryPbIndexer
     with:
       index_filename: text.gz
     metas:
       name: text_kv_idx  # a customized name
+      py_modules: [ '../executors.py' ]
 #  - name: join_all
 #    uses: _merge_root
 #    needs: [image_vector_indexer, image_kv_indexer, text_indexer]
 #    read_only: true
   - name: join_all
     uses: RootMerger
+    metas:
+      py_modules: [ '../executors.py' ]
     needs: [ image_vector_indexer, image_kv_indexer, text_indexer ]
     read_only: true

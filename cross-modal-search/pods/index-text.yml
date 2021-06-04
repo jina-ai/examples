@@ -1,39 +1,48 @@
-jtype: CompoundIndexer
-components:
-  - !NumpyIndexer
-    with:
-      index_filename: text_embs.gz
-      metric: cosine
-    metas:
-      name: text_vec_idx  # a customized name
-  - !BinaryPbIndexer
-    with:
-      index_filename: text.gz
-    metas:
-      name: text_kv_idx  # a customized name
+!NumpyIndexer
 metas:
-  name: text_indexer
+  name: text_idx  # a customized name
   workspace: './workspace'
-requests:
-  on:
-    IndexRequest:
-      - !VectorIndexDriver
-        with:
-          executor: text_vec_idx
-      - !ExcludeQL
-        with:
-          fields:
-            - chunks
-            - embedding
-      - !KVIndexDriver
-        with:
-          executor: text_kv_idx
-    SearchRequest:
-      - !VectorSearchDriver
-        with:
-          executor: text_vec_idx
-      - !KVSearchDriver
-        with:
-          executor: text_kv_idx
-          traversal_paths: ['m']
-          recur_on: matches
+  py_modules: ['../executors.py']
+
+#jtype: CompoundIndexer
+#components:
+#  - !NumpyIndexer
+#    with:
+#      index_filename: text_embs.gz
+#      metric: cosine
+#    metas:
+#      name: text_vec_idx  # a customized name
+#      py_modules: [ '../executors.py' ]
+#  - !BinaryPbIndexer
+#    with:
+#      index_filename: text.gz
+#    metas:
+#      name: text_kv_idx  # a customized name
+#      py_modules: [ '../executors.py' ]
+#metas:
+#  name: text_indexer
+#  workspace: './workspace'
+#  py_modules: [ '../executors.py' ]
+#requests:
+#  on:
+#    IndexRequest:
+#      - !VectorIndexDriver
+#        with:
+#          executor: text_vec_idx
+#      - !ExcludeQL
+#        with:
+#          fields:
+#            - chunks
+#            - embedding
+#      - !KVIndexDriver
+#        with:
+#          executor: text_kv_idx
+#    SearchRequest:
+#      - !VectorSearchDriver
+#        with:
+#          executor: text_vec_idx
+#      - !KVSearchDriver
+#        with:
+#          executor: text_kv_idx
+#          traversal_paths: ['m']
+#          recur_on: matches

@@ -6,7 +6,7 @@ import sys
 
 import click
 from jina import Flow
-from jina.logging import JinaLogger
+import logging
 from jina.logging.profile import TimeContext
 
 from dataset import input_index_data
@@ -81,7 +81,7 @@ def dryrun():
 def main(task, num_docs, request_size, data_set, model_name):
     config(model_name)
     workspace = os.environ['JINA_WORKSPACE']
-    logger = JinaLogger('cross-modal-search')
+    logger = logging.getLogger('cross-modal-search')
     if 'index' in task:
         if os.path.exists(workspace):
             logger.error(
