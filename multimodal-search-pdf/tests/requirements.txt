@@ -1,0 +1,11 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub, http]
+click==7.1.2
+transformers==4.1.1
+torch==1.7.0
+torchvision==0.8.1
+PyPDF2==1.26.0
+PyMuPDF==1.18.5
+Pillow==8.1.2
+pdfplumber==0.5.27
+weasyprint==52.4
+prettytable==2.1.0

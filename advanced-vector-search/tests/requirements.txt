@@ -1,0 +1,4 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub, http]
+docker==4.0.1
+click==7.1.2
+

@@ -45,7 +45,7 @@ class Flickr30kDataset(data.Dataset):
         return len(self.ids)
 
 
-class Flickr8kDataset(data.Dataset):
+class FlickrDataset(data.Dataset):
     """
     Dataset loader for Flickr8k full datasets.
     """
@@ -80,8 +80,8 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
 
     if dataset_type == 'f30k':
         dataset = Flickr30kDataset(images_root=root, split=split, json=captions)
-    elif dataset_type == 'f8k':
-        dataset = Flickr8kDataset(images_root=root, captions_file_path=captions)
+    elif dataset_type == 'f8k' or dataset_type == 'toy-data':
+        dataset = FlickrDataset(images_root=root, captions_file_path=captions)
     else:
         raise NotImplementedError(f'Not valid dataset type {dataset_type}')
     # Data loader
@@ -97,9 +97,13 @@ def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', sh
 
 def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
     captions = 'dataset_flickr30k.json' if dataset_type == 'f30k' else 'captions.txt'
+    if dataset_type == 'toy-data':
+        base_folder = '.'
+    else:
+        base_folder = 'data'
     data_loader = get_data_loader(
-        root=os.path.join(cur_dir, f'data/{dataset_type}/images'),
-        captions=os.path.join(cur_dir, f'data/{dataset_type}/{captions}'),
+        root=os.path.join(cur_dir, f'{base_folder}/{dataset_type}/images'),
+        captions=os.path.join(cur_dir, f'{base_folder}/{dataset_type}/{captions}'),
         split='test',
         batch_size=batch_size,
         dataset_type=dataset_type
