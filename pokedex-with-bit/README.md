@@ -94,8 +94,8 @@ The relevant Jina code to index the data given your Flow's YAML definition break
 ```python
 with Flow.load_config('flows/index.yml') as f:
     document_generator = from_files(IMAGE_SRC, size=num_docs)
-    flow.index(inputs=DocumentArray(document_generator),
-               request_size=64, read_mode='rb')
+    flow.post(on='/index', inputs=DocumentArray(document_generator),
+              request_size=64, read_mode='rb')
 ```
 In the indexing process, all images are read and normalized, and then transformed into
 an embedding by the BiT model. This embedding is then stored in the workspace together with some
