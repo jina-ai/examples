@@ -1,7 +1,7 @@
 jtype: Flow                                 # this YAML file define the index flow, jtype is the YAML tag
 version: '1'                                # we follow the version '1' YAML schema of Jina, details see https://docs.jina.ai/chapters/yaml/
 with:
-  workspace: './workspace'
+  workspace: $JINA_WORKSPACE
   py_modules:
     - flows/executors.py
 executors:                                       # each flow consists of several pods

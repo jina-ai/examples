@@ -1,7 +1,7 @@
 jtype: Flow
 version: '1'
 with:
-  workspace: './workspace'
+  workspace: $JINA_WORKSPACE
   read_only: true
   py_modules:
     - flows/executors.py

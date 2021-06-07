@@ -13,6 +13,9 @@ from jina import Flow, Document
 from app import main
 
 
+TEST_WORKSPACE = 'test-workspace'
+
+
 def search_generator(data_path):
     d = Document()
     d.content = data_path
@@ -30,20 +33,21 @@ def index():
     assert os.getcwd().endswith('multimodal-search-pdf'), \
         "Please execute the tests from the root directory: >>> pytest tests/"
 
-    assert not os.path.isdir('./workspace'), 'Directory ./workspace exists. Please remove before testing'
+    assert not os.path.isdir(TEST_WORKSPACE), 'Directory ./test-workspace exists. Please remove before testing'
+    os.environ['JINA_WORKSPACE'] = TEST_WORKSPACE
 
     runner = CliRunner()
     result = runner.invoke(main, ['-t', 'index'])
     assert result.stderr_bytes is None, f'Error messages found during indexing: {result.stderr}'
 
-    assert os.path.isdir('./workspace')
-    index_files = glob.glob('./workspace/**/*.json', recursive=True)
+    assert os.path.isdir(TEST_WORKSPACE)
+    index_files = glob.glob(os.path.join(TEST_WORKSPACE, '**', '*.json'), recursive=True)
     assert len(index_files) == 3, 'Expected three JSON files in the workspace'
     for _file in index_files:
         assert len(open(_file, 'r').readlines()) > 0, f'Json file {_file} is empty.'
 
     yield
-    shutil.rmtree('./workspace')
+    shutil.rmtree(TEST_WORKSPACE)
 
 
 def test_query_multi_modal_pdf():
