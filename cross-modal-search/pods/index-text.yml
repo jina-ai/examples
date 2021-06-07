@@ -1,3 +1,4 @@
+# index the text into documents
 !NumpyIndexer
 metas:
   name: text_idx  # a customized name

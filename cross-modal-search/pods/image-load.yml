@@ -1,4 +1,4 @@
-!ImageReader
+jtype: ImageReader
 with:
   channel_axis: 0
 metas:

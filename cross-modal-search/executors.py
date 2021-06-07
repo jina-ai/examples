@@ -345,34 +345,34 @@ class CLIPTextEncoder(Executor):
         docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'text' not in doc.mime_type, docs)))
         with torch.no_grad():
             for doc in docs:
-                content = np.expand_dims(doc.content, axis=0)
+                content = np.expand_dims(doc.content, axis=0).astype(float)
                 input = torch.from_numpy(content)
                 embed = self.model.encode_text(input)
                 doc.embedding = embed.cpu().numpy().flatten()
 
 
-class TextIndexer(Executor):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+# class TextIndexer(Executor):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
 
-class MergeMatchesSortTopK(Executor):
-    def __init__(self, docs, **kwargs):
-        super().__init__(**kwargs)
-        self.docs = docs
+# class MergeMatchesSortTopK(Executor):
+#     def __init__(self, docs, **kwargs):
+#         super().__init__(**kwargs)
+#         self.docs = docs
+#
+#     @requests(on=['/index', '/search', '/train', ''])
+#     def merge_and_sort(self, docs, **kwargs):
+#         for m in docs.traverse('m'):
+#             docs.extend(m)
+#         docs = docs[:10]
+#         docs.sort(key=score__value)
+#         return self.docs
 
-    @requests(on=['/index', '/search', '/train', ''])
-    def merge_and_sort(self, docs, **kwargs):
-        for m in docs.traverse('m'):
-            docs.extend(m)
-        docs = docs[:10]
-        docs.sort(key=score__value)
-        return self.docs
-
-class RootMerger(Executor):
-    def __init__(self, doc_matrix, **kwargs):
-        super().__init__(**kwargs)
-        self.doc_matrix = doc_matrix
-
-    def merge(self, **kwargs):
-        return self.doc_matrix
+# class RootMerger(Executor):
+#     def __init__(self, doc_matrix, **kwargs):
+#         super().__init__(**kwargs)
+#         self.doc_matrix = doc_matrix
+#
+#     def merge(self, **kwargs):
+#         return self.doc_matrix
 

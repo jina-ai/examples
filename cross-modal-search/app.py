@@ -15,20 +15,14 @@ MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
-def config(model_name):
+def config():
     os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
     os.environ['JINA_PORT'] = '45678'
-    if model_name == 'clip':
-        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0')
-        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2')
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
-    elif model_name == 'vse':
-        os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.2.0')
-        os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.2.0')
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/vse/text-encoder.yml'
-
+    os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0')
+    os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2')
+    os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
 
 def index_restful(num_docs):
     flow = Flow().load_config('flows/flow-index.yml')
@@ -51,6 +45,7 @@ def index_restful(num_docs):
 
 def index(data_set, num_docs, request_size):
     flow = Flow.load_config('flows/flow-index.yml')
+    flow.plot()
     with flow:
         with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(
@@ -77,9 +72,8 @@ def dryrun():
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
-@click.option('--model_name', '-m', type=click.Choice(['clip', 'vse'], case_sensitive=False), default='clip')
-def main(task, num_docs, request_size, data_set, model_name):
-    config(model_name)
+def main(task, num_docs, request_size, data_set):
+    config()
     workspace = os.environ['JINA_WORKSPACE']
     logger = logging.getLogger('cross-modal-search')
     if 'index' in task:
