@@ -1,5 +1,5 @@
 !Flow                                       # This file defines the flow for querying data
-version: '1'                                # Arbitrary version number
+version: '1'                                # Version number for jaml config
 with:                                       # Define additional parameters
   workspace: "workspace"                    # Workspace folder name
   py_modules:                               # Module list to find the executors

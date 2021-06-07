@@ -25,8 +25,8 @@ def index(num_docs: int):
 
     with Flow.load_config('flows/index.yml') as flow:
         document_generator = from_files(IMAGE_SRC, size=num_docs)
-        flow.index(inputs=DocumentArray(document_generator),
-                   request_size=64, read_mode='rb')
+        flow.post(on='/index', inputs=DocumentArray(document_generator),
+                  request_size=64, read_mode='rb')
 
 
 def query_restful():

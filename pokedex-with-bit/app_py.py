@@ -26,29 +26,29 @@ def index(num_docs: int):
         .add(uses={"jtype": "ImageCrafter",
                    "with": {"target_size": 96,
                             "img_mean": [0.485, 0.456, 0.406],
-                            "img_std": [0.229, 0.224, 0.225]}})
-    flow = flow.add(uses=BigTransferEncoder)
-    flow = flow.add(uses={"jtype": "EmbeddingIndexer",
-                          "with": {"index_file_name": "image.json"},
-                          "metas": {"name": "vec_idx"}},
-              name="vec_idx")
-    flow = flow.add(uses={"jtype": "KeyValueIndexer",
-                          "metas": {"name": "kv_idx"}},
-                    name="kv_idx",
-                    needs="gateway")    # to enable parallel running
-    flow = flow.add(name="join_all",
-                    needs=["kv_idx", "vec_idx"],
-                    read_only="true")
+                            "img_std": [0.229, 0.224, 0.225]}}) \
+        .add(uses=BigTransferEncoder) \
+        .add(uses={"jtype": "EmbeddingIndexer",
+                   "with": {"index_file_name": "image.json"},
+                   "metas": {"name": "vec_idx"}},
+             name="vec_idx") \
+        .add(uses={"jtype": "KeyValueIndexer",
+                   "metas": {"name": "kv_idx"}},
+             name="kv_idx",
+             needs="gateway") \
+        .add(name="join_all",
+             needs=["kv_idx", "vec_idx"],
+             read_only="true")
 
     with flow:
         document_generator = from_files(IMAGE_SRC, size=num_docs)
-        flow.index(inputs=DocumentArray(document_generator),
-                   request_size=64, read_mode='rb')
+        flow.post(on='/index', inputs=DocumentArray(document_generator),
+                  request_size=64, read_mode='rb')
 
 
 def query_restful():
     flow = Flow(workspace="workspace",
-             port_expose=os.environ.get('JINA_PORT', str(45678)))\
+                port_expose=os.environ.get('JINA_PORT', str(45678)))\
         .add(uses={"jtype": "ImageCrafter",
                    "with": {"target_size": 96,
                             "img_mean": [0.485, 0.456, 0.406],
