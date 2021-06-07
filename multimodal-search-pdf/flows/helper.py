@@ -1,10 +1,10 @@
 __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
-from typing import Union, Tuple, Callable
+from typing import Union, Tuple
 
 import numpy as np
-from jina import Document, DocumentArray
+from jina import DocumentArray
 
 
 def filter_docs(mime_type: str, traversal_path: str):

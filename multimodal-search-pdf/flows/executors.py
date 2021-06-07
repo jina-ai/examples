@@ -15,7 +15,7 @@ from transformers import AutoModel, AutoTokenizer
 from jina.logging import default_logger as logger
 
 from flows import helper as helper
-from flows.helper import skip_empty_request, filter_docs
+from flows.helper import filter_docs
 
 
 class PDFCrafter(Executor):
@@ -42,7 +42,7 @@ class PDFCrafter(Executor):
 
         """
         for doc in docs:
-            doc.tags['crafted'] = True
+            doc.tags['crafted'] = True  # informs subsequent executor about the doc status
             pdf_img, pdf_text = self._parse_pdf(doc)
 
             if pdf_img is not None:
