@@ -5,7 +5,7 @@ DATA_FILE='input.zip'
 
 rm -rf ${DATA_DIR} && \
 mkdir -p ${DATA_DIR} && \
-python ../util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
+python ../.github/util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
 unzip ${DATA_FILE} -d ${DATA_DIR} && \
 rm ${DATA_FILE} && \
 rm -rf workspace && \
