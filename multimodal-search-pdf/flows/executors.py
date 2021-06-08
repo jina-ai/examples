@@ -42,7 +42,6 @@ class PDFCrafter(Executor):
 
         """
         for doc in docs:
-            doc.tags['crafted'] = True  # informs subsequent executor about the doc status
             pdf_img, pdf_text = self._parse_pdf(doc)
 
             if pdf_img is not None:
@@ -53,7 +52,7 @@ class PDFCrafter(Executor):
                 texts = self._extract_text(pdf_text)
                 doc.chunks += [Document(text=t, mime_type='text/plain') for t in texts]
                 self._tag_with_root_doc_id(doc, level='c')
-
+        return docs
     def _parse_pdf(self, doc: Document):
         pdf_img = None
         pdf_text = None
@@ -114,29 +113,28 @@ class TextCrafter(Executor):
     @filter_docs('text/plain', traversal_path='r')
     def craft(self, docs: DocumentArray, **kwargs):
         for doc in docs:
-            doc.tags['crafted'] = True
             doc.chunks.append(Document(doc, copy=True, tags={'root_doc_id': doc.id}))
-
+        return docs
 
 class ImageCrafter(Executor):
     @requests(on='/search')
     @filter_docs('image', traversal_path='r')
     def craft(self, docs: DocumentArray, **kwargs):
         for doc in docs:
-            doc.tags['crafted'] = True
             doc.convert_image_uri_to_blob()
             doc.chunks.append(Document(blob=doc.blob, mime_type='image/*'))
+        return docs
 
 
 class MergeCrafts(Executor):
     @requests(on='/search')
-    def join_reduce(self, docs_matrix: List[DocumentArray], **kwargs):
+    def join_reduce(self, docs_matrix: List[DocumentArray], parameters, **kwargs):
         final_docs = DocumentArray()
         for doc_arr in docs_matrix:
+            if not doc_arr:
+                continue
             for doc in doc_arr:
-                if doc.tags.get('crafted', False):
-                    logger.info(f'Found crafted document of type {doc.mime_type}')
-                    final_docs.append(doc)
+                final_docs.append(doc)
         return final_docs
 
 
