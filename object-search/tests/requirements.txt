@@ -1,0 +1,5 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub,http]
+torch==1.7.0
+torchvision==0.8.1
+Pillow==8.1.1
+kaggle==1.5.12

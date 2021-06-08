@@ -1,0 +1,6 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub,http]
+click==7.1.2
+aiofiles
+aiohttp
+tensorflow_cpu >= 2.0
+pillow
