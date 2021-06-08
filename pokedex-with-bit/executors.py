@@ -254,6 +254,7 @@ class MatchImageReader(Executor):
         for doc in docs:
             for match in doc.matches:
                 match.convert_image_uri_to_blob()
+                match.convert_image_blob_to_uri(96, 96)
         return docs
 
 
