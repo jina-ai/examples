@@ -35,7 +35,7 @@ class ImageCrafter(Executor):
     def craft(self, docs: DocumentArray, fn) -> DocumentArray:
         filtered_docs = DocumentArray(
             list(
-                filter(lambda d: d.mime_type == 'image/png', docs)
+                filter(lambda d: 'image/' in d.mime_type, docs)
             )
         )
         for doc in filtered_docs:
