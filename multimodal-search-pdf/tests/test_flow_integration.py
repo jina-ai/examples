@@ -29,25 +29,26 @@ def assert_result(resp):
 
 
 @pytest.fixture(scope='session', autouse=True)
-def index():
+def index(tmpdir_factory):
     assert os.getcwd().endswith('multimodal-search-pdf'), \
         "Please execute the tests from the root directory: >>> pytest tests/"
 
-    assert not os.path.isdir(TEST_WORKSPACE), 'Directory ./test-workspace exists. Please remove before testing'
-    os.environ['JINA_WORKSPACE'] = TEST_WORKSPACE
+    workspace = os.path.join(tmpdir_factory.getbasetemp(), 'test-workspace')
+    assert not os.path.isdir(workspace), 'Directory ./test-workspace exists. Please remove before testing'
+    os.environ['JINA_WORKSPACE'] = workspace
 
     runner = CliRunner()
     result = runner.invoke(main, ['-t', 'index'])
     assert result.stderr_bytes is None, f'Error messages found during indexing: {result.stderr}'
 
-    assert os.path.isdir(TEST_WORKSPACE)
-    index_files = glob.glob(os.path.join(TEST_WORKSPACE, '**', '*.json'), recursive=True)
+    assert os.path.isdir(workspace)
+    index_files = glob.glob(os.path.join(workspace, '**', '*.json'), recursive=True)
     assert len(index_files) == 3, 'Expected three JSON files in the workspace'
     for _file in index_files:
         assert len(open(_file, 'r').readlines()) > 0, f'Json file {_file} is empty.'
 
     yield
-    shutil.rmtree(TEST_WORKSPACE)
+    shutil.rmtree(workspace)
 
 
 def test_query_multi_modal_pdf():
