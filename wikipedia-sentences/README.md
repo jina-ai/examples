@@ -63,6 +63,8 @@ By default, we'll start off by indexing a [small dataset of 50 sentences](data/t
 ```sh
 python app.py -t index
 ```
+Here, we can also specify the number of documents to index with ```--num_docs``` / ```-n``` (defult is 50) and the top k search results with ```--top_k``` /  ```-k``` (defult is 5).
+
 Once indexing is completed, a search prompt will appear in your terminal. See the image below for an example search query and response.
 
 ```
@@ -103,53 +105,17 @@ shuf input.txt > input.txt
 To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
 
 
-
-#### Using a REST API
-Begin by running the following command to open the REST API interface.
-
-```sh
-python app.py -t query_restful
-```
-
-You should open another terminal window and paste the following command. 
-
-```sh
-curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
-```
-
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar Wikipedia sentences to the text input you provided in the `data` parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a better understanding of the parameters see the table below. 
-|  |  |
-|--|--|
-| `top_k` | Integer determining the number of sentences to return |
-| `mode` | Mode to trigger in the call. See [here](https://docs.jina.ai/chapters/rest/) for more details |
-| `data` | Text input to query |
- 
-
-
-#### Using Jina Box; our frontend search interface
-
-**Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
-
-```sh
-python app.py -t query_restful
-```
-
-In your browser, open up the hosted Jina Box on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left-hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search` . You can type search queries into the text box on the right-hand side!
-
-
-#### Directly from terminal
-You can also easily search (query) your data directly from the terminal. Using the following command will open an interface directly in your terminal window. 
-
-```sh
-python app.py -t query
-```
-
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 
 📂 `test/*`   Various maintenance tests to keep the example running.   
 
-📃 `app.py`    The gateway code to combine the index and query Flow.  
+📃 `app.py`    The gateway code to that runs the index & query Flow.  
+
+📃 `indexer.py`    Indexing executor code that uses numpy to aggregate embeddings.
+
+📃 `transformer.py`    Encoding executor code using transformer model.  
+
 
 📃 `get_data.sh`    Downloads the Kaggle dataset. 
 
