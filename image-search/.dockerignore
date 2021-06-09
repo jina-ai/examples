@@ -1,7 +1,9 @@
 # ignore everything
-#data
+data
 pretrained
 workspace
+venv
+.github
 *.html
 
 # Ignore unnecessary files inside allowed directories

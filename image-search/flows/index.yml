@@ -1,0 +1,33 @@
+!Flow                                       # This file defines the indexing flow for this example
+version: '1'                                # Version number for jaml config
+with:                                       # The with keyword defines parameters for the flow
+  workspace: "workspace"                    # Set the workspace path
+  py_modules:                               # Define the location of the executors implementation
+    - executors.py
+executors:                                  # List of executors for this flow
+  - name: crafter                           # Chosen name of the first executor
+    uses:                                   # Define which executor to use
+      jtype: ImageCrafter                   # Name of the class of the executor from executors.py
+      with:                                 # Define parameters for the constructor of the executor
+        target_size: 96                     # Set the image target size
+        img_mean: [ 0.485, 0.456, 0.406 ]   # Set the mean of the images for normalization
+        img_std: [ 0.229, 0.224, 0.225 ]    # Set the standard deviation of the images for normalization
+  - name: encoder                           # Arbitrary name for the second executor
+    uses:                                   # Define which executor to use
+      jtype: BigTransferEncoder             # Class of the executor - Use a BigTransferModel
+  - name: vec_idx                           # Executor name
+    uses:                                   # Define details
+      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
+      with:
+        index_file_name: "image.json"       # Storage file name for the embeddings
+      metas:                                # Metainformation for the executor
+        name: vec_idx                       # Folder name inside the workspace
+  - name: kv_idx                            # Executor name
+    uses:
+      jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
+      metas:                                # Executor metainformation
+        name: kv_idx                        # Name for the folder inside the workspace
+    needs: [gateway]                        # This pod starts directly after the gateways, to enable parallelization
+  - name: join_all                          # Wait until both paths (kv_idx and crafter->encoder->vec_idx) are done
+    needs: [kv_idx, vec_idx]                # Components to wait for
+    read_only: true
