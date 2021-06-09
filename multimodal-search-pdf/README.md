@@ -35,6 +35,7 @@ Be careful to check that the files are supported by [`pdfplumber`](https://githu
 ## Install
 
 ```bash
+pip install wheel
 pip install -r requirements.txt
 ```
 
