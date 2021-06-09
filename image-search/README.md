@@ -31,13 +31,12 @@ These instructions explain how to build the example yourself and deploy it with 
 
 ### 🗝️ Requirements
 
-*Here outline in bullet points anything the user is expected to have before diving in.* 
-
 For example:
 
-1. You have a working Python 3.8 environment. 
+1. You have a working Python 3.8 or 3.9 development environment. (To install: ```apt install python3.8 python3.8-dev python3.8-venv```) 
 2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean install of Jina and prevent dependency conflicts.   
-3. You have at least 5 GB of free space on your hard drive. 
+3. You have at least 5 GB of free space on your hard drive.
+4. You have installed ```wget``` (To install:```apt install wget```)
 
 ### 👾 Step 1. Clone the repo and install Jina
 
@@ -56,6 +55,7 @@ cd examples/image-search
 In your terminal, you should now be located in the *image-search* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
 
 ```sh
+pip install wheel
 pip install -r requirements.txt
 ```
 
