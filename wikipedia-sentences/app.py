@@ -2,18 +2,9 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-import sys
-
-import copy
 import click
-import shutil
-import numpy as np
 from jina import Flow, Document, DocumentArray
 from jina.logging.profile import TimeContext
-from jina.logging import default_logger as logger
-
-logger = JinaLogger('wikipedia-example')
-
 
 from transformer import MyTransformer
 from indexer import NumpyIndexer
