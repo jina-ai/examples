@@ -1,4 +1,4 @@
-jina==2.0.0rc5.dev63
+jina[http]==2.0.0rc5.dev63
 torch==1.7.1
 transformers==4.1.1
 requests~=2.24
