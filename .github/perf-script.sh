@@ -2,6 +2,7 @@
 # required for downloading data from S3
 pip install -e git://github.com/jina-ai/cloud-helper.git@v0.0.2#egg=jinacld_tools
 
+cd ..
 reqs=`find . -name "requirements.txt"`
 folders=()
 for req in $reqs; do
