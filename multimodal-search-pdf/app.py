@@ -15,7 +15,7 @@ PDF_DATA_PATH = 'toy_data'
 
 def config():
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
-    os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45670))
+    os.environ["JINA_PORT"] = os.environ.get("JINA_PORT", str(45678))
 
 
 def index_generator(data_path):

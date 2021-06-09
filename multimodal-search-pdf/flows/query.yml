@@ -5,6 +5,7 @@ with:
   read_only: true
   py_modules:
     - flows/executors.py
+  port_expose: $JINA_PORT
 executors:
   - name: craftPDF
     uses:
