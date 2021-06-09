@@ -53,6 +53,7 @@ class PDFCrafter(Executor):
                 doc.chunks += [Document(text=t, mime_type='text/plain') for t in texts]
                 self._tag_with_root_doc_id(doc, level='c')
         return docs
+
     def _parse_pdf(self, doc: Document):
         pdf_img = None
         pdf_text = None
@@ -115,6 +116,7 @@ class TextCrafter(Executor):
         for doc in docs:
             doc.chunks.append(Document(doc, copy=True, tags={'root_doc_id': doc.id}))
         return docs
+
 
 class ImageCrafter(Executor):
     @requests(on='/search')
