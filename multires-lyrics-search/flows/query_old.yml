@@ -1,0 +1,30 @@
+!Flow
+version: '1'
+with:
+  read_only: true  # better add this in the query time
+  rest_api: true
+  port_expose: $JINA_PORT
+  restful: True
+pods:
+  - name: chunk_seg
+    show_exc_info: true
+    uses: pods/segment.yml
+    parallel: $JINA_PARALLEL
+  - name: tf_encode
+    show_exc_info: true
+    uses: pods/encode.yml
+    parallel: $JINA_PARALLEL
+    timeout_ready: 600000
+  - name: chunk_idx
+    show_exc_info: true
+    uses: pods/chunk.yml
+    shards: $JINA_SHARDS
+    polling: all
+    uses_after: pods/chunk_merger.yml
+    timeout_ready: -1 # larger timeout as in query time will read all the data
+  - name: ranker
+    show_exc_info: true
+    uses: pods/ranker.yml
+  - name: doc_idx
+    show_exc_info: true
+    uses: pods/doc.yml

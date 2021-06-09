@@ -3,6 +3,7 @@
 import csv
 import itertools as it
 import os
+import numpy as np
 
 from jina import Document
 
@@ -21,3 +22,29 @@ def input_generator(num_docs: int):
                     d.tags['SLink'] = row[2]
                     d.text = row[3]
                     yield d
+
+
+def _ext_A(A):
+    nA, dim = A.shape
+    A_ext = np.ones((nA, dim * 3))
+    A_ext[:, dim : 2 * dim] = A
+    A_ext[:, 2 * dim :] = A ** 2
+    return A_ext
+
+
+def _ext_B(B):
+    nB, dim = B.shape
+    B_ext = np.ones((dim * 3, nB))
+    B_ext[:dim] = (B ** 2).T
+    B_ext[dim : 2 * dim] = -2.0 * B.T
+    del B
+    return B_ext
+
+
+def _norm(A):
+    return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
+
+
+def _euclidean(A_ext, B_ext):
+    sqdist = A_ext.dot(B_ext).clip(min=0)
+    return np.sqrt(sqdist)

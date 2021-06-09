@@ -4,10 +4,12 @@ import re
 from typing import Dict, List, Optional, Union, Tuple, Iterable
 import numpy as np
 import torch
+import os
 from transformers import AutoModel, AutoTokenizer
 
 from jina import Executor, DocumentArray, Document, requests
 from jina.logging.predefined import default_logger as logger
+from helper import _ext_A, _ext_B, _norm, _euclidean
 
 
 class Sentencizer(Executor):
@@ -145,4 +147,107 @@ class TransformerTorchEncoder(Executor):
             embeds = self._compute_embedding(hidden_states, input_tokens)
             for doc, embed in zip(chunks, embeds):
                 doc.embedding = embed
-        return chunks
+        return docs
+
+
+class EmbeddingIndexer(Executor):
+    def __init__(self, index_file_name: str, **kwargs):
+        super().__init__(**kwargs)
+        self.index_file_name = index_file_name
+        if os.path.exists(self.save_path):
+            self._docs = DocumentArray.load(self.save_path)
+        else:
+            self._docs = DocumentArray()
+
+    @property
+    def save_path(self):
+        if not os.path.exists(self.workspace):
+            os.makedirs(self.workspace)
+        return os.path.join(self.workspace, self.index_file_name)
+
+    def close(self):
+        self._docs.save(self.save_path)
+
+    @requests(on='/index')
+    def index(self, docs: 'DocumentArray', **kwargs) -> DocumentArray:
+        chunks = docs.traverse_flat(['c'])
+        embedding_docs = DocumentArray()
+        for doc in chunks:
+            embedding_docs.append(Document(id=doc.id, embedding=doc.embedding))
+        self._docs.extend(embedding_docs)
+        return docs
+
+    @requests(on='/search')
+    def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs) \
+            -> DocumentArray:
+        chunks = docs.traverse_flat(['c'])
+        a = np.stack(chunks.get_attributes('embedding'))
+        b = np.stack(self._docs.get_attributes('embedding'))
+        q_emb = _ext_A(_norm(a))
+        d_emb = _ext_B(_norm(b))
+        dists = _euclidean(q_emb, d_emb)
+        top_k = int(parameters.get('top_k', 5))
+        assert top_k > 0
+        idx, dist = self._get_sorted_top_k(dists, top_k)
+        for _q, _ids, _dists in zip(chunks, idx, dist):
+            for _id, _dist in zip(_ids, _dists):
+                doc = Document(self._docs[int(_id)], copy=True)
+                doc.score.value = 1 - _dist
+                doc.parent_id = int(_id)
+                _q.matches.append(doc)
+        return docs
+
+    @staticmethod
+    def _get_sorted_top_k(
+        dist: 'np.array', top_k: int
+    ) -> Tuple['np.ndarray', 'np.ndarray']:
+        if top_k >= dist.shape[1]:
+            idx = dist.argsort(axis=1)[:, :top_k]
+            dist = np.take_along_axis(dist, idx, axis=1)
+        else:
+            idx_ps = dist.argpartition(kth=top_k, axis=1)[:, :top_k]
+            dist = np.take_along_axis(dist, idx_ps, axis=1)
+            idx_fs = dist.argsort(axis=1)
+            idx = np.take_along_axis(idx_ps, idx_fs, axis=1)
+            dist = np.take_along_axis(dist, idx_fs, axis=1)
+
+        return idx, dist
+
+
+class KeyValueIndexer(Executor):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if os.path.exists(self.save_path):
+            self._docs = DocumentArray.load(self.save_path)
+        else:
+            self._docs = DocumentArray()
+
+    @property
+    def save_path(self):
+        if not os.path.exists(self.workspace):
+            os.makedirs(self.workspace)
+        return os.path.join(self.workspace, 'kv.json')
+
+    def close(self):
+        self._docs.save(self.save_path)
+
+    @requests(on='/index')
+    def index(self, docs: DocumentArray, **kwargs) -> DocumentArray:
+        self._docs.extend(docs)
+        return docs
+
+    @requests(on='/search')
+    def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
+        chunks = self._docs.traverse_flat(['c'])
+        for match in docs.traverse_flat(['cm']):
+            extracted_doc = None
+            for doc in self._docs:
+                if chunks[int(match.parent_id)].parent_id == doc.id:
+                    print(chunks[int(match.parent_id)].text)
+                    extracted_doc = doc
+                    break
+
+            extracted_doc.tags['chunk_id'] = match.parent_id
+            extracted_doc.tags['chunk_text'] = match.text
+            match.MergeFrom(extracted_doc)
+        return docs
