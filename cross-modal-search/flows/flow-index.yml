@@ -8,7 +8,7 @@ pods:
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]
-  - name: normalizer                                  # normalize the dimension of the images
+  - name: image_normalizer                                  # normalize the dimension of the images
     uses: pods/image-normalize.yml
     shards: $JINA_PARALLEL
     read_only: true

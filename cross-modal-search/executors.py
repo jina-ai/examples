@@ -6,6 +6,9 @@ import torch
 import numpy as np
 import clip
 
+# import transformers
+# from transformers import DistilBertModel, DistilBertConfig
+
 from jina import Executor, DocumentArray, requests, Document
 
 class ImageReader(Executor):
@@ -324,8 +327,8 @@ class CLIPImageEncoder(Executor):
     def encode(self, docs: DocumentArray, **kwargs):
         with torch.no_grad():
             for doc in docs:
-                content = np.expand_dims(doc.content, axis=0)
-                input = torch.from_numpy(content)
+                #content = np.expand_dims(doc.content, axis=0)
+                input = torch.from_numpy(doc.content().astype('float32'))
                 embed = self.model.encode_image(input)
                 doc.embedding = embed.cpu().numpy().flatten()
 
@@ -345,9 +348,10 @@ class CLIPTextEncoder(Executor):
         docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'text' not in doc.mime_type, docs)))
         with torch.no_grad():
             for doc in docs:
-                content = np.expand_dims(doc.content, axis=0).astype(float)
-                input = torch.from_numpy(content)
-                embed = self.model.encode_text(input)
+                input_torch_tensor = clip.tokenize(doc.content)
+                # content = np.expand_dims(doc.content, axis=0)
+                # input = torch.from_numpy(content) #.to(torch.int64)
+                embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
 
 

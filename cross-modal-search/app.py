@@ -30,7 +30,7 @@ def index_restful(num_docs):
     with flow:
         data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
         flow.logger.info(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{f.port_expose}/index'
+        url = f'http://0.0.0.0:{flow.port_expose}/index'
 
         input_docs = _input_lines(
             filepath=data_path,
