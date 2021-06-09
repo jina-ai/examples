@@ -10,5 +10,10 @@ executors:
       jtype: Sentencizer
       with:
         min_sent_len: 6
-    metas:
-      name: segmenter
+  - name: encoder
+    uses:
+      jtype: TransformerTorchEncoder
+      with:
+        pooling_strategy: 'cls'
+        pretrained_model_name_or_path: distilbert-base-cased
+        max_length: 96
