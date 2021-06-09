@@ -52,8 +52,20 @@ def query():
         f.block()
 
 
+def query_text():
+    def print_result(response):
+        print(response.docs[0].matches)
+
+    f = Flow.load_config('flows/query.yml')
+    with f:
+        #search_text = input('Please type a sentence: ')
+        search_text = 'looked through every window then'
+        doc = Document(content=search_text, mime_type='text/plain')
+        f.post('/search', inputs=doc, on_done=print_result)
+
+
 def query_restful():
-    f = Flow().load_config("flows/query.yml")
+    f = Flow.load_config("flows/query.yml")
     f.use_rest_gateway()
     with f:
         f.block()
@@ -61,7 +73,7 @@ def query_restful():
 
 @click.command()
 @click.option('--task', '-t',
-              type=click.Choice(['index', 'query', 'index_restful', 'query_restful'], case_sensitive=False))
+              type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'query_text'], case_sensitive=False))
 @click.option('--num_docs', '-n', default=1000)
 def main(task, num_docs):
     config()
@@ -80,6 +92,8 @@ def main(task, num_docs):
         index_restful(num_docs)
     elif task == 'query':
         query()
+    elif task == 'query_text':
+        query_text()
     elif task == 'query_restful':
         if not os.path.exists(workspace):
             logger.warning(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')

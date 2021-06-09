@@ -1,30 +1,33 @@
-!Flow
+jtype: Flow
 version: '1'
 with:
-  read_only: true  # better add this in the query time
-  rest_api: true
-  port_expose: $JINA_PORT
-  restful: True
-pods:
-  - name: chunk_seg
-    show_exc_info: true
-    uses: pods/segment.yml
-    parallel: $JINA_PARALLEL
-  - name: tf_encode
-    show_exc_info: true
-    uses: pods/encode.yml
-    parallel: $JINA_PARALLEL
-    timeout_ready: 600000
-  - name: chunk_idx
-    show_exc_info: true
-    uses: pods/chunk.yml
-    shards: $JINA_SHARDS
-    polling: all
-    uses_after: pods/chunk_merger.yml
-    timeout_ready: -1 # larger timeout as in query time will read all the data
-  - name: ranker
-    show_exc_info: true
-    uses: pods/ranker.yml
-  - name: doc_idx
-    show_exc_info: true
-    uses: pods/doc.yml
+  workspace: $JINA_WORKSPACE
+  py_modules:
+    - flows/executors.py
+executors:
+  - name: segmenter
+    uses:
+      jtype: Sentencizer
+      with:
+        min_sent_len: 6
+  - name: encoder
+    uses:
+      jtype: TransformerTorchEncoder
+      with:
+        pooling_strategy: 'cls'
+        pretrained_model_name_or_path: distilbert-base-cased
+        max_length: 96
+  - name: vec_idx                           # Executor name
+    uses:                                   # Define details
+      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
+      with:
+        index_file_name: "image.json"       # Storage file name for the embeddings
+      metas:                                # Metainformation for the executor
+        name: vec_idx                       # Folder name inside the workspace
+    needs: [encoder]
+  - name: kv_idx                            # Executor name
+    uses:
+      jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
+      metas:                                # Executor metainformation
+        name: kv_idx                        # Name for the folder inside the workspace
+    needs: [vec_idx]                        # This pod starts directly after the gateways, to enable parallelization

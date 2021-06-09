@@ -17,3 +17,19 @@ executors:
         pooling_strategy: 'cls'
         pretrained_model_name_or_path: distilbert-base-cased
         max_length: 96
+  - name: vec_idx                           # Executor name
+    uses:                                   # Define details
+      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
+      with:
+        index_file_name: "image.json"       # Storage file name for the embeddings
+      metas:                                # Metainformation for the executor
+        name: vec_idx                       # Folder name inside the workspace
+    needs: [encoder]
+  - name: kv_idx                            # Executor name
+    uses:
+      jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
+      metas:                                # Executor metainformation
+        name: kv_idx                        # Name for the folder inside the workspace
+    needs: [segmenter]                      # This pod starts directly after the gateways, to enable parallelization
+  - name: join_all
+    needs: [vec_idx, kv_idx]
