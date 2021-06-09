@@ -9,9 +9,3 @@ pods:
       jtype: NumpyFileQueryIndexer
       with:
         source_path: '../data'
-  #    requests:
-  #      /index: index
-
-
-
-

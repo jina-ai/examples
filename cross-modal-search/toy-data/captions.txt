@@ -1,0 +1,12 @@
+image,caption
+1000268201_693b08cb0e.jpg,A child in a pink dress is climbing up a set of stairs in an entry way .
+1000268201_693b08cb0e.jpg,A girl going into a wooden building .
+1000268201_693b08cb0e.jpg,A little girl climbing into a wooden playhouse .
+1000268201_693b08cb0e.jpg,A little girl climbing the stairs to her playhouse .
+1000268201_693b08cb0e.jpg,A little girl in a pink dress going into a wooden cabin .
+1001773457_577c3a7d70.jpg,A black dog and a spotted dog are fighting
+1001773457_577c3a7d70.jpg,A black dog and a tri-colored dog playing with each other on the road .
+1001773457_577c3a7d70.jpg,A black dog and a white dog with brown spots are staring at each other in the street .
+1001773457_577c3a7d70.jpg,Two dogs of different breeds looking at each other on the road .
+1001773457_577c3a7d70.jpg,Two dogs on pavement moving toward each other .
+

@@ -10,6 +10,9 @@ import shutil
 import numpy as np
 from jina import Flow, Document, DocumentArray
 from jina.logging.profile import TimeContext
+from jina.logging import default_logger as logger
+
+logger = JinaLogger('wikipedia-example')
 
 
 from transformer import MyTransformer
@@ -68,7 +71,6 @@ def main(task, num_docs, top_k):
     config()
     if task == 'index':
         index(num_docs, top_k)
-
 
 
 if __name__ == '__main__':

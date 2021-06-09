@@ -37,14 +37,23 @@ What's included in this example:
   * [Community](#community)
   * [License](#license)
     
+<details>
+ <summary>How to clone this repo❓</summary>
+ 
+ Because this repo contains many [more example projects](https://github.com/jina-ai/examples/), if you want to clone only this example, you can do this as following
+ 
+ ```bash
+ git clone --depth 1 --filter=blob:none --sparse https://github.com/jina-ai/examples
+ cd examples
+ git sparse-checkout set multimodal-search-pdf
+ ```
+</details>
+
+----
 
 ## Data preparation
 
-We have included several PDF blogs as toy data in [`toy_data`](toy_data). This data is ready to use straight away. You can replace this toy data with your own by simply adding new files to the toy_data folder. Be careful to check that the files are supported by [`pdfplumber`](https://github.com/jsvine/pdfplumber).
-You can also run the script to download more pdf data.
-```bash
-python get_data.py
-```
+We have included several PDF blogs as toy data in [`toy_data`](toy_data). This data is ready to use straight away. You can replace this toy data with your own by simply adding new files to the [`toy_data`](toy_data) folder. Be careful to check that the files are supported by [`pdfplumber`](https://github.com/jsvine/pdfplumber).
 
 ## Install
 
@@ -62,7 +71,6 @@ pip install -r requirements.txt
 | ``python app.py -t query_image`` | To run a query Flow for searching image |
 | ``python app.py -t query_pdf`` | To run a query Flow for searching PDF |
 | ``python app.py -t query_restful`` | To expose the restful API of the query Flow for searching text, image, and PDF|
-| ``python app.py -t dryrun`` | Sanity check on the topology |
 
 ## Start the Server
 

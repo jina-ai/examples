@@ -1,11 +1,9 @@
-FROM jinaai/jina:1.1.0
+FROM jinaai/jina:1.2.0
 
 COPY . /workspace
 WORKDIR /workspace
 
 RUN pip install -r requirements.txt
-
-RUN python app.py -t dryrun
 
 ENTRYPOINT ["python", "app.py", "-t", "query"]
 
@@ -19,4 +17,4 @@ LABEL license="apache-2.0"
 LABEL name="multimodal-search-PDF"
 LABEL platform="linux/amd64"
 LABEL vendor="Jina AI Limited"
-LABEL version="0.0.1"
+LABEL version="0.0.2"

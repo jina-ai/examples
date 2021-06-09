@@ -17,16 +17,18 @@ echo will run tests on ${changedExamples[@]}
 
 EXIT_CODE=0
 
+root_dir=$(pwd)
 # install reqs and run the tests
 for example_dir in ${changedExamples[@]}; do
-  cd $example_dir
+  cd $root_dir/$example_dir
   echo running tests in $example_dir
-  if test -f "requirements.txt"; then
+  pwd
+  if test -f "tests/requirements.txt"; then
     if [[ -d "tests/" ]]; then
       python -m venv .venv
       source .venv/bin/activate
       pip install pytest pytest-mock
-      pip install -r requirements.txt
+      pip install -r tests/requirements.txt
       pytest -s -v tests/
       local_exit_code=$?
       deactivate
@@ -40,7 +42,6 @@ for example_dir in ${changedExamples[@]}; do
   else
     echo 'this is not an example. skipping...'
   fi
-  cd ..
 done
 
 echo final exit code = $EXIT_CODE

@@ -1,0 +1,9 @@
+git+https://github.com/jina-ai/jina.git@v1.2.0#egg=jina[hub, http]
+resampy==0.2.2
+tensorflow_cpu==2.2.0
+tf_slim==1.1.0
+six==1.15.0
+soundfile==0.10.3.post1
+librosa==0.8.0
+click==7.1.2
+pandas==1.2.2
