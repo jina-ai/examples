@@ -1,14 +1,12 @@
 import os
-from typing import Dict, Optional, List, Iterable, Union, Tuple
+from typing import Dict, Iterable, Union, Tuple
 
 import itertools
 import torch
 import numpy as np
 import clip
-
-# import transformers
-# from transformers import DistilBertModel, DistilBertConfig
-
+from PIL import Image
+import io
 from jina import Executor, DocumentArray, requests, Document
 
 class ImageReader(Executor):
@@ -17,36 +15,20 @@ class ImageReader(Executor):
         self.docs = DocumentArray()
         self.channel_axis = channel_axis
 
-    # with:
-    #     channel_axis: 0
 
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
         image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
-        self.docs.extend(image_docs)
-        #IndexRequest:
-        #      - !FilterQL
-        #        with:
-        #          lookups: {'modality': 'image'}
-        #      - !CraftDriver {}
+        return image_docs
+
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'image' not in doc.mime_type, docs)))
+        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'image/jpeg' not in doc.mime_type, docs)))
         for doc in image_docs:
             doc.convert_uri_to_buffer()
             doc.pop('chunks', 'uri')
-        #    SearchRequest:
-        #      - !FilterQL
-        #        with:
-        #          lookups: {'mime_type__contains': 'image'}
-        #      - !URI2Buffer {}
-        #      - !ExcludeQL
-        #        with:
-        #          fields:
-        #            - chunks
-        #            - uri
-        #      - !CraftDriver {}
+
 
 class ImageNormalizer(Executor):
     def __init__(self,
@@ -80,22 +62,10 @@ class ImageNormalizer(Executor):
         :return: a chunk dict with the normalized image
         """
         for doc in docs:
-            '''
-            for chunk in doc.chunks:
-            #if chunk.mime_type == 'image/png':
-                raw_img = _load_image(chunk.blob, self.channel_axis)
-                _img = self._normalize(raw_img)
-                # move the channel_axis to target_channel_axis to better fit different models
-                img = _move_channel_axis(_img, -1, self.target_channel_axis)
-                chunk.blob = img'''
-            doc.convert_uri_to_datauri(base64=True)
-            doc.tags['datauri'] = doc.uri
-            doc.convert_image_datauri_to_blob()
-            raw_img = _load_image(doc.content, self.channel_axis)
-            _img = self._normalize(raw_img)
-            # move the channel_axis to target_channel_axis to better fit different models
-            img = _move_channel_axis(_img, -1, self.target_channel_axis)
-            doc.content = img
+            img = Image.open(io.BytesIO(doc.buffer))
+            img = self._normalize(img)
+            img = np.array(img).astype('float32')
+            doc.content = np.moveaxis(img, 2, 0)
 
     def _normalize(self, img):
         img = _resize_short(img, target_size=self.resize_dim)
@@ -104,27 +74,6 @@ class ImageNormalizer(Executor):
         img -= self.img_mean
         img /= self.img_std
         return img
-
-def _move_channel_axis(
-    img: 'np.ndarray', channel_axis_to_move: int, target_channel_axis: int = -1
-) -> 'np.ndarray':
-    """
-    Ensure the color channel axis is the default axis.
-    """
-    if channel_axis_to_move == target_channel_axis:
-        return img
-    return np.moveaxis(img, channel_axis_to_move, target_channel_axis)
-
-
-def _load_image(blob: 'np.ndarray', channel_axis: int):
-    """
-    Load an image array and return a `PIL.Image` object.
-    """
-
-    from PIL import Image
-
-    img = _move_channel_axis(blob, channel_axis)
-    return Image.fromarray(img.astype('uint8'))
 
 
 def _crop_image(
@@ -327,8 +276,8 @@ class CLIPImageEncoder(Executor):
     def encode(self, docs: DocumentArray, **kwargs):
         with torch.no_grad():
             for doc in docs:
-                #content = np.expand_dims(doc.content, axis=0)
-                input = torch.from_numpy(doc.content().astype('float32'))
+                content = np.expand_dims(doc.content, axis=0)
+                input = torch.from_numpy(content.astype('float32'))
                 embed = self.model.encode_image(input)
                 doc.embedding = embed.cpu().numpy().flatten()
 
@@ -349,34 +298,5 @@ class CLIPTextEncoder(Executor):
         with torch.no_grad():
             for doc in docs:
                 input_torch_tensor = clip.tokenize(doc.content)
-                # content = np.expand_dims(doc.content, axis=0)
-                # input = torch.from_numpy(content) #.to(torch.int64)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
-
-
-# class TextIndexer(Executor):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-
-# class MergeMatchesSortTopK(Executor):
-#     def __init__(self, docs, **kwargs):
-#         super().__init__(**kwargs)
-#         self.docs = docs
-#
-#     @requests(on=['/index', '/search', '/train', ''])
-#     def merge_and_sort(self, docs, **kwargs):
-#         for m in docs.traverse('m'):
-#             docs.extend(m)
-#         docs = docs[:10]
-#         docs.sort(key=score__value)
-#         return self.docs
-
-# class RootMerger(Executor):
-#     def __init__(self, doc_matrix, **kwargs):
-#         super().__init__(**kwargs)
-#         self.doc_matrix = doc_matrix
-#
-#     def merge(self, **kwargs):
-#         return self.doc_matrix
-
