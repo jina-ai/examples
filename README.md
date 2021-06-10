@@ -43,7 +43,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️</h1>
     </td>
     <td>
-      <h4><a href="./pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
+      <h4><a href="./image-search">Google's Big Transfer Model in (Poké-)Production</a></h4>
       Use SOTA visual representation for searching Pokémon!
     </td>
   </tr>

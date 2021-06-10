@@ -5,7 +5,7 @@ DATA_FILE='f8k.zip'
 
 rm -rf ${DATA_DIR} && \
 mkdir -p ${DATA_DIR}/f8k/images && \
-python ../util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
+python ../.github/util/pull_dataset.py -d ${EXAMPLE}/${DATA_FILE} -p ../ && \
 unzip ${DATA_FILE} -d ${DATA_DIR} && \
 rm ${DATA_FILE} && \
 mv ${DATA_DIR}/Images/* ${DATA_DIR}/f8k/images && \
