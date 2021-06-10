@@ -2,18 +2,4 @@
 jtype: CLIPTextEncoder
 metas:
   py_modules:
-    #- workspace/__init__.py
     - '../../executors.py'
-
-#requests:
-#  on:
-#    IndexRequest:
-#      - !FilterQL
-#        with:
-#          lookups: {'modality': 'text'}
-#      - !EncodeDriver {}
-#    SearchRequest:
-#      - !FilterQL
-#        with:
-#          lookups: {'mime_type__contains': 'text'}
-#      - !EncodeDriver {}

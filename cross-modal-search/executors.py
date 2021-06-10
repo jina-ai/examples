@@ -13,7 +13,6 @@ class ImageReader(Executor):
     def __init__(self, channel_axis=0, **kwargs):
         super().__init__(**kwargs)
         self.docs = DocumentArray()
-        self.channel_axis = channel_axis
 
 
     @requests(on='/index')
@@ -28,6 +27,8 @@ class ImageReader(Executor):
         for doc in image_docs:
             doc.convert_uri_to_buffer()
             doc.pop('chunks', 'uri')
+        return image_docs
+
 
 
 class ImageNormalizer(Executor):
@@ -51,8 +52,6 @@ class ImageNormalizer(Executor):
         self.resize_dim = resize_dim
         self.img_mean = np.array(img_mean).reshape((1, 1, 3))
         self.img_std = np.array(img_std).reshape((1, 1, 3))
-        self.channel_axis = channel_axis
-        self.target_channel_axis = target_channel_axis
 
     @requests(on=['/index', '/search'])
     def craft(self, docs: 'DocumentArray', *args, **kwargs) -> Dict:
@@ -300,3 +299,17 @@ class CLIPTextEncoder(Executor):
                 input_torch_tensor = clip.tokenize(doc.content)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
+        return docs
+
+class MergeMatchesSortTopK(Executor):
+    def __init__(self, docs, **kwargs):
+        super().__init__(**kwargs)
+        self.docs = docs
+
+    @requests(on=['/index', '/search', '/train', ''])
+    def merge_and_sort(self, docs, **kwargs):
+        for m in docs.traverse('m'):
+            docs.extend(m)
+        docs = docs[:10]
+        docs.sort(key=lambda item: item.score.value)
+        return self.docs

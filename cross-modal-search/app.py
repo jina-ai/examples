@@ -20,8 +20,6 @@ def config():
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
     os.environ['JINA_PORT'] = '45678'
-    os.environ['JINA_IMAGE_ENCODER'] = os.environ.get('JINA_IMAGE_ENCODER', 'docker://jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0')
-    os.environ['JINA_TEXT_ENCODER'] = os.environ.get('JINA_TEXT_ENCODER', 'docker://jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2')
     os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
 
 def index_restful(num_docs):
@@ -45,7 +43,6 @@ def index_restful(num_docs):
 
 def index(data_set, num_docs, request_size):
     flow = Flow.load_config('flows/flow-index.yml')
-    flow.plot()
     with flow:
         with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(
@@ -56,6 +53,7 @@ def index(data_set, num_docs, request_size):
 
 def query_restful():
     flow = Flow().load_config('flows/flow-query.yml')
+    flow.plot()
     flow.use_rest_gateway()
     with flow:
         flow.block()
@@ -76,20 +74,20 @@ def main(task, num_docs, request_size, data_set):
     config()
     workspace = os.environ['JINA_WORKSPACE']
     logger = logging.getLogger('cross-modal-search')
-    if 'index' in task:
-        if os.path.exists(workspace):
-            logger.error(
-                f'\n +------------------------------------------------------------------------------------+ \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-                    \n |                                   🤖🤖🤖                                           | \
-                    \n +------------------------------------------------------------------------------------+'
-            )
-            sys.exit(1)
-    if 'query' in task:
-        if not os.path.exists(workspace):
-            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
-            sys.exit(1)
+    # if 'index' in task:
+    #     if os.path.exists(workspace):
+    #         logger.error(
+    #             f'\n +------------------------------------------------------------------------------------+ \
+    #                 \n |                                   🤖🤖🤖                                           | \
+    #                 \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+    #                 \n |                                   🤖🤖🤖                                           | \
+    #                 \n +------------------------------------------------------------------------------------+'
+    #         )
+    #         sys.exit(1)
+    # if 'query' in task:
+    #     if not os.path.exists(workspace):
+    #         logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+    #         sys.exit(1)
 
     if task == 'index':
         index(data_set, num_docs, request_size)
