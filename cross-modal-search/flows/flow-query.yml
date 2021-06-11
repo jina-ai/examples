@@ -22,23 +22,23 @@ pods:
     polling: all
     uses: pods/index-text.yml
     shards: $JINA_SHARDS
-#    uses_after: pods/merge_matches_sort_topk.yml
-  - name: text_encoder                    # encode query text into embeddings with CLIP model
-    uses: pods/clip/text-encoder.yml
-    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
-    shards: $JINA_PARALLEL
-    timeout_ready: 600000
-    read_only: true
-    needs: [gateway]
-  - name: image_vector_indexer            # index query image embeddings
-    polling: all
-    uses: pods/index-image-vector.yml
-    shards: $JINA_SHARDS
-  - name: image_kv_indexer                # index query image as kv
-    polling: all
-    uses: pods/index-image-kv.yml
-    shards: $JINA_SHARDS
-#    uses_after: pods/merge_matches_sort_topk.yml
-  - name: join_all                        # combine text and image queries
-    needs: [text_indexer, image_kv_indexer]
-    read_only: true
+    uses_after: pods/merge_matches_sort_topk.yml
+#  - name: text_encoder                    # encode query text into embeddings with CLIP model
+#    uses: pods/clip/text-encoder.yml
+#    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
+#    shards: $JINA_PARALLEL
+#    timeout_ready: 600000
+#    read_only: true
+#    needs: [gateway]
+#  - name: image_vector_indexer            # index query image embeddings
+#    polling: all
+#    uses: pods/index-image-vector.yml
+#    shards: $JINA_SHARDS
+#  - name: image_kv_indexer                # index query image as kv
+#    polling: all
+#    uses: pods/index-image-kv.yml
+#    shards: $JINA_SHARDS
+##    uses_after: pods/merge_matches_sort_topk.yml
+#  - name: join_all                        # combine text and image queries
+#    needs: [text_indexer, image_kv_indexer]
+#    read_only: true
