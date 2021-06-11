@@ -8,16 +8,18 @@ import sys
 import click
 import requests
 
-from jina.flow import Flow
-from jina import Document
+from jina import Flow, Document
 from helper import input_generator
 from jina.logging.predefined import default_logger as logger
-# from jina.logging.profile import TimeContext
 
 
 def config():
     os.environ.setdefault('JINA_WORKSPACE', './workspace')
-    os.environ.setdefault('JINA_DATA_FILE', 'toy-data/lyrics-toy-data1000.csv')
+    if os.path.exists('lyrics-data/lyrics-data.csv'):
+        print("large")
+        os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-data.csv')
+    else:
+        os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-toy-data1000.csv')
     os.environ.setdefault('JINA_PORT', str(45678))
 
 
@@ -26,7 +28,6 @@ def index(num_docs):
     flow = Flow.load_config('flows/index.yml')
     with flow:
         input_docs = input_generator(num_docs=num_docs)
-        # with TimeContext(f'QPS: indexing {len(input_docs)}', logger=flow.logger):
         flow.post(on='/index', inputs=input_docs, request_size=10)
 
 
