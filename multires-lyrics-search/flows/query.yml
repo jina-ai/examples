@@ -21,7 +21,7 @@ executors:
     uses:                                   # Define details
       jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
       with:
-        index_file_name: "image.json"       # Storage file name for the embeddings
+        index_file_name: "chunks.binary"    # Storage file name for the embeddings
       metas:                                # Metainformation for the executor
         name: vec_idx                       # Folder name inside the workspace
     needs: [encoder]
