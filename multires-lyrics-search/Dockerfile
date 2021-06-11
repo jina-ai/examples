@@ -1,20 +1,19 @@
-FROM jinaai/jina:1.0.7
+FROM jinaai/jina:2.0.0rc6-py38-devel
 
 # setup the workspace
 COPY . /workspace
 WORKDIR /workspace
 
-RUN pip uninstall -y jina && pip install -r requirements.txt && mkdir data && mv lyrics-data.csv data/
+RUN pip uninstall -y jina && pip install -r requirements.txt && bash get_data.sh
 
 ENV JINA_DATA_PATH='data/lyrics-data.csv'
 ENV JINA_SHARDS='10'
-ENV JINA_MAX_DOCS='10000'
 
-EXPOSE 65481
+EXPOSE 45678
 
 RUN python app.py index
 
-ENTRYPOINT ["python", "app.py", "search"]
+ENTRYPOINT ["python", "app.py", "-t", "query_restful"]
 
 LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
 LABEL type="app"

@@ -9,9 +9,8 @@ from jina import Document
 
 
 def input_generator(num_docs: int):
-    lyrics_file = os.environ.setdefault(
-        'JINA_DATA_PATH', 'lyrics-data/lyrics-toy-data1000.csv'
-    )
+    lyrics_file = os.environ.setdefault('JINA_DATA_FILE',
+                                        'lyrics-data/lyrics-toy-data1000.csv')
     with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in it.islice(reader, num_docs):

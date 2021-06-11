@@ -16,7 +16,6 @@ from jina.logging.predefined import default_logger as logger
 def config():
     os.environ.setdefault('JINA_WORKSPACE', './workspace')
     if os.path.exists('lyrics-data/lyrics-data.csv'):
-        print("large")
         os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-data.csv')
     else:
         os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-toy-data1000.csv')
@@ -78,11 +77,10 @@ def query_restful():
 @click.command()
 @click.option('--task', '-t',
               type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'query_text'], case_sensitive=False))
-@click.option('--num_docs', '-n', default=1000)
+@click.option('--num_docs', '-n', default=10000)
 def main(task, num_docs):
     config()
     workspace = os.environ["JINA_WORKSPACE"]
-
     if task == 'index':
         if os.path.exists(workspace):
             logger.error(f'\n +---------------------------------------------------------------------------------+ \
