@@ -5,6 +5,7 @@ import itertools
 import torch
 import numpy as np
 import clip
+import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
@@ -17,13 +18,17 @@ class ImageReader(Executor):
 
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
+        assert len(docs)==2
         image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
+        assert len(docs) == 2
         return image_docs
 
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
         image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'image/jpeg' not in doc.mime_type, docs)))
+        if not image_docs:
+            return
         for doc in image_docs:
             doc.convert_uri_to_buffer()
             doc.pop('chunks', 'uri')
@@ -37,8 +42,6 @@ class ImageNormalizer(Executor):
                  img_mean: Tuple[float] = (0, 0, 0),
                  img_std: Tuple[float] = (1, 1, 1),
                  resize_dim: int = 256,
-                 channel_axis: int = -1,
-                 target_channel_axis: int = -1,
                  *args,
                  **kwargs):
         """Set Constructor."""
@@ -60,6 +63,8 @@ class ImageNormalizer(Executor):
         :param blob: the ndarray of the image with the color channel at the last axis
         :return: a chunk dict with the normalized image
         """
+        if not docs:
+            return
         for doc in docs:
             img = Image.open(io.BytesIO(doc.buffer))
             img = self._normalize(img)
@@ -163,9 +168,23 @@ def _resize_short(img, target_size, how: str = 'LANCZOS'):
     return img
 
 class NumpyIndexer(Executor):
+    filename = 'chatbot.ndjson'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._docs = DocumentArray()
+        if os.path.exists(self.filename):
+            with open(self.filename) as fp:
+                for v in fp:
+                    d = Document(v)
+                    self._docs.append(d)
+
+
+    def close(self) -> None:
+        with open(self.filename, 'w') as fp:
+            for d in self._docs:
+                json.dump(d.dict(), fp)
+                fp.write('\n')
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', **kwargs):
@@ -174,11 +193,15 @@ class NumpyIndexer(Executor):
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict = None, **kwargs):
-        if parameters is None:
+        print(f'********** parameters: {parameters}')
+        #assert parameters==None
+        if parameters is None or parameters == {}:
             parameters = {'top_k': 5}
 
         doc_embeddings = np.stack(docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(doc_embeddings))
+        embeddings = self._docs.get_attributes('embedding')
+        print(f'********** embedding: {embeddings}')
         d_emb = _ext_B(_norm(self._docs.get_attributes('embedding')))
         dists = _cosine(q_emb, d_emb)
         positions, dist = self._get_sorted_top_k(dists, int(parameters['top_k']))
@@ -256,10 +279,19 @@ class KeyValueIndexer(Executor):
 
     @requests(on='/search')
     def query(self, docs: DocumentArray, **kwargs):
+        if not docs:
+            return
         for doc in docs:
+            # for match in doc.matches:
+            #     assert match.parent_id
+            #     extracted_doc = self._docs[match.parent_id]
+            #     match.MergeFrom(extracted_doc)
+            current_matches = DocumentArray()
             for match in doc.matches:
-                extracted_doc = self._docs[match.parent_id]
-                match.MergeFrom(extracted_doc)
+                for d in self._docs:
+                    if match.id in [chunk.id for chunk in d.chunks]:
+                        current_matches.append(Document(self._docs[d.id]))
+            doc.matches = current_matches
 
 
 class CLIPImageEncoder(Executor):
@@ -273,12 +305,15 @@ class CLIPImageEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
+        if not docs:
+            return
         with torch.no_grad():
             for doc in docs:
                 content = np.expand_dims(doc.content, axis=0)
                 input = torch.from_numpy(content.astype('float32'))
                 embed = self.model.encode_image(input)
                 doc.embedding = embed.cpu().numpy().flatten()
+        #print(f'******** encoded image docs: {docs}')
 
 
 class CLIPTextEncoder(Executor):
@@ -292,14 +327,17 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
+        #docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
         docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'text' not in doc.mime_type, docs)))
+        assert docs
+        if not docs:
+            return
         with torch.no_grad():
             for doc in docs:
                 input_torch_tensor = clip.tokenize(doc.content)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
-        return docs
+        # return docs
 
 class MergeMatchesSortTopK(Executor):
     def __init__(self, docs, **kwargs):
