@@ -5,3 +5,4 @@ torchvision==0.8.1
 python-magic==0.4.20
 click==7.1.2
 kaggle==1.5.12
+clip==1.0
