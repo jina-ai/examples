@@ -166,11 +166,13 @@ class NumpyIndexer(Executor):
 
         self.filename = filename
         self._docs = DocumentArray()
+        self.doc_embeddings = np.array([])
         if os.path.exists(self.save_path):
             with open(self.save_path) as fp:
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
+            self.doc_embeddings = np.stack(self._docs.get_attributes('embedding'))
 
     @property
     def save_path(self):
@@ -189,15 +191,14 @@ class NumpyIndexer(Executor):
         self._docs.extend(docs)
 
     @requests(on='/search')
-    def search(self, docs: 'DocumentArray', parameters: Dict = {'top_k': 5}, **kwargs):
-        print(f'********** parameters: {parameters}')
+    def search(self, docs: 'DocumentArray', parameters: Dict, **kwargs):
+        top_k = int(parameters.get('top_k', 5))
         doc_embeddings = np.stack(docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(doc_embeddings))
-        embeddings = self._docs.get_attributes('embedding')
-        print(f'********** embedding: {embeddings}')
-        d_emb = _ext_B(_norm(self._docs.get_attributes('embedding')))
+
+        d_emb = _ext_B(_norm(self.doc_embeddings))
         dists = _cosine(q_emb, d_emb)
-        positions, dist = self._get_sorted_top_k(dists, int(parameters['top_k']))
+        positions, dist = self._get_sorted_top_k(dists, top_k)
         for _q, _positions, _dists in zip(docs, positions, dist):
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
@@ -283,16 +284,11 @@ class KeyValueIndexer(Executor):
         if not docs:
             return
         for doc in docs:
-            # for match in doc.matches:
-            #     assert match.parent_id
-            #     extracted_doc = self._docs[match.parent_id]
-            #     match.MergeFrom(extracted_doc)
-            current_matches = DocumentArray()
             for match in doc.matches:
                 for d in self._docs:
-                    if match.id in [chunk.id for chunk in d.chunks]:
-                        current_matches.append(Document(self._docs[d.id]))
-            doc.matches = current_matches
+                    if match.id == d.id:
+                        match.uri = d.uri
+                        match.MergeFrom(d)
 
 
 class CLIPImageEncoder(Executor):
@@ -337,7 +333,7 @@ class CLIPTextEncoder(Executor):
                 input_torch_tensor = clip.tokenize(doc.content)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
-        # return docs
+        return docs
 
 
 class MergeMatchesSortTopK(Executor):
