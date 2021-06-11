@@ -26,16 +26,16 @@ pods:
     uses: pods/index-image-kv.yml
     shards: $JINA_SHARDS
     needs: [gateway]
-#  - name: text_encoder                                # encode text into embeddings with CLIP model
-#    uses: pods/clip/text-encoder.yml
-#    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
-#    shards: $JINA_PARALLEL
-#    timeout_ready: 600000
-#    read_only: true
-#    needs: [gateway]
-#  - name: text_indexer                                # index the text into documents
-#    polling: any
-#    uses: pods/index-text.yml #(numpy + binary pb indexer)
-#    shards: $JINA_SHARDS
+  - name: text_encoder                                # encode text into embeddings with CLIP model
+    uses: pods/clip/text-encoder.yml
+    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
+    shards: $JINA_PARALLEL
+    timeout_ready: 600000
+    read_only: true
+    needs: [gateway]
+  - name: text_indexer                                # index the text into documents
+    polling: any
+    uses: pods/index-text.yml #(numpy + binary pb indexer)
+    shards: $JINA_SHARDS
   - name: join_all                                    # wait on the 3 executors to finish data processing with "needs"
-    needs: [image_vector_indexer, image_kv_indexer]
+    needs: [image_vector_indexer, image_kv_indexer, text_indexer]

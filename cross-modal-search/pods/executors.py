@@ -161,7 +161,7 @@ def _resize_short(img, target_size, how: str = 'LANCZOS'):
 
 
 class NumpyIndexer(Executor):
-    def __init__(self, filename='chatbot.ndjson', **kwargs):
+    def __init__(self, filename='data.ndjson', **kwargs):
         super().__init__(**kwargs)
 
         self.filename = filename
