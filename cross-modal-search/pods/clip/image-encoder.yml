@@ -1,5 +1,4 @@
 jtype: CLIPImageEncoder
 metas:
   py_modules:
-    #- workspace/__init__.py
-    - '../../executors.py'
+    - '../executors.py'

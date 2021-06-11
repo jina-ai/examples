@@ -1,25 +1,3 @@
 jtype: ImageReader
-with:
-  channel_axis: 0
 metas:
-  py_modules: ['../executors.py']
-#requests:
-#  on:
-#    IndexRequest:
-#      - !FilterQL
-#        with:
-#          lookups: {'modality': 'image'}
-#      - !CraftDriver {}
-#    SearchRequest:
-#      - !FilterQL
-#        with:
-#          lookups: {'mime_type__contains': 'image'}
-#      - !URI2Buffer {}
-#      - !ExcludeQL
-#        with:
-#          fields:
-#            - chunks
-#            - uri
-#      - !CraftDriver {}
-#    ControRequest:
-#      - !ControlReqDriver {}
+  py_modules: 'executors.py'

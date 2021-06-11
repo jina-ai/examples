@@ -2,4 +2,4 @@
 jtype: CLIPTextEncoder
 metas:
   py_modules:
-    - '../../executors.py'
+    - '../executors.py'

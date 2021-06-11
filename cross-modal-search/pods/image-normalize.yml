@@ -5,4 +5,4 @@ with:
   img_std: [0.229, 0.224, 0.225]
 metas:
   name: normalizer
-  py_modules: ['../executors.py']
+  py_modules: 'executors.py'

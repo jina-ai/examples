@@ -10,19 +10,12 @@ from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
 
+
 class ImageReader(Executor):
-    def __init__(self, channel_axis=0, **kwargs):
-        super().__init__(**kwargs)
-        self.docs = DocumentArray()
-
-
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
-        assert len(docs)==2
         image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
-        assert len(docs) == 2
         return image_docs
-
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
@@ -33,7 +26,6 @@ class ImageReader(Executor):
             doc.convert_uri_to_buffer()
             doc.pop('chunks', 'uri')
         return image_docs
-
 
 
 class ImageNormalizer(Executor):
@@ -81,11 +73,11 @@ class ImageNormalizer(Executor):
 
 
 def _crop_image(
-    img,
-    target_size: Union[Tuple[int, int], int],
-    top: int = None,
-    left: int = None,
-    how: str = 'precise',
+        img,
+        target_size: Union[Tuple[int, int], int],
+        top: int = None,
+        left: int = None,
+        how: str = 'precise',
 ):
     """
     Crop the input :py:mod:`PIL` image.
@@ -124,10 +116,10 @@ def _crop_image(
     elif how == 'precise':
         assert w_beg is not None and h_beg is not None
         assert (
-            0 <= w_beg <= (img_w - target_w)
+                0 <= w_beg <= (img_w - target_w)
         ), f'left must be within [0, {img_w - target_w}]: {w_beg}'
         assert (
-            0 <= h_beg <= (img_h - target_h)
+                0 <= h_beg <= (img_h - target_h)
         ), f'top must be within [0, {img_h - target_h}]: {h_beg}'
     else:
         raise ValueError(f'unknown input how: {how}')
@@ -167,21 +159,27 @@ def _resize_short(img, target_size, how: str = 'LANCZOS'):
     img = img.resize((target_w, target_h), getattr(Image, how))
     return img
 
-class NumpyIndexer(Executor):
-    filename = 'chatbot.ndjson'
 
-    def __init__(self, **kwargs):
+class NumpyIndexer(Executor):
+    def __init__(self, filename='chatbot.ndjson', **kwargs):
         super().__init__(**kwargs)
+
+        self.filename = filename
         self._docs = DocumentArray()
-        if os.path.exists(self.filename):
-            with open(self.filename) as fp:
+        if os.path.exists(self.save_path):
+            with open(self.save_path) as fp:
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
 
+    @property
+    def save_path(self):
+        if not os.path.exists(self.workspace):
+            os.makedirs(self.workspace)
+        return os.path.join(self.workspace, self.filename)
 
     def close(self) -> None:
-        with open(self.filename, 'w') as fp:
+        with open(self.save_path, 'w') as fp:
             for d in self._docs:
                 json.dump(d.dict(), fp)
                 fp.write('\n')
@@ -190,14 +188,9 @@ class NumpyIndexer(Executor):
     def index(self, docs: 'DocumentArray', **kwargs):
         self._docs.extend(docs)
 
-
     @requests(on='/search')
-    def search(self, docs: 'DocumentArray', parameters: Dict = None, **kwargs):
+    def search(self, docs: 'DocumentArray', parameters: Dict = {'top_k': 5}, **kwargs):
         print(f'********** parameters: {parameters}')
-        #assert parameters==None
-        if parameters is None or parameters == {}:
-            parameters = {'top_k': 5}
-
         doc_embeddings = np.stack(docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(doc_embeddings))
         embeddings = self._docs.get_attributes('embedding')
@@ -213,7 +206,7 @@ class NumpyIndexer(Executor):
 
     @staticmethod
     def _get_sorted_top_k(
-        dist: 'np.array', top_k: int
+            dist: 'np.array', top_k: int
     ) -> Tuple['np.ndarray', 'np.ndarray']:
         if top_k >= dist.shape[1]:
             idx = dist.argsort(axis=1)[:, :top_k]
@@ -227,30 +220,36 @@ class NumpyIndexer(Executor):
 
         return idx, dist
 
+
 def _get_ones(x, y):
     return np.ones((x, y))
+
 
 def _ext_A(A):
     nA, dim = A.shape
     A_ext = _get_ones(nA, dim * 3)
-    A_ext[:, dim : 2 * dim] = A
-    A_ext[:, 2 * dim :] = A ** 2
+    A_ext[:, dim: 2 * dim] = A
+    A_ext[:, 2 * dim:] = A ** 2
     return A_ext
+
 
 def _ext_B(B):
     nB, dim = B.shape
     B_ext = _get_ones(dim * 3, nB)
     B_ext[:dim] = (B ** 2).T
-    B_ext[dim : 2 * dim] = -2.0 * B.T
+    B_ext[dim: 2 * dim] = -2.0 * B.T
     del B
     return B_ext
+
 
 def _euclidean(A_ext, B_ext):
     sqdist = A_ext.dot(B_ext).clip(min=0)
     return np.sqrt(sqdist)
 
+
 def _norm(A):
     return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
+
 
 def _cosine(A_norm_ext, B_norm_ext):
     return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
@@ -275,6 +274,8 @@ class KeyValueIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: DocumentArray, **kwargs):
+        for doc in docs:
+            doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')
@@ -313,7 +314,6 @@ class CLIPImageEncoder(Executor):
                 input = torch.from_numpy(content.astype('float32'))
                 embed = self.model.encode_image(input)
                 doc.embedding = embed.cpu().numpy().flatten()
-        #print(f'******** encoded image docs: {docs}')
 
 
 class CLIPTextEncoder(Executor):
@@ -327,7 +327,7 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        #docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
+        # docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
         docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'text' not in doc.mime_type, docs)))
         assert docs
         if not docs:
@@ -338,6 +338,7 @@ class CLIPTextEncoder(Executor):
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
         # return docs
+
 
 class MergeMatchesSortTopK(Executor):
     def __init__(self, docs, **kwargs):

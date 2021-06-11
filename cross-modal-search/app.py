@@ -4,7 +4,7 @@ __license__ = "Apache-2.0"
 import os
 
 import click
-from jina import Flow
+from jina import Flow, Document
 import logging
 from jina.logging.profile import TimeContext
 
@@ -40,13 +40,20 @@ def index_restful(num_docs):
             raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
 
 
+def check_index_result(resp):
+    for doc in resp.data.docs:
+        _doc = Document(doc)
+        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
+
+
 def index(data_set, num_docs, request_size):
     flow = Flow.load_config('flows/flow-index.yml')
     with flow:
         with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(
                 inputs=input_index_data(num_docs, request_size, data_set),
-                request_size=request_size
+                request_size=request_size,
+                on_done=check_index_result
             )
 
 

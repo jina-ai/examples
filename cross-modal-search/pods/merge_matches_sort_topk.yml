@@ -1,4 +1,4 @@
 jtype: MergeMatchesSortTopK
 metas:
   name: merge_matches_topk
-  py_modules: [ '../executors.py' ]
+  py_modules: [ 'executors.py' ]
