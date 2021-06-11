@@ -55,7 +55,10 @@ def query():
 
 def query_text():
     def print_result(response):
+        print(response.docs[0])
         print(response.docs[0].matches)
+
+        print(f'Total matches {sum([len(d.matches) for d in response.docs])}')
 
     f = Flow.load_config('flows/query.yml')
     with f:

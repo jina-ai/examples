@@ -178,7 +178,7 @@ class EmbeddingIndexer(Executor):
         chunks = docs.traverse_flat(['c'])
         embedding_docs = DocumentArray()
         for doc in chunks:
-            embedding_docs.append(Document(id=doc.id, embedding=doc.embedding))
+            embedding_docs.append(Document(id=doc.id, embedding=doc.embedding, parent_id=doc.parent_id))
         self._docs.extend(embedding_docs)
         return docs
 
@@ -188,6 +188,8 @@ class EmbeddingIndexer(Executor):
         chunks = docs.traverse_flat(['c'])
         a = np.stack(chunks.get_attributes('embedding'))
         b = np.stack(self._docs.get_attributes('embedding'))
+        parent_ids = self._docs.get_attributes('parent_id')
+        # get parent ids from stored docs and add to matches
         q_emb = _ext_A(_norm(a))
         d_emb = _ext_B(_norm(b))
         dists = _euclidean(q_emb, d_emb)
@@ -198,7 +200,7 @@ class EmbeddingIndexer(Executor):
             for _id, _dist in zip(_ids, _dists):
                 doc = Document(self._docs[int(_id)], copy=True)
                 doc.score.value = 1 - _dist
-                doc.parent_id = int(_id)
+                doc.parent_id = parent_ids[_id]
                 _q.matches.append(doc)
         return docs
 
@@ -223,7 +225,7 @@ class KeyValueIndexer(Executor):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if os.path.exists(self.save_path):
-            self._docs = DocumentArray.load(self.save_path)
+            self._docs = DocumentArray.load_binary(self.save_path)
         else:
             self._docs = DocumentArray()
 
@@ -234,7 +236,7 @@ class KeyValueIndexer(Executor):
         return os.path.join(self.workspace, 'kv.json')
 
     def close(self):
-        self._docs.save(self.save_path)
+        self._docs.save_binary(self.save_path)
 
     @requests(on='/index')
     def index(self, docs: DocumentArray, **kwargs) -> DocumentArray:
@@ -243,16 +245,12 @@ class KeyValueIndexer(Executor):
 
     @requests(on='/search')
     def query(self, docs: DocumentArray, **kwargs) -> DocumentArray:
-        chunks = self._docs.traverse_flat(['c'])
+        result = {}
         for match in docs.traverse_flat(['cm']):
-            extracted_doc = None
-            for doc in self._docs:
-                if chunks[int(match.parent_id)].parent_id == doc.id:
-                    print(chunks[int(match.parent_id)].text)
-                    extracted_doc = doc
-                    break
-
-            extracted_doc.tags['chunk_id'] = match.parent_id
-            extracted_doc.tags['chunk_text'] = match.text
-            match.MergeFrom(extracted_doc)
-        return docs
+            extracted_doc = Document(self._docs[match.parent_id], copy=True)
+            if extracted_doc.id not in result:
+                result[extracted_doc.id] = extracted_doc
+            result[extracted_doc.id].matches.append(
+                extracted_doc.chunks[match.id]
+            )
+        return DocumentArray(list(result.values()))
