@@ -10,7 +10,7 @@ from jina import Document
 
 def input_generator(num_docs: int):
     lyrics_file = os.environ.setdefault(
-        'JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv'
+        'JINA_DATA_PATH', 'lyrics-data/lyrics-toy-data1000.csv'
     )
     with open(lyrics_file, newline='', encoding='utf-8') as f:
         reader = csv.reader(f)
@@ -23,6 +23,14 @@ def input_generator(num_docs: int):
                     d.text = row[3]
                     yield d
 
+
+def num_input_docs():
+    lyrics_file = os.environ.setdefault(
+        'JINA_DATA_PATH', 'lyrics-data/lyrics-toy-data1000.csv'
+    )
+    with open(lyrics_file, newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        return len(list(reader))
 
 def _ext_A(A):
     nA, dim = A.shape

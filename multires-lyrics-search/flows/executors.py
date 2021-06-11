@@ -91,6 +91,7 @@ class TransformerTorchEncoder(Executor):
         max_length: Optional[int] = None,
         acceleration: Optional[str] = None,
         embedding_fn_name: str = '__call__',
+        device: str = 'cpu',
         *args,
         **kwargs,
     ):
@@ -103,17 +104,21 @@ class TransformerTorchEncoder(Executor):
         self.layer_index = layer_index
         self.max_length = max_length
         self.acceleration = acceleration
+        if not device in ['cpu', 'cuda']:
+            logger.error('Torch device not supported. Must be cpu or cuda!')
+            raise RuntimeError('Torch device not supported. Must be cpu or cuda!')
+        self.device = device
         self.embedding_fn_name = embedding_fn_name
         self.tokenizer = AutoTokenizer.from_pretrained(self.base_tokenizer_model)
         self.model = AutoModel.from_pretrained(
             self.pretrained_model_name_or_path, output_hidden_states=True
         )
-        self.model.to(torch.device('cpu'))
+        self.model.to(torch.device(device))
 
     def _compute_embedding(self, hidden_states: 'torch.Tensor', input_tokens: Dict):
         fill_vals = {'cls': 0.0, 'mean': 0.0, 'max': -np.inf, 'min': np.inf}
         fill_val = torch.tensor(
-            fill_vals[self.pooling_strategy], device=torch.device('cpu')
+            fill_vals[self.pooling_strategy], device=torch.device(self.device)
         )
         layer = hidden_states[self.layer_index]
         attn_mask = input_tokens['attention_mask'].unsqueeze(-1).expand_as(layer)
@@ -138,7 +143,7 @@ class TransformerTorchEncoder(Executor):
                 return_tensors='pt',
             )
             input_tokens = {
-                k: v.to(torch.device('cpu')) for k, v in input_tokens.items()
+                k: v.to(torch.device(self.device)) for k, v in input_tokens.items()
             }
             outputs = getattr(self.model, self.embedding_fn_name)(**input_tokens)
             if isinstance(outputs, torch.Tensor):

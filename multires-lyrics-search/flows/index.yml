@@ -17,6 +17,7 @@ executors:
         pooling_strategy: 'cls'
         pretrained_model_name_or_path: distilbert-base-cased
         max_length: 96
+        device: 'cpu'
   - name: vec_idx                           # Executor name
     uses:                                   # Define details
       jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
