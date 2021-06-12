@@ -171,6 +171,9 @@ class NumpyIndexer(Executor):
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
+            self._darray_chunks = self._docs.traverse_flat(traversal_paths='r')
+            self._embedding_matrix = _ext_B(_norm(np.stack(self._darray_chunks.get_attributes('embedding'))))
+            self.docid_to_docpos = {doc.id: i for i, doc in enumerate(self._docs)}
 
     @property
     def save_path(self):
@@ -190,19 +193,16 @@ class NumpyIndexer(Executor):
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict = {'top_k': 5}, **kwargs):
-        print(f'********** parameters: {parameters}')
         doc_embeddings = np.stack(docs.get_attributes('embedding'))
         q_emb = _ext_A(_norm(doc_embeddings))
-        embeddings = self._docs.get_attributes('embedding')
-        print(f'********** embedding: {embeddings}')
-        d_emb = _ext_B(_norm(self._docs.get_attributes('embedding')))
-        dists = _cosine(q_emb, d_emb)
-        positions, dist = self._get_sorted_top_k(dists, int(parameters['top_k']))
+        dists = _cosine(q_emb, self._embedding_matrix)
+        positions, dist = self._get_sorted_top_k(dists, int(parameters.get('top_k', 5)))
         for _q, _positions, _dists in zip(docs, positions, dist):
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
                 d.score.value = 1 - _dist
                 _q.matches.append(d)
+            _q.matches.sort(key=lambda item: -item.score.value)
 
     @staticmethod
     def _get_sorted_top_k(
@@ -227,6 +227,7 @@ def _get_ones(x, y):
 
 def _ext_A(A):
     nA, dim = A.shape
+    print(f'A.shape: {A.shape}')
     A_ext = _get_ones(nA, dim * 3)
     A_ext[:, dim: 2 * dim] = A
     A_ext[:, 2 * dim:] = A ** 2
@@ -327,9 +328,7 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        # docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
-        docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'text' not in doc.mime_type, docs)))
-        assert docs
+        docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
         if not docs:
             return
         with torch.no_grad():
@@ -337,18 +336,4 @@ class CLIPTextEncoder(Executor):
                 input_torch_tensor = clip.tokenize(doc.content)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
-        # return docs
-
-
-class MergeMatchesSortTopK(Executor):
-    def __init__(self, docs, **kwargs):
-        super().__init__(**kwargs)
-        self.docs = docs
-
-    @requests(on=['/index', '/search', '/train', ''])
-    def merge_and_sort(self, docs, **kwargs):
-        for m in docs.traverse('m'):
-            docs.extend(m)
-        docs = docs[:10]
-        docs.sort(key=lambda item: item.score.value)
-        return self.docs
+        return docs

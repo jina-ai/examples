@@ -22,7 +22,6 @@ pods:
     polling: all
     uses: pods/index-text.yml
     shards: $JINA_SHARDS
-    uses_after: pods/merge_matches_sort_topk.yml
 #  - name: text_encoder                    # encode query text into embeddings with CLIP model
 #    uses: pods/clip/text-encoder.yml
 #    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
