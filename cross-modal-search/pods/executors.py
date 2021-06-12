@@ -19,9 +19,10 @@ class ImageReader(Executor):
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: 'image/jpeg' not in doc.mime_type, docs)))
+        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
+        print(f'image docs: {len(image_docs)}')
         if not image_docs:
-            return
+            return DocumentArray([])
         for doc in image_docs:
             doc.convert_uri_to_buffer()
             doc.pop('chunks', 'uri')
@@ -193,7 +194,12 @@ class NumpyIndexer(Executor):
 
     @requests(on='/search')
     def search(self, docs: 'DocumentArray', parameters: Dict = {'top_k': 5}, **kwargs):
-        doc_embeddings = np.stack(docs.get_attributes('embedding'))
+        if not docs:
+            return
+        embedding_list = docs.get_attributes('embedding')
+        if not embedding_list:
+            return
+        doc_embeddings = np.stack(embedding_list)
         q_emb = _ext_A(_norm(doc_embeddings))
         dists = _cosine(q_emb, self._embedding_matrix)
         positions, dist = self._get_sorted_top_k(dists, int(parameters.get('top_k', 5)))
@@ -227,7 +233,6 @@ def _get_ones(x, y):
 
 def _ext_A(A):
     nA, dim = A.shape
-    print(f'A.shape: {A.shape}')
     A_ext = _get_ones(nA, dim * 3)
     A_ext[:, dim: 2 * dim] = A
     A_ext[:, 2 * dim:] = A ** 2
@@ -261,6 +266,7 @@ class KeyValueIndexer(Executor):
         super().__init__(*args, **kwargs)
         if os.path.exists(self.save_path):
             self._docs = DocumentArray.load(self.save_path)
+            print(f'docs indexed: {len(self._docs)}')
         else:
             self._docs = DocumentArray()
 
@@ -290,9 +296,8 @@ class KeyValueIndexer(Executor):
             #     match.MergeFrom(extracted_doc)
             current_matches = DocumentArray()
             for match in doc.matches:
-                for d in self._docs:
-                    if match.id in [chunk.id for chunk in d.chunks]:
-                        current_matches.append(Document(self._docs[d.id]))
+                if match.id in self._docs:
+                    current_matches.append(Document(self._docs[match.id]))
             doc.matches = current_matches
 
 
@@ -328,12 +333,13 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
-        if not docs:
+        _docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
+        if not _docs:
+            print(f'not text doc is found: {[d.modality for d in docs]}')
             return
         with torch.no_grad():
-            for doc in docs:
+            for doc in _docs:
                 input_torch_tensor = clip.tokenize(doc.content)
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
-        return docs
+        return _docs

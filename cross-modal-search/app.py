@@ -49,10 +49,11 @@ def check_index_result(resp):
 def check_query_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        # print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
             for m in _doc.matches:
-                print(f'+- {m.id[:10]}, score: {m.score.value}, text: {m.text}, modality: {m.modality}')
+                print(f'\t+- {m.id[:10]}, score: {m.score.value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
 
 
 def index(data_set, num_docs, request_size):
@@ -69,8 +70,12 @@ def index(data_set, num_docs, request_size):
 def query():
     f = Flow().load_config('flows/flow-query.yml')
     with f:
-        f.search(inputs=Document(uri='toy-data/images/1000268201_693b08cb0e.jpg'),
-                 on_done=check_query_result)
+        f.search(inputs=[
+            # Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image'),
+            Document(text='a black dog and a spotted dog are fighting', modality='text')],
+            request_size=1,
+            size=1,
+            on_done=check_query_result)
 
 
 def query_restful():
