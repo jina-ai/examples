@@ -71,11 +71,8 @@ def query():
     f = Flow().load_config('flows/flow-query.yml')
     with f:
         f.search(inputs=[
-            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image'),
-        ],
-            on_done=check_query_result)
-        f.search(inputs=[
-            Document(text='a black dog and a spotted dog are fighting', modality='text')
+            Document(text='a black dog and a spotted dog are fighting', modality='text'),
+            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image')
         ],
             on_done=check_query_result)
 
