@@ -72,7 +72,8 @@ def query():
     with f:
         f.search(inputs=[
             # Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image'),
-            Document(text='a black dog and a spotted dog are fighting', modality='text')],
+            Document(text='a black dog and a spotted dog are fighting', modality='text')
+        ],
             request_size=1,
             size=1,
             on_done=check_query_result)

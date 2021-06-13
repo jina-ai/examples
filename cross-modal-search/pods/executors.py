@@ -9,6 +9,7 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
+from jina.types.score import NamedScore
 
 
 class ImageReader(Executor):
@@ -290,14 +291,11 @@ class KeyValueIndexer(Executor):
         if not docs:
             return
         for doc in docs:
-            # for match in doc.matches:
-            #     assert match.parent_id
-            #     extracted_doc = self._docs[match.parent_id]
-            #     match.MergeFrom(extracted_doc)
             current_matches = DocumentArray()
             for match in doc.matches:
                 if match.id in self._docs:
-                    current_matches.append(Document(self._docs[match.id]))
+                    score = match.score
+                    current_matches.append(Document(self._docs[match.id], score=score))
             doc.matches = current_matches
 
 
