@@ -2,6 +2,7 @@ jtype: Flow
 version: '1'
 with:
   prefetch: 10
+  workspace: 'workspace'
 pods:
   - name: loader                                      # load images from the dataset of image-caption pairs
     uses: pods/image-load.yml
