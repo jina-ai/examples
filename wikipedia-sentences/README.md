@@ -1,8 +1,6 @@
-
 # Semantic Wikipedia Search with Transformers and DistilBERT
 
 ![](https://docs.jina.ai/_images/jinabox-wikipedia.gif)
-
 
 ## Table of contents: 
 
@@ -11,10 +9,8 @@
 - [🔮 Overview of the files in this example](#-overview-of-the-files-in-this-example)
 - [🌀 Flow diagram](#-flow-diagram)
 - [🔨 Next steps, building your own app](#-next-steps-building-your-own-app)
-- [🐳 Deploy the prebuild application using Docker](#-deploy-the-prebuild-application-using-docker)
 - [🙍 Community](#-community)
 - [🦄 License](#-license)
-
 
 ## Overview
 |  |  |
@@ -23,9 +19,14 @@
 | Data for indexing | Wikipedia corpus |
 | Data for querying | A text sentence  |
 | Dataset used |  [Kaggle Wikipedia corpus](kaggle.com/mikeortman/wikipedia-sentences)     |
-| ML model used |  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) |
+| ML model used |  [`distilbert-base-nli-stsb-mean-tokens `](https://huggingface.co/sentence-transformers/distilbert-base-nli-stsb-mean-tokens) |
 
-This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state-of-the-art machine learning  [`distilbert-based-uncased`](https://huggingface.co/distilbert-base-uncased) language model from the [Transformers](https://huggingface.co) library.
+This example shows you how to build a simple semantic search app powered by [Jina](http://www.jina.ai)'s neural search framework. You can index and search text sentences from Wikipedia using a state-of-the-art machine learning  [`distilbert-base-nli-stsb-mean-tokens `](https://huggingface.co/sentence-transformers/distilbert-base-nli-stsb-mean-tokens) language model from the [Transformers](https://huggingface.co) library.
+
+| item   | content                                          |
+|--------|--------------------------------------------------|
+| Input  | 1 text file with 1 sentence per line             |
+| Output | *top_k* number of sentences that match input query |
 
 ## 🐍 Build the app with Python
 
@@ -36,7 +37,6 @@ These instructions explain how to build the example yourself and deploy it with 
 1. You have a working Python 3.7 or 3.8 environment. 
 2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
 3. You have at least 2 GB of free space on your hard drive. 
-
 
 ### 👾 Step 1. Clone the repo and install Jina
 
@@ -56,38 +56,35 @@ pip install -r requirements.txt
 ```
 If this command runs without any error messages, you can then move onto step two. 
 
-### 🏃 Step 2. Indexing your data
-To quickly get started, you can index a [small dataset of 50 sentences](data/toy-input.txt)  to make sure everything is working correctly. 
+### 📇 Step 2. Index & 🔍 Search
+
+By default, we'll start off by indexing a [small dataset of 50 sentences](data/toy-input.txt) :
 
 ```sh
 python app.py -t index
 ```
-The relevant Jina code to index data given your Flow's YAML definition breaks down to
-```python
-with Flow().load_config('flows/index.yml'):
-    f.index_lines(filepath='data/toy-input.txt', read_mode='r', batch_size=16, num_docs=10)
+Here, we can also specify the number of documents to index with ```--num_docs``` / ```-n``` (defult is 50) and the top k search results with ```--top_k``` /  ```-k``` (defult is 5).
+
+Once indexing is completed, a search prompt will appear in your terminal. See the image below for an example search query and response.
+
 ```
-The Flow will interpret each line in the txt file as one Document.
-You can limit the number of indexed Documents with the `num_docs`
-argument. If you see the following output, it means your data has been correctly indexed.
-```sh
-Flow@5162[S]:flow is closed and all resources are released, current build level is 0
+please type a sentence: What is ROMEO
+         
+Ta-Dah🔮, here are what we found for: What is ROMEO
+>  0(0.36). The ROMEO website, iOS app and Android app are commonly used by the male gay community to find friends, dates, love or get informed about LGBT+ topics.
+
 ```
 
-We recommend you come back to the indexing step later and run the full wikipedia dataset for better results. To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB) follow these steps:
 
-<details>
-  <summary>Click to expand!</summary>
-  
-1. Set up a [Kaggle.com](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication) account
-2. Install the [Kaggle Python library](https://github.com/Kaggle/kaggle-api#installation) and set up your [API credentials](https://github.com/Kaggle/kaggle-api#api-credentials)
-3. Run the script: `sh ./get_data.sh`
-4. Set the input file: `export JINA_DATA_FILE='data/input.txt'`
-5. Set the number of docs to index `export JINA_MAX_DOCS=30000` (or whatever number you prefer. The default is `50`)
-6. Delete the old index: `rm -rf workspace`
-7. Index your new dataset: `python app.py -t index`
+To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB):
 
-If you are using a subset of the data (less than 30,000 documents) we recommend you shuffle the data. This is because the input file is ordered alphabetically, and Jina indexes from the top down. So without shuffling, your index may contain unrepresentative data, like this:
+1. Set up [Kaggle](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication)
+2. Run the script: `sh ./get_data.sh`
+3. Set the input file: `export JINA_DATA_FILE='data/input.txt'`
+4. Set the number of docs to index `export JINA_MAX_DOCS=30000` (or whatever number you prefer. The default is `50`)
+5. Index your new dataset: `python app.py -t index`
+
+If you are using a subset of the data (less then 30,000 documents) we recommend you shuffle the data. This is because the input file is ordered alphabetically, and Jina indexes from the top down. So without shuffling, your index may contain unrepresentative data, like this:
 
 ```
 0.000123, which corresponds to a distance of 705 Mly, or 216 Mpc.
@@ -105,110 +102,32 @@ On Linux, you can shuffle using the [`shuf` command](https://linuxhint.com/bash_
 shuf input.txt > input.txt
 ```
 
-To shuffle a file on macOS, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
+To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
 
-</details>
-
-
-### Step 3. 🔍 Search your data
-Jina offers several ways to search (query) your data. In this example, we show three of the most common ones. All three are optional, in a production environment, you would only choose one which suits your use case best. 
-
-
-#### Using a REST API
-Begin by running the following command to open the REST API interface.
-
-```sh
-python app.py -t query_restful
-```
-
-You should open another terminal window and paste the following command. 
-
-```sh
-curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
-```
-
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar Wikipedia sentences to the text input you provided in the `data` parameter. Feel free to alter the text in the 'data' parameter and play around with other queries! For a better understanding of the parameters see the table below. 
-|  |  |
-|--|--|
-| `top_k` | Integer determining the number of sentences to return |
-| `mode` | Mode to trigger in the call. See [here](https://docs.jina.ai/chapters/rest/) for more details |
-| `data` | Text input to query |
- 
-
-#### Using Jina Box; our frontend search interface
-
-**Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
-
-```sh
-python app.py -t query_restful
-```
-
-In your browser, open up the hosted Jina Box on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left-hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search` . You can type search queries into the text box on the right-hand side!
-
-
-#### Directly from terminal
-You can also easily search (query) your data directly from the terminal. Using the following command will open an interface directly in your terminal window. 
-
-```sh
-python app.py -t query
-```
-
-### Step 4. Incremental indexing (optional)
-What if new data arrives that needs to be indexed? Many applications will require incremental indexing, which is a way to add new data to an index, without re-indexing the original data.
-Of course, we don't want to re-calculate our index for all our data every time we add a couple of new Documents. 
-For this case, Jina provides a simple and intuitive solution which we will demonstrate using a second [small dataset](data/toy-input-incremental.txt).
-Just as before, index the [first dataset](data/toy-input.txt) and then *incrementally* the [second dataset](data/toy-input-incremental.txt)
-```python
-with Flow().load_config('flows/index.yml'):
-    f.index_lines(filepath='data/toy-input.txt', read_mode='r', batch_size=16, num_docs=10)
-    f.index_lines(filepath='data/toy-input-incremental.txt', read_mode='r', batch_size=16, num_docs=10)
-```
-One challenge we need to address when incrementally adding new data to the index is duplication of Documents.
-Jina provides a [DocCache](pods/index_cache.yml) Pod that is pre-configured for you and takes care of detecting duplicates 
-when adding to the index. Finally, we add the DocCache Pod to the [index Flow](flows/index_incremental.yml). 
-```yaml
-!Flow
-version: '1'
-pods:
-  - name: encoder
-    uses: pods/encode.yml
-    timeout_ready: 1200000
-    read_only: true
-  - name: indexer
-    uses_before: pods/index_cache.yml  # use before indexing to detect duplicates 
-    uses: pods/index.yml
-```
-As you can see, compared to the previous [index Flow](flows/index.yml) we just needed to add one line to the YAML spec.
-To see the incremental indexing in action, run 
-```shell
-python app.py -t index_incremental
-```
 
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
-|File   | Explanation  |
-|--|--|
-|📂 `flows/`  | Folder to store Flow configuration    |
-|--- 📃 `flows/index.yml`  | Contains the details of which Executors should be used for indexing your data. |
-|--- 📃 `flows/query.yml`  | Contains the details of which Executors should be used for querying your data. |
-|--- 📃 `flows/index_incremental.yml`  | Contains the details of which Pods are required for the incremental indexing. |
-|📂 `pods/` | Folder to store Pod configurations|
-|--- 📃 `pods/encode.yml`  | Specifies the configurations values for the encoding Executor.   |
-|--- 📃 `pods/index.yml`  | Specifies the configurations values for the encoding Executor.   |
-|--- 📃 `pods/index_cache.yml`  | Specifies the DocCache necessary for the incremental indexing.   |
-|📂 `test/*`  | Various maintenance tests to keep the example running.   |
-|📃 `app.py`   | The gateway code to combine the index and query Flow.  |
-|📃 `get_data.sh`  |  Downloads the Kaggle dataset.|
-|📃 `manifest.yml`   |Needed to deploy to Jina Hub.|
-|📃 `requirements.txt`  |  Contains all required python libraries.|
+
+📂 `test/*`   Various maintenance tests to keep the example running.   
+
+📃 `app.py`    The gateway code to that runs the index & query Flow.  
+
+📃 `indexer.py`    Indexing executor code that uses numpy to aggregate embeddings.
+
+📃 `transformer.py`    Encoding executor code using transformer model.  
+
+
+📃 `get_data.sh`    Downloads the Kaggle dataset. 
+
+📃 `manifest.yml`      Needed to deploy to Jina Hub.
+
+📃 `requirements.txt`    Contains all required python libraries.
 
 
 ## 🌀 Flow diagram
 
-This diagram provides a visual representation of the two Flows in this example, showing which Executors are used in which order.
-
-![116664240-7bad2500-a998-11eb-90fa-1d1268806602](https://user-images.githubusercontent.com/59612379/116871566-bde29a80-ac14-11eb-84d8-26b5b48dee81.jpeg)
-
+This diagram provides a visual representation of the flow in this example, showing which Executors are used in which order.
+![wiki_flow](https://user-images.githubusercontent.com/22567795/119640719-7930d480-be4b-11eb-8566-83ba068aa05b.jpeg)
 
 ## 🔨 Next steps, building your own app
 
@@ -253,6 +172,4 @@ Once you run this command, you should see a JSON output returned to you. This co
 ## 🦄 License
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
-
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples#license) for the full license text.
-

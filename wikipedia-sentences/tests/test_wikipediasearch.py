@@ -19,19 +19,16 @@ def config(tmpdir):
 @pytest.mark.parametrize('task_para',
                          [('index',
                            'Their land was taken back by the Spanish Crown',
-                           'California became part of the United States',
-                           '> 49('),
-                          ('index_incremental',
+                           'California became part of the United States'
+                           ),
+                          ('index',
                            'Andrea Kremer',
-                           'multi-Emmy Award Winning American',
-                           '> 99(')
-                          ])
+                           'multi-Emmy Award Winning American'
+                           )])
 def test_wikipediasearch_index(tmpdir, task_para):
-    task_str, input_str, output_str, last_str = task_para
+    task_str, input_str, last_str = task_para
     config(tmpdir)
     runner = CliRunner()
     result = runner.invoke(main, ['-t', task_str])
     assert 'done in' in result.stdout
-    result = runner.invoke(main, ['-t', 'query', '-k', '200'], input=input_str)
-    assert output_str in result.stdout
     assert last_str in result.stdout

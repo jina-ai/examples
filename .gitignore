@@ -136,5 +136,5 @@ jina-profile*.json
 models
 result.html # genreated in pokedex example
 /advanced-vector-search/siftsmall/
-/pokedex-with-bit/pretrained
+/image-search/pretrained
 **/metrics.txt
