@@ -3,4 +3,4 @@ jtype: NumpyIndexer
 metas:
   name: text_idx  # a customized name
   workspace: './workspace'
-  py_modules: ['executors.py']
+  py_modules: 'executors.py'

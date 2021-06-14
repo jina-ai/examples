@@ -46,6 +46,16 @@ def check_index_result(resp):
         print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
 
 
+def check_query_result(resp):
+    for doc in resp.data.docs:
+        _doc = Document(doc)
+        # print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        if _doc.matches:
+            for m in _doc.matches:
+                print(f'\t+- {m.id[:10]}, score: {m.score.value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+
+
 def index(data_set, num_docs, request_size):
     flow = Flow.load_config('flows/flow-index.yml')
     with flow:
@@ -55,6 +65,16 @@ def index(data_set, num_docs, request_size):
                 request_size=request_size,
                 on_done=check_index_result
             )
+
+
+def query():
+    f = Flow().load_config('flows/flow-query.yml')
+    with f:
+        f.search(inputs=[
+            Document(text='a black dog and a spotted dog are fighting', modality='text'),
+            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image')
+        ],
+            on_done=check_query_result)
 
 
 def query_restful():
@@ -72,7 +92,7 @@ def dryrun():
 
 
 @click.command()
-@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False), default='index')
+@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query_restful', 'dryrun', 'query'], case_sensitive=False), default='index')
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
@@ -99,6 +119,8 @@ def main(task, num_docs, request_size, data_set):
         index(data_set, num_docs, request_size)
     elif task == 'index_restful':
         index_restful(num_docs)
+    elif task == 'query':
+        query()
     elif task == 'query_restful':
         query_restful()
     elif task == 'dryrun':

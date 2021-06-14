@@ -2,6 +2,7 @@ jtype: Flow
 version: '1'
 with:
   prefetch: 10
+  workspace: 'workspace'
 pods:
   - name: loader                                      # load images from the dataset of image-caption pairs
     uses: pods/image-load.yml
@@ -37,5 +38,6 @@ pods:
     polling: any
     uses: pods/index-text.yml #(numpy + binary pb indexer)
     shards: $JINA_SHARDS
+    needs: text_encoder
   - name: join_all                                    # wait on the 3 executors to finish data processing with "needs"
     needs: [image_vector_indexer, image_kv_indexer, text_indexer]
