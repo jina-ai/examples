@@ -1,4 +1,4 @@
-jina[http]==1.2.0
+jina[http]==1.3.0
 click
 torch==1.7.1
 transformers==4.1.1
