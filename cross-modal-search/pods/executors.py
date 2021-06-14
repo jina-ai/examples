@@ -167,6 +167,7 @@ class NumpyIndexer(Executor):
 
         self.filename = filename
         self._docs = DocumentArray()
+        self.doc_embeddings = np.array([])
         if os.path.exists(self.save_path):
             with open(self.save_path) as fp:
                 for v in fp:
@@ -303,3 +304,4 @@ class CLIPTextEncoder(Executor):
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
         return _docs
+
