@@ -19,7 +19,7 @@ class ImageReader(Executor):
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
+        image_docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('image/jpeg', 'image/png'), docs)))
         if not image_docs:
             return DocumentArray([])
         for doc in image_docs:
@@ -319,7 +319,7 @@ class CLIPTextEncoder(Executor):
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
         print(f'docs: {docs}')
-        _docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
+        _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain', ), docs)))
         if not _docs:
             print(f'not text doc is found: {[d.modality for d in docs]}')
             return
