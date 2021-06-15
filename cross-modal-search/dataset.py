@@ -39,7 +39,7 @@ class Flickr30kDataset(data.Dataset):
         image_file_path = os.path.join(images_root, img_file_name)
         with open(image_file_path, 'rb') as fp:
             image_buffer = fp.read()
-        return image_buffer, str(caption).lower()
+        return image_buffer, image_file_path, str(caption).lower()
 
     def __len__(self):
         return len(self.ids)
