@@ -1,5 +1,4 @@
 jtype: NumpyIndexer
 metas:
   name: images_vec_idx  # a customized name
-  workspace: 'workspace'
   py_modules: 'executors.py'

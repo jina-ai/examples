@@ -1,5 +1,4 @@
 jtype: KeyValueIndexer
 metas:
   name: kv_indexer
-  workspace: 'workspace'
   py_modules: 'executors.py'

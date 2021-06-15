@@ -8,6 +8,7 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
+from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 
 
 class ImageReader(Executor):
@@ -187,11 +188,6 @@ class NumpyIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', **kwargs):
-        import base64
-        # for doc in docs:
-        #     # doc.uri = base64.b64encode(doc.blob)
-        #     doc.convert_blob_to_buffer()
-        #     doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')
@@ -211,13 +207,6 @@ class NumpyIndexer(Executor):
                 d.score.value = 1 - _dist
                 _q.matches.append(d)
 
-            # for match in _q.matches:
-            #     if match.id in self._docs:
-            #         score = match.score
-            #         match.MergeFrom(self._docs[match.id])
-            #         match.score = score
-
-
     @staticmethod
     def _get_sorted_top_k(
             dist: 'np.array', top_k: int
@@ -232,31 +221,6 @@ class NumpyIndexer(Executor):
             idx = np.take_along_axis(idx_ps, idx_fs, axis=1)
             dist = np.take_along_axis(dist, idx_fs, axis=1)
         return idx, dist
-
-def _ext_A(A):
-    nA, dim = A.shape
-    A_ext = np.ones((nA, dim * 3))
-    A_ext[:, dim: 2 * dim] = A
-    A_ext[:, 2 * dim:] = A ** 2
-    return A_ext
-
-def _ext_B(B):
-    nB, dim = B.shape
-    B_ext = np.ones((dim * 3, nB))
-    B_ext[:dim] = (B ** 2).T
-    B_ext[dim: 2 * dim] = -2.0 * B.T
-    del B
-    return B_ext
-
-def _euclidean(A_ext, B_ext):
-    sqdist = A_ext.dot(B_ext).clip(min=0)
-    return np.sqrt(sqdist)
-
-def _norm(A):
-    return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
-
-def _cosine(A_norm_ext, B_norm_ext):
-    return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
 
 
 class KeyValueIndexer(Executor):
