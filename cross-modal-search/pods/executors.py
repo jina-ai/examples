@@ -294,6 +294,7 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
+        print(f'docs: {docs}')
         _docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'text', docs)))
         if not _docs:
             print(f'not text doc is found: {[d.modality for d in docs]}')

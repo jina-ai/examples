@@ -2,6 +2,7 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
+import sys
 
 import click
 from jina import Flow, Document
@@ -19,25 +20,13 @@ def config():
     os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
     os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
     os.environ['JINA_PORT'] = '45678'
-    os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
 
-def index_restful(num_docs):
+
+def index_restful():
     flow = Flow().load_config('flows/flow-index.yml')
-
+    flow.use_rest_gateway()
     with flow:
-        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        flow.logger.info(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{flow.port_expose}/index'
-
-        input_docs = _input_lines(
-            filepath=data_path,
-            size=num_docs,
-            read_mode='r',
-        )
-        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        r = requests.post(url, json=data_json)
-        if r.status_code != 200:
-            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
+        flow.block()
 
 
 def check_index_result(resp):
@@ -49,7 +38,6 @@ def check_index_result(resp):
 def check_query_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
-        # print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
             for m in _doc.matches:
@@ -79,20 +67,13 @@ def query():
 
 def query_restful():
     flow = Flow().load_config('flows/flow-query.yml')
-    flow.plot()
     flow.use_rest_gateway()
     with flow:
         flow.block()
 
 
-def dryrun():
-    flow = Flow().load_config('flows/flow-index.yml')
-    with flow:
-        pass
-
-
 @click.command()
-@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query_restful', 'dryrun', 'query'], case_sensitive=False), default='index')
+@click.option('--task', '-t', type=click.Choice(['index', 'index_restful', 'query_restful', 'query']), default='index')
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
@@ -100,31 +81,29 @@ def main(task, num_docs, request_size, data_set):
     config()
     workspace = os.environ['JINA_WORKSPACE']
     logger = logging.getLogger('cross-modal-search')
-    # if 'index' in task:
-    #     if os.path.exists(workspace):
-    #         logger.error(
-    #             f'\n +------------------------------------------------------------------------------------+ \
-    #                 \n |                                   🤖🤖🤖                                           | \
-    #                 \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
-    #                 \n |                                   🤖🤖🤖                                           | \
-    #                 \n +------------------------------------------------------------------------------------+'
-    #         )
-    #         sys.exit(1)
-    # if 'query' in task:
-    #     if not os.path.exists(workspace):
-    #         logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
-    #         sys.exit(1)
+    if 'index' in task:
+        if os.path.exists(workspace):
+            logger.error(
+                f'\n +------------------------------------------------------------------------------------+ \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n | The directory {workspace} already exists. Please remove it before indexing again.  | \
+                    \n |                                   🤖🤖🤖                                           | \
+                    \n +------------------------------------------------------------------------------------+'
+            )
+            sys.exit(1)
+    if 'query' in task:
+        if not os.path.exists(workspace):
+            logger.error(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
+            sys.exit(1)
 
     if task == 'index':
         index(data_set, num_docs, request_size)
     elif task == 'index_restful':
-        index_restful(num_docs)
+        index_restful()
     elif task == 'query':
         query()
     elif task == 'query_restful':
         query_restful()
-    elif task == 'dryrun':
-        dryrun()
 
 
 if __name__ == '__main__':

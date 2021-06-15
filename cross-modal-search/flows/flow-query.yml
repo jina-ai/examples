@@ -3,6 +3,7 @@ version: '1'
 with:
   prefetch: 10
   port_expose: 45678
+  workspace: $JINA_WORKSPACE
 pods:
   - name: loader                          # load query image
     uses: pods/image-load.yml
@@ -27,7 +28,6 @@ pods:
     shards: $JINA_SHARDS
   - name: text_encoder                    # encode query text into embeddings with CLIP model
     uses: pods/clip/text-encoder.yml
-    uses_internal: $JINA_TEXT_ENCODER_INTERNAL
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
