@@ -23,11 +23,6 @@ pods:
     polling: any
     uses: pods/index-image-vector.yml
     shards: $JINA_SHARDS
-  - name: image_kv_indexer                            # store image documents
-    polling: any
-    uses: pods/index-image-kv.yml
-    shards: $JINA_SHARDS
-    needs: [gateway]
   - name: text_encoder                                # encode text into embeddings with CLIP model
     uses: pods/clip/text-encoder.yml
     shards: $JINA_PARALLEL
@@ -40,4 +35,4 @@ pods:
     shards: $JINA_SHARDS
     needs: text_encoder
   - name: join_all                                    # wait on the 3 executors to finish data processing with "needs"
-    needs: [image_vector_indexer, image_kv_indexer, text_indexer]
+    needs: [image_vector_indexer, text_indexer]

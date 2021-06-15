@@ -37,11 +37,6 @@ pods:
     uses: pods/index-image-vector.yml
     shards: $JINA_SHARDS
     needs: text_encoder
-  - name: image_kv_indexer                # index query image as kv
-    polling: all
-    uses: pods/index-image-kv.yml
-    shards: $JINA_SHARDS
-    needs: image_vector_indexer
   - name: join_all                        # combine text and image queries
-    needs: [text_indexer, image_kv_indexer]
+    needs: [text_indexer, image_vector_indexer]
     read_only: true
