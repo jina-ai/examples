@@ -21,13 +21,9 @@ def config(model_name):
     os.environ['JINA_PORT'] = '45678'
     os.environ['JINA_USE_REST_API'] = 'false'
     if model_name == 'clip':
-        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7'
-        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7'
+        # os.environ['JINA_IMAGE_ENCODER'] = CLIPImageEncoder
+        # os.environ['JINA_TEXT_ENCODER'] = CLIPTextEncoder
         os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
-    elif model_name == 'vse':
-        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7'
-        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7'
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/vse/text-encoder.yml'
     else:
         msg = f'Unsupported model {model_name}.'
         msg += 'Expected `clip` or `vse`.'
@@ -98,13 +94,13 @@ def print_evaluation_score(resp):
 def main(index_num_docs, evaluate_num_docs, request_size, data_set, model_name, evaluation_mode):
     config(model_name)
     if index_num_docs > 0:
-        with Flow.load_config('flow-index.yml') as f:
+        with Flow.load_config('flows/flow-index.yml') as f:
             f.use_rest_gateway()
             f.index(
                 input_fn=input_index_data(index_num_docs, request_size, data_set),
                 request_size=request_size
             )
-    with Flow.load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
+    with Flow.load_config('flows/flow-query.yml').add(name='evaluator', uses='pods/evaluate.yml') as flow_eval:
         flow_eval.search(
             input_fn=evaluation_generator(evaluate_num_docs, request_size, data_set, mode=evaluation_mode),
             on_done=print_evaluation_score

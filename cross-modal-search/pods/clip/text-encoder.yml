@@ -1,16 +1,5 @@
-!CLIPTextEncoder
+# encodes text into embeddings with CLIP model
+jtype: CLIPTextEncoder
 metas:
   py_modules:
-    - workspace/__init__.py
-requests:
-  on:
-    IndexRequest:
-      - !FilterQL
-        with:
-          lookups: {'modality': 'text'}
-      - !EncodeDriver {}
-    SearchRequest:
-      - !FilterQL
-        with:
-          lookups: {'mime_type__contains': 'text'}
-      - !EncodeDriver {}
+    - '../executors.py'
