@@ -1,0 +1,7 @@
+git+https://github.com/jina-ai/jina.git@v2.0.0rc6#egg=jina[http]
+nltk==3.5
+pycocotools==2.0.2
+python-magic==0.4.20
+click==7.1.2
+kaggle==1.5.12
+git+https://github.com/openai/CLIP.git
