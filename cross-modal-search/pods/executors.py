@@ -1,7 +1,6 @@
 import os
 from typing import Dict, Iterable, Union, Tuple
 
-import itertools
 import torch
 import numpy as np
 import clip
@@ -14,7 +13,7 @@ from jina import Executor, DocumentArray, requests, Document
 class ImageReader(Executor):
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(itertools.filterfalse(lambda doc: doc.modality != 'image', docs)))
+        image_docs = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
         return image_docs
 
     @requests(on='/search')
@@ -172,8 +171,7 @@ class NumpyIndexer(Executor):
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
-            self._darray_chunks = self._docs.traverse_flat(traversal_paths='r')
-            self._embedding_matrix = _ext_B(_norm(np.stack(self._darray_chunks.get_attributes('embedding'))))
+            self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
 
     @property
     def save_path(self):
@@ -189,6 +187,11 @@ class NumpyIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', **kwargs):
+        import base64
+        # for doc in docs:
+        #     # doc.uri = base64.b64encode(doc.blob)
+        #     doc.convert_blob_to_buffer()
+        #     doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')
@@ -207,7 +210,13 @@ class NumpyIndexer(Executor):
                 d = Document(self._docs[int(position)])
                 d.score.value = 1 - _dist
                 _q.matches.append(d)
-            _q.matches.sort(key=lambda item: -item.score.value)
+
+            # for match in _q.matches:
+            #     if match.id in self._docs:
+            #         score = match.score
+            #         match.MergeFrom(self._docs[match.id])
+            #         match.score = score
+
 
     @staticmethod
     def _get_sorted_top_k(
@@ -278,12 +287,11 @@ class KeyValueIndexer(Executor):
         if not docs:
             return
         for doc in docs:
-            current_matches = DocumentArray()
             for match in doc.matches:
                 if match.id in self._docs:
                     score = match.score
-                    current_matches.append(Document(self._docs[match.id], score=score))
-            doc.matches = current_matches
+                    match.MergeFrom(self._docs[match.id])
+                    match.score = score
 
 
 class CLIPImageEncoder(Executor):
@@ -318,7 +326,6 @@ class CLIPTextEncoder(Executor):
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        print(f'docs: {docs}')
         _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain', ), docs)))
         if not _docs:
             print(f'not text doc is found: {[d.modality for d in docs]}')
