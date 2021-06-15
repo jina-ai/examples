@@ -56,9 +56,10 @@ def index(data_set, num_docs, request_size):
 
 
 def query():
-    f = Flow().load_config('flows/flow-query.yml')
-    with f:
-        f.search(inputs=[
+    flow = Flow().load_config('flows/flow-query.yml')
+    flow.use_rest_gateway()
+    with flow:
+        flow.search(inputs=[
             Document(text='a black dog and a spotted dog are fighting', modality='text'),
             Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image')
         ],
