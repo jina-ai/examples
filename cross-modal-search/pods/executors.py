@@ -187,13 +187,11 @@ class NumpyIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: 'DocumentArray', **kwargs):
-        for doc in docs:
-            if doc.blob is not None:
-                doc.uri = doc.tags['uri']
-                print(f'uri: {doc.uri}')
-                doc.convert_uri_to_datauri()
-                # doc.blob = np.moveaxis(doc.blob, 0, -1)
-                # doc.convert_image_blob_to_uri(224, 224)
+        import base64
+        # for doc in docs:
+        #     # doc.uri = base64.b64encode(doc.blob)
+        #     doc.convert_blob_to_buffer()
+        #     doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')
@@ -212,6 +210,12 @@ class NumpyIndexer(Executor):
                 d = Document(self._docs[int(position)])
                 d.score.value = 1 - _dist
                 _q.matches.append(d)
+
+            # for match in _q.matches:
+            #     if match.id in self._docs:
+            #         score = match.score
+            #         match.MergeFrom(self._docs[match.id])
+            #         match.score = score
 
 
     @staticmethod
@@ -253,6 +257,41 @@ def _norm(A):
 
 def _cosine(A_norm_ext, B_norm_ext):
     return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
+
+
+class KeyValueIndexer(Executor):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if os.path.exists(self.save_path):
+            self._docs = DocumentArray.load(self.save_path)
+        else:
+            self._docs = DocumentArray()
+
+    @property
+    def save_path(self):
+        if not os.path.exists(self.workspace):
+            os.makedirs(self.workspace)
+        return os.path.join(self.workspace, 'kv.json')
+
+    def close(self):
+        self._docs.save(self.save_path)
+
+    @requests(on='/index')
+    def index(self, docs: DocumentArray, **kwargs):
+        for doc in docs:
+            doc.convert_buffer_to_uri()
+        self._docs.extend(docs)
+
+    @requests(on='/search')
+    def query(self, docs: DocumentArray, **kwargs):
+        if not docs:
+            return
+        for doc in docs:
+            for match in doc.matches:
+                if match.id in self._docs:
+                    score = match.score
+                    match.MergeFrom(self._docs[match.id])
+                    match.score = score
 
 
 class CLIPImageEncoder(Executor):

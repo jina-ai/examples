@@ -39,7 +39,7 @@ class Flickr30kDataset(data.Dataset):
         image_file_path = os.path.join(images_root, img_file_name)
         with open(image_file_path, 'rb') as fp:
             image_buffer = fp.read()
-        return image_buffer, image_file_path, str(caption).lower()
+        return image_buffer, str(caption).lower()
 
     def __len__(self):
         return len(self.ids)
@@ -62,7 +62,7 @@ class FlickrDataset(data.Dataset):
         image_file_name, caption = self.lines[index*5].split(',', 1)
         with open(os.path.join(self.images_root, image_file_name), 'rb') as fp:
             image_buffer = fp.read()
-        return image_buffer, os.path.join(self.images_root, image_file_name), str(caption).lower().rstrip()
+        return image_buffer, str(caption).lower().rstrip()
 
     def __len__(self):
         return int(len(self.lines)/5)
@@ -70,8 +70,8 @@ class FlickrDataset(data.Dataset):
 
 def collate_fn(data):
     # Not sure this is actually needed
-    images, image_fns, captions = zip(*data)
-    return images, image_fns, captions
+    images, captions = zip(*data)
+    return images, captions
 
 
 def get_data_loader(split, root, captions, batch_size=8, dataset_type='f30k', shuffle=False,
@@ -109,15 +109,14 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
         dataset_type=dataset_type
     )
 
-    for i, (images, image_filenames, captions) in enumerate(data_loader):
-        for image, image_fn, caption in zip(images, image_filenames, captions):
+    for i, (images, captions) in enumerate(data_loader):
+        for image, caption in zip(images, captions):
             hashed = hashlib.sha1(image).hexdigest()
             with Document() as document_img:
                 document_img.buffer = image
                 document_img.modality = 'image'
                 document_img.mime_type = 'image/jpeg'
                 document_img.tags['id'] = hashed
-                document_img.tags['uri'] = image_fn
 
             with Document() as document_caption:
                 document_caption.text = caption
