@@ -32,7 +32,7 @@ def index_restful():
 def check_index_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, blob: {_doc.blob.shape}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
+        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
 
 
 def check_query_result(resp):

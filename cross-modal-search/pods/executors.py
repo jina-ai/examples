@@ -189,8 +189,11 @@ class NumpyIndexer(Executor):
     def index(self, docs: 'DocumentArray', **kwargs):
         for doc in docs:
             if doc.blob is not None:
-                doc.blob = np.moveaxis(doc.blob, 0, -1)
-                doc.convert_image_blob_to_uri(224, 224)
+                doc.uri = doc.tags['uri']
+                print(f'uri: {doc.uri}')
+                doc.convert_uri_to_datauri()
+                # doc.blob = np.moveaxis(doc.blob, 0, -1)
+                # doc.convert_image_blob_to_uri(224, 224)
         self._docs.extend(docs)
 
     @requests(on='/search')
