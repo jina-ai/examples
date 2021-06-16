@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Iterable, Union, Tuple
+from typing import Dict, Iterable, Union, Tuple, Sequence
 
 import torch
 import numpy as np
@@ -8,7 +8,17 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
-from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
+from jina.helloworld.chatbot.executors import _norm, _ext_B, _ext_A, _cosine
+
+
+class ReciprocalRankEvaluator(Executor):
+    def rank_evaluate(self, actual: Sequence[Union[str, int]], desired: Sequence[Union[str, int]], **kwargs):
+        if len(actual) == 0 or len(desired) == 0:
+            return 0.0
+        try:
+            return 1.0 / (actual.index(desired[0]) + 1)
+        except:
+            return 0.0
 
 
 class ImageReader(Executor):
@@ -242,8 +252,8 @@ class KeyValueIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: DocumentArray, **kwargs):
-        for doc in docs:
-            doc.convert_buffer_to_uri()
+        # for doc in docs:
+        #     doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')

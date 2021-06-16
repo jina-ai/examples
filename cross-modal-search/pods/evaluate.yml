@@ -1,10 +1,8 @@
-!ReciprocalRankEvaluator
-with:
-  {}
+jtype: ReciprocalRankEvaluator
+#with:
+#  {}
+metas:
+  py_modules: 'executors.py'
 requests:
-    on:
-      SearchRequest:
-        - !RankEvaluateDriver
-          with:
-            fields: ['tags__id']
-            traversal_paths: ['r']
+  /search: rank_evaluate
+#            traversal_paths: ['r']
