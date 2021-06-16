@@ -408,8 +408,7 @@ class DocVectorIndexer(Executor):
         q_emb = helper.ext_A(helper.norm(a))
         d_emb = helper.ext_B(helper.norm(b))
         dists = helper.cosine(q_emb, d_emb)
-        # top_k = parameters.get('top_k', 3)
-        top_k = 3
+        top_k = parameters.get('top_k', 3)
         idx, dist = self._get_sorted_top_k(dists, top_k)
         for _q, _ids, _dists in zip(docs, idx, dist):
             for _id, _dist in zip(_ids, _dists):
@@ -442,25 +441,17 @@ class DynamicNModalityRanker(Executor):
     def rank(self, docs_matrix: List[DocumentArray], parameters: Dict, **kwargs):
         result = DocumentArray()
         docs_matrix = [doc_arr for doc_arr in docs_matrix if doc_arr is not None and len(doc_arr) > 0]
-        num_modalities = len(docs_matrix)
 
         for single_doc_per_modality in zip(*docs_matrix):
             final_matches = {}
-            for mod in range(num_modalities):
-                doc: Document = single_doc_per_modality[mod]
+            for doc in single_doc_per_modality:
                 for m in doc.matches:
                     if m.tags['root_doc_id'] in final_matches:
-                        final_matches[m.tags['root_doc_id']].score.value += (
-                                m.score.value * doc.weight
-                        )
+                        final_matches[m.tags['root_doc_id']].score.value += m.score.value
                     else:
-                        m.score.value *= doc.weight
-                        final_matches[m.tags['root_doc_id']] = Document(m, copy=True)
+                        final_matches[m.tags['root_doc_id']] = Document(id=m.tags['root_doc_id'], score=m.score)
             da = DocumentArray(list(final_matches.values()))
             da.sort(key=lambda ma: ma.score.value, reverse=True)
             d = Document(matches=da[: int(parameters.get('top_k', 3))])
             result.append(d)
         return result
-
-
-
