@@ -12,11 +12,20 @@ from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 
 
 class ReciprocalRankEvaluator(Executor):
-    def rank_evaluate(self, docs: 'DocumentArray', **kwargs):
-        for doc in docs:
-            # where actual mean reciprocal rank is calculated
-            mcr = sum([match.score.value for match in doc.matches])/len(doc.matches)
-            doc.evaluations = [mcr]
+
+    @requests
+    def rank_evaluate(self, docs: 'DocumentArray', groundtruths, **kwargs):
+        # mcr is the 1/RANKi where i the rank position of the first match
+        for doc, gt in zip(docs, groundtruths):
+            mrr = 0
+            for i, match in enumerate(doc.matches):
+                if match.id==gt.matches[0].tags['id']: # gt only has one match
+                    rank_position = i+1
+                    mrr = 1 / rank_position
+                    break
+
+            doc.evaluations['mrr'] = mrr
+
 
 class ImageReader(Executor):
     @requests(on='/index')
@@ -213,7 +222,7 @@ class NumpyIndexer(Executor):
         for _q, _positions, _dists in zip(docs, positions, dist):
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
-                d.score.value = 1 - _dist
+                d.scores['cosine'] = 1 - _dist
                 _q.matches.append(d)
 
     @staticmethod
@@ -260,11 +269,12 @@ class KeyValueIndexer(Executor):
         if not docs:
             return
         for doc in docs:
+            assert(len(doc.matches))
             for match in doc.matches:
                 if match.id in self._docs:
-                    score = match.score
+                    score = match.scores['cosine']
                     match.MergeFrom(self._docs[match.id])
-                    match.score = score
+                    match.scores['cosine'] = score
 
 
 class CLIPImageEncoder(Executor):
