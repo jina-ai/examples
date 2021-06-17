@@ -8,18 +8,15 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
-from jina.helloworld.chatbot.executors import _norm, _ext_B, _ext_A, _cosine
+from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 
 
 class ReciprocalRankEvaluator(Executor):
-    def rank_evaluate(self, actual: Sequence[Union[str, int]], desired: Sequence[Union[str, int]], **kwargs):
-        if len(actual) == 0 or len(desired) == 0:
-            return 0.0
-        try:
-            return 1.0 / (actual.index(desired[0]) + 1)
-        except:
-            return 0.0
-
+    def rank_evaluate(self, docs: 'DocumentArray', **kwargs):
+        for doc in docs:
+            # where actual mean reciprocal rank is calculated
+            mcr = sum([match.score.value for match in doc.matches])/len(doc.matches)
+            doc.evaluations = [mcr]
 
 class ImageReader(Executor):
     @requests(on='/index')
@@ -178,10 +175,12 @@ class NumpyIndexer(Executor):
         self._docs = DocumentArray()
         self.doc_embeddings = np.array([])
         if os.path.exists(self.save_path):
+            print(f'path ............ {self.save_path}')
             with open(self.save_path) as fp:
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
+            print(f'********** {self._docs}')
             self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
 
     @property
@@ -252,8 +251,8 @@ class KeyValueIndexer(Executor):
 
     @requests(on='/index')
     def index(self, docs: DocumentArray, **kwargs):
-        # for doc in docs:
-        #     doc.convert_buffer_to_uri()
+        for doc in docs:
+            doc.convert_buffer_to_uri()
         self._docs.extend(docs)
 
     @requests(on='/search')
