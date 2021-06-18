@@ -76,36 +76,15 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
 
 
 def print_evaluation_score(resp):
-    flag = False
     batch_of_score = 0
     for doc in resp.docs:
-        _doc = Document(doc)
-        print(
-            f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
-        if _doc.matches:
-            for m in _doc.matches:
-                print(
-                    f'\t+- {m.id[:10]}, score: {m.scores}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
         if len(doc.evaluations) > 0:
-            print(f'evaluation in resp')
-            print(f'{doc.evaluations}')
-            flag = True
             batch_of_score += doc.evaluations['mrr'].value
 
-    assert(flag)
     global sum_of_score
     global num_of_searches
     sum_of_score += batch_of_score
     num_of_searches += len(resp.data.docs)
-
-
-def check_query_result(resp):
-    for doc in resp.data.docs:
-        _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
-        if _doc.matches:
-            for m in _doc.matches:
-                print(f'\t+- {m.id[:10]}, score: {m.score.value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
 
 
 @click.command()
