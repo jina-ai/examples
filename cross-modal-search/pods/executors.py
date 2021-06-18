@@ -18,11 +18,17 @@ class ReciprocalRankEvaluator(Executor):
         # mcr is the 1/RANKi where i the rank position of the first match
         for doc, gt in zip(docs, groundtruths):
             mrr = 0
-            for i, match in enumerate(doc.matches):
-                if match.id==gt.matches[0].tags['id']: # gt only has one match
-                    rank_position = i+1
-                    mrr = 1 / rank_position
-                    break
+            if gt.matches[0].tags['id'] not in doc.matches.get_attributes('tags__id'):
+                doc.evaluations['precision'] = 0
+            else:
+                flag = True
+                num_of_match = 0
+                for i, match in enumerate(doc.matches):
+                    if match.tags['id']==gt.matches[0].tags['id']: # gt only has one match
+                        num_of_match += 1
+                        rank_position = i+1
+                        mrr = 1 / rank_position
+                        break
 
             doc.evaluations['mrr'] = mrr
 
@@ -184,12 +190,10 @@ class NumpyIndexer(Executor):
         self._docs = DocumentArray()
         self.doc_embeddings = np.array([])
         if os.path.exists(self.save_path):
-            print(f'path ............ {self.save_path}')
             with open(self.save_path) as fp:
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
-            print(f'********** {self._docs}')
             self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
 
     @property
@@ -220,10 +224,13 @@ class NumpyIndexer(Executor):
         dists = _cosine(q_emb, self._embedding_matrix)
         positions, dist = self._get_sorted_top_k(dists, int(parameters.get('top_k', 5)))
         for _q, _positions, _dists in zip(docs, positions, dist):
+            l = []
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
                 d.scores['cosine'] = 1 - _dist
                 _q.matches.append(d)
+                l.append(d.id)
+
 
     @staticmethod
     def _get_sorted_top_k(

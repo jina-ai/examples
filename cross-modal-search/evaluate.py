@@ -44,11 +44,11 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
         for image, caption in zip(images, captions):
             hashed = hashlib.sha1(image).hexdigest()
             if mode == 'text2image':
-                with Document() as document:
+                with Document(id=hashed) as document:
                     document.text = caption
                     document.modality = 'text'
                     document.mime_type = 'text/plain'
-                    document.tags['id'] = caption
+                    #document.tags['id'] = hashed
                 with Document() as gt:
                     match = Document()
                     match.tags['id'] = hashed
@@ -80,7 +80,6 @@ def print_evaluation_score(resp):
     batch_of_score = 0
     for doc in resp.docs:
         _doc = Document(doc)
-        print(f'{doc.evaluations}')
         print(
             f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
@@ -88,6 +87,8 @@ def print_evaluation_score(resp):
                 print(
                     f'\t+- {m.id[:10]}, score: {m.scores}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
         if len(doc.evaluations) > 0:
+            print(f'evaluation in resp')
+            print(f'{doc.evaluations}')
             flag = True
             batch_of_score += doc.evaluations['mrr'].value
 
@@ -121,7 +122,6 @@ def main(index_num_docs, evaluate_num_docs, request_size, data_set, model_name, 
         f = Flow.load_config('flows/flow-index.yml')
         with f:
             f.use_rest_gateway()
-            f.plot()
             f.index(
                 inputs=input_index_data(index_num_docs, request_size, data_set),
                 request_size=request_size
