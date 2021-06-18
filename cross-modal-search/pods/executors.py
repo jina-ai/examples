@@ -13,30 +13,38 @@ from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 
 class ReciprocalRankEvaluator(Executor):
 
+    @staticmethod
+    def _evaluate(actual: Sequence[Union[str, int]], desired: Sequence[Union[str, int]], *args, **kwargs) -> float:
+        """
+        Evaluate score as per reciprocal rank metric.
+
+        :param actual: Sequence of sorted document IDs.
+        :param desired: Sequence of sorted relevant document IDs
+            (the first is the most relevant) and the one to be considered.
+        :param args:  Additional positional arguments
+        :param kwargs: Additional keyword arguments
+        :return: Reciprocal rank score
+        """
+        if len(actual) == 0 or len(desired) == 0:
+            return 0.0
+        try:
+            return 1.0 / (actual.index(desired[0]) + 1)
+        except:
+            return 0.0
+
     @requests
     def rank_evaluate(self, docs: 'DocumentArray', groundtruths, **kwargs):
-        # mcr is the 1/RANKi where i the rank position of the first match
         for doc, gt in zip(docs, groundtruths):
-            mrr = 0
-            if gt.matches[0].tags['id'] not in doc.matches.get_attributes('tags__id'):
-                doc.evaluations['precision'] = 0
-            else:
-                flag = True
-                num_of_match = 0
-                for i, match in enumerate(doc.matches):
-                    if match.tags['id']==gt.matches[0].tags['id']: # gt only has one match
-                        num_of_match += 1
-                        rank_position = i+1
-                        mrr = 1 / rank_position
-                        break
-
+            actual_ids = doc.matches.get_attributes('tags__id')
+            desired_ids = gt.matches.get_attributes('tags__id')
+            mrr = self._evaluate(actual_ids, desired_ids)
             doc.evaluations['mrr'] = mrr
 
 
 class ImageReader(Executor):
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
+        image_docs = DocumentArray(list(filter(lambda doc: doc.modality == 'image', docs)))
         return image_docs
 
     @requests(on='/search')
@@ -231,7 +239,6 @@ class NumpyIndexer(Executor):
                 _q.matches.append(d)
                 l.append(d.id)
 
-
     @staticmethod
     def _get_sorted_top_k(
             dist: 'np.array', top_k: int
@@ -276,7 +283,6 @@ class KeyValueIndexer(Executor):
         if not docs:
             return
         for doc in docs:
-            assert(len(doc.matches))
             for match in doc.matches:
                 if match.id in self._docs:
                     score = match.scores['cosine']
@@ -290,8 +296,7 @@ class CLIPImageEncoder(Executor):
     def __init__(self, model_name: str = 'ViT-B/32', *args, **kwargs):
         super().__init__(*args, **kwargs)
         torch.set_num_threads(1)
-        model, _ = clip.load(model_name, 'cpu')
-        self.model = model
+        self.model, _ = clip.load(model_name, 'cpu')
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
@@ -311,12 +316,11 @@ class CLIPTextEncoder(Executor):
     def __init__(self, model_name: str = 'ViT-B/32', *args, **kwargs):
         super().__init__(*args, **kwargs)
         torch.set_num_threads(1)
-        model, _ = clip.load(model_name, 'cpu')
-        self.model = model
+        self.model, _ = clip.load(model_name, 'cpu')
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain', ), docs)))
+        _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain',), docs)))
         if not _docs:
             print(f'not text doc is found: {[d.modality for d in docs]}')
             return
@@ -326,4 +330,3 @@ class CLIPTextEncoder(Executor):
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
         return _docs
-

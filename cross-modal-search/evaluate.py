@@ -44,11 +44,11 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
         for image, caption in zip(images, captions):
             hashed = hashlib.sha1(image).hexdigest()
             if mode == 'text2image':
-                with Document(id=hashed) as document:
+                with Document() as document:
                     document.text = caption
                     document.modality = 'text'
                     document.mime_type = 'text/plain'
-                    #document.tags['id'] = hashed
+                    document.tags['id'] = hashed
                 with Document() as gt:
                     match = Document()
                     match.tags['id'] = hashed
