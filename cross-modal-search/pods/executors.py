@@ -9,12 +9,16 @@ from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
 from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
+from jina.types.score import NamedScore
 
 
 class ImageReader(Executor):
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
         image_docs = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
+        for doc in image_docs:
+            img = Image.open(io.BytesIO(doc.buffer))
+            doc.content = np.array(img).astype('uint8')
         return image_docs
 
     @requests(on='/search')
@@ -24,7 +28,9 @@ class ImageReader(Executor):
             return DocumentArray([])
         for doc in image_docs:
             doc.convert_uri_to_buffer()
-            doc.pop('chunks', 'uri')
+            doc.convert_image_buffer_to_blob()
+            doc.blob = np.array(doc.blob).astype('uint8')
+            # doc.pop('chunks', 'uri')
         return image_docs
 
 
@@ -60,8 +66,8 @@ class ImageNormalizer(Executor):
         for doc in docs:
             img = Image.open(io.BytesIO(doc.buffer))
             img = self._normalize(img)
-            img = np.array(img).astype('float32')
-            doc.content = np.moveaxis(img, 2, 0)
+            doc.content = np.array(img).astype('float32')
+            # doc.content = img
 
     def _normalize(self, img):
         img = self._resize_short(img, target_size=self.resize_dim)
@@ -204,7 +210,7 @@ class NumpyIndexer(Executor):
         for _q, _positions, _dists in zip(docs, positions, dist):
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
-                d.score.value = 1 - _dist
+                d.scores['doc_score'] = NamedScore(value=1 - _dist)
                 _q.matches.append(d)
 
     @staticmethod
@@ -253,30 +259,9 @@ class KeyValueIndexer(Executor):
         for doc in docs:
             for match in doc.matches:
                 if match.id in self._docs:
-                    score = match.score
+                    scores = match.scores
                     match.MergeFrom(self._docs[match.id])
-                    match.score = score
-
-
-class CLIPImageEncoder(Executor):
-    """Encode image into embeddings."""
-
-    def __init__(self, model_name: str = 'ViT-B/32', *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        torch.set_num_threads(1)
-        model, _ = clip.load(model_name, 'cpu')
-        self.model = model
-
-    @requests
-    def encode(self, docs: DocumentArray, **kwargs):
-        if not docs:
-            return
-        with torch.no_grad():
-            for doc in docs:
-                content = np.expand_dims(doc.content, axis=0)
-                input = torch.from_numpy(content.astype('float32'))
-                embed = self.model.encode_image(input)
-                doc.embedding = embed.cpu().numpy().flatten()
+                    match.score = scores
 
 
 class CLIPTextEncoder(Executor):
