@@ -1,8 +1,5 @@
 jtype: ReciprocalRankEvaluator
-#with:
-#  {}
 metas:
   py_modules: 'executors.py'
 requests:
   /search: rank_evaluate
-#            traversal_paths: ['r']

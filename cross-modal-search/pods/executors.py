@@ -32,7 +32,7 @@ class ReciprocalRankEvaluator(Executor):
         except:
             return 0.0
 
-    @requests
+    @requests(on='/search')
     def rank_evaluate(self, docs: 'DocumentArray', groundtruths, **kwargs):
         for doc, gt in zip(docs, groundtruths):
             actual_ids = doc.matches.get_attributes('tags__id')
