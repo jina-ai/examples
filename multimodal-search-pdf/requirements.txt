@@ -1,5 +1,7 @@
-jina[hub, http]==1.2.0
+jina[hub, http]==2.0.0rc3.dev24
 click==7.1.2
+pytest==6.2.4
+pytest-mock==3.6.1
 transformers==4.1.1
 torch==1.7.0
 torchvision==0.8.1
