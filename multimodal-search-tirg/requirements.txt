@@ -1,4 +1,4 @@
 jina[hub, http]==1.2.0
 click==7.1.2
 matplotlib==3.3.3
-pillow==8.1.1
+pillow==8.2.0
