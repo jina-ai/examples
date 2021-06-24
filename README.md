@@ -48,33 +48,8 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Use SOTA visual representation for searching Pokémon!
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️</h1>
-    </td>
-    <td>
-      <h4><a href="./object-search">Object detection with fasterrcnn and MobileNetV2</a></h4>
-      Detect, index and query similar objects
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>🎧</h1>
-    </td>
-    <td>
-      <h4><a href="./audio-search">Search YouTube audio data with Vggish</a></h4>
-      A demo of neural search for audio data based Vggish model.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>🎞️ </h1>
-    </td>
-    <td>
-      <h4><a href="./tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a></h4>
-      Use prefetching and sharding to improve the performance of your index and query flow when searching animated GIFs.
-    </td>
-  </tr>
+  
+  
 </table>
 
 ## 🚀  Advanced Examples
@@ -89,15 +64,7 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Support both querying and indexing simultaneously in our Wikipedia Search Example
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>📄</h1>
-    </td>
-    <td>
-      <h4><a href="./advanced-vector-search">Index and query with FAISS</a></h4>
-      Build a vector search engine that finds the closest vector in the database to a query.
-    </td>
-  </tr>
+  
   <tr>
     <td>
       <h1>🖼️📄</h1>
@@ -107,15 +74,7 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Use one modality (text) to search another (images)
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️📄</h1>
-    </td>
-    <td>
-      <h4><a href="./multimodal-search-tirg">Multi-Modal: Search images with 2 modalities in the query</a></h4>
-      Use more than one modality (image+text) to search images
-    </td>
-  </tr>
+  
   <tr>
     <td>
       <h1>🖼️📄</h1>
@@ -125,15 +84,7 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Use different modalities (image, text or PDF) to search PDF
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🗂️</h1>
-    </td>
-    <td>
-      <h4><a href="./fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
-      Create separate indexes and queries for different clothing in Fashion-MNIST
-    </td>
-  </tr>
+  
 </table>
 
 ## Community Examples
