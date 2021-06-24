@@ -94,6 +94,28 @@ Want to add your own example? Please check our [guidelines](example-guidelines.m
 <table>
     <tr>
     <td>
+      <h1>🖼️📄</h1>
+    </td>
+    <td>
+      <h4>Meme Search - <a href="https://github.com/alexcg1/jina-meme-search-example/">Text search</a> / <a href="https://github.com/alexcg1/jina-meme-search-image-backend">Image search</a> / <a href="https://github.com/alexcg1/jina-meme-search-frontend">Front end</a></h4>
+      Search memes by caption or similar image.
+    </td>
+  </tr><tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/alexcg1/jina-app-store-example">App Store Search</a></h4>
+      Use Transformers to search through a rich app store dataset with a responsive front-end
+    </td>
+  </tr>
+</table>
+
+#### Legacy examples
+
+<table>
+    <tr>
+    <td>
       <h1>📄</h1>
     </td>
     <td>
