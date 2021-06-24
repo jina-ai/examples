@@ -11,11 +11,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-These examples showcase Jina in action and provide sample code for you to work from. We suggest you read [Jina 101](http://101.jina.ai) and <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">What is Neural Search?</a> to get a conceptual overview.
+These examples showcase Jina in action and provide sample code for you to work from. 
 
-❗If you'd like to run our examples on Windows, please follow [this instruction](https://docs.jina.ai/chapters/install/os/on-wsl.html).
+We suggest you read the following to get an overview of what Jina is and how it works:
 
-To learn more about how to use Jina, please refer to [our docs](http://www.jina.ai).
+- [What is neural search?](https://github.com/jina-ai/jina/blob/master/.github/2.0/neural-search.md)
+- [Get started](https://github.com/jina-ai/jina/#get-started) - especially the cookbooks for Document, Executor and Flow
 
 ## 🐣 Simple Examples
 
