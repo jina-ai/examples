@@ -373,7 +373,7 @@ class KeyValueIndexer(Executor):
     def query(self, docs: DocumentArray, **kwargs):
         for doc in docs:
             for match in doc.matches:
-                extracted_doc = self._docs[match.tags['root_doc_id']]
+                extracted_doc = self._docs[match.id]
                 match.MergeFrom(extracted_doc)
 
 
