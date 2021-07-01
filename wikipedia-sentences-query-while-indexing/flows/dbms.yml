@@ -9,10 +9,10 @@ pods:
   - name: indexer
     uses: 'jinahub://PostgreSQLIndexer'
     with:
-      hostname: '127.0.0.1'
-      port: 5432
-      username:
-      password:
-      database: 'jina_example'
-      table: 'query_while_indexing'
+      hostname: $DB_HOST
+      port: $DB_PORT
+      username: $DB_USERNAME
+      password: $DB_PASSWORD
+      database: $DB_DATABASE
+      table: $DB_TABLE
 

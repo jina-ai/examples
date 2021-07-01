@@ -4,4 +4,5 @@ docker==5.0.0
 torch==1.9.0
 transformers==4.8.2
 git+https://github.com/jina-ai/jina-commons
-psycopg2==2.9.1
+psycopg2-binary==2.8.6
+python-dotenv==0.18.0
