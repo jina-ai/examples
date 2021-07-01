@@ -3,8 +3,6 @@ DATASET="mikeortman/wikipedia-sentences"
 DATA_DIR="data"
 LINES=3000
 
-
-
 cd ${DATA_DIR}
 kaggle datasets download -d ${DATASET}
 unzip wikipedia-sentences.zip
