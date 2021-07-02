@@ -89,7 +89,6 @@ class TransformerTorchEncoder(Executor):
         pooling_strategy: str = 'mean',
         layer_index: int = -1,
         max_length: Optional[int] = None,
-        acceleration: Optional[str] = None,
         embedding_fn_name: str = '__call__',
         device: str = 'cpu',
         *args,
@@ -103,7 +102,6 @@ class TransformerTorchEncoder(Executor):
         self.pooling_strategy = pooling_strategy
         self.layer_index = layer_index
         self.max_length = max_length
-        self.acceleration = acceleration
         if not device in ['cpu', 'cuda']:
             logger.error('Torch device not supported. Must be cpu or cuda!')
             raise RuntimeError('Torch device not supported. Must be cpu or cuda!')
