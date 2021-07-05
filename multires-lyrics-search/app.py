@@ -6,7 +6,6 @@ __version__ = '0.0.1'
 import os
 import sys
 import click
-import requests
 
 from jina import Flow, Document
 from helper import input_generator
@@ -15,6 +14,7 @@ from jina.logging.predefined import default_logger as logger
 
 def config():
     os.environ.setdefault('JINA_WORKSPACE', './workspace')
+    os.environ.setdefault('JINA_LOG_LEVEL', 'DEBUG')
     if os.path.exists('lyrics-data/lyrics-data.csv'):
         os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-data.csv')
     else:
@@ -27,22 +27,10 @@ def index(num_docs):
     flow = Flow.load_config('flows/index.yml')
     with flow:
         input_docs = input_generator(num_docs=num_docs)
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 os.environ.get('JINA_DATA_FILE', None))
+        flow.logger.info(f'Indexing {data_path}')
         flow.post(on='/index', inputs=input_docs, request_size=10)
-
-
-def index_restful(num_docs):
-    f = Flow().load_config('flows/index.yml')
-    f.use_rest_gateway()
-    with f:
-        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.logger.info(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{f.port_expose}/index'
-
-        input_docs = input_generator(num_docs=num_docs)
-        data_json = {'data': [doc.dict() for doc in input_docs]}
-        r = requests.post(url, json=data_json)
-        if r.status_code != 200:
-            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
 
 
 # for search
@@ -54,29 +42,29 @@ def query():
 
 def query_text():
     def print_result(response):
-        print(response.docs[0])
-        print(response.docs[0].matches)
+        print(f'### Number of response documents: {len(response.docs)}')
 
-        print(f'Total matches {sum([len(d.matches) for d in response.docs])}')
+        print(f'### Total matches {sum([len(d.matches) for d in response.docs])}')
+        for i, match in enumerate(response.docs):
+            print(f'###\tMatch {i}: {match.matches[0].text}')
 
     f = Flow.load_config('flows/query.yml')
     with f:
-        #search_text = input('Please type a sentence: ')
-        search_text = 'looked through every window then'
+        search_text = input('Please type a sentence: ')
         doc = Document(content=search_text, mime_type='text/plain')
         f.post('/search', inputs=doc, on_done=print_result)
 
 
 def query_restful():
-    f = Flow.load_config("flows/query.yml")
-    f.use_rest_gateway()
-    with f:
-        f.block()
+    flow = Flow.load_config("flows/query.yml")
+    flow.protocol = 'http'
+    with flow:
+        flow.block()
 
 
 @click.command()
 @click.option('--task', '-t',
-              type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'query_text'], case_sensitive=False))
+              type=click.Choice(['index', 'query', 'query_restful', 'query_text'], case_sensitive=False))
 @click.option('--num_docs', '-n', default=10000)
 def main(task, num_docs):
     config()
@@ -90,8 +78,6 @@ def main(task, num_docs):
                     \n +---------------------------------------------------------------------------------+')
             sys.exit(1)
         index(num_docs)
-    elif task == 'index_restful':
-        index_restful(num_docs)
     elif task == 'query':
         query()
     elif task == 'query_text':
@@ -102,7 +88,7 @@ def main(task, num_docs):
         query_restful()
     else:
         raise NotImplementedError(
-            f'unknown task: {task}. A valid task is either `index` or `query`.')
+            f'Unknown task: {task}.')
 
 
 if __name__ == '__main__':
