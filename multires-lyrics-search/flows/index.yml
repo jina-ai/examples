@@ -2,35 +2,23 @@ jtype: Flow
 version: '1'
 with:
   workspace: $JINA_WORKSPACE
-  py_modules:
-    - flows/executors.py
 executors:
   - name: segmenter
     uses:
       jtype: Sentencizer
-      with:
-        min_sent_len: 6
+    py_modules:
+      - flows/executors.py
   - name: encoder
-    uses:
-      jtype: TransformerTorchEncoder
-      with:
-        pooling_strategy: 'cls'
-        pretrained_model_name_or_path: distilbert-base-cased
-        max_length: 96
-        device: 'cpu'
-  - name: vec_idx                           # Executor name
-    uses:                                   # Define details
-      jtype: EmbeddingIndexer               # Indexer that stores the embeddings of the images
-      with:
-        index_file_name: "chunks.binary"    # Storage file name for the embeddings
-      metas:                                # Metainformation for the executor
-        name: vec_idx                       # Folder name inside the workspace
-    needs: [encoder]
-  - name: kv_idx                            # Executor name
-    uses:
-      jtype: KeyValueIndexer                # Use a key value indexer that stores file metainformation (URI, MIME, ID) for quick access
-      metas:                                # Executor metainformation
-        name: kv_idx                        # Name for the folder inside the workspace
-    needs: [segmenter]                      # This pod starts directly after the gateways, to enable parallelization
-  - name: join_all
-    needs: [vec_idx, kv_idx]
+    uses: 'jinahub://TransformerTorchEncoder'
+    volumes: '~/.cache/huggingface:/root/.cache/huggingface'
+    override_with:
+      pooling_strategy: 'cls'
+      pretrained_model_name_or_path: distilbert-base-cased
+      max_length: 96
+      device: 'cuda'
+      default_traversal_paths: ['c']
+  - name: indexer
+    uses: 'jinahub+docker://SimpleIndexer'
+    volumes: $JINA_WORKSPACE_MOUNT
+    override_with:
+      default_traversal_paths: ['c']
