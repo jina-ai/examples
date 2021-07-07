@@ -2,17 +2,21 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
 
-- [Build a CrossModal Search System to look for Images from Captions and vice versa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
-  - [Prerequisites](#prerequisites)
-  - [Prepare the data](#prepare-the-data)
-  - [Build the docker images](#build-the-docker-images)
-  - [Run the Flows](#run-the-flows)
-  - [Results](#results)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [License](#license)
+# Build a CrossModal Search System to look for Images from Captions and vice versa
+
+
+**Table of Contents**
+  - [Overview](#-overview)
+  - [🐍 Build the app with Python](#-build-the-app-with-python)
+  - [🌀 Flow diagram](#-flow-diagram)
+  - [🚑 Troubleshooting](#-troubleshooting)
+  - [📖 Optional: Extra information useful for the user](#-optional-extra-information-useful-for-the-user)
+  - [🔮 Overview of the files](#-overview-of-the-files)
+  - [🐋 Deploy the prebuild application using Docker](#-deploy-the-prebuild-application-using-docker) 
+  - [⏭️ Next steps](#-next-steps)
+  - [‍👩‍👧‍👦 Community](#-community)
+  - [🦄License](#-license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
