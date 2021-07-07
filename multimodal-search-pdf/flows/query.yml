@@ -1,0 +1,61 @@
+jtype: Flow
+version: '1'
+with:
+  workspace: $JINA_WORKSPACE
+  read_only: true
+  py_modules:
+    - flows/executors.py
+  port_expose: $JINA_PORT
+executors:
+  - name: craftPDF
+    uses:
+      jtype: PDFCrafter
+    needs: gateway
+  - name: craftImage
+    uses:
+      jtype: ImageCrafter
+    needs: gateway
+  - name: craftText
+    uses:
+      jtype: TextCrafter
+    needs: gateway
+  - name: joinReduce
+    uses:
+      jtype: MergeCrafts
+    needs: [craftPDF, craftText, craftImage]
+  - name: imagePreprocessor
+    uses:
+      jtype: ImagePreprocessor
+    needs: joinReduce
+  - name: textSegmenter
+    uses:
+      jtype: TextSegmenter
+    needs: joinReduce
+  - name: imageEncoder
+    uses:
+      jtype: ImageTorchEncoder
+    needs: imagePreprocessor
+  - name: textEncoder
+    uses:
+      jtype: TextEncoder
+    needs: textSegmenter
+  - name: textChunkIndexer
+    uses:
+      jtype: DocVectorIndexer
+      with:
+        index_file_name: 'text.json'
+    needs: textEncoder
+  - name: imageChunkIndexer                  # index the images, note that here we will index on chunks level
+    uses:
+      jtype: DocVectorIndexer
+      with:
+        index_file_name: 'image.json'
+    needs: imageEncoder
+  - name: ranker
+    uses:
+      jtype: DynamicNModalityRanker
+    needs: [textChunkIndexer, imageChunkIndexer]
+  - name: keyValueIndexer
+    uses:
+      jtype: KeyValueIndexer
+    needs: ranker

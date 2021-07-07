@@ -116,9 +116,8 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
                 document_img.buffer = image
                 document_img.modality = 'image'
                 document_img.mime_type = 'image/jpeg'
-                document_img.tags['id'] = hashed
 
-            with Document() as document_caption:
+            with Document(id=hashed) as document_caption:
                 document_caption.text = caption
                 document_caption.modality = 'text'
                 document_caption.mime_type = 'text/plain'

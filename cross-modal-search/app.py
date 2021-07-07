@@ -41,7 +41,7 @@ def check_query_result(resp):
         print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
             for m in _doc.matches:
-                print(f'\t+- {m.id[:10]}, score: {m.score.value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+                print(f'\t+- {m.id[:10]}, score: {m.scores["doc_score"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
 
 
 def index(data_set, num_docs, request_size):

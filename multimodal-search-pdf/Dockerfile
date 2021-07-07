@@ -1,20 +1,10 @@
-FROM jinaai/jina:1.2.0
+FROM pytorch/pytorch:1.7.0
 
 COPY . /workspace
 WORKDIR /workspace
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["python", "app.py", "-t", "query"]
+RUN python app.py -t index
 
-LABEL author="Jina AI Dev-Team (dev-team@jina.ai)"
-LABEL type="app"
-LABEL kind="example"
-LABEL avatar="None"
-LABEL description="Jina App on searching text, image, and partial PDF in PDF files"
-LABEL keywords="[examples, PDF]"
-LABEL license="apache-2.0"
-LABEL name="multimodal-search-PDF"
-LABEL platform="linux/amd64"
-LABEL vendor="Jina AI Limited"
-LABEL version="0.0.2"
+ENTRYPOINT ["python", "app.py", "-t", "query_restful"]
