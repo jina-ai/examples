@@ -11,7 +11,7 @@ pods:
     read_only: true
     needs: [gateway]
   - name: image_encoder                               # encode images into embeddings with CLIP model
-    uses: 'jinahub+docker://ClipImageEncoder'
+    uses: 'jinahub+docker://CLIPImageEncoder'
     volumes: $HOME/.cache/clip:/root/.cache/clip
     shards: $JINA_PARALLEL
     timeout_ready: 600000
