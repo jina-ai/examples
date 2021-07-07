@@ -1,9 +1,7 @@
-# Build A Cross-Modal Search System To Look For Images From Captions
+# Build A Cross-Modal Search System To Look For Images From Captions and vice versa
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-# Build a CrossModal Search System to look for Images from Captions and vice versa
 
 
 **Table of Contents**
