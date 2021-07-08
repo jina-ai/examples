@@ -1,16 +1,12 @@
 jtype: CompoundQueryExecutor
 components:
-  - jtype: NumpyQueryIndexer
+  - jtype: NumpyPostgresSearcher
+    uses: 'jinahub://NumpyPostgresSearcher'
     with:
       index_filename: vec.bin
       metric: euclidean
     metas:
       name: vecidx
-  - jtype: BinaryPbQueryIndexer
-    with:
-      index_filename: kv.bin
-    metas:
-      name: kvidx
 metas:
   name: compound_indexer
   workspace: query_workspace
