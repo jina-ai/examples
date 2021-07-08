@@ -57,7 +57,6 @@ def index(data_set, num_docs, request_size):
 
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
-    flow.use_rest_gateway()
     with flow:
         flow.search(inputs=[
             Document(text='a black dog and a spotted dog are fighting', modality='text'),

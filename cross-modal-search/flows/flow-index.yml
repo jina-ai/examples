@@ -1,12 +1,13 @@
 jtype: Flow
 version: '1'
 with:
+  protocol: http
   prefetch: 10
   port_expose: 45678
   workspace: $JINA_WORKSPACE
 pods:
   - name: loader                                      # load images from the dataset of image-caption pairs
-    uses: pods/image-load.yml
+    uses: 'jinahub+docker://ImageNormalizer'
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]
