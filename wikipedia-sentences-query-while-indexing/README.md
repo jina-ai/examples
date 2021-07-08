@@ -41,8 +41,8 @@ The Index Flow (also referred to as the DBMS Flow) will require a `DBMSIndexer`,
 In our case we use `BinaryPbDBMSIndexer` and `CompoundQueryExecutor` (made up of `BinaryPbQueryIndexer` and `NumpyQueryIndexer`).
 These are the standard Indexers provided by Jina, but we also provide:
 
-- [PostgreSQLDBMSIndexer](https://github.com/jina-ai/jina-hub/tree/master/indexers/dbms/PostgreSQLIndexer), which leverages the resilience of PostgreSQL as a storage engine
-- [AnnoyQueryIndexer](https://github.com/jina-ai/jina-hub/tree/master/indexers/query/AnnoyQueryIndexer), which uses the [`annoy`](https://github.com/spotify/annoy) algorithm to provide faster query results
+- [PostgreSQLStorage](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/storage/PostgreSQLStorage), which leverages the resilience of PostgreSQL as a storage engine
+- [AnnoySearcher](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/searcher/AnnoySearcher), which uses the [`annoy`](https://github.com/spotify/annoy) algorithm to provide faster query results
 
 You can check the `flows` and `pods` directories for the changes to the files.
 _____
@@ -153,8 +153,7 @@ Notice the following:
 | --- 📃 `dbms.yml`     | YAML file to configure DBMS (Index) Flow                                                                             |
 | --- 📃 `query.yml`     | YAML file to configure Querying Flow                                                                             |
 | 📂 `pods/`           | Folder to store Pod configuration                                                                                |
-| --- 📃 `dbms_indexer.yml`   | YAML file to configure the DBMS Indexer                                                                               |
-| --- 📃 `encoder.yml`   | YAML file to configure encoder Pod                                                                               |
+| --- 📃 `dbms_indexer.yml`   | YAML file to configure the DBMS Indexer                                                                               | |
 | --- 📃 `query_indexer.yml`   | YAML file to configure the Query Indexer                                                                               |
 | 🐍 `app.py`      | Code file for the example   |
 
