@@ -11,9 +11,8 @@ from typing import List, Dict
 
 import click
 import requests
-from jina import Document
-from jina.clients.sugary_io import _input_lines
-from jina.logging import JinaLogger
+from jina import Document, DocumentArray, Flow, requests
+from jina.logging.logger import JinaLogger
 
 logger = JinaLogger('jina')
 
@@ -120,7 +119,7 @@ def _query_docs(docs: List[Dict]):
 
 def _docs_from_file(file: str):
     docs = []
-    for text in list(_input_lines(filepath=file)):
+    for text in list(  _input_lines(filepath=file)):
         d = Document()
         d.text = text
         docs.append(d.dict())
