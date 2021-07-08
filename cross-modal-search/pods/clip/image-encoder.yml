@@ -1,0 +1,5 @@
+# encodes text into embeddings with CLIP model
+jtype: CLIPImageEncoder
+metas:
+  py_modules:
+    - '../executors.py'

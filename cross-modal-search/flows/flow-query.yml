@@ -6,6 +6,7 @@ with:
   workspace: $JINA_WORKSPACE
 pods:
   - name: loader                          # load query image
+    # uses: 'jinahub+docker://ImageNormalizer'
     uses: pods/image-load.yml
     shards: $JINA_PARALLEL
     read_only: true
@@ -17,8 +18,9 @@ pods:
 #    needs: loader
   - name: image_encoder                   # encode query image into embeddings with CLIP model
     polling: any
-    uses: 'jinahub+docker://ClipImageEncoder'
-    volumes: $HOME/.cache/clip:/root/.cache/clip
+     # uses: 'jinahub+docker://ClIPImageEncoder'
+     # volumes: $HOME/.cache/clip:/root/.cache/clip
+    uses: pods/clip/image-encoder.yml
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
