@@ -10,15 +10,3 @@ components:
 metas:
   name: compound_indexer
   workspace: query_workspace
-requests:
-  on:
-    SearchRequest:
-      - jtype: VectorSearchDriver
-        with:
-          executor: vecidx
-          fill_embedding: False
-      - jtype: KVSearchDriver
-        with:
-          executor: kvidx
-          is_update: True
-          traversal_paths: ['m']

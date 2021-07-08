@@ -11,8 +11,10 @@ from typing import List, Dict
 
 import click
 import requests
-from jina import Document, DocumentArray, Flow, requests
+from jina import Document, DocumentArray, Flow
 from jina.logging.logger import JinaLogger
+from jina.types.document.generators import from_files
+
 
 logger = JinaLogger('jina')
 
@@ -39,7 +41,7 @@ def query_restful():
         query_doc.text = text
         response = _query_docs([query_doc.dict()])
 
-        for doc in response['search']['docs']:
+        for doc in response['data']['search']['docs']:
             matches = doc.get('matches')
             len_matches = len(matches)
             logger.info(f'Ta-Dah🔮, {len_matches} matches we found for: "{text}" :')
@@ -69,6 +71,7 @@ def _serve_flow(
     workspace_id = _create_workspace(deps, url=ws_url)
     with open(flow_yaml, 'rb') as f:
         r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
+        print(f'response {r}')
         assert r.status_code == 201
         return r.json()
 
@@ -119,11 +122,8 @@ def _query_docs(docs: List[Dict]):
 
 def _docs_from_file(file: str):
     docs = []
-    for text in list(  _input_lines(filepath=file)):
-        d = Document()
-        d.text = text
-        docs.append(d.dict())
-    return docs
+    return DocumentArray(from_files(file))
+
 
 
 def _path_size(dump_path):
@@ -171,6 +171,8 @@ def _cleanup():
     requests.delete(f'http://{JINAD_HOST}:{JINAD_PORT}/flows/')
     assert r.status_code == 200
 
+'''
+'''
 
 @click.command()
 @click.option(
@@ -187,7 +189,7 @@ def main(task: str):
                 shutil.rmtree(DUMP_PATH, ignore_errors=False)
 
             # dependencies required by JinaD in order to start DBMS (Index) Flow
-            dbms_deps = ['pods/encoder.yml', 'pods/dbms_indexer.yml']
+            dbms_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
             dbms_flow_id = _serve_flow('flows/dbms.yml', dbms_deps)
             logger.info(f'created DBMS Flow with id {dbms_flow_id}')
