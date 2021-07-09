@@ -23,7 +23,7 @@ def config():
 
 
 def index_restful():
-    flow = Flow(protocol='http').load_config('flows/flow-index.yml', override_with={'protocol': 'http'})
+    flow = Flow().load_config('flows/flow-index.yml', override_with={'protocol': 'http'})
     with flow:
         flow.block()
 
@@ -65,7 +65,7 @@ def query():
 
 
 def query_restful():
-    flow = Flow(protocol='http').load_config('flows/flow-query.yml', override_with={'protocol': 'http'})
+    flow = Flow().load_config('flows/flow-query.yml', override_with={'protocol': 'http'})
     with flow:
         flow.block()
 

@@ -6,25 +6,22 @@ with:
   workspace: $JINA_WORKSPACE
 pods:
   - name: loader                          # load query image
-    # uses: 'jinahub+docker://ImageNormalizer'
     uses: pods/image-load.yml
     shards: $JINA_PARALLEL
     read_only: true
     needs: gateway
-#  - name: normalizer                      # normalize query image
-#    uses: pods/image-normalize.yml
-#    shards: $JINA_PARALLEL
-#    read_only: true
-#    needs: loader
+  - name: normalizer                      # normalize query image
+    uses: pods/image-normalize.yml
+    shards: $JINA_PARALLEL
+    read_only: true
+    needs: loader
   - name: image_encoder                   # encode query image into embeddings with CLIP model
     polling: any
-     # uses: 'jinahub+docker://ClIPImageEncoder'
-     # volumes: $HOME/.cache/clip:/root/.cache/clip
     uses: pods/clip/image-encoder.yml
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
-    needs: loader
+    needs: normalizer
   - name: text_indexer                    # index query text
     polling: all
     uses: pods/index-text.yml
