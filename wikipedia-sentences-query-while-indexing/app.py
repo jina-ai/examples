@@ -13,13 +13,14 @@ import click
 import requests
 from daemon.models import DaemonID
 from jina import __default_host__, Document, DocumentArray, Flow
+from jina.enums import RemoteWorkspaceState
 from jina.logging.logger import JinaLogger
 from jina.types.document.generators import from_files
 
 
 logger = JinaLogger('jina')
 
-curdir = os.getcwd()
+cur_dir = os.getcwd()
 
 JINAD_HOST = 'localhost'  # change this if you are using remote jinad
 JINAD_PORT = '8000'  # change this if you set a different port
@@ -56,6 +57,35 @@ def query_restful():
 
 def _jinad_url(host: str, port: int, kind: str):
     return f'http://{host}:{port}/{kind}'
+
+
+def wait_for_workspace(
+    workspace_id: DaemonID,
+    host: str = __default_host__,
+    port: int = 8000,
+) -> bool:
+    url = _jinad_url(host, port, 'workspaces')
+    while True:
+        r = requests.get(f'{url}/{workspace_id}')
+        try:
+            state = r.json()['state']
+        except KeyError as e:
+            print(f'KeyError: {e!r}')
+            return False
+        if state in [
+            RemoteWorkspaceState.PENDING,
+            RemoteWorkspaceState.CREATING,
+            RemoteWorkspaceState.UPDATING,
+        ]:
+            print(f'workspace still {state}, sleeping for 2 secs')
+            time.sleep(2)
+            continue
+        elif state == RemoteWorkspaceState.ACTIVE:
+            print(f'workspace got created successfully')
+            return True
+        elif state == RemoteWorkspaceState.FAILED:
+            print(f'workspace creation failed. please check logs')
+            return False
 
 
 def _create_workspace(
@@ -109,13 +139,16 @@ def _serve_flow_with_workspace(
 ) -> str:
     flow_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'flows')
     ws_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'workspaces')
-    workspace_id = _create_workspace(deps, url=ws_url)
-    with open(flow_yaml, 'rb') as f:
-        r = requests.post(flow_url, params={'workspace_id': workspace_id, 'filename': f})
-        #r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
-        print(f'Checking if the flow creation is succeeded: {r.json()}')
-        assert r.status_code == 201
-        return r.json(), workspace_id
+    deps.append(flow_yaml)
+    workspace_id = _create_workspace(filepaths=[os.path.join(cur_dir, file) for file in deps], url=ws_url)
+    # with open(flow_yaml, 'rb') as f:
+    #     print(f'filename {f}')
+    assert(wait_for_workspace(workspace_id))
+    r = requests.post(flow_url, params={'workspace_id': workspace_id, 'filename': flow_yaml})
+    #r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
+    print(f'Checking if the flow creation is succeeded: {r.json()}')
+    assert r.status_code == 201
+    return r.json(), workspace_id
 
 
 def _jinad_dump(pod_name: str, dump_path: str, shards: int, url: str):
