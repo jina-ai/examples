@@ -23,8 +23,7 @@ def config():
 
 
 def index_restful():
-    flow = Flow().load_config('flows/flow-index.yml')
-    flow.use_rest_gateway()
+    flow = Flow().load_config('flows/flow-index.yml', override_with={'protocol': 'http'})
     with flow:
         flow.block()
 
@@ -45,7 +44,7 @@ def check_query_result(resp):
 
 
 def index(data_set, num_docs, request_size):
-    flow = Flow.load_config('flows/flow-index.yml')
+    flow = Flow().load_config('flows/flow-index.yml')
     with flow:
         with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
             flow.index(
@@ -57,7 +56,6 @@ def index(data_set, num_docs, request_size):
 
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
-    flow.use_rest_gateway()
     with flow:
         flow.search(inputs=[
             Document(text='a black dog and a spotted dog are fighting', modality='text'),
@@ -67,8 +65,7 @@ def query():
 
 
 def query_restful():
-    flow = Flow().load_config('flows/flow-query.yml')
-    flow.use_rest_gateway()
+    flow = Flow().load_config('flows/flow-query.yml', override_with={'protocol': 'http'})
     with flow:
         flow.block()
 
