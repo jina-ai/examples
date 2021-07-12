@@ -7,11 +7,12 @@ import time
 import traceback
 from contextlib import ExitStack
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import click
 import requests
-from jina import Document, DocumentArray, Flow
+from daemon.models import DaemonID
+from jina import __default_host__, Document, DocumentArray, Flow
 from jina.logging.logger import JinaLogger
 from jina.types.document.generators import from_files
 
@@ -53,27 +54,68 @@ def query_restful():
                 logger.info(f'> {idx:>2d}({score:.2f}). {match["text"]}')
 
 
-def _create_workspace(filepaths: List[str], url: str) -> str:
+def _jinad_url(host: str, port: int, kind: str):
+    return f'http://{host}:{port}/{kind}'
+
+
+def _create_workspace(
+    filepaths: Optional[List[str]] = None,
+    dirpath: Optional[str] = None,
+    workspace_id: Optional[DaemonID] = None,
+    url: Optional[str] = None
+) -> Optional[str]:
     with ExitStack() as file_stack:
-        files = [('files', file_stack.enter_context(open(filepath, 'rb'))) for filepath in filepaths]
-        r = requests.post(url, files=files)
+
+        def _to_file_tuple(path):
+            return 'files', file_stack.enter_context(open(path, 'rb'))
+
+        files_to_upload = set()
+        if filepaths:
+            files_to_upload.update([_to_file_tuple(filepath) for filepath in filepaths])
+        if dirpath:
+            for ext in ['*yml', '*yaml', '*py', '*.jinad', 'requirements.txt']:
+                files_to_upload.update(
+                    [_to_file_tuple(filepath) for filepath in Path(dirpath).rglob(ext)]
+                )
+
+        if not files_to_upload:
+            print('nothing to upload')
+            return
+
+        print(f'will upload files: {files_to_upload}')
+        r = requests.post(url, files=list(files_to_upload))
+        print(f'Checking if the upload is succeeded: {r.json()}')
         assert r.status_code == 201
-        workspace_id = r.json()
+        json_response = r.json()
+        workspace_id = next(iter(json_response))
         return workspace_id
 
 
-def _serve_flow(
-    flow_yaml: str,
-    deps: List[str],
-    flow_url: str = f'http://{JINAD_HOST}:{JINAD_PORT}/flows',
-    ws_url: str = f'http://{JINAD_HOST}:{JINAD_PORT}/workspaces',
+def create_flow(
+    workspace_id: DaemonID,
+    filename: str,
+    host: str = __default_host__,
+    port: int = 8000,
 ) -> str:
+    url = _jinad_url(host, port, 'flows')
+    r = requests.post(url, params={'workspace_id': workspace_id, 'filename': filename})
+
+    assert r.status_code == 201
+    return r.json()
+
+def _serve_flow_with_workspace(
+    flow_yaml: str,
+    deps: List[str]
+) -> str:
+    flow_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'flows')
+    ws_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'workspaces')
     workspace_id = _create_workspace(deps, url=ws_url)
     with open(flow_yaml, 'rb') as f:
-        r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
-        print(f'response {r}')
+        r = requests.post(flow_url, params={'workspace_id': workspace_id, 'filename': f})
+        #r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
+        print(f'Checking if the flow creation is succeeded: {r.json()}')
         assert r.status_code == 201
-        return r.json()
+        return r.json(), workspace_id
 
 
 def _jinad_dump(pod_name: str, dump_path: str, shards: int, url: str):
@@ -121,7 +163,6 @@ def _query_docs(docs: List[Dict]):
 
 
 def _docs_from_file(file: str):
-    docs = []
     return DocumentArray(from_files(file))
 
 
@@ -166,13 +207,19 @@ def _dump_roll_update(dbms_flow_id: str, query_flow_id: str):
 
 
 def _cleanup():
-    r = requests.delete(f'http://{JINAD_HOST}:{JINAD_PORT}/workspaces/')
-    assert r.status_code == 200
-    requests.delete(f'http://{JINAD_HOST}:{JINAD_PORT}/flows/')
-    assert r.status_code == 200
+#     workspace_ids,
+#     host: str = __default_host__,
+#     port: int = 8000,
+# ) -> bool:
+#     for workspace_id in workspace_ids:
+#         print(f'will delete workspace {workspace_id}')
+#         url = _jinad_url(host, port, f'workspaces/{workspace_id}')
+#         r = requests.delete(url, params={'everything': True})
+#         assert(r.status_code == 200)
+    url = f'http://{JINAD_HOST}:{JINAD_PORT}/workspaces/'
+    r = requests.delete(url, params={'everything': True})
 
-'''
-'''
+
 
 @click.command()
 @click.option(
@@ -191,13 +238,13 @@ def main(task: str):
             # dependencies required by JinaD in order to start DBMS (Index) Flow
             dbms_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
-            dbms_flow_id = _serve_flow('flows/dbms.yml', dbms_deps)
+            dbms_flow_id, dbms_ws = _serve_flow_with_workspace('flows/dbms.yml', dbms_deps)
             logger.info(f'created DBMS Flow with id {dbms_flow_id}')
 
             # dependencies required by JinaD in order to start Query Flow
             query_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
-            query_flow_id = _serve_flow('flows/query.yml', query_deps)
+            query_flow_id, query_ws = _serve_flow_with_workspace('flows/query.yml', query_deps)
             logger.info(f'created Query Flow with id {query_flow_id}')
 
             # starting a loop that
