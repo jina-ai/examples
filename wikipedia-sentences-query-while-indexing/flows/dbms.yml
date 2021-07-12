@@ -2,7 +2,7 @@ jtype: Flow
 version: '1'
 with:
   port_expose: 9000
-  protocal: 'websocket'
+  protocol: 'http'
 pods:
   - name: encoder
     uses: 'jinahub://TransformerTorchEncoder'
