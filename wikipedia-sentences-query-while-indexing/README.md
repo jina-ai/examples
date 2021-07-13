@@ -88,18 +88,24 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 
 ### 🏃 Step 3. Running the Flows
 
-1. In one terminal session, run the command `docker run --add-host host.docker.internal:host-gateway \
+1. In one terminal session, run the command `docker run -e POSTGRES_PASSWORD=123456  -p 127.0.0.1:5432:5432/tcp postgres:13.2 
+` to run a PostgreSQL database docker image
+
+
+2. In a second terminal session, run `docker run --add-host host.docker.internal:host-gateway \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /tmp/jinad:/tmp/jinad \
            -p 8000:8000 \
            --name jinad \
-           -d jinaai/jina:latest-daemon`.
+           -d jinaai/jina:latest-daemon` to start JinaD.
    
-    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. In this example, we use `JinaD` to serve the two Flows (Index and Query). You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
+    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. 
+   In this example, we use `JinaD` to serve the two Flows (Index and Query) and listen to incoming requests. 
+   You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
 
-2. In another terminal, run `python app.py -t flows`
+3. In a third terminal session, run `python app.py -t flows`
 
-    This will create the two Flows, and then repeatedly do the following, every 20 seconds:
+    This will create the two Flows, and then repeatedly do the following(which can also be done in any other REST client), every 20 seconds:
 
     1. Index 5 Documents
     2. Send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
@@ -165,7 +171,7 @@ Notice the following:
 ## Troubleshooting
 
 1. When running `jinad` from a virtual environment, make sure it points to the same installation as `jina`.
-2. On some Mac machines, you may have to run `jinad` with `sudo` command.
+2. On some Mac machines, you may have to disable "Use gRPC FUSE for file sharing" in docker desktop.
 
 _________
 
