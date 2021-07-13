@@ -8,11 +8,6 @@ pods:
     uses: 'jinahub://TransformerTorchEncoder'
   - name: indexer
     uses: 'jinahub://PostgreSQLStorage'
-    with:
-      hostname: $DB_HOST
-      port: $DB_PORT
-      username: $DB_USERNAME
-      password: $DB_PASSWORD
-      database: $DB_DATABASE
-      table: $DB_TABLE
+    override_with:
+      hostname: host.docker.internal
 

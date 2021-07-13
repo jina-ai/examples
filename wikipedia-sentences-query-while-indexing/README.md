@@ -99,13 +99,14 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
            --name jinad \
            -d jinaai/jina:latest-daemon` to start JinaD.
    
-    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. 
+    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for 
+   running Jina services (Flows, Pods) remotely, wherever you want to run them. 
    In this example, we use `JinaD` to serve the two Flows (Index and Query) and listen to incoming requests. 
    You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
 
 3. In a third terminal session, run `python app.py -t flows`
 
-    This will create the two Flows, and then repeatedly do the following(which can also be done in any other REST client), every 20 seconds:
+    This will create the two Flows, and then repeatedly do the following (which can also be done in any other REST client), every 2 seconds:
 
     1. Index 5 Documents
     2. Send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
