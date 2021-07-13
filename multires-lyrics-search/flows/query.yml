@@ -1,5 +1,8 @@
 jtype: Flow
 version: '1'
+with:
+  port_expose: $JINA_PORT
+  cors: true
 executors:
   - name: segmenter
     uses:
@@ -7,7 +10,7 @@ executors:
     py_modules:
       - flows/executors.py
   - name: encoder
-    uses: 'jinahub://TransformerTorchEncoder'
+    uses: 'jinahub+docker://TransformerTorchEncoder'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'
     override_with:
       pooling_strategy: 'cls'
@@ -16,8 +19,18 @@ executors:
       device: 'cuda'
       default_traversal_paths: ['c']
   - name: indexer
-    uses: 'docker://simple-indexer-image'
+    uses: 'jinahub+docker://SimpleIndexer'
     volumes: $JINA_WORKSPACE_MOUNT
     workspace: '/workspace/workspace'
     override_with:
       default_traversal_paths: ['c']
+  - name: ranker
+    uses:
+      jtype: MinRanker
+    py_modules:
+      - flows/executors.py
+  - name: root_indexer
+    uses: 'jinahub+docker://LMDBStorage'
+    volumes: $JINA_WORKSPACE_MOUNT
+    override_with:
+      default_traversal_paths: ['m']

@@ -39,22 +39,28 @@ def index(num_docs):
 
 # for search
 def query():
-    f = Flow.load_config('flows/query.yml')
-    with f:
-        f.block()
+    flow = Flow.load_config('flows/query.yml')
+    flow.rest_api = True
+    flow.protocol = 'http'
+    with flow:
+        flow.block()
 
 
 def query_text():
     def print_result(response):
-        print(f'### Number of response documents: {len(response.docs)}')
-        print(response.docs)
-        # TODO Print matches here
+        doc = response.docs[0]
+        for index, parent in enumerate(doc.matches):
+            print(f'Parent {index}: {parent.text}')
+        for index, chunk in enumerate(doc.chunks):
+            print(f'Chunk {index}: {chunk.text}')
+            for match in chunk.matches:
+                print(f'\tMatch: {match.text}')
 
     f = Flow.load_config('flows/query.yml')
     with f:
-        search_text = input('Please type a sentence: ')
+        search_text = "When sentenced to die. Shards of glass cut through my gaze."  #input('Please type a sentence: ')
         doc = Document(content=search_text, mime_type='text/plain')
-        response = f.post('/search', inputs=doc, return_results=True)
+        response = f.post('/search', inputs=doc, parameters={'lookup_type': 'parent'}, return_results=True)
         print_result(response[0].data)
 
 

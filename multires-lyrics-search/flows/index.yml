@@ -9,16 +9,24 @@ executors:
     py_modules:
       - flows/executors.py
   - name: encoder
-    uses: 'jinahub://TransformerTorchEncoder'
+    uses: 'jinahub+docker://TransformerTorchEncoder'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'
     override_with:
       pooling_strategy: 'cls'
       pretrained_model_name_or_path: distilbert-base-cased
       max_length: 96
-      device: 'cuda'
+      device: 'cpu'
       default_traversal_paths: ['c']
   - name: indexer
     uses: 'jinahub+docker://SimpleIndexer'
     volumes: $JINA_WORKSPACE_MOUNT
     override_with:
       default_traversal_paths: ['c']
+  - name: root_indexer
+    uses: 'jinahub+docker://LMDBStorage'
+    volumes: $JINA_WORKSPACE_MOUNT
+    override_with:
+      default_traversal_paths: ['r']
+    needs: [gateway]
+  - name: wait_both
+    needs: [indexer, root_indexer]

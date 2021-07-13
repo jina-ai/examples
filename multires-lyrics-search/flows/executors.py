@@ -2,6 +2,7 @@
 
 import re
 from typing import List, Optional
+from itertools import groupby
 
 from jina import Executor, DocumentArray, Document, requests
 from jina.logging.predefined import default_logger as logger
@@ -72,3 +73,30 @@ class Sentencizer(Executor):
                             weight=1.0 if self.uniform_weight else len(f) / len(text),
                             location=[s, e])
                     )
+
+
+class MinRanker(Executor):
+    def __init__(
+            self,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+    @requests(on='/search')
+    def min_rank(self, docs: 'DocumentArray', *args, **kwargs):
+        for doc in docs:
+            matches_of_chunks = []
+            for chunk in doc.chunks:
+                for match in chunk.matches:
+                    matches_of_chunks.append(match)
+
+            groups = groupby(sorted(matches_of_chunks, key=lambda d: d.parent_id), lambda d: d.parent_id)
+            for key, group in groups:
+                # key, len(list(group))
+                chunk_match_list = list(group)
+                chunk_match_list.sort(key=lambda m: -m.scores['cosine'].value)
+                match = chunk_match_list[0]
+                match.id = key
+                doc.matches.append(match)
+            doc.matches.sort(key=lambda d: -d.scores['cosine'].value)
