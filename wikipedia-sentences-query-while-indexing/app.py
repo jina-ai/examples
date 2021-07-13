@@ -140,6 +140,7 @@ def _serve_flow_with_workspace(
     flow_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'flows')
     ws_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'workspaces')
     deps.append(flow_yaml)
+    deps.append('requirements.txt')
     workspace_id = _create_workspace(filepaths=[os.path.join(cur_dir, file) for file in deps], url=ws_url)
     # with open(flow_yaml, 'rb') as f:
     #     print(f'filename {f}')

@@ -7,7 +7,7 @@ pods:
   - name: encoder
     uses: 'jinahub://TransformerTorchEncoder'
   - name: indexer
-    uses: 'jinahub://PostgreSQLIndexer'
+    uses: 'jinahub://PostgreSQLStorage'
     with:
       hostname: $DB_HOST
       port: $DB_PORT
