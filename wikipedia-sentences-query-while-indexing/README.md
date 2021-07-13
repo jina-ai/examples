@@ -37,9 +37,8 @@ For more in-depth technical information about how Jina achieves this, refer to [
 
 This feature requires you to split the Flow, one for Indexing (and Updates, Deletes) and one for Querying, and have them running at the same time.
 Also, you will need to replace the indexers in Flows.
-The Index Flow (also referred to as the DBMS Flow) will require a `DBMSIndexer`, while the Query Flow will require `QueryIndexer`.
-In our case we use `BinaryPbDBMSIndexer` and `CompoundQueryExecutor` (made up of `BinaryPbQueryIndexer` and `NumpyQueryIndexer`).
-These are the standard Indexers provided by Jina, but we also provide:
+The Index Flow (also referred to as the DBMS Flow) will require a [Storage Indexer](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/storage), while the Query Flow will require a [Vector Searcher](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/searcher).
+In our case we use :
 
 - [PostgreSQLStorage](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/storage/PostgreSQLStorage), which leverages the resilience of PostgreSQL as a storage engine
 - [AnnoySearcher](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/searcher/AnnoySearcher), which uses the [`annoy`](https://github.com/spotify/annoy) algorithm to provide faster query results
@@ -89,9 +88,14 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 
 ### 🏃 Step 3. Running the Flows
 
-1. In one terminal session, run the command `jinad`.
-
-    `JinaD` is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. In this example, we use `JinaD` to serve the two Flows (Index and Query). You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
+1. In one terminal session, run the command `docker run --add-host host.docker.internal:host-gateway \
+           -v /var/run/docker.sock:/var/run/docker.sock \
+           -v /tmp/jinad:/tmp/jinad \
+           -p 8000:8000 \
+           --name jinad \
+           -d jinaai/jina:latest-daemon`.
+   
+    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for running Jina services (Flows, Pods) remotely, wherever you want to run them. In this example, we use `JinaD` to serve the two Flows (Index and Query). You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
 
 2. In another terminal, run `python app.py -t flows`
 
@@ -153,7 +157,7 @@ Notice the following:
 | --- 📃 `dbms.yml`     | YAML file to configure DBMS (Index) Flow                                                                             |
 | --- 📃 `query.yml`     | YAML file to configure Querying Flow                                                                             |
 | 📂 `pods/`           | Folder to store Pod configuration                                                                                |
-| --- 📃 `dbms_indexer.yml`   | YAML file to configure the DBMS Indexer                                                                               | |
+| --- 📃 `encoder.yml`   | YAML file to configure the TransformerTorchEncoder to encode wiki sentences                                                                               | |
 | --- 📃 `query_indexer.yml`   | YAML file to configure the Query Indexer                                                                               |
 | 🐍 `app.py`      | Code file for the example   |
 

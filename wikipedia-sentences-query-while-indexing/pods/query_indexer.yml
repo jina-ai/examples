@@ -1,7 +1,7 @@
 jtype: CompoundQueryExecutor
 components:
-  - jtype: NumpyPostgresSearcher
-    uses: 'jinahub://NumpyPostgresSearcher'
+  - jtype: AnnoySearcher
+    uses: 'jinahub+docker://AnnoySearcher'
     with:
       index_filename: vec.bin
       metric: euclidean
