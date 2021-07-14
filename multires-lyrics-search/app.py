@@ -42,8 +42,6 @@ def query():
     flow = Flow.load_config('flows/query.yml')
     flow.rest_api = True
     flow.protocol = 'http'
-    flow.plot('.github/search.jpg')
-    exit(0)
     with flow:
         flow.block()
 
