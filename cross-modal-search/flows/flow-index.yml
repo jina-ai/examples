@@ -6,15 +6,13 @@ with:
   port_expose: 45678
   workspace: $JINA_WORKSPACE
 pods:
-  - name: loader                                      # load images from the dataset of image-caption pairs
+  - name: image_normalizer                                  # normalize the dimension of the images
+    uses: pods/image-normalize.yml
     uses: 'jinahub+docker://ImageNormalizer'
+    override_with: {'dtype': 'uint8'}
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]
-  - name: image_normalizer                                  # normalize the dimension of the images
-    uses: pods/image-normalize.yml
-    shards: $JINA_PARALLEL
-    read_only: true
   - name: image_encoder                               # encode images into embeddings with CLIP model
     uses: 'jinahub+docker://CLIPImageEncoder'
     volumes: $HOME/.cache/clip:/root/.cache/clip
