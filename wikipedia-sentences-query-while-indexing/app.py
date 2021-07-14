@@ -145,7 +145,7 @@ def _serve_flow_with_workspace(
     #     print(f'filename {f}')
     assert(wait_for_workspace(workspace_id=workspace_id, host=JINAD_HOST))
     #with open(flow_yaml, 'rb') as f:
-    r = requests.post(flow_url, params={'workspace_id': workspace_id, 'filename': flow_yaml})
+    r = requests.post(flow_url, params={'workspace_id': workspace_id, 'filename': flow_yaml.split('/')[-1]})
     #r = requests.post(flow_url, data={'workspace_id': workspace_id}, files={'flow': f})
     print(f'Checking if the flow creation is succeeded: {r.json()}')
     assert r.status_code == 201
