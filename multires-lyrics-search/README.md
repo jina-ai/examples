@@ -1,6 +1,6 @@
 # Lyrics Search: Understanding Chunks
 
-[![](demo.gif)](https://www.youtube.com/watch?v=GzufeV8AY_w)
+[![](.github/demo.gif)](.github/demo.gif)
 
   * [Overview](#overview)
   * [🐍 Build the app with Python](#---build-the-app-with-python)
