@@ -1,5 +1,5 @@
 
-# Lyrics Live Search: Understanding the Concept of Chunk
+# Lyrics Search: Understanding Chunks
 
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg?raw=true  "We fully commit to open-source")](https://get.jina.ai)
 
@@ -9,7 +9,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Use toy data](#use-toy-data)
+- [Dataset](#dataset)
 - [[Optional] Download full lyrics dataset](#optional-download-full-lyrics-dataset)
 - [Install](#install)
 - [Run](#run)
@@ -19,14 +19,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## Use toy data
+## Dataset
 
-We have included 1000 lyrics as toy data in [`toy-data`](toy-data).
+The dataset used in this example contains lyrics of songs.
+
+We have included 1000 songs' lyrics as toy data in [`lyrics-data`](lyrics-data).
 This data is ready to use with this example.
 
-## [Optional] Download full lyrics dataset
-
-**NOTE**: This is what is used in the Docker image and is **required** if you want to build it (the Docker image) yourself. 
+### [Optional] Download full lyrics dataset
 
 If you want to use the full dataset, you can download it from kaggle (https://www.kaggle.com/neisse/scrapped-lyrics-from-6-genres).
 To get it, once you have your Kaggle Token in your system as described in (https://www.kaggle.com/docs/api), run:
@@ -35,45 +35,21 @@ To get it, once you have your Kaggle Token in your system as described in (https
 bash get_data.sh
 ```
 
-## Install
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run
+## Command Overview
 
 | Command | Description |
 | :--- | :--- |
-| ``python app.py -t index`` | To index files/data |
-| ``python app.py -t query`` | To run query on the index |
-| ``python app.py -t dryrun`` | Sanity check on the topology |
+| ``python app.py -t index`` | To index the dataset |
+| ``python app.py -t query`` | Start a REST API working on queries |
+| ``python app.py -t query_text`` | Perform one query with your custom text |
 
-## View in Browser
-
-```bash
-cd static
-python -m http.server
-```
-
-Open `http://0.0.0.0:8000/` in your browser.
-
-## Use Docker image from the jina hub
-
-To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.multireslyricssearch) with 10000 indexed songs (more than the toy example, but just a small part of the huge dataset).
-You can retrieve the docker image using:
-
-```bash
-docker pull jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
-```
-So you can pull from its latest tags.
-
-Then you can run it, and you can proceed to see the results in the browser as explained before
-
-```bash
-docker run -p 65481:65481 jinahub/app.example.multireslyricssearch:0.0.2-0.9.20
-```
-
+Then, open `http://0.0.0.0:8000/` in your browser.
 
 ## 🏃 Run the Flows
 Now that we've got the code to load our data, we're going to dive into writing our app and running our Flows!
@@ -89,21 +65,17 @@ Now for the query time, run:
 ```bash
 python app.py -t query
 ```
-
-### With REST API
-
+This starts an API waiting for query requests.  
+You can send a query using cURL:
 ```sh
-python app.py -t query_restful
-```
-
-Then:
-
-```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
+curl --request POST -d '{"parameters": {"top_k": 10}, "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
 ````
-
-Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
-
+Alternatively, use the provided frontend:
+```bash
+cd static
+python -m http.server
+```
+Then, open `http://0.0.0.0:8000/` in your browser.
 ## License
 
-Copyright (c) 2020-2021 Han Xiao. All rights reserved.
+Copyright (c) 2020-2021 Jina AI. All rights reserved.
