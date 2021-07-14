@@ -1,0 +1,5 @@
+# index the text into documents
+jtype: NumpyIndexer
+metas:
+  name: text_idx  # a customized name
+  py_modules: 'executors.py'

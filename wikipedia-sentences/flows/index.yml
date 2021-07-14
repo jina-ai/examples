@@ -1,11 +1,11 @@
-!Flow
+jtype: Flow
 version: '1'
 with:
   restful: True
+  workspace: $JINA_WORKSPACE
 pods:
-  - name: encoder
-    uses: pods/encode.yml
-    timeout_ready: 1200000
-    read_only: true
-  - name: indexer
-    uses: pods/index.yml
+  - name: NumpyFileQueryIndexer
+    uses:
+      jtype: NumpyFileQueryIndexer
+      with:
+        source_path: '../data'

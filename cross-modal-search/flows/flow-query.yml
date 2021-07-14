@@ -1,0 +1,47 @@
+jtype: Flow
+version: '1'
+with:
+  prefetch: 10
+  port_expose: 45678
+  workspace: $JINA_WORKSPACE
+pods:
+  - name: loader                          # load query image
+    uses: pods/image-load.yml
+    shards: $JINA_PARALLEL
+    read_only: true
+    needs: gateway
+  - name: normalizer                      # normalize query image
+    uses: pods/image-normalize.yml
+    shards: $JINA_PARALLEL
+    read_only: true
+    needs: loader
+  - name: image_encoder                   # encode query image into embeddings with CLIP model
+    polling: any
+    uses: pods/clip/image-encoder.yml
+    shards: $JINA_PARALLEL
+    timeout_ready: 600000
+    read_only: true
+    needs: normalizer
+  - name: text_indexer                    # index query text
+    polling: all
+    uses: pods/index-text.yml
+    shards: $JINA_SHARDS
+  - name: text_encoder                    # encode query text into embeddings with CLIP model
+    uses: pods/clip/text-encoder.yml
+    shards: $JINA_PARALLEL
+    timeout_ready: 600000
+    read_only: true
+    needs: [gateway]
+  - name: image_vector_indexer            # index query image embeddings
+    polling: all
+    uses: pods/index-image-vector.yml
+    shards: $JINA_SHARDS
+    needs: text_encoder
+  - name: image_kv_indexer                # index query image as kv
+    polling: all
+    uses: pods/index-image-kv.yml
+    shards: $JINA_SHARDS
+    needs: image_vector_indexer
+  - name: join_all                        # combine text and image queries
+    needs: [text_indexer, image_kv_indexer]
+    read_only: true

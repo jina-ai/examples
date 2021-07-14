@@ -1,0 +1,17 @@
+jtype: Flow
+version: '1'
+with:
+  read_only: false
+  rest_api: true
+  port_expose: 9001
+pods:
+  - name: encoder
+    uses: encoder.yml
+    timeout_ready: 60000
+  - name: query_indexer
+    uses: query_indexer.yml
+    replicas: 2
+    parallel: 3
+    polling: all
+    uses_after: _merge_matches
+    timeout_ready: '-1'

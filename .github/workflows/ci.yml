@@ -1,23 +1,26 @@
 name: CI
 
-
 on: [pull_request]
 
 jobs:
   example-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: ${{ matrix.python-version }}
       - id: changed-files
         uses: jitterbit/get-changed-files@v1
         continue-on-error: true
       - name: ci
         run: ./.github/ci.sh
+        timeout-minutes: 15
         env:
           CHANGED_FILES: ${{ steps.changed-files.outputs.all }}
           AWS_ACCESS_KEY_ID: AKIAWB5UZPEQHHYDKVUC

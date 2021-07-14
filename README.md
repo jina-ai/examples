@@ -11,11 +11,12 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-These examples showcase Jina in action and provide sample code for you to work from. We suggest you read [Jina 101](http://101.jina.ai) and <a href="https://jina.ai/2020/07/06/What-is-Neural-Search-and-Why-Should-I-Care.html">What is Neural Search?</a> to get a conceptual overview.
+These examples showcase Jina in action and provide sample code for you to work from. 
 
-❗If you'd like to run our examples on Windows, please follow [this instruction](https://docs.jina.ai/chapters/install/os/on-wsl.html).
+We suggest you read the following to get an overview of what Jina is and how it works:
 
-To learn more about how to use Jina, please refer to [our docs](http://www.jina.ai).
+- [What is neural search?](https://github.com/jina-ai/jina/blob/master/.github/2.0/neural-search.md)
+- [Get started](https://github.com/jina-ai/jina/#get-started) - especially the cookbooks for Document, Executor and Flow
 
 ## 🐣 Simple Examples
 
@@ -34,15 +35,6 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./wikipedia-sentences-incremental">Add Incremental Indexing to Wikipedia Search</a></h4>
-      Index more effectively by adding incremental indexing to your Wikipedia search
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>📄</h1>
-    </td>
-    <td>
       <h4><a href="./multires-lyrics-search">Search Lyrics with Transformers and PyTorch</a></h4>
       Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
     </td>
@@ -52,37 +44,12 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>🖼️</h1>
     </td>
     <td>
-      <h4><a href="./pokedex-with-bit">Google's Big Transfer Model in (Poké-)Production</a></h4>
+      <h4><a href="./image-search">Google's Big Transfer Model in (Poké-)Production</a></h4>
       Use SOTA visual representation for searching Pokémon!
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️</h1>
-    </td>
-    <td>
-      <h4><a href="./object-search">Object detection with fasterrcnn and MobileNetV2</a></h4>
-      Detect, index and query similar objects
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>🎧</h1>
-    </td>
-    <td>
-      <h4><a href="./audio-search">Search YouTube audio data with Vggish</a></h4>
-      A demo of neural search for audio data based Vggish model.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <h1>🎞️ </h1>
-    </td>
-    <td>
-      <h4><a href="./tumblr-gif-search">Search Tumblr GIFs with KerasEncoder</a></h4>
-      Use prefetching and sharding to improve the performance of your index and query flow when searching animated GIFs.
-    </td>
-  </tr>
+  
+  
 </table>
 
 ## 🚀  Advanced Examples
@@ -93,10 +60,11 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./advanced-vector-search">Index and query with FAISS</a></h4>
-      Build a vector search engine that finds the closest vector in the database to a query.
+      <h4><a href="./wikipedia-sentences-query-while-indexing">Querying While Indexing in the Wikipedia Search Example</a></h4>
+      Support both querying and indexing simultaneously in our Wikipedia Search Example
     </td>
   </tr>
+  
   <tr>
     <td>
       <h1>🖼️📄</h1>
@@ -106,15 +74,7 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       Use one modality (text) to search another (images)
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️📄</h1>
-    </td>
-    <td>
-      <h4><a href="./multimodal-search-tirg">Multi-Modal: Search images with 2 modalities in the query</a></h4>
-      Use more than one modality (image+text) to search images
-    </td>
-  </tr>
+  
   <tr>
     <td>
       <h1>🖼️📄</h1>
@@ -124,20 +84,34 @@ To learn more about how to use Jina, please refer to [our docs](http://www.jina.
       Use different modalities (image, text or PDF) to search PDF
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🗂️</h1>
-    </td>
-    <td>
-      <h4><a href="./fashion-example-query">Build complex logic, structures and filters with Query Language</a></h4>
-      Create separate indexes and queries for different clothing in Fashion-MNIST
-    </td>
-  </tr>
+  
 </table>
 
 ## Community Examples
 
 Want to add your own example? Please check our [guidelines](example-guidelines.md)!
+
+<table>
+    <tr>
+    <td>
+      <h1>🖼️📄</h1>
+    </td>
+    <td>
+      <h4>Meme Search - <a href="https://github.com/alexcg1/jina-meme-search-example/">Text search</a> / <a href="https://github.com/alexcg1/jina-meme-search-image-backend">Image search</a> / <a href="https://github.com/alexcg1/jina-meme-search-frontend">Front end</a></h4>
+      Search memes by caption or similar image.
+    </td>
+  </tr><tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/alexcg1/jina-app-store-example">App Store Search</a></h4>
+      Use Transformers to search through a rich app store dataset with a responsive front-end
+    </td>
+  </tr>
+</table>
+
+#### Legacy examples
 
 <table>
     <tr>

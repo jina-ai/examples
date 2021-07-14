@@ -1,20 +1,23 @@
+# Build A Cross-Modal Search System To Look For Images From Captions and vice versa
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
 
-- [Build a CrossModal Search System to look for Images from Captions and viceversa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
-  - [Prerequisites](#prerequisites)
-  - [Prepare the data](#prepare-the-data)
-  - [Build the docker images](#build-the-docker-images)
-  - [Run the Flows](#run-the-flows)
-  - [Results](#results)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [License](#license)
+
+**Table of Contents**
+  - [Overview](#-overview)
+  - [🐍 Build the app with Python](#-build-the-app-with-python)
+  - [🌀 Flow diagram](#-flow-diagram)
+  - [🚑 Troubleshooting](#-troubleshooting)
+  - [📖 Optional: Extra information useful for the user](#-optional-extra-information-useful-for-the-user)
+  - [🔮 Overview of the files](#-overview-of-the-files)
+  - [🐋 Deploy the prebuild application using Docker](#-deploy-the-prebuild-application-using-docker) 
+  - [⏭️ Next steps](#-next-steps)
+  - [‍👩‍👧‍👦 Community](#-community)
+  - [🦄License](#-license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Build a CrossModal Search System to look for Images from Captions and viceversa
 <p align="center">
  
 [![Jina](https://github.com/jina-ai/jina/blob/master/.github/badges/jina-badge.svg "We fully commit to open-source")](https://jina.ai)
@@ -32,118 +35,160 @@
 
 </p>
 
-In this example, `jina` is used to implement a cross-modal search system. This example allows the user to search for images given a caption description and to look for a caption description given an image. We encode images and its captions (any descriptive text of the image) in separate indexes, which are later queried in a `cross-modal` fashion. It queries the `text index` using `image embeddings` and query the `image index` using `text embeddings`. 
+![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/visualizations/cross-modal-result.jpg)
 
-**Motive behind Cross Modal Retrieval**
+## Overview
+|  |  |
+| ------------- | ------------- |
+| Learnings | How to use image captions (short descriptions of the image content) to search for images. |
+| Used for indexing | Images + captions. |
+| Used for querying | Image caption e.g. "A boy playing basketball". |
+| Dataset used | [Flickr 8k](https://www.kaggle.com/adityajn105/flickr8k) containing 8k image caption pairs. |
+| Model used | Both [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) and [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf) are demonstrated. |
 
-Cross-modal retrieval tries to effectively search for documents in a set of documents of a given modality by querying with documents from a different modality.
+In this example, Jina is used to implement a cross-modal search system.
+This example allows the user to search for images given a caption description.
+First, we encode all images in our dataset into vectors and create an index of these vectors.
+When we search with text inputs, we compute the vector representation of this text and compare it to the previously calculated image vector index to find the most similar image. 
+It is also possible to do it the other way around and use the image encoding to search for similar text-embeddings (captions).
 
-Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
-It is possible that documents may be of the same mime type,
-but come from different distributions,
-for them to have different modalities.
-**Example**: In an article or web page, 
-the body text and the title are from the same mime type (text),
-but can be considered of different modalities (distributions).
+_____
 
-Different encoders map different modalities to a common embedding space.
-They need to extract semantic information from the documents. 
+## 🐍 Build the app with Python
 
-In this embedding space,
-documents that are semantically relevant to each other from different modalities are expected to be close to another -  Metric Learning
-
-In the example, we expect images embeddings to be nearby their captions’ embeddings.
-
-**Research for Cross Modal Retrieval**
-
-The models used for the example are cited from the paper, you can try our example with one of them:
-
-1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
-2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
-
-Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
-
-**CLIP Encoders in Jina for Cross Modal Search**
-
-Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
-for encoding image and text respectively.
-
-**VSE Encoders in Jina for Cross Modal Search**
-
-Two encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
-for encoding image and text respectively.
+These instructions explain how to build the example yourself and deploy it with Python. 
+If you want to skip the building steps and just run the example with Docker, check out the  [Docker section](#-deploy-the-prebuild-application-using-docker) below. 
 
 
-## Prerequisites
+### 🗝️ Requirements
 
-This demo requires Python 3.7, [`docker`](https://www.docker.com/get-started) and [`jina`](https://docs.jina.ai/chapters/core/setup/) installation.
+1. You have a working Python 3.7 or 3.8 environment and a installation of [Docker](https://docs.docker.com/get-docker/). 
+2. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
+3. You have at least 2 GB of free space on your hard drive. 
 
-## Prepare the data
+### 👾 Step 1. Clone the repo and install Jina
 
+Begin by cloning the repo, so you can get the required files and datasets. (If you already have the examples repository on your machine make sure to fetch the most recent version)
 
-### Use Flickr8k
+```sh
+git clone https://github.com/jina-ai/examples
+cd examples/cross-modal-search
+````
+In your terminal, you should now be located in you the *cross-modal-search* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
 
-Although the model is trained on `Flickr30k`, you can test on `Flickr8k` dataset, which is a much smaller version of flickr30k. This is the default dataset used for this example.
-
-To make this work, we need to get the image files from the `kaggle` [dataset](https://www.kaggle.com/adityajn105/flickr8k). To get it, once you have your Kaggle Token in your system as described [here](https://www.kaggle.com/docs/api), run:
-
-```bash
-bash get_data.sh
-bash prepare_data.sh
+```sh
+pip install -r requirements.txt
 ```
 
-Make sure that your data folder has:
+### 🏃 Step 2. Index your data
+To quickly get started, you can index a [small dataset](data/toy-data) to make sure everything is working correctly. 
+You can pre-fetch the Pods containing the machine learning models required to calculate the embeddings of the data using Docker.
+```bash
+docker pull jinahub/pod.encoder.clipimageencoder:0.0.2-1.2.0
+docker pull jinahub/pod.encoder.cliptextencoder:0.0.3-1.2.2
+```
+Or for the VSE model:
 
 ```bash
-data/f8k/images/*jpg
-data/f8k/captions.txt
+docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.2.0
+docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.2.0
+```
+Once the images are downloaded, run
+```bash
+python app.py -t index
+```
+If you see the following output, it means your data has been correctly indexed.
+
+```
+Flow@5162[S]:flow is closed and all resources are released, current build level is 0
 ```
 
-### Use Flickr30k
+We recommend you come back to this step later and index the full flickr 8k dataset for better results. To index the [full dataset](https://www.kaggle.com/adityajn105/flickr8k) (8000 images) follow these steps:
+1. Register for a free [Kaggle account](https://www.kaggle.com/account/login?phase=startRegisterTab&returnUrl=%2F)
+2. Set up your API token (see [authentication section of their API docs](https://www.kaggle.com/docs/api))
+3. Run `sh get_data.sh` 
 
-The model used has been trained using `Flickr30k` and therefore we recommend using this dataset to try this system. But it is a good exercise to see if it works as well for other datasets or your custom ones.
-
-To do so, instead of downloading the `flickr8k` from kaggle, just take its 30k counterpart
-
-```bash
-bash get_data30k.sh
-``` 
-
-Then we also need `captions` data, to get this:
-
-```bash
-bash prepare_data30k.sh
+To index the full dataset, run
+```shell
+python app.py -t index --data_set=f8k
 ```
 
-Once all the steps are completed, we need to make sure that under `cross-modal-search/data/f30k` folder, we have a folder `images` and a json file `dataset_flickr30k.json`. Inside the `images` folder there should be all the images of `Flickr30K` and the `dataset_flickr30k.json` contains the captions and its linkage to the images.
+### 🔎 Step 3: Query your data
+Jina offers several ways to search (query) your data. In this example, we show two of the most common ones. In a production environment, you would only choose one which suits your use case best. 
 
-## Run the Flows
+#### Using a REST API
+Begin by running the following command to open the REST API interface.
 
-### Pull docker image(Optional)
-
-To save your time when doing indexing, you could pull the docker images to your local machine.
-
-To use CLIP model:
-
-```bash
-docker pull jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7
-docker pull jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7
+```sh
+python app.py -t query_restful
 ```
 
-Or use VSE model:
+You should open another terminal window and paste the following command. 
 
-```bash
-docker pull jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7
-docker pull jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7
+```sh
+curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://localhost:45678/search'
 ```
 
-### Index 
+Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar images sentences to the text input you provided in the `data` parameter.
+Note, that the toy-data only contains two images.
+Feel free to alter the text in the 'data' parameter and play around with other queries (this is only fun with the large dataset)! For a better understanding of the parameters see the table below. 
+|  |  |
+|--|--|
+| `top_k` | Integer determining the number of sentences to return |
+| `mode` | Mode to trigger in the call. See [here](https://docs.jina.ai/chapters/rest/) for more details |
+| `data` | Text input to query |
+ 
+#### Using Jina Box; our frontend search interface
+**Jina Box** is a light-weight, highly customizable JavaScript based front-end search interface. To use it for this example, begin by opening the REST API interface. 
 
-Index is run with the following command, where `request_size` can be chosen by the user. Index will process both images and captions
+```sh
+python app.py -t query_restful
+```
 
+In your browser, open up the hosted Jina Box on [jina.ai/jinabox.js](https://jina.ai/jinabox.js/). In the configuration bar on the left-hand side, choose a custom endpoint and enter the following: `http://127.0.0.1:45678/search`.
+You can type search queries into the text box on the right-hand side!
+
+______
+
+## 🌀 Flow diagram
+This diagram provides a visual representation of the Flows in this example; Showing which executors are used in which order.
+Remember, our goal is to compare vectors representing the semantics of images with vectors encoding the semantics of short text descriptions.
+
+### Indexing
+![](visualizations/cross-modal-index-flow.png)  
+As you can see, the Flow that Indexes the data contains three parallel branches: 
+- Upper: a key-value indexer for the images that we use as a lookup (like a Dictionary in Python).
+- Middle: transformations to get from the JPG to vectors
+- Lower: transformations to get from text descriptions to vectors
+To have️ low latency at query time, we store the computed vectors on disk.
+
+### Querying
+![](visualizations/cross-modal-query-flow.png)  
+This Flow shows what happens when a user queries our data. First, the provided text description is passed through the text Encoder which turns
+it into a vector. Now, we use our image vector index to find the most similar image encodings to the previously computed text vector from the user.
+Because the user does not want to see the vector as a result, but the image this vector belongs to we use the key-value lookup to get from image vector to human-interpretable JPG image.
+Note, that this Flow only shows how to search for images using text. The example actually support searching for text using images as well. 
+As an exercise, you can think of the required steps for that and check against our [Flow configuration](flows/flow-query.yml).
+
+
+## 🚑 Troubleshooting
+
+In case a Flow hangs during indexing it often helps to restart the process.
+
+
+## 📖 Optional: Extra information useful for the user
+
+**Motive behind Cross-Modal Retrieval**
+
+Cross-modal retrieval tries to effectively search for documents of one modality (text) in an index storing data of another modality (images). An example of this is google image search.
 ```bash
 python app.py -t index -n $num_docs -s $request_size -d 'f8k' -m clip
 ```
+
+If your index hangs, please remove the workspace,
+reduce the `request_size` and re-run the above command to index.
+The default `request_size` is 12. 
+Check out the fix suggested in [this issue](https://github.com/jina-ai/examples/issues/613).
 
 Not that `num_docs` should be 8k or 30k depending on the `flickr` dataset you use.
 If you decide to index the complete datasets,
@@ -157,41 +202,67 @@ Request size can be configured with `-s` flag.
 Jina normalizes the images needed before entering them in the encoder.
 `QueryLanguageDriver` is used to redirect (filtering) documents based on modality.
 
-### Query
-
-```bash
-python app.py -t query -m clip
-```
-
-You can then query the system from [jinabox](https://jina.ai/jinabox.js/) using either images or text. 
-The default port number will be `45678`
-
-Examples of captions in the dataset:
-
-`A man in an orange hat starring at something, A Boston terrier is running in the grass, A television with a picture of a girl on it`
-
-Note the cross for which cross modal stands.
-
-Internally, `TextEncoder` targets `ImageVectorIndexer` and `ImageEncoder` targets `TextVectorIndexer`.
-`ImageVectorIndexer` and `TextVectorIndexer` map to a common Embedding Space. (To Jina it means having common dimensionality).
-
-### With REST API
-
-```sh
-python app.py -t query_restful
-```
-
-Then:
-
-```sh
-curl --request POST -d '{"top_k": 10, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/search'
-````
-
-Or use [Jinabox](https://jina.ai/jinabox.js/) with endpoint `http://127.0.0.1:45678/search`
+Modality is an attribute assigned to a document in Jina in the protobuf Document structure.
+It is possible that documents may be of the same mime type,
+but come from different distributions,
+for them to have different modalities.
+**Example**: In an article or web page, 
+the body text and the title are from the same mime type (text),
+but will differ in statistical properties (like expected length or frequency of certain key-words) and should therefore be modeled separately.
+If that is the case, we consider them as different modalities.
 
 
-## Use Docker image from the jina hub
+Different Encoders map different modalities to a common embedding space.
+They need to extract semantic information from the documents. 
 
+In this embedding space,
+documents that are semantically relevant to each other from different modalities are expected to be close to another - [Metric Learning](https://en.wikipedia.org/wiki/Similarity_learning#:~:text=Metric%20learning%20is%20the%20task,(or%20the%20triangle%20inequality).)
+
+In the example, we expect images embeddings to be nearby their captions’ embeddings.
+
+**Research for Cross-Modal Retrieval**
+
+The models used for the example are cited from the paper, you can try our example with one of them:
+
+1. [CLIP: Contrastive Language-Image Pre-Training](https://arxiv.org/abs/2007.13135) (recommend)
+2. [VSE++: Improving Visual-Semantic Embeddings with Hard Negatives](https://arxiv.org/pdf/1707.05612.pdf).
+
+Both of the models have been trained to encode pairs of `text` and `images` into a common embedding space.
+
+**CLIP Encoders in Jina for Cross-Modal Search**
+
+Two encoders have been created for this example, namely `CLIPImageEncoder` and `CLIPTextEncoder`,
+for encoding image and text respectively.
+
+**VSE Encoders in Jina for Cross-Modal Search**
+
+Two Encoders have been created for this example, namely `VSEImageEncoder` and `VSETextEncoder`,
+for encoding image and text respectively.
+
+
+## 🔮 Overview of the files
+
+|                      |                                                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| 📂 `flows/`          | Folder to store Flow configuration                                                                               |
+| --- 📃 `flow-index.yml`     | YAML file to configure indexing Flow                                                                             |
+| --- 📃 `flow-query.yml`     | YAML file to configure querying Flow                                                                             |
+| 📂 `pods/`           | Folder to store Pod configuration                                                                                |
+| --- 📂 `clip`   | YAML files to configure the Encoder using the clip model                                                                               |
+| --- 📂 `vse`   | YAML files to configure the Encoder using the vse model                                                                                |
+| --- 📃 `image-load.yml`   | YAML file to configure loading JPG files                                                                             |
+| --- 📃 `image-normalzer.yml`   | YAML file to configure how images are normalized                                                                           |
+| --- 📃 `index-image-kv.yml`   | YAML file to configure the key-value image index                                                                           |
+| --- 📃 `index-image-vector.yml`   | YAML file to configure the vector image index                                                                           |
+| --- 📃 `index-text.yml`   | YAML file to configure the index for the text vectors                                                                            |
+| --- 📃 `merge_matche_sort_topk.yml`   | YAML file to configure the merging ranking of matches in the final result.                                                                     |
+| 📂 `workspace/`      | Folder to store indexed files (embeddings and documents). Automatically created after the first indexing   |
+| 📂 `visualizations/`      | Folder to store images used for documentation  |
+| 📂 `data/`      | Folder to store the toy-data for the example  |
+
+_____
+
+## 🐋 Deploy the prebuild application using Docker
 To make it easier for the user, we have built and published the [Docker image](https://hub.docker.com/r/jinahub/app.example.crossmodalsearch) with the indexed documents.
 Just be aware that the image weights 11 GB. Make sure that your docker lets you allocate a sufficient amount of memory. 
 
@@ -202,53 +273,27 @@ docker pull jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 ```
 So you can pull from its latest tags. 
 
-To run the application with the pre-indexed documents and ready to be used from jina-box, run
+To run the application with the pre-indexed documents and ready to be used from Jina Box, run
 
 ```bash
 docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 ```
 
-### Build the docker image yourself
+## ⏭️ Next steps
 
-In order to build the docker image, please first run `./get_data.sh` or make sure that `flickr8k.zip` is downloaded.
+Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
-And then just simply run:
+If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
-```bash
-docker build -f Dockerfile -t {DOCKER_IMAGE_TAG} .
-```
+## 👩‍👩‍👧‍👦 Community
 
-## Results
-![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/cross-modal-result.jpg "Cross Modal Search Results")
-![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_image2text.png "Cross Modal Search Results")
-![](https://github.com/jina-ai/examples/blob/master/cross-modal-search/results/saxophone_text2image.png "Cross Modal Search Results")
-
-## Documentation 
-
-<a href="https://docs.jina.ai/">
-<img align="right" width="350px" src="https://github.com/jina-ai/jina/blob/master/.github/jina-docs.png" />
-</a>
-
-The best way to learn Jina in depth is to read our documentation. Documentation is built on every push, merge, and release event of the master branch. You can find more details about the following topics in our documentation.
-
-- [Jina command line interface arguments explained](https://docs.jina.ai/chapters/cli/index.html)
-- [Jina Python API interface](https://docs.jina.ai/api/jina.html)
-- [Jina YAML syntax for executor, driver and flow](https://docs.jina.ai/chapters/yaml/yaml.html)
-- [Jina Protobuf schema](https://docs.jina.ai/chapters/proto/index.html)
-- [Environment variables used in Jina](https://docs.jina.ai/chapters/envs.html)
-- ... [and more](https://docs.jina.ai/index.html)
-
-
-## Community
-
-- [Slack channel](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) - a communication platform for developers to discuss Jina
-- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
-- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
-- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
+- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
+- [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
 
-## License
+## 🦄 License
 
-Copyright (c) 2020-2021 Jina AI Limited. All rights reserved.
+Copyright (c) 2021 Jina AI Limited. All rights reserved.
 
 Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/jina/blob/master/LICENSE) for the full license text.

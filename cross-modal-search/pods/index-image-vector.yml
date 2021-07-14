@@ -1,0 +1,4 @@
+jtype: NumpyIndexer
+metas:
+  name: images_vec_idx  # a customized name
+  py_modules: 'executors.py'

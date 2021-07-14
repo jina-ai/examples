@@ -1,0 +1,3 @@
+jtype: ImageReader
+metas:
+  py_modules: 'executors.py'

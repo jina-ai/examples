@@ -1,0 +1,10 @@
+!Flow                                   # Define the flow used for incrementally indexing files
+version: '1'
+pods:                                   # All pods that are executed in this flow are listed here
+  - name: encoder                       # Name for the encoder pod
+    uses: pods/encode.yml               # The configuration file for the encoder pod
+    timeout_ready: 1200000
+    read_only: true
+  - name: indexer                       # Name for the indexer pod
+    uses_before: pods/index_cache.yml   # This config file is applied and executed before the "pods/index.yml" file
+    uses: pods/index.yml                # The configuration file for the indexer pod

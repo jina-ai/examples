@@ -21,16 +21,12 @@ def config(model_name):
     os.environ['JINA_PORT'] = '45678'
     os.environ['JINA_USE_REST_API'] = 'false'
     if model_name == 'clip':
-        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.clipimageencoder:0.0.1-1.0.7'
-        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.cliptextencoder:0.0.1-1.0.7'
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/clip/text-encoder.yml'
-    elif model_name == 'vse':
-        os.environ['JINA_IMAGE_ENCODER'] = 'docker://jinahub/pod.encoder.vseimageencoder:0.0.5-1.0.7'
-        os.environ['JINA_TEXT_ENCODER'] = 'docker://jinahub/pod.encoder.vsetextencoder:0.0.6-1.0.7'
-        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'yaml/vse/text-encoder.yml'
+        # os.environ['JINA_IMAGE_ENCODER'] = CLIPImageEncoder
+        # os.environ['JINA_TEXT_ENCODER'] = CLIPTextEncoder
+        os.environ['JINA_TEXT_ENCODER_INTERNAL'] = 'pods/clip/text-encoder.yml'
     else:
         msg = f'Unsupported model {model_name}.'
-        msg += 'Expected `clip` or `vse`.'
+        msg += 'Expected `clip`'
         raise ValueError(msg)
 
 
@@ -52,6 +48,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
                     document.text = caption
                     document.modality = 'text'
                     document.mime_type = 'text/plain'
+                    document.tags['id'] = hashed
                 with Document() as gt:
                     match = Document()
                     match.tags['id'] = hashed
@@ -62,6 +59,7 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
                     document.buffer = image
                     document.modality = 'image'
                     document.mime_type = 'image/jpeg'
+                    document.tags['id'] = hashed
                     document.convert_buffer_to_uri()
                 with Document() as gt:
                     match = Document()
@@ -79,12 +77,14 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
 
 def print_evaluation_score(resp):
     batch_of_score = 0
-    for doc in resp.search.docs:
-        batch_of_score += doc.evaluations[0].value
+    for doc in resp.docs:
+        if len(doc.evaluations) > 0:
+            batch_of_score += doc.evaluations['mrr'].value
+
     global sum_of_score
     global num_of_searches
     sum_of_score += batch_of_score
-    num_of_searches += len(resp.search.docs)
+    num_of_searches += len(resp.data.docs)
 
 
 @click.command()
@@ -98,14 +98,16 @@ def print_evaluation_score(resp):
 def main(index_num_docs, evaluate_num_docs, request_size, data_set, model_name, evaluation_mode):
     config(model_name)
     if index_num_docs > 0:
-        with Flow.load_config('flow-index.yml') as f:
+        f = Flow.load_config('flows/flow-index.yml')
+        with f:
+            f.use_rest_gateway()
             f.index(
-                input_fn=input_index_data(index_num_docs, request_size, data_set),
+                inputs=input_index_data(index_num_docs, request_size, data_set),
                 request_size=request_size
             )
-    with Flow.load_config('flow-query.yml').add(name='evaluator', uses='yaml/evaluate.yml') as flow_eval:
+    with Flow.load_config('flows/flow-query.yml').add(name='evaluator', uses='pods/evaluate.yml') as flow_eval:
         flow_eval.search(
-            input_fn=evaluation_generator(evaluate_num_docs, request_size, data_set, mode=evaluation_mode),
+            inputs=evaluation_generator(evaluate_num_docs, request_size, data_set, mode=evaluation_mode),
             on_done=print_evaluation_score
         )
     print(f'MeanReciprocalRank is: {sum_of_score / num_of_searches}')

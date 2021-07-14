@@ -1,0 +1,16 @@
+jtype: BinaryPbDBMSIndexer
+with:
+  index_filename: dbms.bin
+metas:
+  workspace: workspace_dbms
+  name: dbms
+requests:
+  on:
+    [IndexRequest, UpdateRequest]:
+      - jtype: DBMSIndexDriver
+        with:
+          executor: dbms
+    DeleteRequest:
+      - jtype: DeleteDriver
+        with:
+          executor: dbms
