@@ -1,7 +1,6 @@
 jtype: Flow
 version: '1'
 with:
-  protocol: http
   prefetch: 10
   port_expose: 45678
   workspace: $JINA_WORKSPACE
