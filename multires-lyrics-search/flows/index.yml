@@ -4,10 +4,7 @@ with:
   workspace: $JINA_WORKSPACE
 executors:
   - name: segmenter
-    uses:
-      jtype: Sentencizer
-    py_modules:
-      - flows/executors.py
+    uses: 'jinahub+docker://Sentencizer'
   - name: encoder
     uses: 'jinahub+docker://TransformerTorchEncoder'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'

@@ -58,22 +58,15 @@ def query_text():
 
     f = Flow.load_config('flows/query.yml')
     with f:
-        search_text = "When sentenced to die. Shards of glass cut through my gaze."  #input('Please type a sentence: ')
+        search_text = input('Please type a sentence: ')
         doc = Document(content=search_text, mime_type='text/plain')
         response = f.post('/search', inputs=doc, parameters={'lookup_type': 'parent'}, return_results=True)
         print_result(response[0].data)
 
 
-def query_restful():
-    flow = Flow.load_config("flows/query.yml")
-    flow.protocol = 'http'
-    with flow:
-        flow.block()
-
-
 @click.command()
 @click.option('--task', '-t',
-              type=click.Choice(['index', 'query', 'query_restful', 'query_text'], case_sensitive=False))
+              type=click.Choice(['index', 'query', 'query_text'], case_sensitive=False))
 @click.option('--num_docs', '-n', default=10000)
 def main(task, num_docs):
     config()
@@ -91,10 +84,6 @@ def main(task, num_docs):
         query()
     elif task == 'query_text':
         query_text()
-    elif task == 'query_restful':
-        if not os.path.exists(workspace):
-            logger.warning(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
-        query_restful()
     else:
         raise NotImplementedError(
             f'Unknown task: {task}.')
