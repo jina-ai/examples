@@ -43,13 +43,13 @@ def query_restful():
         query_doc.text = text
         response = _query_docs([query_doc.dict()])
 
-        for doc in response['data']['search']['docs']:
-            matches = doc.get('matches')
+        for doc in response['data']['docs']:
+            matches = doc.matches
             len_matches = len(matches)
             logger.info(f'Ta-Dah🔮, {len_matches} matches we found for: "{text}" :')
 
             for idx, match in enumerate(matches):
-                score = match['score']['value']
+                score = match.scores['distance']
                 if score < 0.0:
                     continue
                 logger.info(f'> {idx:>2d}({score:.2f}). {match["text"]}')
