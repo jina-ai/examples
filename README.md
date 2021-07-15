@@ -5,7 +5,7 @@
 **Table of Contents**
 
 - [Adding Tests for Examples](#adding-tests-for-examples)
-- [Performance metrics](#performance)
+- [Performance metrics](#performance-metrics)
 - [Community](#community)
 - [License](#license)
 
