@@ -8,7 +8,7 @@ pods:
   - name: image_normalizer                                  # normalize the dimension of the images
     uses: pods/image-normalize.yml
     uses: 'jinahub+docker://ImageNormalizer'
-    override_with: {'dtype': 'uint8'}
+    override_with: {'target_dtype': 'numpy.uint8'}
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]

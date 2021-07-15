@@ -7,7 +7,7 @@ with:
 pods:
   - name: normalizer                      # normalize query image
     uses: 'jinahub+docker://ImageNormalizer'
-    override_with: {'dtype': 'uint8'}
+    override_with: {'target_dtype': 'numpy.uint8'}
     shards: $JINA_PARALLEL
     read_only: true
     needs: gateway
