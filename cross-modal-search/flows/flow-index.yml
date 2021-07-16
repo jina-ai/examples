@@ -5,10 +5,8 @@ with:
   port_expose: 45678
   workspace: $JINA_WORKSPACE
 pods:
-  - name: image_normalizer                                  # normalize the dimension of the images
-    uses: pods/image-normalize.yml
-    uses: 'jinahub+docker://ImageNormalizer'
-    override_with: {'target_dtype': 'numpy.uint8'}
+  - name: loader                                      # load images from the dataset of image-caption pairs
+    uses: pods/image-load.yml
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]

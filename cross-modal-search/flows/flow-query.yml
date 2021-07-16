@@ -5,9 +5,8 @@ with:
   port_expose: 45678
   workspace: $JINA_WORKSPACE
 pods:
-  - name: normalizer                      # normalize query image
-    uses: 'jinahub+docker://ImageNormalizer'
-    override_with: {'target_dtype': 'numpy.uint8'}
+  - name: loader                          # load query image
+    uses: pods/image-load.yml
     shards: $JINA_PARALLEL
     read_only: true
     needs: gateway
@@ -18,7 +17,7 @@ pods:
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true
-    needs: normalizer
+    needs: loader
   - name: text_indexer                    # index query text
     polling: all
     uses: pods/index-text.yml
