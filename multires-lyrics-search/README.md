@@ -104,18 +104,25 @@ Let's begin by starting with a simple one-sentence query. For example, if you ad
 <img width="300" alt="Screenshot 2021-04-30 at 11 56 08" src="https://user-images.githubusercontent.com/59612379/116891772-67cf2080-ac2f-11eb-9fc6-faaaa30e70bb.png">
 
 
-Similarity can be adjusted using the breakdown slider on the left-hand side. As you move the slider to the right, you will see more matches appear. This is because we are increasing our radius in the vector space for finding similar matches. 
+Similarity can be adjusted using the breakdown slider on the left-hand side. 
+As you move the slider to the right, you will see more matches appear. 
+This is because we are increasing our radius in the vector space for finding similar matches. 
 
-The relevance score you see at the bottom of the song box summarizes all the matches. Each match has a numeric value, determining how close it is to the original input in the vector space. The average of these match values is the relevance score. This means that a song with a lot of matches will be ranked as highly relevant. 
+The relevance score you see at the bottom of the song box summarizes all the matches in a song. 
+Each match has a numeric value between 0 and 1, determining how close it is to the original input in the vector space.
+The average of these match values is the relevance score. This means that a song with only good matches will be ranked as highly relevant. 
 
-The example also allows for more complex, multi sentence queries. If you input two or three sentences when querying, the query Flow will break down the total input into individual 'chunks'. Which in this example are sentences, but you can determine what is a chunk for your own data when building Jina. To calculate the relevance score, we aggregate all the match scores using a [SimpleAggregateRanker](https://hub.jina.ai/#/package/6). 
+The example also allows for more complex, multi sentence queries. 
+If you input two or three sentences when querying, the query Flow will break down the total input into individual 'chunks'. 
+these chunks in this example are sentences, but you can determine what is a chunk for your own data when building Jina. 
+To calculate the relevance score, we aggregate all the match scores using the [MinRanker class](flows/executors.py). 
 
 
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 
 | File | Explanation |
-|--|--|
+|---|---|
 |📃`toy-data/lyrics-toy-data1000.csv`  |Contains a small number of songs to test the example   |
 |📂`flows`  |Folder to store Flow configuration |
 |--- 📃`flows/index.yml`  |determines which executors should index the data, and the configuration details of these executors |
@@ -126,7 +133,7 @@ Here is a small overview if you're interested in understanding what each file in
 |--- 📃`pods/chunk_merger.yml`  |  specifies how the chunks should be merged during indexing and querying |
 |--- 📃`pods/doc.yml`  | specifies which executor should be used for indexing and the configuration details for this executor |
 |--- 📃`pods/ranker.yml`  | specifies which executor should be used to rank the matches, the configuration details for this executor |
-|--- 📃`pods/segment.yml`  | specifies the configuration values for the segmeneting of chunks |
+|--- 📃`pods/segment.yml`  | specifies the configuration values for the segmenting of chunks |
 |📂`static/*`  |contains the frontend interface |
 |📂`test/*`  | various maintenance tests to keep the example running.  |
 |📃`app.py`  | the gateway code to combine the index and query flow   |

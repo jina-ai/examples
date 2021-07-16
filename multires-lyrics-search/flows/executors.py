@@ -2,6 +2,7 @@
 
 from itertools import groupby
 from jina import Executor, DocumentArray, requests
+import numpy as np
 
 
 class MinRanker(Executor):
@@ -26,5 +27,7 @@ class MinRanker(Executor):
                 chunk_match_list.sort(key=lambda m: -m.scores['cosine'].value)
                 match = chunk_match_list[0]
                 match.id = key
+                match.scores['relevance'] = np.mean([m.scores['cosine'].value
+                                                    for m in chunk_match_list])
                 doc.matches.append(match)
-            doc.matches.sort(key=lambda d: -d.scores['cosine'].value)
+            doc.matches.sort(key=lambda d: -d.scores['relevance'].value)
