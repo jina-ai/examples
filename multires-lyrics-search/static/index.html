@@ -81,13 +81,13 @@
                                            v-html="topkDocsDict.get(item['id'])['renderHTML']"></p>
                                         <footer class="blockquote-footer">
                                             <small class="text-muted">
-                                                in <cite title="Source Title">{{item.tags["SName"]}} </cite>
+                                                Song: <cite title="Source Title">{{item.tags["SName"]}} </cite>
                                             </small>
                                         </footer>
                                     </blockquote>
                                     <p class="card-text">
                                         <span class="badge badge-warning">{{index+1}}</span>
-                                        <small class="text-muted">Relevance {{ item.score.value.toFixed(3) }}</small>
+                                        <small class="text-muted">Relevance: <cite title="Source Title">{{ item.scores["relevance"].value.toFixed(3) }} </cite></small>
                                     </p>
                                 </div>
                             </div>

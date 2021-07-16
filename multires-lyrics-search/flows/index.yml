@@ -1,28 +1,29 @@
-!Flow
+jtype: Flow
 version: '1'
 with:
-  restful: True
-pods:
+  workspace: $JINA_WORKSPACE
+executors:
   - name: segmenter
-    show_exc_info: true
-    uses: pods/segment.yml
-    read_only: true
+    uses: 'jinahub+docker://Sentencizer'
   - name: encoder
-    show_exc_info: true
-    uses: pods/encode.yml
-    polling: any
-    shards: $JINA_PARALLEL
-    timeout_ready: 600000
-    read_only: true
-  - name: chunk_idx
-    polling: any
-    show_exc_info: true
-    uses: pods/chunk.yml
-    shards: $JINA_SHARDS
-  - name: doc_idx
-    polling: any
-    uses: pods/doc.yml
-    needs: gateway
-  - name: join_all
-    uses: _merge
-    needs: [doc_idx, chunk_idx]
+    uses: 'jinahub+docker://TransformerTorchEncoder'
+    volumes: '~/.cache/huggingface:/root/.cache/huggingface'
+    override_with:
+      pooling_strategy: 'cls'
+      pretrained_model_name_or_path: distilbert-base-cased
+      max_length: 96
+      device: 'cpu'
+      default_traversal_paths: ['c']
+  - name: indexer
+    uses: 'jinahub+docker://SimpleIndexer'
+    volumes: $JINA_WORKSPACE_MOUNT
+    override_with:
+      default_traversal_paths: ['c']
+  - name: root_indexer
+    uses: 'jinahub+docker://LMDBStorage'
+    volumes: $JINA_WORKSPACE_MOUNT
+    override_with:
+      default_traversal_paths: ['r']
+    needs: [gateway]
+  - name: wait_both
+    needs: [indexer, root_indexer]
