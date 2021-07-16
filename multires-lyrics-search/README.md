@@ -55,7 +55,7 @@ You have two different options here. You can either use the toy-data we provide 
 #### Toy dataset
 We have included 1000 songs' lyrics as toy data in [`lyrics-data`](lyrics-data).
 This data is ready to use with this example.  
-If you intend to use the toy data, no action isneeded here. 
+If you intend to use the toy data, no action is needed here. 
 
 #### Full dataset 
 Begin by installing the Kaggle library if you haven't already done so.  You will also need to setup your API keys as [explained here](https://github.com/Kaggle/kaggle-api#api-credentials) .
