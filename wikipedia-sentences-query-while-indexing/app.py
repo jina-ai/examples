@@ -265,6 +265,7 @@ def _cleanup():
 def main(task: str):
     """main entrypoint for this example"""
     if task == 'flows':
+        # start a Index Flow, dump the data from the Index Flow, and load it into the Query Flow.
         try:
             if os.path.exists(DUMP_PATH):
                 logger.warning(f'removing {DUMP_PATH}...')
