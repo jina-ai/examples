@@ -1,4 +1,4 @@
-jtype: CompoundQueryExecutor
+jtype: AnnoySearcher
 components:
   - jtype: AnnoySearcher
     uses: 'jinahub+docker://AnnoySearcher'
@@ -8,5 +8,5 @@ components:
     metas:
       name: vecidx
 metas:
-  name: compound_indexer
+  name: annoy_searcher
   workspace: query_workspace
