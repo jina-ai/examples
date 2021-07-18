@@ -5,7 +5,7 @@
 **Table of Contents**
 
 - [Adding Tests for Examples](#adding-tests-for-examples)
-- [Performance metrics](#performance)
+- [Performance metrics](#performance-metrics)
 - [Community](#community)
 - [License](#license)
 
@@ -127,11 +127,11 @@ Want to add your own example? Please check our [guidelines](example-guidelines.m
 
 ## Performance metrics
 
-You can run the `perf-script.sh` in order to run all of the examples on your machine. Make sure this is done in a separate python virtualenv.
+You can run the `.github/perf-script.sh` in order to run all of the examples on your machine. Make sure this is done in a separate python virtualenv.
 
 This measures QPS for indexing and querying.
 
-This will store the results in [`performance.txt`](./performance.txt).
+This will store the results in [`.github/performance.txt`](./github/performance.txt).
 
 Note that a lot of the examples are not optimized (or configured for scaling). They are provided as is, for the basic functionality. 
 
