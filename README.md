@@ -39,17 +39,6 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️</h1>
-    </td>
-    <td>
-      <h4><a href="./image-search">Google's Big Transfer Model in (Poké-)Production</a></h4>
-      Use SOTA visual representation for searching Pokémon!
-    </td>
-  </tr>
-  
-  
 </table>
 
 ## 🚀  Advanced Examples
@@ -74,17 +63,6 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Use one modality (text) to search another (images)
     </td>
   </tr>
-  
-  <tr>
-    <td>
-      <h1>🖼️📄</h1>
-    </td>
-    <td>
-      <h4><a href="./multimodal-search-pdf">PDF Search: Search PDF with text, image or PDF in the query</a></h4>
-      Use different modalities (image, text or PDF) to search PDF
-    </td>
-  </tr>
-  
 </table>
 
 ## Community Examples
