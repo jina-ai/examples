@@ -1,7 +1,2 @@
-jtype: AnnoySearcher
-components:
-  - jtype: AnnoySearcher
-    uses: 'jinahub+docker://AnnoySearcher'
-metas:
-  name: annoy_searcher
-  workspace: query_workspace
+jtype: NumpySearcher
+uses: 'jinahub://NumpySearcher'

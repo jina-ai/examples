@@ -5,5 +5,4 @@ torch==1.7.1
 transformers==4.8.2
 git+https://github.com/jina-ai/jina-commons
 psycopg2-binary==2.8.6
-annoy==1.17.0
 python-dotenv==0.18.0
