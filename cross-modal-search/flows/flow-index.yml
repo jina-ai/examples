@@ -10,12 +10,9 @@ pods:
     shards: $JINA_PARALLEL
     read_only: true
     needs: [gateway]
-  - name: image_normalizer                                  # normalize the dimension of the images
-    uses: pods/image-normalize.yml
-    shards: $JINA_PARALLEL
-    read_only: true
   - name: image_encoder                               # encode images into embeddings with CLIP model
-    uses: pods/clip/image-encoder.yml
+    uses: 'jinahub://CLIPImageEncoder'
+    volumes: $HOME/.cache/clip:/root/.cache/clip
     shards: $JINA_PARALLEL
     timeout_ready: 600000
     read_only: true

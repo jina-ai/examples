@@ -45,7 +45,11 @@ class ReciprocalRankEvaluator(Executor):
 class ImageReader(Executor):
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
-        return DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
+        array = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
+        for doc in array:
+            doc.convert_image_buffer_to_blob()
+            doc.blob = np.array(doc.blob).astype(np.uint8)
+        return array
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
@@ -54,6 +58,8 @@ class ImageReader(Executor):
             return DocumentArray([])
         for doc in image_docs:
             doc.convert_uri_to_buffer()
+            doc.convert_image_buffer_to_blob()
+            doc.blob = doc.blob.astype(np.uint8)
         return image_docs
 
 
