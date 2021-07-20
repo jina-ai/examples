@@ -114,7 +114,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 
 ### Testing Tips
 
-- For reference, check out the `tests` folder from [South Park example](./southpark-search/tests) if your data is about text and [object search example](./object-search/tests) for images.
+- For reference, check out the `tests` folder from any of the examples in this repo.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
 - Use the [pytest fixture](https://docs.pytest.org/en/stable/fixture.html) `tmpdir` for temporary directory
 
