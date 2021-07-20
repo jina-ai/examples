@@ -12,7 +12,7 @@ pods:
     needs: gateway
   - name: image_encoder                   # encode query image into embeddings with CLIP model
     polling: any
-    uses: 'jinahub+docker://CLIPImageEncoder'
+    uses: 'jinahub://CLIPImageEncoder'
     volumes: $HOME/.cache/clip:/root/.cache/clip
     shards: $JINA_PARALLEL
     timeout_ready: 600000

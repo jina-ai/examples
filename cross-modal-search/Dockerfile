@@ -1,4 +1,4 @@
-FROM jinaai/jina:1.2.0
+FROM jinaai/jina:2.0.8-perf
 
 RUN apt-get -y update && apt-get install -y git wget gcc unzip libmagic1
 
