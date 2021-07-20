@@ -1,4 +1,4 @@
-jina[hub]==2.0.7
+jina[hub]==2.0.8
 kaggle==1.5.12
 docker==5.0.0
 torch==1.7.1
