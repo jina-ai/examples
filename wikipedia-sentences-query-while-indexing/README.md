@@ -8,9 +8,9 @@
 | Dataset used | [Wikipedia dataset from kaggle](https://www.kaggle.com/mikeortman/wikipedia-sentences) |
 | Model used | [distilbert-base-cased](https://huggingface.co/distilbert-base-cased) |
 
-This is an example of using [Jina](http://www.jina.ai) to support both querying and indexing simultaneously in our [Wikipedia sentence search example](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences). 
+This is an example of using [Jina](http://www.jina.ai) to support both querying and indexing simultaneously in our [Wikipedia sentence search example](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences).
 
-## Table of contents: 
+## Table of contents:
 
   * [Prerequisites](#prerequisites)
   * [What is querying while indexing?](#what-is-querying-while-indexing)
@@ -48,12 +48,12 @@ _____
 
 ## 🐍 Build the app with Python
 
-These instructions explain how to run the example yourself and deploy it with Python. 
+These instructions explain how to run the example yourself and deploy it with Python.
 
 ### 🗝️ Requirements
 
 1. Have a working Python 3.7 or 3.8 environment.
-1. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.   
+1. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.
 1. Have at least 2 GB of free space on your hard drive.
 
 ### Running the example
@@ -82,36 +82,39 @@ In order to run the example you will need to do the following:
 
 ### 📥 Step 2. Download your data to search (Optional)
 
-The repo includes a small subset of the Wikipedia dataset, for quick testing. You can just use that. 
+The repo includes a small subset of the Wikipedia dataset, for quick testing. You can just use that.
 
 If you want to use the entire dataset, run `bash get_data.sh` and then modify the `DATA_FILE` constant (in `app.py`) to point to that file.
 
 ### 🏃 Step 3. Running the Flows
 
-1. In one terminal session, run the command `docker run -e POSTGRES_PASSWORD=123456  -p 127.0.0.1:5432:5432/tcp postgres:13.2 
-` to run a PostgreSQL database docker image
+1. In a terminal session, start a PostgreSQL database using the below command.
 
+  ```bash
+  docker run -e POSTGRES_PASSWORD=123456  -p 127.0.0.1:5432:5432/tcp postgres:13.2
+  ```
 
-2. In a second terminal session, run `docker run --add-host host.docker.internal:host-gateway \
+1. In a second terminal, start [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) using the below command.
+
+  ```bash
+  docker run --add-host host.docker.internal:host-gateway \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /tmp/jinad:/tmp/jinad \
            -p 8000:8000 \
            --name jinad \
-           -d jinaai/jina:latest-daemon` to start JinaD.
-   
-    [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) is our platform for 
-   running Jina services (Flows, Pods) remotely, wherever you want to run them. 
-   In this example, we use `JinaD` to serve the two Flows (Index and Query) and listen to incoming requests. 
-   You can read more about it [in the docs](https://docs.jina.ai/chapters/remote/jinad).
+           -d jinaai/jina:latest-daemon
+  ```
 
-3. In a third terminal session, run `python app.py -t flows`
+  In this example, we use `JinaD` to serve the two Flows (Index and Query) and listen to incoming requests.
+
+1. In a third terminal session, run `python app.py -t flows`
 
     This will create the two Flows, and then repeatedly do the following (which can also be done in any other REST client), every 2 seconds:
 
     1. Index 5 Documents
     2. Send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
     3. Send a `ROLLING_UPDATE` request to the Query Flow to take down its Indexers and start them again, with the new data located at the respective path
-    
+
     **Notice** the logs of the operations.
 
     **Warning**: the data file is limited to 200 documents. Once that is exhausted, the process will terminate. If you want to use the entire dataset, run `bash get_data.sh` and then modify the `DATA_FILE` constant to point to that file.
@@ -178,7 +181,7 @@ _________
 
 ## ⏭️ Next steps
 
-Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
+Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation.
 
 If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
 
@@ -186,7 +189,7 @@ If you have any issues following this guide, you can always get support from our
 
 - [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
-- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
+- [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.
 - [Company](https://jina.ai) - know more about our company. We are fully committed to open-source!
 
 ## 🦄 License

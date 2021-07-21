@@ -8,6 +8,5 @@ pods:
     uses: 'jinahub://TransformerTorchEncoder'
   - name: indexer
     uses: 'jinahub://PostgreSQLStorage'
-override_with:
-  hostname: host.docker.internal
-
+    override_with:
+      hostname: host.docker.internal
