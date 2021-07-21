@@ -135,7 +135,7 @@ def create_flow(
 
 def _serve_flow_with_workspace(
     flow_yaml: str,
-    deps: List[str]
+    deps: List[str] = []
 ) -> str:
     flow_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'flows')
     ws_url = _jinad_url(JINAD_HOST, JINAD_PORT, 'workspaces')
@@ -271,16 +271,12 @@ def main(task: str):
                 logger.warning(f'removing {DUMP_PATH}...')
                 shutil.rmtree(DUMP_PATH, ignore_errors=False)
 
-            # dependencies required by JinaD in order to start DBMS (Index) Flow
-            dbms_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
-            dbms_flow_id, dbms_ws = _serve_flow_with_workspace('flows/dbms.yml', dbms_deps)
+            dbms_flow_id, dbms_ws = _serve_flow_with_workspace('flows/dbms.yml')
             logger.info(f'created DBMS Flow with id {dbms_flow_id}')
 
-            # dependencies required by JinaD in order to start Query Flow
-            query_deps = ['pods/encoder.yml', 'pods/query_indexer.yml']
             # we need to keep track of the Flow id
-            query_flow_id, query_ws = _serve_flow_with_workspace('flows/query.yml', query_deps)
+            query_flow_id, query_ws = _serve_flow_with_workspace('flows/query.yml')
             logger.info(f'created Query Flow with id {query_flow_id}')
 
             # starting a loop that
