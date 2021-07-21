@@ -5,7 +5,7 @@ RUN apt-get -y update && apt-get install -y git wget gcc unzip libmagic1
 WORKDIR /workspace
 COPY ./requirements.txt requirements.txt
 
-RUN pip3 install torch==1.9.0+cpu torchvision==0.10.0+cpu torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install torch==1.9.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 # install the third-party requirements
 RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
