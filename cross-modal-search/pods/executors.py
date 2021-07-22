@@ -8,7 +8,7 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
-from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
+from jina.helloworld.multimodal.my_executors import _norm, _ext_B, _ext_A, _cosine
 from jina.types.score import NamedScore
 
 
@@ -208,7 +208,9 @@ class NumpyIndexer(Executor):
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
-            self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
+            embeddings = self._docs.get_attributes('embedding')
+            if len(embeddings) > 0:
+                self._embedding_matrix = _ext_B(_norm(np.stack(embeddings)))
 
     @property
     def save_path(self):
@@ -232,6 +234,8 @@ class NumpyIndexer(Executor):
             return
         embedding_list = docs.get_attributes('embedding')
         if not embedding_list:
+            return
+        if not hasattr(self, '_embedding_matrix'):
             return
         doc_embeddings = np.stack(embedding_list)
         q_emb = _ext_A(_norm(doc_embeddings))
