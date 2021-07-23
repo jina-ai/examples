@@ -8,7 +8,7 @@ COPY ./requirements.txt requirements.txt
 RUN pip3 install torch==1.9.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 # install the third-party requirements
-RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
+RUN pip install git+https://github.com/openai/CLIP.git click && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
 
 COPY . /workspace
 
