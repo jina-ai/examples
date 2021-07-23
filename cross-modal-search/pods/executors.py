@@ -8,8 +8,36 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
-from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 from jina.types.score import NamedScore
+
+
+def _get_ones(x, y):
+    return np.ones((x, y))
+
+
+def _norm(A):
+    return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
+
+
+def _ext_B(B):
+    nB, dim = B.shape
+    B_ext = _get_ones(dim * 3, nB)
+    B_ext[:dim] = (B ** 2).T
+    B_ext[dim : 2 * dim] = -2.0 * B.T
+    del B
+    return B_ext
+
+
+def _ext_A(A):
+    nA, dim = A.shape
+    A_ext = _get_ones(nA, dim * 3)
+    A_ext[:, dim : 2 * dim] = A
+    A_ext[:, 2 * dim :] = A ** 2
+    return A_ext
+
+
+def _cosine(A_norm_ext, B_norm_ext):
+    return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
 
 
 class ReciprocalRankEvaluator(Executor):
@@ -208,7 +236,9 @@ class NumpyIndexer(Executor):
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
-            self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
+            embeddings = self._docs.get_attributes('embedding')
+            if len(embeddings) > 0:
+                self._embedding_matrix = _ext_B(_norm(np.stack(embeddings)))
 
     @property
     def save_path(self):
@@ -232,6 +262,8 @@ class NumpyIndexer(Executor):
             return
         embedding_list = docs.get_attributes('embedding')
         if not embedding_list:
+            return
+        if not hasattr(self, '_embedding_matrix'):
             return
         doc_embeddings = np.stack(embedding_list)
         q_emb = _ext_A(_norm(doc_embeddings))
