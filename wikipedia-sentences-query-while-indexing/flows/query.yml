@@ -6,7 +6,7 @@ with:
   port_expose: 9001
 pods:
   - name: encoder
-    uses: 'jinahub://TransformerTorchEncoder'
+    uses: 'jinahub://FlairTextEncoder' #'jinahub://TransformerTorchEncoder'
     timeout_ready: 60000
   - name: query_indexer
     uses: 'jinahub://NumpySearcher'

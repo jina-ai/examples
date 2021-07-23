@@ -5,8 +5,9 @@ with:
   protocol: 'http'
 pods:
   - name: encoder
-    uses: 'jinahub://TransformerTorchEncoder'
+    uses: 'jinahub://FlairTextEncoder' # 'jinahub://TransformerTorchEncoder'
+    parallel: 2
   - name: indexer
     uses: 'jinahub://PostgreSQLStorage'
-    override_with:
+    uses_with:
       hostname: host.docker.internal
