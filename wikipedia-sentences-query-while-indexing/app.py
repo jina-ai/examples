@@ -42,9 +42,8 @@ def query_restful():
         query_doc = Document()
         query_doc.text = text
         response = _query_docs([query_doc.dict()])
-
         for doc in response['data']['docs']:
-            matches = doc.matches
+            matches = doc['matches']
             len_matches = len(matches)
             logger.info(f'Ta-Dah🔮, {len_matches} matches we found for: "{text}" :')
 
