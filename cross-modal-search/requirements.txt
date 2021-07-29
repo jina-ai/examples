@@ -1,4 +1,4 @@
-jina[hub, http]~=2.0.0
+jina[hub, http]~=2.0.13
 nltk==3.5
 pycocotools==2.0.2
 python-magic==0.4.20
