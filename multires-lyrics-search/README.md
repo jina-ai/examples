@@ -175,7 +175,7 @@ Did you like this example and are you interested in building your own? For a det
 
 For more information on chunking, check out our [Understand Jina Recursive Document Representation](https://docs.jina.ai/chapters/traversal/#understand-jina-recursive-document-representation).
 
-If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
+If you have any issues following this guide, you can always get support from our [Slack community](https://slack.jina.ai) .
 
 
 ## 👩‍👩‍👧‍👦 Community
