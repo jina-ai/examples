@@ -283,11 +283,11 @@ docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 
 Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
-If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
+If you have any issues following this guide, you can always get support from our [Slack community](https://slack.jina.ai) .
 
 ## 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
+- [Slack channel](https://slack.jina.ai) - a communication platform for developers to discuss Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
