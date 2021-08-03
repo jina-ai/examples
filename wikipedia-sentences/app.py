@@ -21,7 +21,7 @@ def print_topk(resp, sentence):
         print(f"\n\n\nTa-Dah🔮, here's what we found for: {sentence}")
         for idx, match in enumerate(doc.matches):
 
-            score = match.score.value
+            score = match.scores['cosine'].value
             if score < 0.0:
                 continue
             print(f'> {idx:>2d}({score:.2f}). {match.text}')
