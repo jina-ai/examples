@@ -22,10 +22,9 @@ executors:
     uses_with:
       default_traversal_paths: ['c']
   - name: ranker
-    uses:
-      jtype: MinRanker
-    py_modules:
-      - flows/executors.py
+    uses: 'jinahub://MinRanker'
+    uses_with:
+      metric: 'cosine'
   - name: root_indexer
     uses: 'jinahub+docker://LMDBStorage'
     volumes: $JINA_WORKSPACE_MOUNT
