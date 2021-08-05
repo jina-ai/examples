@@ -64,7 +64,6 @@ def index(tmpdir_factory):
 def test_query_text(tmpdir_factory):
     def assert_result(response):
         docs = response.docs
-
         # check number of results
         assert len(docs) == 1
         assert len(docs[0].chunks) == 2
@@ -72,6 +71,7 @@ def test_query_text(tmpdir_factory):
         parent_ids = parent_docs.get_attributes('id')
         assert len(parent_docs) > 0
         for chunk in docs[0].chunks:
+            print(chunk)
             assert len(chunk.matches) == 5  # top_k = 5
             match_ids = chunk.matches.get_attributes('id')
             assert len(match_ids) == len(list(set(match_ids)))
@@ -85,4 +85,5 @@ def test_query_text(tmpdir_factory):
     with flow:
         search_text = 'looked through every window then. hello world.'
         doc = Document(content=search_text, mime_type='text/plain')
-        flow.post('/search', inputs=doc, parameters={'top_k': 5}, on_done=assert_result)
+        response = flow.post('/search', inputs=doc, parameters={'top_k': 5}, return_results=True)
+        assert_result(response[0])

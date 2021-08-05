@@ -9,17 +9,17 @@ executors:
   - name: encoder
     uses: 'jinahub+docker://TransformerTorchEncoder'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'
-    override_with:
+    uses_with:
       pooling_strategy: 'cls'
       pretrained_model_name_or_path: distilbert-base-cased
       max_length: 96
-      device: 'cuda'
+      device: 'cpu'
       default_traversal_paths: ['c']
   - name: indexer
     uses: 'jinahub+docker://SimpleIndexer'
     volumes: $JINA_WORKSPACE_MOUNT
     workspace: '/workspace/workspace'
-    override_with:
+    uses_with:
       default_traversal_paths: ['c']
   - name: ranker
     uses:
@@ -29,5 +29,5 @@ executors:
   - name: root_indexer
     uses: 'jinahub+docker://LMDBStorage'
     volumes: $JINA_WORKSPACE_MOUNT
-    override_with:
+    uses_with:
       default_traversal_paths: ['m']

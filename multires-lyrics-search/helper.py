@@ -15,12 +15,11 @@ def input_generator(num_docs: int):
         reader = csv.reader(f)
         for row in it.islice(reader, num_docs):
             if row[-1] == 'ENGLISH':
-                with Document() as d:
-                    d.tags['ALink'] = row[0]
-                    d.tags['SName'] = row[1]
-                    d.tags['SLink'] = row[2]
-                    d.text = row[3]
-                    yield d
+                d = Document(text=row[3])
+                d.tags['ALink'] = row[0]
+                d.tags['SName'] = row[1]
+                d.tags['SLink'] = row[2]
+                yield d
 
 
 def num_input_docs():
