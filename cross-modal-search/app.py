@@ -29,12 +29,6 @@ def index_restful():
         flow.block()
 
 
-def check_index_result(resp):
-    for doc in resp.data.docs:
-        _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
-
-
 def check_query_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
@@ -50,7 +44,7 @@ def index(data_set, num_docs, request_size):
         flow.post(on='/index',
                   inputs=input_index_data(num_docs, request_size, data_set),
                   request_size=request_size,
-                  on_done=check_index_result)
+                  show_progress=True)
 
 
 def query():
