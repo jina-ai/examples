@@ -32,10 +32,14 @@ def index_restful():
 def check_query_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        # print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
             for m in _doc.matches:
-                print(f'\t+- {m.id[:10]}, score: {m.scores["doc_score"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+                print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
+                # import matplotlib.pyplot as plt
+                # plt.imshow(m.blob)
+                # plt.show()
+
 
 
 def index(data_set, num_docs, request_size):
