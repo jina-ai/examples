@@ -7,19 +7,20 @@ import sys
 import click
 from jina import Flow, Document
 import logging
-from jina.logging.profile import TimeContext
 
 from dataset import input_index_data
 
-MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 10000))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def config():
-    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
-    os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
-    os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
-    os.environ['JINA_PORT'] = '45678'
+    os.environ.setdefault('JINA_WORKSPACE', os.path.join(cur_dir, 'workspace'))
+    os.environ.setdefault(
+        'JINA_WORKSPACE_MOUNT',
+        f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace')
+    os.environ.setdefault('JINA_LOG_LEVEL', 'INFO')
+    os.environ.setdefault('JINA_PORT', str(45678))
 
 
 def index_restful():
@@ -46,22 +47,22 @@ def check_query_result(resp):
 def index(data_set, num_docs, request_size):
     flow = Flow().load_config('flows/flow-index.yml')
     with flow:
-        with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
-            flow.index(
-                inputs=input_index_data(num_docs, request_size, data_set),
-                request_size=request_size,
-                on_done=check_index_result
-            )
+        flow.post(on='/index',
+                  inputs=input_index_data(num_docs, request_size, data_set),
+                  request_size=request_size,
+                  on_done=check_index_result)
 
 
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
-        flow.search(inputs=[
-            Document(text='a black dog and a spotted dog are fighting', modality='text'),
-            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image')
-        ],
-            on_done=check_query_result)
+        input = [
+            Document(text='a black dog and a spotted dog are fighting',
+                     modality='text'),
+            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
+                     modality='image')
+        ]
+        flow.post(on='/search', inputs=input, on_done=check_query_result)
 
 
 def query_restful():

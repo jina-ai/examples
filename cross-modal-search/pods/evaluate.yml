@@ -1,5 +1,0 @@
-jtype: ReciprocalRankEvaluator
-metas:
-  py_modules: 'executors.py'
-requests:
-  /search: rank_evaluate
