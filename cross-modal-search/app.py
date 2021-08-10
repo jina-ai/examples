@@ -32,14 +32,13 @@ def index_restful():
 def check_query_result(resp):
     for doc in resp.data.docs:
         _doc = Document(doc)
-        # print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
         if _doc.matches:
             for m in _doc.matches:
                 print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
-                # import matplotlib.pyplot as plt
-                # plt.imshow(m.blob)
-                # plt.show()
-
+                import matplotlib.pyplot as plt
+                plt.imshow(m.blob)
+                plt.show()
 
 
 def index(data_set, num_docs, request_size):
@@ -60,11 +59,17 @@ def query():
             Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
                      modality='image')
         ]
-        flow.post(on='/search', inputs=input, on_done=check_query_result)
+        import time
+        start = time.time()
+        result = flow.post(on='/search', inputs=input, return_results=True)
+        print(f'Request duration: {time.time() - start}')
+        check_query_result(result[0])
 
 
 def query_restful():
-    flow = Flow().load_config('flows/flow-query.yml', override_with={'protocol': 'http'})
+    flow = Flow(cors=True).load_config('flows/flow-query.yml')
+    flow.rest_api = True
+    flow.protocol = 'http'
     with flow:
         flow.block()
 

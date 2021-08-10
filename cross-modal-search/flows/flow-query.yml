@@ -16,7 +16,7 @@ pods:
     timeout_ready: 600000
     read_only: true
   - name: text_indexer                                # index the text into documents
-    uses: 'jinahub+docker://SimpleIndexer'
+    uses: 'docker://simple_indexer'
     volumes: $JINA_WORKSPACE_MOUNT
     uses_with:
      index_file_name: 'text_index'
@@ -32,7 +32,7 @@ pods:
     read_only: true
     needs: text_filter
   - name: image_indexer                        # store image embeddings
-    uses: 'jinahub+docker://SimpleIndexer'
+    uses: 'docker://simple_indexer'
     volumes: $JINA_WORKSPACE_MOUNT
     uses_with:
       index_file_name: 'image_index'
