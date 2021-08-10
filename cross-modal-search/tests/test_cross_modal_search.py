@@ -14,6 +14,7 @@ def test_cross_modal_search(tmpdir):
     runner = CliRunner()
     result = runner.invoke(main, ['-t', 'index'])
     # assert 'buffer: 0, mime_type: image/jpeg, modality: image, embed: (512,), uri:' in result.stdout
+    assert 'done in' in result.stdout
     assert result.stderr_bytes is None
     result = runner.invoke(main, ['-t', 'query'])
     assert result.stderr_bytes is None
