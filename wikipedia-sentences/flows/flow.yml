@@ -1,0 +1,11 @@
+jtype: Flow
+version: '1'
+with:
+  workspace: $JINA_WORKSPACE
+  port_expose: $JINA_PORT
+executors:
+  - name: transformer
+    uses: 'jinahub+docker://TransformerTorchEncoder'
+  - name: indexer
+    uses: 'jinahub+docker://SimpleIndexer'
+    volumes: $JINA_WORKSPACE_MOUNT

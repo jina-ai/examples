@@ -56,16 +56,34 @@ pip install -r requirements.txt
 ```
 If this command runs without any error messages, you can then move onto step two. 
 
-### 📇 Step 2. Index & 🔍 Search
+### 📥 Step 2. Download your data to search 
 
-By default, we'll start off by indexing a [small dataset of 50 sentences](data/toy-input.txt) :
+By default, a small test dataset si used for indexing. This can lead to bad search results.
+
+To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (around 900 MB):
+
+1. Set up [Kaggle](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication)
+2. Run the script: `sh get_data.sh`
+3. Index your new dataset: `python app.py -t index -d full -n $num_docs`
+
+The whole dataset contains about 8 Million wikipedia sentences, indexing all of this will take a very long time.
+Therefore, we recommend selecting only a subset of the data, the number of elements can be selected by the `-n` flag.
+We recommend values smaller than 100000. For larger indexes, the SimpleIndexer used in this example will be very slow also in query time.
+It is then recommended to use more advanced indexers like the FaissIndexer.  
+
+### 🏃 Step 3. Index your data
+
+Index your data by running:
 
 ```sh
 python app.py -t index
 ```
-Here, we can also specify the number of documents to index with ```--num_docs``` / ```-n``` (defult is 50) and the top k search results with ```--top_k``` /  ```-k``` (defult is 5).
+Here, we can also specify the number of documents to index with ```--num_docs``` / ```-n``` (defult is 10000).
 
-Once indexing is completed, a search prompt will appear in your terminal. See the image below for an example search query and response.
+### 🔎 Step 4. Query your indexed data
+
+Once indexing is completed, a search prompt will appear in your terminal. See the text below for an example search query and response.
+You can also specify the top k search results with ```--top_k``` /  ```-k``` (default is 5)
 
 ```
 please type a sentence: What is ROMEO
@@ -75,96 +93,36 @@ Ta-Dah🔮, here are what we found for: What is ROMEO
 
 ```
 
-
-To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (almost 900 MB):
-
-1. Set up [Kaggle](https://www.kaggle.com/docs/api#getting-started-installation-&-authentication)
-2. Run the script: `sh ./get_data.sh`
-3. Set the input file: `export JINA_DATA_FILE='data/input.txt'`
-4. Set the number of docs to index `export JINA_MAX_DOCS=30000` (or whatever number you prefer. The default is `50`)
-5. Index your new dataset: `python app.py -t index`
-
-If you are using a subset of the data (less then 30,000 documents) we recommend you shuffle the data. This is because the input file is ordered alphabetically, and Jina indexes from the top down. So without shuffling, your index may contain unrepresentative data, like this:
-
-```
-0.000123, which corresponds to a distance of 705 Mly, or 216 Mpc.
-000webhost is a free web hosting service, operated by Hostinger.
-0010x0010 is a Dutch-born audiovisual artist, currently living in Los Angeles.
-0-0-1-3 is an alcohol abuse prevention program developed in 2004 at Francis E. Warren Air Force Base based on research by the National Institute on Alcohol Abuse and Alcoholism regarding binge drinking in college students.
-0.01 is the debut studio album of H3llb3nt, released on February 20, 1996 by Fifth Colvmn Records.
-001 of 3 February 1997, which was signed between the Government of the Republic of Rwanda, and FAPADER.
-003230 is a South Korean food manufacturer.
-```
-
-On Linux, you can shuffle using the [`shuf` command](https://linuxhint.com/bash_shuf_command/):
-
-```bash
-shuf input.txt > input.txt
-```
-
-To shuffle a file on macos, please read [this post](https://apple.stackexchange.com/questions/142860/install-shuf-on-os-x/195387).
-
-
 ## 🔮 Overview of the files in this example
 Here is a small overview if you're interested in understanding what each file in this example is doing. 
 
-📂 `test/*`   Various maintenance tests to keep the example running.   
-
-📃 `app.py`    The gateway code to that runs the index & query Flow.  
-
-📃 `indexer.py`    Indexing executor code that uses numpy to aggregate embeddings.
-
-📃 `transformer.py`    Encoding executor code using transformer model.  
-
-
-📃 `get_data.sh`    Downloads the Kaggle dataset. 
-
-📃 `manifest.yml`      Needed to deploy to Jina Hub.
-
-📃 `requirements.txt`    Contains all required python libraries.
+| File | Explanation |
+|---|---|
+|📂 `test/*` |  Various maintenance tests to keep the example running. |
+|📃 `app.py`  |  The gateway code to that runs the index & query Flow. |
+|📃 `get_data.sh`  |  Downloads the Kaggle dataset. |
+|📃 `requirements.txt` |   Contains all required python libraries. |
 
 
 ## 🌀 Flow diagram
 
-This diagram provides a visual representation of the flow in this example, showing which Executors are used in which order.
-![wiki_flow](https://user-images.githubusercontent.com/22567795/119640719-7930d480-be4b-11eb-8566-83ba068aa05b.jpeg)
+This diagram provides a visual representation of the flow in this example, showing which Executors are used in which order:
+![wiki_flow](.github/flow.png)
+It can be seen that the flow for this example is quite simple. We receive input Documents from the gateway,
+which are then fed into a transformer. This transformer computes an embedding based on the text of the document.
+Then, the documents are sent to the indexer which does the following:
+ - Index time: Store all the documents on disk (in the workspace folder).
+ - Query time: Compare the query document embedding with all stored embeddings and return closest matches
 
-## 🔨 Next steps, building your own app
+## ⏭️ Next steps, building your own app
 
 Did you like this example and are you interested in building your own? For a detailed tuturial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation.
 
 - [Enable querying while indexing](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences-query-while-indexing)
 
-## 🐳 Deploy the prebuild application using Docker
-Warning! This section is not maintained, so we can't guarantee it works! 
- 
-If you want to run this example quickly without installing Jina, you can do so via Docker. If you'd rather build the example yourself, return to the Python instructions above.  
+## 👩‍👩‍👧‍👦 Community
 
-### Requirements:
-1. You have Docker installed and working. 
-2. You have at least 8 GB of free space on your hard drive. 
-
-### Step 1. Pull the prebuild image from Docker hub and run
-We begin by running the following Docker command in the terminal. This will pull the prebuilt Docker image from Docker Hub and begin downloading the required files and data. To increase speed, this example only has 30,000 sentences indexed. 
-
-```sh
-docker run -p 45678:45678 jinahub/app.example.wikipedia-sentences-30k:0.2.10-1.0.10
-```
-
-### Step 2. Query the data
-There are several ways for you to query data in Jina; for this example, we will use a CURL command interface. You should open another terminal window and paste the following command.
-
-```sh
-curl --request POST -d '{"top_k": 5, "mode": "search",  "data": ["hello world"]}' -H 'Content-Type: application/json' 'http://0.0.0.0:45678/api/search'
-```
-For a quick explanation of what some of these parameters mean, `top_k` tells the system how many documents to return. The `data` parameter contains the text input you want to query. 
-
-Once you run this command, you should see a JSON output returned to you. This contains the five most semantically similar documents to the text input you provided in the data field. Feel free to alter the text in the data field and play around with other queries!
-
-## 🙍 Community
-
-- [Slack channel](https://slack.jina.ai/) - a communication platform for developers to discuss Jina
-- [Community newsletter](mailto:newsletter+subscribe@jina.ai) - subscribe to the latest update, release and event news of Jina
+- [Slack channel](https://slack.jina.ai) - a communication platform for developers to discuss Jina
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!
@@ -172,4 +130,5 @@ Once you run this command, you should see a JSON output returned to you. This co
 ## 🦄 License
 
 Copyright (c) 2021 Jina AI Limited. All rights reserved.
-Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples#license) for the full license text.
+
+Jina is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/jina-ai/examples/blob/master/LICENSE) for the full license text.
