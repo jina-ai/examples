@@ -1,42 +1,42 @@
-jtype: Flow
-version: '1'
+jtype: Flow                                       # This file defines the query flow which is used for searching in the indexed documents
+version: '1'                                      # The query flow is very similar to the index flow - only the differences are explained here
 with:
   prefetch: 10
   port_expose: $JINA_PORT
   workspace: $JINA_WORKSPACE
 pods:
-  - name: loader                          # load images from the dataset of image-caption pairs
+  - name: loader                                  # Again, we start two paths in the flow - here we start the image path
     uses: ImageReader
     py_modules: 'flows/executors.py'
     read_only: true
     needs: [gateway]
-  - name: image_encoder                               # encode images into embeddings with CLIP model
+  - name: image_encoder                           # Now, encode the images and compute the embeddings
     uses: 'jinahub+docker://CLIPImageEncoder'
     volumes: $HOME/.cache/clip:/root/.cache/clip
     timeout_ready: 600000
     read_only: true
-  - name: text_indexer                                # index the text into documents
-    uses: 'docker://simple_indexer'
-    volumes: $JINA_WORKSPACE_MOUNT
-    uses_with:
+  - name: text_indexer                            # Now, we use the text indexer in the image path - This is how we achieve the cross-modality here
+    uses: 'docker://simple_indexer'               # The text indexer has indexed all text documents and stored them on disk.
+    volumes: $JINA_WORKSPACE_MOUNT                # We now compare the search image embedding with the stored text embeddings.
+    uses_with:                                    # Then we return the closest matches as results
      index_file_name: 'text_index'
     needs: image_encoder
     read_only: true
-  - name: text_filter
+  - name: text_filter                             # Here, the text path starts
     uses: TextFilter
     py_modules: 'flows/executors.py'
     needs: [gateway]
-  - name: text_encoder                                # encode text into embeddings with CLIP model
+  - name: text_encoder                            # Compute the embedding of the search text
     uses: 'jinahub+docker://CLIPTextEncoder'
     timeout_ready: 600000
     read_only: true
     needs: text_filter
-  - name: image_indexer                        # store image embeddings
-    uses: 'docker://simple_indexer'
-    volumes: $JINA_WORKSPACE_MOUNT
+  - name: image_indexer                           # Now, we use the image indexer in the text path - this is again how we get cross-modality
+    uses: 'docker://simple_indexer'               # The image indexer has indexed all images and their embeddings
+    volumes: $JINA_WORKSPACE_MOUNT                # We now compare the search text embedding to the stored image embeddings and return the closest matches
     uses_with:
       index_file_name: 'image_index'
     read_only: true
     needs: text_encoder
-  - name: join_all                                    # wait on the 3 executors to finish data processing with "needs"
+  - name: join_all                                # Wait for both paths to finish and join the results
     needs: [image_indexer, text_indexer]

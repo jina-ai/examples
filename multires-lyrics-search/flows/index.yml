@@ -1,29 +1,29 @@
-jtype: Flow
-version: '1'
-with:
-  workspace: $JINA_WORKSPACE
-executors:
-  - name: segmenter
-    uses: 'jinahub+docker://Sentencizer'
-  - name: encoder
-    uses: 'jinahub+docker://TransformerTorchEncoder'
-    volumes: '~/.cache/huggingface:/root/.cache/huggingface'
-    uses_with:
-      pooling_strategy: 'cls'
-      pretrained_model_name_or_path: distilbert-base-cased
-      max_length: 96
-      device: 'cpu'
-      default_traversal_paths: ['c']
-  - name: indexer
-    uses: 'jinahub+docker://SimpleIndexer'
-    volumes: $JINA_WORKSPACE_MOUNT
-    uses_with:
-      default_traversal_paths: ['c']
-  - name: root_indexer
-    uses: 'jinahub+docker://LMDBStorage'
-    volumes: $JINA_WORKSPACE_MOUNT
-    uses_with:
-      default_traversal_paths: ['r']
-    needs: [gateway]
-  - name: wait_both
-    needs: [indexer, root_indexer]
+jtype: Flow                                                   # We define the flow used for indexing here
+version: '1'                                                  # yml version
+with:                                                         # Parameters for the flow
+  workspace: $JINA_WORKSPACE                                  # Workspace folder
+executors:                                                    # Now, define all the executors that are used
+  - name: segmenter                                           # The first executor splits the input text into sentences which are stored as chunks in the original documents
+    uses: 'jinahub+docker://Sentencizer'                      # The type of the executor is Sentencizer, we download it from the hub as a docker container
+  - name: encoder                                             # Then, compute the embeddings of the sentences in this executor
+    uses: 'jinahub+docker://TransformerTorchEncoder'          # We use a TransformerTorchEncoder from the hub
+    volumes: '~/.cache/huggingface:/root/.cache/huggingface'  # Mount the huggingface cache into the docker container
+    uses_with:                                                # Override some parameters for the executor
+      pooling_strategy: 'cls'                                 # This is the pooling strategy that is used by the encoder
+      pretrained_model_name_or_path: distilbert-base-cased    # The ML model that is used
+      max_length: 96                                          # Max length argument for the tokenizer
+      device: 'cpu'                                           # Run the executor on CPU - For GPU, we would have to use another container!
+      default_traversal_paths: ['c']                          # Compute the embeddings on the chunk level - the sentences created before
+  - name: indexer                                             # Now, index the sentences and store them to disk
+    uses: 'jinahub+docker://SimpleIndexer'                    # We use a simple indexer for that purpose
+    volumes: $JINA_WORKSPACE_MOUNT                            # Mount the workspace into the container
+    uses_with:                                                # Override parameters for the executor
+      default_traversal_paths: ['c']                          # Store the sentences on disk - this means on chunk level
+  - name: root_indexer                                        # Additionally to the sentences, we also need to store the original songs which are not split into sentences
+    uses: 'jinahub+docker://LMDBStorage'                      # Therefore, we use a LMDBStorage indexer
+    volumes: $JINA_WORKSPACE_MOUNT                            # Again, mount the workspace
+    uses_with:                                                # Override some parameters for the LMDBStorage
+      default_traversal_paths: ['r']                          # Now, we store the root documents, not the sentence chunks
+    needs: [gateway]                                          # We can start this at the beginning - in parallel to the sentence flow
+  - name: wait_both                                           # Now, we wait for both the root indexing and the sentence path to finish
+    needs: [indexer, root_indexer]                            # Continue once these two executor are finished
