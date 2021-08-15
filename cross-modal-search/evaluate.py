@@ -44,27 +44,29 @@ def evaluation_generator(num_docs=None, batch_size=8, dataset_type='f8k', mode='
         for image, caption in zip(images, captions):
             hashed = hashlib.sha1(image).hexdigest()
             if mode == 'text2image':
-                with Document() as document:
-                    document.text = caption
-                    document.modality = 'text'
-                    document.mime_type = 'text/plain'
-                    document.tags['id'] = hashed
-                with Document() as gt:
-                    match = Document()
-                    match.tags['id'] = hashed
-                    gt.matches.append(match)
+                document = Document()
+                document.text = caption
+                document.modality = 'text'
+                document.mime_type = 'text/plain'
+                document.tags['id'] = hashed
+                
+                gt = Document()
+                match = Document()
+                match.tags['id'] = hashed
+                gt.matches.append(match)
                 yield document, gt
             elif mode == 'image2text':
-                with Document() as document:
-                    document.buffer = image
-                    document.modality = 'image'
-                    document.mime_type = 'image/jpeg'
-                    document.tags['id'] = hashed
-                    document.convert_buffer_to_uri()
-                with Document() as gt:
-                    match = Document()
-                    match.tags['id'] = caption
-                    gt.matches.append(match)
+                document = Document()
+                document.buffer = image
+                document.modality = 'image'
+                document.mime_type = 'image/jpeg'
+                document.tags['id'] = hashed
+                document.convert_buffer_to_uri()
+                
+                gt = Document()
+                match = Document()
+                match.tags['id'] = caption
+                gt.matches.append(match)
                 yield document, gt
             else:
                 msg = f'Not supported mode {mode}.'
