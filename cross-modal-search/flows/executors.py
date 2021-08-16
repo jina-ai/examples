@@ -1,4 +1,4 @@
-""" Implementation of a filter for images"""
+""" Implementation of filters for images and texts"""
 
 import numpy as np
 from jina import Executor, DocumentArray, requests
