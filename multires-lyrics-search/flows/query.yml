@@ -22,7 +22,7 @@ executors:
     uses_with:
       default_traversal_paths: ['c']
   - name: ranker                                              # Now, we need to use a special ranker in the query flow
-    uses: 'jinahub://MinRanker'                               # This ranker collects all the matches from the sentences and adds them to the root document
+    uses: 'jinahub+docker://SimpleRanker'                     # This ranker collects all the matches from the sentences and adds them to the root document
     uses_with:                                                # It also orders the matches according to their minimum distance
       metric: 'cosine'
   - name: root_indexer                                        # Now, we can collect the stored metadata from the root documents to the matches collected by the MinRanker
