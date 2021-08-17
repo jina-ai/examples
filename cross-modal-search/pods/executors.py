@@ -1,5 +1,5 @@
 import os
-from typing import Dict, Iterable, Union, Tuple
+from typing import Dict, Iterable, Union, Tuple, Sequence
 
 import torch
 import numpy as np
@@ -8,18 +8,76 @@ import json
 from PIL import Image
 import io
 from jina import Executor, DocumentArray, requests, Document
-from jina.helloworld.chatbot.my_executors import _norm, _ext_B, _ext_A, _cosine
 from jina.types.score import NamedScore
+
+
+def _get_ones(x, y):
+    return np.ones((x, y))
+
+
+def _norm(A):
+    return A / np.linalg.norm(A, ord=2, axis=1, keepdims=True)
+
+
+def _ext_B(B):
+    nB, dim = B.shape
+    B_ext = _get_ones(dim * 3, nB)
+    B_ext[:dim] = (B ** 2).T
+    B_ext[dim : 2 * dim] = -2.0 * B.T
+    del B
+    return B_ext
+
+
+def _ext_A(A):
+    nA, dim = A.shape
+    A_ext = _get_ones(nA, dim * 3)
+    A_ext[:, dim : 2 * dim] = A
+    A_ext[:, 2 * dim :] = A ** 2
+    return A_ext
+
+
+def _cosine(A_norm_ext, B_norm_ext):
+    return A_norm_ext.dot(B_norm_ext).clip(min=0) / 2
+
+
+class ReciprocalRankEvaluator(Executor):
+
+    @staticmethod
+    def _evaluate(actual: Sequence[Union[str, int]], desired: Sequence[Union[str, int]], *args, **kwargs) -> float:
+        """
+        Evaluate score as per reciprocal rank metric.
+
+        :param actual: Sequence of sorted document IDs.
+        :param desired: Sequence of sorted relevant document IDs
+            (the first is the most relevant) and the one to be considered.
+        :param args:  Additional positional arguments
+        :param kwargs: Additional keyword arguments
+        :return: Reciprocal rank score
+        """
+        if len(actual) == 0 or len(desired) == 0:
+            return 0.0
+        try:
+            return 1.0 / (actual.index(desired[0]) + 1)
+        except:
+            return 0.0
+
+    @requests(on='/search')
+    def rank_evaluate(self, docs: 'DocumentArray', groundtruths, **kwargs):
+        for doc, gt in zip(docs, groundtruths):
+            actual_ids = doc.matches.get_attributes('tags__id')
+            desired_ids = gt.matches.get_attributes('tags__id')
+            mrr = self._evaluate(actual_ids, desired_ids)
+            doc.evaluations['mrr'] = mrr
 
 
 class ImageReader(Executor):
     @requests(on='/index')
     def index_read(self, docs: 'DocumentArray', **kwargs):
-        image_docs = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
-        for doc in image_docs:
-            img = Image.open(io.BytesIO(doc.buffer))
-            doc.content = np.array(img).astype('uint8')
-        return image_docs
+        array = DocumentArray(list(filter(lambda doc: doc.modality=='image', docs)))
+        for doc in array:
+            doc.convert_image_buffer_to_blob()
+            doc.blob = np.array(doc.blob).astype(np.uint8)
+        return array
 
     @requests(on='/search')
     def search_read(self, docs: 'DocumentArray', **kwargs):
@@ -29,8 +87,7 @@ class ImageReader(Executor):
         for doc in image_docs:
             doc.convert_uri_to_buffer()
             doc.convert_image_buffer_to_blob()
-            doc.blob = np.array(doc.blob).astype('uint8')
-            # doc.pop('chunks', 'uri')
+            doc.blob = doc.blob.astype(np.uint8)
         return image_docs
 
 
@@ -67,6 +124,7 @@ class ImageNormalizer(Executor):
             img = Image.open(io.BytesIO(doc.buffer))
             img = self._normalize(img)
             doc.content = np.array(img).astype('float32')
+            doc.blob = np.moveaxis(doc.blob, -1, 0)
             # doc.content = img
 
     def _normalize(self, img):
@@ -178,7 +236,9 @@ class NumpyIndexer(Executor):
                 for v in fp:
                     d = Document(v)
                     self._docs.append(d)
-            self._embedding_matrix = _ext_B(_norm(np.stack(self._docs.get_attributes('embedding'))))
+            embeddings = self._docs.get_attributes('embedding')
+            if len(embeddings) > 0:
+                self._embedding_matrix = _ext_B(_norm(np.stack(embeddings)))
 
     @property
     def save_path(self):
@@ -203,15 +263,19 @@ class NumpyIndexer(Executor):
         embedding_list = docs.get_attributes('embedding')
         if not embedding_list:
             return
+        if not hasattr(self, '_embedding_matrix'):
+            return
         doc_embeddings = np.stack(embedding_list)
         q_emb = _ext_A(_norm(doc_embeddings))
         dists = _cosine(q_emb, self._embedding_matrix)
         positions, dist = self._get_sorted_top_k(dists, int(parameters.get('top_k', 5)))
         for _q, _positions, _dists in zip(docs, positions, dist):
+            l = []
             for position, _dist in zip(_positions, _dists):
                 d = Document(self._docs[int(position)])
-                d.scores['doc_score'] = NamedScore(value=1 - _dist)
+                d.scores['cosine'] = 1 - _dist
                 _q.matches.append(d)
+                l.append(d.id)
 
     @staticmethod
     def _get_sorted_top_k(
@@ -259,9 +323,29 @@ class KeyValueIndexer(Executor):
         for doc in docs:
             for match in doc.matches:
                 if match.id in self._docs:
-                    scores = match.scores
+                    score = match.scores['cosine']
                     match.MergeFrom(self._docs[match.id])
-                    match.score = scores
+                    match.scores['cosine'] = score
+
+
+class CLIPImageEncoder(Executor):
+    """Encode image into embeddings."""
+
+    def __init__(self, model_name: str = 'ViT-B/32', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        torch.set_num_threads(1)
+        self.model, _ = clip.load(model_name, 'cpu')
+
+    @requests
+    def encode(self, docs: DocumentArray, **kwargs):
+        if not docs:
+            return
+        with torch.no_grad():
+            for doc in docs:
+                content = np.expand_dims(doc.content, axis=0)
+                input = torch.from_numpy(content.astype('float32'))
+                embed = self.model.encode_image(input)
+                doc.embedding = embed.cpu().numpy().flatten()
 
 
 class CLIPTextEncoder(Executor):
@@ -270,12 +354,11 @@ class CLIPTextEncoder(Executor):
     def __init__(self, model_name: str = 'ViT-B/32', *args, **kwargs):
         super().__init__(*args, **kwargs)
         torch.set_num_threads(1)
-        model, _ = clip.load(model_name, 'cpu')
-        self.model = model
+        self.model, _ = clip.load(model_name, 'cpu')
 
     @requests
     def encode(self, docs: DocumentArray, **kwargs):
-        _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain', ), docs)))
+        _docs = DocumentArray(list(filter(lambda doc: doc.mime_type in ('text/plain',), docs)))
         if not _docs:
             print(f'not text doc is found: {[d.modality for d in docs]}')
             return
@@ -285,4 +368,3 @@ class CLIPTextEncoder(Executor):
                 embed = self.model.encode_text(input_torch_tensor)
                 doc.embedding = embed.cpu().numpy().flatten()
         return _docs
-

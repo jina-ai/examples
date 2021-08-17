@@ -4,7 +4,7 @@ Vue.use(VueMasonryPlugin);
 const vm = new Vue({
     el: '#jina-ui',
     data: {
-        serverUrl: 'http://localhost:65481/api/search',
+        serverUrl: 'http://localhost:45678/search',
         top_k: 50,
         topkDocs: [],
         topkDocsDict: {},
@@ -109,21 +109,23 @@ const vm = new Vue({
                 if (item['isSelect']) {
                     item.matches.forEach(function (r) {
                         if (vm.topkDocsDict.has(r.parentId)) {
-                            if (r.score.value < vm.distThreshold) {
+                            let dist = 1. - r.scores['cosine'].value
+                            if (dist < vm.distThreshold) {
                                 // console.log(item)
                                 vm.topkDocsDict.get(r.parentId)['hlchunk'].push({
                                     'range': r.location,
                                     'idx': i,
-                                    'dist': r.score.value,
+                                    'dist': dist,
                                     'range_str': r.location[0] + ',' + r.location[1]
                                 });
                             }
-                            if (r.score.value < vm.sliderOptions.min) {
-                                vm.sliderOptions.min = r.score.value.toFixed(2)
+                            if (dist < vm.sliderOptions.min) {
+                                vm.sliderOptions.min = dist.toFixed(2)
                             }
-                            if (r.score.value > vm.sliderOptions.max) {
-                                vm.sliderOptions.max = r.score.value.toFixed(2)
+                            if (dist > vm.sliderOptions.max) {
+                                vm.sliderOptions.max = dist.toFixed(2)
                             }
+
                         } else {
                             console.error(r.id);
                         }
@@ -161,7 +163,7 @@ const vm = new Vue({
                 contentType: "application/json; charset=utf-8",
                 cache: false,
                 data: JSON.stringify({
-                    "top_k": this.top_k,
+                    "parameters": {"top_k": this.top_k},
                     "data": [this.searchQuery]
                 }),
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -170,8 +172,10 @@ const vm = new Vue({
                     console.log(errorThrown);
                 },
                 success: function (data) {
-                    vm.topkDocs = data.search.docs[0].matches;
-                    vm.queryChunks = data.search.docs[0].chunks;
+                    vm.topkDocs = data.data.docs[0].matches;
+                    console.log('Number parents: ' + vm.topkDocs.length);
+                    vm.queryChunks = data.data.docs[0].chunks;
+                    console.log('Number chunks: ' + vm.queryChunks.length);
                     vm.refreshAllCards();
                     console.log('Success');
                 },

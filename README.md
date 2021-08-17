@@ -5,7 +5,6 @@
 **Table of Contents**
 
 - [Adding Tests for Examples](#adding-tests-for-examples)
-- [Performance metrics](#performance)
 - [Community](#community)
 - [License](#license)
 
@@ -39,17 +38,6 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Get a better understanding of chunks by searching a lyrics database. Now with shiny front-end!
     </td>
   </tr>
-  <tr>
-    <td>
-      <h1>🖼️</h1>
-    </td>
-    <td>
-      <h4><a href="./image-search">Google's Big Transfer Model in (Poké-)Production</a></h4>
-      Use SOTA visual representation for searching Pokémon!
-    </td>
-  </tr>
-  
-  
 </table>
 
 ## 🚀  Advanced Examples
@@ -74,17 +62,6 @@ We suggest you read the following to get an overview of what Jina is and how it 
       Use one modality (text) to search another (images)
     </td>
   </tr>
-  
-  <tr>
-    <td>
-      <h1>🖼️📄</h1>
-    </td>
-    <td>
-      <h4><a href="./multimodal-search-pdf">PDF Search: Search PDF with text, image or PDF in the query</a></h4>
-      Use different modalities (image, text or PDF) to search PDF
-    </td>
-  </tr>
-  
 </table>
 
 ## Community Examples
@@ -125,16 +102,6 @@ Want to add your own example? Please check our [guidelines](example-guidelines.m
   </tr>
 </table>
 
-## Performance metrics
-
-You can run the `perf-script.sh` in order to run all of the examples on your machine. Make sure this is done in a separate python virtualenv.
-
-This measures QPS for indexing and querying.
-
-This will store the results in [`performance.txt`](./performance.txt).
-
-Note that a lot of the examples are not optimized (or configured for scaling). They are provided as is, for the basic functionality. 
-
 ## Adding Tests for Examples
 
 You are highly encouraged to add a test for your example so that we will be alerted if it breaks in the future:
@@ -147,7 +114,7 @@ You are highly encouraged to add a test for your example so that we will be aler
 
 ### Testing Tips
 
-- For reference, check out the `tests` folder from [South Park example](./southpark-search/tests) if your data is about text and [object search example](./object-search/tests) for images.
+- For reference, check out the `tests` folder from any of the examples in this repo.
 - Try using the original example function by importing them to the test. Avoid any modifications to original Flow or logic.
 - Use the [pytest fixture](https://docs.pytest.org/en/stable/fixture.html) `tmpdir` for temporary directory
 

@@ -1,18 +1,20 @@
-# Build A Cross-Modal Search System To Look For Images From Captions
+# Build A Cross-Modal Search System To Look For Images From Captions and vice versa
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**
 
-- [Build a CrossModal Search System to look for Images from Captions and vice versa](#build-a-crossmodal-search-system-to-look-for-images-from-captions-and-viceversa)
-  - [Prerequisites](#prerequisites)
-  - [Prepare the data](#prepare-the-data)
-  - [Build the docker images](#build-the-docker-images)
-  - [Run the Flows](#run-the-flows)
-  - [Results](#results)
-  - [Documentation](#documentation)
-  - [Community](#community)
-  - [License](#license)
+
+**Table of Contents**
+  - [Overview](#-overview)
+  - [🐍 Build the app with Python](#-build-the-app-with-python)
+  - [🌀 Flow diagram](#-flow-diagram)
+  - [🚑 Troubleshooting](#-troubleshooting)
+  - [📖 Optional: Extra information useful for the user](#-optional-extra-information-useful-for-the-user)
+  - [🔮 Overview of the files](#-overview-of-the-files)
+  - [🐋 Deploy the prebuild application using Docker](#-deploy-the-prebuild-application-using-docker) 
+  - [⏭️ Next steps](#-next-steps)
+  - [‍👩‍👧‍👦 Community](#-community)
+  - [🦄License](#-license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -281,11 +283,11 @@ docker run -p 45678:45678 jinahub/app.example.crossmodalsearch:0.0.3-1.0.8
 
 Did you like this example and are you interested in building your own? For a detailed tutorial on how to build your Jina app check out [How to Build Your First Jina App](https://docs.jina.ai/chapters/my_first_jina_app/#how-to-build-your-first-jina-app) guide in our documentation. 
 
-If you have any issues following this guide, you can always get support from our [Slack community](https://join.slack.com/t/jina-ai/shared_invite/zt-dkl7x8p0-rVCv~3Fdc3~Dpwx7T7XG8w) .
+If you have any issues following this guide, you can always get support from our [Slack community](https://slack.jina.ai) .
 
 ## 👩‍👩‍👧‍👦 Community
 
-- [Slack channel](slack.jina.ai) - a communication platform for developers to discuss Jina.
+- [Slack channel](https://slack.jina.ai) - a communication platform for developers to discuss Jina.
 - [LinkedIn](https://www.linkedin.com/company/jinaai/) - get to know Jina AI as a company and find job opportunities.
 - [![Twitter Follow](https://img.shields.io/twitter/follow/JinaAI_?label=Follow%20%40JinaAI_&style=social)](https://twitter.com/JinaAI_) - follow us and interact with us using hashtag `#JinaSearch`.  
 - [Company](https://jina.ai) - know more about our company, we are fully committed to open-source!

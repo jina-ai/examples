@@ -3,134 +3,91 @@ __license__ = "Apache-2.0"
 
 __version__ = '0.0.1'
 
-import csv
 import os
 import sys
-import itertools
 import click
-import requests
 
-from jina.flow import Flow
-from jina import Document
-from jina.clients.sugary_io import _input_lines
-from jina.logging import JinaLogger
-from jina.logging.profile import TimeContext
+from jina import Flow, Document
+from helper import input_generator
+from jina.logging.predefined import default_logger as logger
 
 
 def config():
-    parallel = 2 if sys.argv[1] == 'index' else 1
-
-    os.environ.setdefault('JINA_MAX_DOCS', '100')
-    os.environ.setdefault('JINA_PARALLEL', str(parallel))
-    os.environ.setdefault('JINA_SHARDS', str(4))
-    os.environ.setdefault('JINA_WORKSPACE', './workspace')
-    os.environ.setdefault('JINA_DATA_FILE', 'toy-data/lyrics-toy-data1000.csv')
-    os.environ['JINA_WORKDIR'] = './workspace'
-    os.makedirs(os.environ['JINA_WORKDIR'], exist_ok=True)
-    os.environ.setdefault('JINA_PORT', str(65481))
-
-
-def input_fn():
-    lyrics_file = os.environ.setdefault(
-        'JINA_DATA_PATH', 'toy-data/lyrics-toy-data1000.csv'
-    )
-    docs = []
-    with open(lyrics_file, newline='', encoding='utf-8') as f:
-        reader = csv.reader(f)
-        for row in itertools.islice(reader, int(os.environ['JINA_MAX_DOCS'])):
-            if row[-1] == 'ENGLISH':
-                with Document() as d:
-                    d.tags['ALink'] = row[0]
-                    d.tags['SName'] = row[1]
-                    d.tags['SLink'] = row[2]
-                    d.text = row[3]
-                docs.append(d)
-
-    return docs
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    os.environ.setdefault('JINA_WORKSPACE', os.path.join(cur_dir, 'workspace'))
+    os.environ.setdefault('JINA_WORKSPACE_MOUNT',
+                          f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace')
+    os.environ.setdefault('JINA_LOG_LEVEL', 'INFO')
+    if os.path.exists('lyrics-data/lyrics-data.csv'):
+        os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-data.csv')
+    else:
+        os.environ.setdefault('JINA_DATA_FILE', 'lyrics-data/lyrics-toy-data1000.csv')
+    os.environ.setdefault('JINA_PORT', str(45678))
 
 
 # for index
-def index():
-    f = Flow.load_config('flows/index.yml')
-    with f:
-        input_docs = input_fn()
-        with TimeContext(f'QPS: indexing {len(input_docs)}', logger=f.logger):
-            f.index(input_docs, request_size=8)
+def index(num_docs):
+    flow = Flow.load_config('flows/index.yml')
+    with flow:
+        input_docs = input_generator(num_docs=num_docs)
+        data_path = os.path.join(os.path.dirname(__file__),
+                                 os.environ.get('JINA_DATA_FILE', None))
+        flow.logger.info(f'Indexing {data_path}')
+        flow.post(on='/index', inputs=input_docs, request_size=10,
+                  show_progress=True)
 
 
 # for search
 def query():
+    flow = Flow.load_config('flows/query.yml')
+    flow.rest_api = True
+    flow.protocol = 'http'
+    with flow:
+        flow.block()
+
+
+def query_text():
+    def print_result(response):
+        doc = response.docs[0]
+        for index, parent in enumerate(doc.matches):
+            print(f'Parent {index}: {parent.text}')
+        for index, chunk in enumerate(doc.chunks):
+            print(f'Chunk {index}: {chunk.text}')
+            for match in chunk.matches:
+                print(f'\tMatch: {match.text}')
+
     f = Flow.load_config('flows/query.yml')
-
     with f:
-        f.block()
-
-
-def index_restful(num_docs):
-    f = Flow().load_config('flows/index.yml')
-
-    with f:
-        data_path = os.path.join(os.path.dirname(__file__), os.environ.get('JINA_DATA_FILE', None))
-        f.logger.info(f'Indexing {data_path}')
-        url = f'http://0.0.0.0:{f.port_expose}/index'
-
-        input_docs = _input_lines(
-            filepath=data_path,
-            size=num_docs,
-            read_mode='r',
-        )
-        data_json = {'data': [Document(text=text).dict() for text in input_docs]}
-        r = requests.post(url, json=data_json)
-        if r.status_code != 200:
-            raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content}')
-
-
-def query_restful():
-    f = Flow().load_config("flows/query.yml")
-    f.use_rest_gateway()
-    with f:
-        f.block()
-
-
-def dryrun():
-    f = Flow().load_config("flows/index.yml")
-    with f:
-        pass
+        search_text = input('Please type a sentence: ')
+        doc = Document(content=search_text, mime_type='text/plain')
+        response = f.post('/search', inputs=doc, parameters={'lookup_type': 'parent'}, return_results=True)
+        print_result(response[0].data)
 
 
 @click.command()
 @click.option('--task', '-t',
-              type=click.Choice(['index', 'query', 'index_restful', 'query_restful', 'dryrun'], case_sensitive=False))
-@click.option('--num_docs_index', '-n', default=600)
-def main(task, num_docs_index):
+              type=click.Choice(['index', 'query', 'query_text'], case_sensitive=False))
+@click.option('--num_docs', '-n', default=10000)
+def main(task, num_docs):
     config()
     workspace = os.environ["JINA_WORKSPACE"]
-    logger = JinaLogger('multires-lyrics-search')
-
     if task == 'index':
-        config()
-        workspace = os.environ['JINA_WORKDIR']
         if os.path.exists(workspace):
-            logger.warning(f'\n +---------------------------------------------------------------------------------+ \
+            logger.error(f'\n +---------------------------------------------------------------------------------+ \
                     \n |                                   🤖🤖🤖                                        | \
                     \n | The directory {workspace} already exists. Please remove it before indexing again. | \
                     \n |                                   🤖🤖🤖                                        | \
                     \n +---------------------------------------------------------------------------------+')
-        index()
-    elif task == 'index_restful':
-        index_restful(num_docs_index)
+            sys.exit(1)
+        index(num_docs)
     elif task == 'query':
-        config()
         query()
-    elif task == 'query_restful':
-        if not os.path.exists(workspace):
-            logger.warning(f'The directory {workspace} does not exist. Please index first via `python app.py -t index`')
-        query_restful()
-    elif task == 'dryrun':
-        dryrun()
+    elif task == 'query_text':
+        query_text()
     else:
         raise NotImplementedError(
-            f'unknown task: {task}. A valid task is either `index` or `query`.')
+            f'Unknown task: {task}.')
+
 
 if __name__ == '__main__':
     main()

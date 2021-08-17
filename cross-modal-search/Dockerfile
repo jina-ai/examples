@@ -1,12 +1,16 @@
-FROM jinaai/jina:1.2.0
+FROM jinaai/jina:2.0.8-perf
 
 RUN apt-get -y update && apt-get install -y git wget gcc unzip libmagic1
 
-COPY . /workspace
 WORKDIR /workspace
+COPY ./requirements.txt requirements.txt
+
+RUN pip3 install torch==1.9.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 
 # install the third-party requirements
-RUN pip install git+https://github.com/openai/CLIP.git click && pip uninstall -y jina && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
+RUN pip install git+https://github.com/openai/CLIP.git click && pip install -r requirements.txt && pip uninstall -y dataclasses && python -c "import clip; clip.load('ViT-B/32')"
+
+COPY . /workspace
 
 ENV JINA_IMAGE_ENCODER='yaml/clip/hub-image-encoder.yml'
 ENV JINA_TEXT_ENCODER='yaml/clip/hub-text-encoder.yml'
