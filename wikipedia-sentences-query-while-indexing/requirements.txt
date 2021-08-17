@@ -1,7 +1,7 @@
-jina[daemon]==2.0.8
+jina[daemon]==2.0.18
 kaggle==1.5.12
 docker==5.0.0
 flair==0.8.0
-git+https://github.com/jina-ai/jina-commons
+git+https://github.com/jina-ai/jina-commons@v0.0.3
 psycopg2-binary==2.8.6
 python-dotenv==0.18.0
