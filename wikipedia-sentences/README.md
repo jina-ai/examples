@@ -58,7 +58,7 @@ If this command runs without any error messages, you can then move onto step two
 
 ### 📥 Step 2. Download your data to search 
 
-By default, a small test dataset si used for indexing. This can lead to bad search results.
+By default, a small test dataset is used for indexing. This can lead to bad search results.
 
 To index the [full dataset](https://www.kaggle.com/mikeortman/wikipedia-sentences) (around 900 MB):
 
@@ -107,7 +107,9 @@ Here is a small overview if you're interested in understanding what each file in
 ## 🌀 Flow diagram
 
 This diagram provides a visual representation of the flow in this example, showing which Executors are used in which order:
-![wiki_flow](.github/flow.png)
+
+![wiki_flow](.github/flow.png)  
+
 It can be seen that the flow for this example is quite simple. We receive input Documents from the gateway,
 which are then fed into a transformer. This transformer computes an embedding based on the text of the document.
 Then, the documents are sent to the indexer which does the following:

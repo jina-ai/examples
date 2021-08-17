@@ -7,5 +7,4 @@ executors:                                            # Now, define the executor
   - name: transformer                                 # This executor computes an embedding based on the input text documents
     uses: 'jinahub+docker://TransformerTorchEncoder'  # We use a Transformer Torch Encoder from the hub as a docker container
   - name: indexer                                     # Now, index the text documents with the embeddings
-    uses: 'jinahub+docker://SimpleIndexer'            # We use the SimpleIndexer for this purpose
-    volumes: $JINA_WORKSPACE_MOUNT                    # We need to mount the workspace otherwise the files remain in the docker container only
+    uses: 'jinahub://SimpleIndexer'                   # We use the SimpleIndexer for this purpose

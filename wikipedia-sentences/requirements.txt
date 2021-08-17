@@ -1,4 +1,5 @@
 click==7.1.2
 transformers==4.6.1
 torch==1.7.1
-jina[scipy,http,standard]==2.0.16
+jina[scipy,standard]==2.0.18
+git+git://github.com/jina-ai/jina-commons@v0.0.3

@@ -5,7 +5,7 @@ import os
 import sys
 
 import click
-from jina import Flow, Document
+from jina import Flow, Document, DocumentArray
 import logging
 
 from dataset import input_index_data
@@ -29,16 +29,25 @@ def index_restful():
         flow.block()
 
 
-def check_query_result(resp):
-    for doc in resp.data.docs:
-        _doc = Document(doc)
+def check_query_result(results):
+    text_doc = Document(results[0])
+    image_doc = Document(results[1])
+    print('Result documents:')
+    for _doc in [image_doc, text_doc]:
         print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
-        if _doc.matches:
-            for m in _doc.matches:
-                print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
-                import matplotlib.pyplot as plt
-                plt.imshow(m.blob)
-                plt.show()
+    # Image doc matches are text:
+    print('Closest matches for the search image:')
+    if image_doc.matches:
+        for m in image_doc.matches:
+            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+    # Text doc matches are images
+    print('Closest matches for the search text:')
+    if text_doc.matches:
+        for m in text_doc.matches:
+            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
+            import matplotlib.pyplot as plt
+            plt.imshow(m.blob)
+            plt.show()
 
 
 def index(data_set, num_docs, request_size):
@@ -53,17 +62,18 @@ def index(data_set, num_docs, request_size):
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
-        input = [
-            Document(text='a black dog and a spotted dog are fighting',
-                     modality='text'),
-            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
-                     modality='image')
-        ]
+        text_doc = Document(text='a black dog and a spotted dog are fighting',
+                            modality='text')
+        image_doc = Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
+                             modality='image')
         import time
         start = time.time()
-        result = flow.post(on='/search', inputs=input, return_results=True)
+        result_text = flow.post(on='/search', inputs=text_doc,
+                                return_results=True)
+        result_image = flow.post(on='/search', inputs=image_doc,
+                                 return_results=True)
         print(f'Request duration: {time.time() - start}')
-        check_query_result(result[0])
+        check_query_result([result_text[0].data.docs[0], result_image[0].data.docs[0]])
 
 
 def query_restful():

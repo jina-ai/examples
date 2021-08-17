@@ -16,11 +16,12 @@ executors:
       device: 'cpu'
       default_traversal_paths: ['c']
   - name: indexer                                             # Compare the search sentence embeddings to the stored sentence embeddings from the indexing
-    uses: 'jinahub+docker://SimpleIndexer'                    # Then, return the closest matches for every sentence
-    volumes: $JINA_WORKSPACE_MOUNT
-    workspace: '/workspace/workspace'
+    uses: 'jinahub://SimpleIndexer'                           # Then, return the closest matches for every sentence
+    uses_metas:
+      workspace: $JINA_WORKSPACE
     uses_with:
       default_traversal_paths: ['c']
+    read_only: True
   - name: ranker                                              # Now, we need to use a special ranker in the query flow
     uses: 'jinahub+docker://SimpleRanker'                     # This ranker collects all the matches from the sentences and adds them to the root document
     uses_with:                                                # It also orders the matches according to their minimum distance
@@ -30,3 +31,4 @@ executors:
     volumes: $JINA_WORKSPACE_MOUNT
     uses_with:
       default_traversal_paths: ['m']
+    read_only: True

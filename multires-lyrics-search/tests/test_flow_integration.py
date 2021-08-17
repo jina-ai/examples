@@ -71,7 +71,6 @@ def test_query_text(tmpdir_factory):
         parent_ids = parent_docs.get_attributes('id')
         assert len(parent_docs) > 0
         for chunk in docs[0].chunks:
-            print(chunk)
             assert len(chunk.matches) == 5  # top_k = 5
             match_ids = chunk.matches.get_attributes('id')
             assert len(match_ids) == len(list(set(match_ids)))

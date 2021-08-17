@@ -14,9 +14,10 @@ executors:                                                    # Now, define all 
       max_length: 96                                          # Max length argument for the tokenizer
       device: 'cpu'                                           # Run the executor on CPU - For GPU, we would have to use another container!
       default_traversal_paths: ['c']                          # Compute the embeddings on the chunk level - the sentences created before
-  - name: indexer                                             # Now, index the sentences and store them to disk
-    uses: 'jinahub+docker://SimpleIndexer'                    # We use a simple indexer for that purpose
-    volumes: $JINA_WORKSPACE_MOUNT                            # Mount the workspace into the container
+  - name: indexer                                             # Now, index the sentences and store them to disk.
+    uses: 'jinahub://SimpleIndexer'                           # We use a simple indexer for that purpose (not in docker, but using source codes - there are some bugs with docker for this executor)
+    uses_metas:                                               # Set some meta arguments for this executor
+      workspace: $JINA_WORKSPACE                              # Define the workspace folder for the executor
     uses_with:                                                # Override parameters for the executor
       default_traversal_paths: ['c']                          # Store the sentences on disk - this means on chunk level
   - name: root_indexer                                        # Additionally to the sentences, we also need to store the original songs which are not split into sentences
