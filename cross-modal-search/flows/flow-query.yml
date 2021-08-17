@@ -1,43 +1,42 @@
-jtype: Flow
-version: '1'
+jtype: Flow                                       # This file defines the query flow which is used for searching in the indexed documents
+version: '1'                                      # The query flow is very similar to the index flow - only the differences are explained here
 with:
   prefetch: 10
-  port_expose: 45678
+  port_expose: $JINA_PORT
   workspace: $JINA_WORKSPACE
 pods:
-  - name: loader                          # load query image
-    uses: pods/image-load.yml
-    shards: $JINA_PARALLEL
+  - name: loader                                  # Again, we start two paths in the flow - here we start the image path
+    uses: ImageReader
+    py_modules: 'flows/executors.py'
     read_only: true
-    needs: gateway
-  - name: image_encoder                   # encode query image into embeddings with CLIP model
-    polling: any
-    uses: 'jinahub://CLIPImageEncoder'
-    volumes: $HOME/.cache/clip:/root/.cache/clip
-    shards: $JINA_PARALLEL
+    needs: [gateway]
+  - name: image_encoder                           # Now, encode the images and compute the embeddings
+    uses: 'jinahub+docker://CLIPImageEncoder'
+    volumes: $HOME/.cache/huggingface:/root/.cache/huggingface
     timeout_ready: 600000
     read_only: true
     needs: loader
-  - name: text_indexer                    # index query text
-    polling: all
-    uses: pods/index-text.yml
-    shards: $JINA_SHARDS
-  - name: text_encoder                    # encode query text into embeddings with CLIP model
-    uses: pods/clip/text-encoder.yml
-    shards: $JINA_PARALLEL
+  - name: text_indexer                            # Now, we use the text indexer in the image path - This is how we achieve the cross-modality here
+    uses: 'jinahub://SimpleIndexer'               # The text indexer has indexed all text documents and stored them on disk.
+    uses_with:                                    # Then we return the closest matches as results
+     index_file_name: 'text_index'
+    needs: image_encoder
+    read_only: true
+  - name: text_filter                             # Here, the text path starts
+    uses: TextFilter
+    py_modules: 'flows/executors.py'
+    needs: [gateway]
+  - name: text_encoder                            # Compute the embedding of the search text
+    uses: 'jinahub+docker://CLIPTextEncoder'
+    volumes: $HOME/.cache/huggingface:/root/.cache/huggingface
     timeout_ready: 600000
     read_only: true
-    needs: [gateway]
-  - name: image_vector_indexer            # index query image embeddings
-    polling: all
-    uses: pods/index-image-vector.yml
-    shards: $JINA_SHARDS
-    needs: text_encoder
-  - name: image_kv_indexer                # index query image as kv
-    polling: all
-    uses: pods/index-image-kv.yml
-    shards: $JINA_SHARDS
-    needs: image_vector_indexer
-  - name: join_all                        # combine text and image queries
-    needs: [text_indexer, image_kv_indexer]
+    needs: text_filter
+  - name: image_indexer                           # Now, we use the image indexer in the text path - this is again how we get cross-modality
+    uses: 'jinahub://SimpleIndexer'               # The image indexer has indexed all images and their embeddings
+    uses_with:
+      index_file_name: 'image_index'
     read_only: true
+    needs: text_encoder
+  - name: join_all                                # Wait for both paths to finish and join the results
+    needs: [image_indexer, text_indexer]

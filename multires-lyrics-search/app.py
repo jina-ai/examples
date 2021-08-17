@@ -50,7 +50,7 @@ def query_text():
     def print_result(response):
         doc = response.docs[0]
         for index, parent in enumerate(doc.matches):
-            print(f'Parent {index}: {parent.text}')
+            print(f'Parent {index}: Song Name: {parent.tags["SName"]}\n{parent.text}')
         for index, chunk in enumerate(doc.chunks):
             print(f'Chunk {index}: {chunk.text}')
             for match in chunk.matches:

@@ -1,33 +1,34 @@
-jtype: Flow
-version: '1'
+jtype: Flow                                                   # Now, we define the search flow for this example
+version: '1'                                                  # It is quite similar to the index flow, only the differences are explained here
 with:
-  port_expose: $JINA_PORT
-  cors: true
+  port_expose: $JINA_PORT                                     # Port to run the flow on
+  cors: true                                                  # Add cross origin headers to the request responses
 executors:
-  - name: segmenter
+  - name: segmenter                                           # First, split the search text into sentences again
     uses: 'jinahub+docker://Sentencizer'
-  - name: encoder
+  - name: encoder                                             # Encode the search sentences into embeddings
     uses: 'jinahub+docker://TransformerTorchEncoder'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'
-    override_with:
+    uses_with:
       pooling_strategy: 'cls'
       pretrained_model_name_or_path: distilbert-base-cased
       max_length: 96
-      device: 'cuda'
+      device: 'cpu'
       default_traversal_paths: ['c']
-  - name: indexer
-    uses: 'jinahub+docker://SimpleIndexer'
-    volumes: $JINA_WORKSPACE_MOUNT
-    workspace: '/workspace/workspace'
-    override_with:
+  - name: indexer                                             # Compare the search sentence embeddings to the stored sentence embeddings from the indexing
+    uses: 'jinahub://SimpleIndexer'                           # Then, return the closest matches for every sentence
+    uses_metas:
+      workspace: $JINA_WORKSPACE
+    uses_with:
       default_traversal_paths: ['c']
-  - name: ranker
-    uses:
-      jtype: MinRanker
-    py_modules:
-      - flows/executors.py
-  - name: root_indexer
+    read_only: True
+  - name: ranker                                              # Now, we need to use a special ranker in the query flow
+    uses: 'jinahub+docker://SimpleRanker'                     # This ranker collects all the matches from the sentences and adds them to the root document
+    uses_with:                                                # It also orders the matches according to their minimum distance
+      metric: 'cosine'
+  - name: root_indexer                                        # Now, we can collect the stored metadata from the root documents to the matches collected by the MinRanker
     uses: 'jinahub+docker://LMDBStorage'
     volumes: $JINA_WORKSPACE_MOUNT
-    override_with:
+    uses_with:
       default_traversal_paths: ['m']
+    read_only: True

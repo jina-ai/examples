@@ -1,4 +1,0 @@
-jtype: KeyValueIndexer
-metas:
-  name: kv_indexer
-  py_modules: 'executors.py'

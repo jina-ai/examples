@@ -5,21 +5,22 @@ import os
 import sys
 
 import click
-from jina import Flow, Document
+from jina import Flow, Document, DocumentArray
 import logging
-from jina.logging.profile import TimeContext
 
 from dataset import input_index_data
 
-MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 50))
+MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 10000))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def config():
-    os.environ['JINA_PARALLEL'] = os.environ.get('JINA_PARALLEL', '1')
-    os.environ['JINA_SHARDS'] = os.environ.get('JINA_SHARDS', '1')
-    os.environ["JINA_WORKSPACE"] = os.environ.get("JINA_WORKSPACE", "workspace")
-    os.environ['JINA_PORT'] = '45678'
+    os.environ.setdefault('JINA_WORKSPACE', os.path.join(cur_dir, 'workspace'))
+    os.environ.setdefault(
+        'JINA_WORKSPACE_MOUNT',
+        f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace')
+    os.environ.setdefault('JINA_LOG_LEVEL', 'INFO')
+    os.environ.setdefault('JINA_PORT', str(45678))
 
 
 def index_restful():
@@ -28,44 +29,57 @@ def index_restful():
         flow.block()
 
 
-def check_index_result(resp):
-    for doc in resp.data.docs:
-        _doc = Document(doc)
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, mime_type: {_doc.mime_type}, modality: {_doc.modality}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}')
-
-
-def check_query_result(resp):
-    for doc in resp.data.docs:
-        _doc = Document(doc)
+def check_query_result(results):
+    text_doc = Document(results[0])
+    image_doc = Document(results[1])
+    print('Result documents:')
+    for _doc in [image_doc, text_doc]:
         print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
-        if _doc.matches:
-            for m in _doc.matches:
-                print(f'\t+- {m.id[:10]}, score: {m.scores["doc_score"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+    # Image doc matches are text:
+    print('Closest matches for the search image:')
+    if image_doc.matches:
+        for m in image_doc.matches:
+            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+    # Text doc matches are images
+    print('Closest matches for the search text:')
+    if text_doc.matches:
+        for m in text_doc.matches:
+            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
+            import matplotlib.pyplot as plt
+            plt.imshow(m.blob)
+            plt.show()
 
 
 def index(data_set, num_docs, request_size):
     flow = Flow().load_config('flows/flow-index.yml')
     with flow:
-        with TimeContext(f'QPS: indexing {num_docs}', logger=flow.logger):
-            flow.index(
-                inputs=input_index_data(num_docs, request_size, data_set),
-                request_size=request_size,
-                on_done=check_index_result
-            )
+        flow.post(on='/index',
+                  inputs=input_index_data(num_docs, request_size, data_set),
+                  request_size=request_size,
+                  show_progress=True)
 
 
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
-        flow.search(inputs=[
-            Document(text='a black dog and a spotted dog are fighting', modality='text'),
-            Document(uri='toy-data/images/1000268201_693b08cb0e.jpg', modality='image')
-        ],
-            on_done=check_query_result)
+        text_doc = Document(text='a black dog and a spotted dog are fighting',
+                            modality='text')
+        image_doc = Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
+                             modality='image')
+        import time
+        start = time.time()
+        result_text = flow.post(on='/search', inputs=text_doc,
+                                return_results=True)
+        result_image = flow.post(on='/search', inputs=image_doc,
+                                 return_results=True)
+        print(f'Request duration: {time.time() - start}')
+        check_query_result([result_text[0].data.docs[0], result_image[0].data.docs[0]])
 
 
 def query_restful():
-    flow = Flow().load_config('flows/flow-query.yml', override_with={'protocol': 'http'})
+    flow = Flow(cors=True).load_config('flows/flow-query.yml')
+    flow.rest_api = True
+    flow.protocol = 'http'
     with flow:
         flow.block()
 
