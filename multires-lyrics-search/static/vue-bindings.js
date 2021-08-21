@@ -109,7 +109,7 @@ const vm = new Vue({
                 if (item['isSelect']) {
                     item.matches.forEach(function (r) {
                         if (vm.topkDocsDict.has(r.parentId)) {
-                            let dist = 1. - r.scores['cosine'].value
+                            let dist = r.scores['cosine'].value
                             if (dist < vm.distThreshold) {
                                 // console.log(item)
                                 vm.topkDocsDict.get(r.parentId)['hlchunk'].push({
@@ -160,7 +160,7 @@ const vm = new Vue({
             $.ajax({
                 url: this.serverUrl,
                 type: "POST",
-                contentType: "application/json; charset=utf-8",
+                contentType: "application/json",
                 cache: false,
                 data: JSON.stringify({
                     "parameters": {"top_k": this.top_k},

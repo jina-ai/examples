@@ -1,40 +1,40 @@
-jtype: Flow
-version: '1'
-with:
-  prefetch: 10
-  port_expose: 45678
-  workspace: $JINA_WORKSPACE
-pods:
-  - name: loader                                      # load images from the dataset of image-caption pairs
-    uses: pods/image-load.yml
-    shards: $JINA_PARALLEL
-    read_only: true
-    needs: [gateway]
-  - name: image_encoder                               # encode images into embeddings with CLIP model
-    uses: 'jinahub://CLIPImageEncoder'
-    volumes: $HOME/.cache/clip:/root/.cache/clip
-    shards: $JINA_PARALLEL
-    timeout_ready: 600000
-    read_only: true
-  - name: image_vector_indexer                        # store image embeddings
-    polling: any
-    uses: pods/index-image-vector.yml
-    shards: $JINA_SHARDS
-  - name: image_kv_indexer                            # store image documents
-    polling: any
-    uses: pods/index-image-kv.yml
-    shards: $JINA_SHARDS
-    needs: [gateway]
-  - name: text_encoder                                # encode text into embeddings with CLIP model
-    uses: pods/clip/text-encoder.yml
-    shards: $JINA_PARALLEL
-    timeout_ready: 600000
-    read_only: true
-    needs: [gateway]
-  - name: text_indexer                                # index the text into documents
-    polling: any
-    uses: pods/index-text.yml #(numpy + binary pb indexer)
-    shards: $JINA_SHARDS
-    needs: text_encoder
-  - name: join_all                                    # wait on the 3 executors to finish data processing with "needs"
-    needs: [image_vector_indexer, image_kv_indexer, text_indexer]
+jtype: Flow                                       # We configure the index flow here that is used for indexing images and captions
+version: '1'                                      # yml version
+with:                                             # Parameters for the flow are defined after with
+  prefetch: 10                                    # Number of prefetched requests from the client
+  port_expose: $JINA_PORT                         # Port defined in environment variable
+  workspace: $JINA_WORKSPACE                      # Workspace folder
+pods:                                             # Now, we define the pods that are used
+  - name: image_loader                            # The first executor is an image loader that filters only image documents
+    uses: ImageReader                             # Type of the executor
+    py_modules: 'flows/executors.py'              # The python file where the executor is implemented
+    read_only: true                               # Executor does not modify files
+    needs: gateway                                # Executor is after the gateway, this means at the start of the flow
+  - name: image_encoder                           # After the images are read, compute their embedding in the encoder
+    uses: 'jinahub+docker://CLIPImageEncoder'     # The type of the executor - here, we use a hub executor from the jinahub in the form of a docker container
+    volumes: $HOME/.cache/huggingface:/root/.cache/huggingface  # Mount a volume into the executor
+    timeout_ready: 600000                         # Set a timeout for the executor
+    read_only: true                               # Executor does not modify files
+    needs: image_loader                           # This executor is located after the image loader in the flow
+  - name: image_indexer                           # Executor that stores image embeddings
+    uses: 'jinahub://SimpleIndexer'               # Hub Executor - We use a SimpleIndexer here
+    uses_with:                                    # Define arguments for the SimpleIndexer
+      index_file_name: 'image_index'              # Folder path for this executor
+    needs: image_encoder                          # This executor is after the image encoder in the flow
+  - name: text_filter                             # Now, we define another path in the flow that is parallel in the execution
+    uses: TextFilter                              # The first executor is a filter that filters all text documents and ignores images now
+    py_modules: 'flows/executors.py'              # File where the TextFilter is implemented
+    needs: gateway                                # Start after the gateway, so at the beginning of the flow - this creates a second path in the flow
+  - name: text_encoder                            # Create the next executor that computes embeddings for the text documents
+    uses: 'jinahub+docker://CLIPTextEncoder'      # Use a hub executor in docker
+    volumes: $HOME/.cache/huggingface:/root/.cache/huggingface  # Mount the models directory
+    timeout_ready: 600000                         # Set timeout
+    read_only: true                               # Executor does not modify files
+    needs: text_filter                            # Run this executor after the image filter
+  - name: text_indexer                            # Finally, store the indexed text documents with embeddings on disk
+    uses: 'jinahub://SimpleIndexer'               # Use SimpleIndexer from hub in docker again
+    uses_with:                                    # Define parameters for the text indexer
+      index_file_name: 'text_index'               # Folder name in the workspace
+    needs: text_encoder                           # Start after the text encoder executor is finished
+  - name: join_all                                # This is the last executor - it waits until both paths in the flow are finished (image and text path)
+    needs: [image_indexer, text_indexer]          # Wait for these two executors to finish - only then we can continue

@@ -1,4 +1,4 @@
-''' Configure the tests by patching the random ports'''
+"""Patch the birthday problem for random parts"""
 
 import pytest
 

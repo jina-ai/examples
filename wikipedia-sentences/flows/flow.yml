@@ -1,0 +1,10 @@
+jtype: Flow                                           # This file defines the flow (both index and query) for the wikipedia sentences example
+version: '1'                                          # This is the yml file version
+with:                                                 # Additional arguments for the flow
+  workspace: $JINA_WORKSPACE                          # Workspace folder path
+  port_expose: $JINA_PORT                             # Network Port for the flow
+executors:                                            # Now, define the executors that are run on this flow
+  - name: transformer                                 # This executor computes an embedding based on the input text documents
+    uses: 'jinahub+docker://TransformerTorchEncoder'  # We use a Transformer Torch Encoder from the hub as a docker container
+  - name: indexer                                     # Now, index the text documents with the embeddings
+    uses: 'jinahub://SimpleIndexer'                   # We use the SimpleIndexer for this purpose

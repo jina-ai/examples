@@ -124,7 +124,7 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
             document_caption.modality = 'text'
             document_caption.mime_type = 'text/plain'
             document_caption.tags['id'] = caption
-            
+
             yield document_img
             yield document_caption
 
