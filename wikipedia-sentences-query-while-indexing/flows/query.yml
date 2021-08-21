@@ -5,12 +5,16 @@ with:
   protocol: 'http'
   port_expose: 9001
 pods:
-  - name: encoder
-    uses: 'jinahub://FlairTextEncoder' #'jinahub://TransformerTorchEncoder'
-    timeout_ready: 60000
+  - name: query_encoder
+    uses: jinahub+docker://FlairTextEncoder     # 'jinahub://TransformerTorchEncoder'
+    timeout_ready: -1
+    docker_kwargs:                              # required to set following docker_kwargs while creating a Flow on JinaD which uses jinahub+docker
+      extra_hosts: host.docker.internal
   - name: query_indexer
-    uses: 'jinahub://NumpySearcher'
+    uses: jinahub+docker://AnnoySearcher
     replicas: 2
     parallel: 3
     polling: all
     timeout_ready: '-1'
+    docker_kwargs:                              # required to set following docker_kwargs while creating a Flow on JinaD which uses jinahub+docker
+      extra_hosts: host.docker.internal
