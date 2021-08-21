@@ -164,8 +164,8 @@ def _jinad_dump(pod_name: str, dump_path: str, shards: int, url: str):
     assert r.status_code == 200
 
 
-def _send_rest_request(port_expose: str, endpoint: str, method: str, data: List[dict], timeout: int = 13):
-    json = {'data': data}
+def _send_rest_request(port_expose: str, endpoint: str, method: str, data: List[dict], timeout: int = 13000000):
+    json = {'data': ['test data']}
     url = f'http://{JINAD_HOST}:{port_expose}/{endpoint}'
     r = getattr(requests, method)(url, json=json, timeout=timeout)
 
@@ -263,6 +263,7 @@ def _cleanup():
 )
 def main(task: str):
     """main entrypoint for this example"""
+    os.environ.setdefault('JINA_WORKSPACE_MOUNT', 'workspace:/workspace/workspace')
     if task == 'flows':
         # start a Index Flow, dump the data from the Index Flow, and load it into the Query Flow.
         try:
