@@ -54,6 +54,9 @@ audio clips and and predict whether they are part of the audio tracks.
 The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter,  and
 `time` uses TimeSegmenter.
 
+The `-e` option allows user to specify which encoder to use. `vgg` uses Jinahub's VGGishEncoder,  and
+`clip` uses AudioCLIPEncoder.
+
 The `-t` option allows user to specify what the match threshold is. If score of match is below threshold,
 then it is not considered a match.
 
