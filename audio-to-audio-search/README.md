@@ -46,8 +46,8 @@ Then:
 python app.py search
 ```
 
-will read a set of query audio clips generated on the fly by extracting a portion of some index
-audio clips and then predict whether they are part of the audio tracks.
+will generate a set of query audio clips on the fly by extracting snippets from a set of randomly sampled
+of index audio clips. The program then matches each query doc with the most similar index docs.
 
 The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter,  and
 `time` uses TimeSegmenter.
