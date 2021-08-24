@@ -2,14 +2,12 @@
 
 # Find Similar Audio Cuts
 
-In this example, the code check if the query audio clip is part of the indexed audio tracks.
+This example checks if the query audio clip is part of the indexed audio tracks.
 
 
 ## Prerequisites
 
-The program in `app.py`  uses a `VGGISH` model to encode audio data and search audio data.
-
-To use this code the user is required to first download one of:
+To run this example, the user is required to first download one of:
 
 1. the `VGGISH` model with the provided shell script:
 
@@ -23,7 +21,7 @@ bash download_vggish_model.sh
 bash download_audio_clip_model.sh
 ```
 
-Then, `cd` into the directory containing `requirements.txt` install the following:
+Then, `cd` into the directory containing `requirements.txt` and install the following:
 
 ```
 sudo apt-get -y update && sudo apt-get install libsndfile1 ffmpeg
@@ -34,7 +32,7 @@ pip install -r requirements.txt
 
 ## Basic Usages
 
-The `app.py` can be used in two shell commands:
+You can run `app.py` by doing the following:
 
 ```shell
 python app.py index
@@ -49,7 +47,7 @@ python app.py search
 ```
 
 will read a set of query audio clips generated on the fly by extracting a portion of some index
-audio clips and and predict whether they are part of the audio tracks.
+audio clips and then predict whether they are part of the audio tracks.
 
 The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter,  and
 `time` uses TimeSegmenter.
