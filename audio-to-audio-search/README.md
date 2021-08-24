@@ -9,13 +9,13 @@ This example checks if the query audio clip is part of the indexed audio tracks.
 
 To run this example, the user is required to first download one of:
 
-1. the `VGGISH` model with the provided shell script:
+1. `VGGISH` model with the provided shell script:
 
 ```
 bash download_vggish_model.sh
 ```
 
-2. the `AudioCLIP` model with the provided shell script:
+2. `AudioCLIP` model with the provided shell script:
 
 ```
 bash download_audio_clip_model.sh
