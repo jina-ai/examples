@@ -115,8 +115,8 @@ def cli(
     ]
 
     encoder = {
-        'clip': 'jinahub://AudioCLIPEncoder',
-        'vgg': 'jinahub://VGGishAudioEncoder',
+        'clip': 'jinahub+docker://AudioCLIPEncoder',
+        'vgg': 'jinahub+docker://VGGishAudioEncoder',
     }[encoder]
 
     flow = (
@@ -132,7 +132,7 @@ def cli(
         # we set default_top_k to top_k * 2 so that we have sufficient information to
         # determine the true top k matches as a quick workaround.
         .add(
-            uses='jinahub://SimpleIndexer',
+            uses='jinahub+docker://SimpleIndexer',
             uses_with={
                 'index_file_name': 'simple_indexer',
                 'default_traversal_paths': ['c'],
@@ -141,7 +141,7 @@ def cli(
             uses_metas={'workspace': str(workspace)},
         )
         .add(uses=DebugExecutor)
-        .add(uses='jinahub://SimpleRanker', uses_metas={'workspace': str(workspace)})
+        .add(uses='jinahub+docker://SimpleRanker', uses_metas={'workspace': str(workspace)})
     )
 
     {
