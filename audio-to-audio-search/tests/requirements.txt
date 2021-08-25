@@ -1,3 +1,11 @@
 click
-git+https://github.com/jina-ai/jina.git@v2.0.18#egg=jina[standard]
 pytest~=6.1.2
+jina~=2.0
+tensorflow_cpu==2.5.0
+tf_slim==1.1.0
+soundfile==0.10.3.post1
+librosa==0.8.0
+visdom==0.1.8.9
+ffmpeg
+torchaudio
+prettytable
