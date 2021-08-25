@@ -91,7 +91,7 @@ def cli(
     operation: str,
     segmenter: str,
     encoder: str,
-    threshold: float,
+    threshold: Optional[float],
     top_k: int,
     num_queries: int,
 ):
