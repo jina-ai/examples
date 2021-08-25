@@ -7,7 +7,8 @@ This example checks if the query audio clip is part of the indexed audio tracks.
 
 ## Prerequisites
 
-To run this example, the user is required to first download one of:
+To run this example, the user is required to `cd` into the directory containing
+`requirements.txt` and download one of:
 
 1. `VGGISH` model with the provided shell script:
 
@@ -21,7 +22,7 @@ bash download_vggish_model.sh
 bash download_audio_clip_model.sh
 ```
 
-Then, `cd` into the directory containing `requirements.txt` and install the following:
+Then, install the following:
 
 ```
 sudo apt-get -y update && sudo apt-get install libsndfile1 ffmpeg
@@ -38,7 +39,7 @@ You can run `app.py` by doing the following:
 python app.py index
 ```
 
-will index the audio tracks in the `toy_data/index`. 
+will index the audio tracks in the `data/index`. 
 
 Then:
 

@@ -1,22 +1,15 @@
 import os
-from collections import defaultdict
-from typing import Tuple, Dict, List, Optional
+from typing import Tuple, Dict, Optional
 
 import numpy as np
 import tensorflow as tf
 import librosa as lr
 import torchaudio
 from jina import Executor, DocumentArray, requests, Document
-from jina.types.arrays.memmap import DocumentArrayMemmap
-from jina.types.score import NamedScore
 from jina_commons import get_logger
 
 from vggish.vggish_input import waveform_to_examples
-from vggish.vggish_params import INPUT_TENSOR_NAME, OUTPUT_TENSOR_NAME, SAMPLE_RATE
-from vggish.vggish_postprocess import Postprocessor
-from vggish.vggish_slim import load_vggish_slim_checkpoint, define_vggish_slim
-
-cur_dir = os.path.dirname(os.path.abspath(__file__))
+from vggish.vggish_params import SAMPLE_RATE
 
 
 class Wav2MelCrafter(Executor):
@@ -25,21 +18,28 @@ class Wav2MelCrafter(Executor):
         self.logger = get_logger(self)
 
     @requests
-    def segment(self, docs, **kwargs):
+    def segment(self, docs: Optional[DocumentArray] = None, **kwargs):
+        if not docs:
+            return
         for doc in docs:
             result_chunk = []
             for chunk in doc.chunks:
                 mel_data = waveform_to_examples(chunk.blob, chunk.tags['sample_rate'])
                 if mel_data.ndim != 3:
-                    self.logger.warning(f'failed to convert from wave to mel, chunk.blob: {chunk.blob.shape}, sample_rate: {SAMPLE_RATE}')
+                    self.logger.warning(
+                        f'failed to convert from wave to mel, chunk.blob: {chunk.blob.shape}, sample_rate: {SAMPLE_RATE}'
+                    )
                     continue
                 if mel_data.shape[0] <= 0:
-                    self.logger.warning(f'chunk between {chunk.location} is skipped due to the duration is too short')
+                    self.logger.warning(
+                        f'chunk between {chunk.location} is skipped due to the duration is too short'
+                    )
                 if mel_data.ndim == 2:
                     mel_data = np.atleast_3d(mel_data)
                     mel_data = mel_data.reshape(1, mel_data.shape[0], mel_data.shape[1])
                 chunk.blob = mel_data
-                if mel_data.size > 0: result_chunk.append(chunk)
+                if mel_data.size > 0:
+                    result_chunk.append(chunk)
             doc.chunks = result_chunk
 
 
@@ -50,9 +50,13 @@ class TimeSegmenter(Executor):
         self.strip = chunk_strip
 
     @requests(on=['/search', '/index'])
-    def segment(self, docs, parameters: Dict, **kwargs):
+    def segment(
+        self, docs: Optional[DocumentArray] = None, parameters: dict = {}, **kwargs
+    ):
+        if not docs:
+            return
         for idx, doc in enumerate(docs):
-            doc.blob, sample_rate = self._load_raw_audio(doc) 
+            doc.blob, sample_rate = self._load_raw_audio(doc)
             doc.tags['sample_rate'] = sample_rate
             chunk_size = int(self.chunk_duration * sample_rate)
             strip = parameters.get('chunk_strip', self.strip)
@@ -68,7 +72,9 @@ class TimeSegmenter(Executor):
                         blob=doc.blob[beg:end],
                         offset=idx,
                         location=[beg, end],
-                        tags=doc.tags))
+                        tags=doc.tags,
+                    )
+                )
 
     def _load_raw_audio(self, doc: Document) -> Tuple[np.ndarray, int]:
         if doc.blob is not None and doc.tags.get('sample_rate', None) is None:
@@ -93,9 +99,10 @@ class TimeSegmenter(Executor):
 
 class DebugExecutor(Executor):
     @requests
-    def debug(self, docs: Optional['DocumentArray'], **kwargs):
+    def debug(self, docs: Optional[DocumentArray] = None, **kwargs):
         logger = get_logger(self)
-        if not docs: return
+        if not docs:
+            return
         for i, doc in enumerate(docs):
             for match in doc.matches:
                 logger.info(f"doc {doc.tags['file']} match: ", match.tags['file'])
