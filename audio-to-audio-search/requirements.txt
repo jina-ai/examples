@@ -1,11 +1,10 @@
+git+git://github.com/jina-ai/jina-commons@v0.0.3
+click
 jina~=2.0
-resampy==0.2.2
-tensorflow_cpu==2.5.0
-tf_slim==1.1.0
+numpy==1.20.0
 soundfile==0.10.3.post1
 librosa==0.8.0
 visdom==0.1.8.9
-click
 ffmpeg
 torchaudio
 prettytable

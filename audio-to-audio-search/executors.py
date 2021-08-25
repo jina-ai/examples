@@ -2,7 +2,6 @@ import os
 from typing import Tuple, Dict, Optional
 
 import numpy as np
-import tensorflow as tf
 import librosa as lr
 import torchaudio
 from jina import Executor, DocumentArray, requests, Document

@@ -17,7 +17,7 @@ def config():
     os.environ.setdefault('JINA_DATA_FILE', str(Path(__file__).parent / 'data' / 'mp3'))
     os.environ.setdefault(
         'JINA_WORKSPACE_MOUNT',
-        f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace',
+        f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace'
     )
 
 
@@ -133,12 +133,12 @@ def cli(
         # determine the true top k matches as a quick workaround.
         .add(
             uses='jinahub+docker://SimpleIndexer',
+            volumes=os.environ['JINA_WORKSPACE_MOUNT'],
             uses_with={
                 'index_file_name': 'simple_indexer',
                 'default_traversal_paths': ['c'],
                 'default_top_k': top_k * 2,
             },
-            uses_metas={'workspace': str(workspace)},
         )
         .add(uses=DebugExecutor)
         .add(uses='jinahub+docker://SimpleRanker', uses_metas={'workspace': str(workspace)})

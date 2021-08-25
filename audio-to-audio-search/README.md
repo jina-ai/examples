@@ -8,21 +8,7 @@ This example checks if the query audio clip is part of the indexed audio tracks.
 ## Prerequisites
 
 To run this example, the user is required to `cd` into the directory containing
-`requirements.txt` and download one of:
-
-1. `VGGISH` model with the provided shell script:
-
-```
-bash download_vggish_model.sh
-```
-
-2. `AudioCLIP` model with the provided shell script:
-
-```
-bash download_audio_clip_model.sh
-```
-
-Then, install the following:
+`requirements.txt` to install:
 
 ```
 sudo apt-get -y update && sudo apt-get install libsndfile1 ffmpeg

@@ -16,6 +16,7 @@ def test_exec(tmp_path, segmenter, encoder):
     ), "Please execute the tests from the root directory: >>> pytest tests/"
     os.environ['JINA_DATA_FILE'] = os.path.join('tests', 'data', 'mp3')
     workspace = os.environ['JINA_WORKSPACE'] = os.path.join(tmp_path, 'workspace')
+    os.environ['JINA_WORKSPACE_MOUNT']= f'{workspace}:/workspace/workspace'
     runner = CliRunner()
     _test_index(runner, workspace, segmenter, encoder)
     _test_query(runner, segmenter, encoder)

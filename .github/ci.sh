@@ -20,6 +20,10 @@ EXIT_CODE=0
 root_dir=$(pwd)
 # install reqs and run the tests
 for example_dir in ${changedExamples[@]}; do
+  if [[ $example_dir =~ 'audio-to-audio-search' ]]; then
+    echo 'install dependencies for audio-to-audio-search'
+    sudo apt-get -y update && sudo apt-get install libsndfile1 ffmpeg
+  fi
   cd $root_dir/$example_dir
   echo running tests in $example_dir
   pwd
