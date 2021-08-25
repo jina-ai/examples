@@ -1,6 +1,5 @@
 import os
 import glob
-import logging
 import shutil
 from functools import partial
 from pathlib import Path
@@ -10,22 +9,30 @@ import click
 from jina import DocumentArray, Document, Flow
 
 from executors import TimeSegmenter, Wav2MelCrafter, DebugExecutor
-from helper import report_results, write_html, create_query_audios, create_docs
-
-data_folder = Path(__file__).parent / 'data' / 'mp3'
+from helper import report_results, write_html, create_query_audios, create_docs, logger
 
 
-def index(workspace: Path, flow: Flow):
+def config():
+    os.environ.setdefault('JINA_WORKSPACE', str(Path(__file__).parent / 'workspace'))
+    os.environ.setdefault('JINA_DATA_FILE', str(Path(__file__).parent / 'data' / 'mp3'))
+    os.environ.setdefault(
+        'JINA_WORKSPACE_MOUNT',
+        f'{os.environ.get("JINA_WORKSPACE")}:/workspace/workspace',
+    )
+
+
+def index(workspace: Path, data_dir: Path, flow: Flow):
     if workspace.exists():
         shutil.rmtree(workspace)
     with flow:
         flow.post(
-            '/index', inputs=create_docs(os.path.join(data_folder, 'index', '*.mp3'))
+            '/index', inputs=create_docs(os.path.join(data_dir, 'index', '*.mp3'))
         )
 
 
 def search(
     workspace: Path,
+    data_dir: Path,
     flow: Flow,
     threshold: Optional[float],
     top_k: int,
@@ -37,10 +44,10 @@ def search(
         )
 
     with flow:
-        create_query_audios(num_queries, data_folder)
+        create_query_audios(num_queries, data_dir)
         responses = flow.post(
             '/search',
-            inputs=create_docs(os.path.join(data_folder, 'query', '*.mp3')),
+            inputs=create_docs(os.path.join(data_dir, 'query', '*.mp3')),
             return_results=True,
         )
 
@@ -95,11 +102,18 @@ def cli(
     top_k: int,
     num_queries: int,
 ):
-    workspace = Path(__file__).parent / 'workspace'
+    config()
+
+    data_dir = Path(os.environ["JINA_DATA_FILE"])
+    workspace = Path(os.environ["JINA_WORKSPACE"])
+    logger.info(f'data directory path: {data_dir}')
+    logger.info(f'workspace path: {workspace}')
+
     segmenter_uses_with = {'chunk_duration': 2.5} if segmenter == 'time' else {}
     segmenter = {'time': TimeSegmenter, 'vad': 'jinahub://VADSpeechSegmenter'}[
         segmenter
     ]
+
     encoder = {
         'clip': 'jinahub://AudioCLIPEncoder',
         'vgg': 'jinahub://VGGishAudioEncoder',
@@ -116,7 +130,7 @@ def cli(
         .add(uses=encoder, uses_with={'default_traversal_paths': ['c']})
         # Since matched chunks may come from the same top level query doc,
         # we set default_top_k to top_k * 2 so that we have sufficient information to
-        # determine the true top k matches
+        # determine the true top k matches as a quick workaround.
         .add(
             uses='jinahub://SimpleIndexer',
             uses_with={
@@ -124,6 +138,7 @@ def cli(
                 'default_traversal_paths': ['c'],
                 'default_top_k': top_k * 2,
             },
+            uses_metas={'workspace': str(workspace)},
         )
         .add(uses=DebugExecutor)
         .add(uses='jinahub://SimpleRanker', uses_metas={'workspace': str(workspace)})
@@ -134,7 +149,7 @@ def cli(
         'search': partial(
             search, threshold=threshold, top_k=top_k, num_queries=num_queries
         ),
-    }[operation](workspace, flow)
+    }[operation](workspace, data_dir, flow)
 
 
 if __name__ == '__main__':

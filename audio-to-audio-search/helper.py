@@ -85,7 +85,7 @@ def create_query_audios(num_docs: int, data_folder: Path):
         cmd = [
             'ffmpeg',
             '-i',
-            input_file,
+            os.path.abspath(input_file),
             '-ss',
             str(startTime),
             '-to',
