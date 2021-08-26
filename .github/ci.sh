@@ -19,6 +19,7 @@ EXIT_CODE=0
 
 root_dir=$(pwd)
 # install reqs and run the tests
+sudo apt-get -y update && sudo apt-get install libsndfile1 ffmpeg
 for example_dir in ${changedExamples[@]}; do
   cd $root_dir/$example_dir
   echo running tests in $example_dir
