@@ -138,6 +138,3 @@ dmypy.json
 
 models/
 workspace/
-
-./download_mp4.py
-./prepare_index_query_docs.py
