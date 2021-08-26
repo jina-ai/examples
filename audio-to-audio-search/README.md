@@ -25,21 +25,28 @@ You can run `app.py` by doing the following:
 python app.py index
 ```
 
-will index the audio tracks in the `data/index`. 
+By default, audio tracks in the `data/mp3/index` will be indexed. You can specify custom data path by:
 
-Then:
+```
+export JINA_DATA_FILE=<custom_data_path>
+```
+where audios to be indexed are stored in `<custom_data_path>/index`.
+
+
+Then, to search the documents, do:
 
 ```shell
 python app.py search
 ```
 
-will generate a set of query audio clips on the fly by extracting snippets from a set of randomly sampled
+This will generate a set of query audio clips on the fly in `data/mp3/query` (or, if you are using
+custom data path, in `<custom_data_path>/query`) by extracting snippets from a set of randomly sampled
 of index audio clips. The program then matches each query doc with the most similar index docs.
 
-The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter,  and
+The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter, and
 `time` uses TimeSegmenter.
 
-The `-e` option allows user to specify which encoder to use. `vgg` uses Jinahub's VGGishEncoder,  and
+The `-e` option allows user to specify which encoder to use. `vgg` uses Jinahub's VGGishEncoder, and
 `clip` uses AudioCLIPEncoder.
 
 The `-t` option allows user to specify what the match threshold is. If score of match is below threshold,
