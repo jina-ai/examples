@@ -125,7 +125,7 @@ def report_results(responses: List[Response], threshold: Optional[float], top_k:
             pred_list.append(target_result == pred_result)
 
             query_html = f"""
-                <audio id="res{i}_query{j}" src="{'file://' + doc.tags['file']}" preload="none" type="audio/mp3"></audio>
+                <audio id="res{i}_query{j}" src="{'file://' + os.path.abspath(doc.tags['file'])}" preload="none" type="audio/mp3"></audio>
                 <button style="padding: 1em" onclick=" if (prev!=null){{prev.pause(); prev.currentTIme=0;}} prev=document.getElementById('res{i}_query{j}'); prev.play();">
                     <i class='fa fa-volume-up fa-2x'></i></a>
                 </button>
@@ -140,7 +140,7 @@ def report_results(responses: List[Response], threshold: Optional[float], top_k:
                     continue
                 seen.add(match.tags['file'])
                 match_html = f"""
-                    <audio id="resp{i}_query{j}_match{k}" src="{'file://' + match.tags['file']}" preload="none" type="audio/mp3"></audio>
+                    <audio id="res{i}_query{j}_match{k}" src="{'file://' + os.path.abspath(match.tags['file'])}" preload="none" type="audio/mp3"></audio>
                     <button style="padding: 1em" onclick="if(prev!=null){{prev.pause(); prev.currentTIme=0;}} prev=document.getElementById('res{i}_query{j}_match{k}'); prev.play();">
                         <i class='fa fa-volume-up fa-2x'></i>
                     </button>

@@ -43,8 +43,8 @@ We suggest you read the following to get an overview of what Jina is and how it 
       <h1>📄</h1>
     </td>
     <td>
-      <h4><a href="./audio-to-audio-search">Find Similar Audio Cuts</a></h4>
-      A simple example to show how to find similar audio cuts using Jina
+      <h4><a href="./audio-to-audio-search">Find Similar Audio Clips</a></h4>
+      A simple example to show how to find similar audio clips using Jina
     </td>
   </tr>
 </table>

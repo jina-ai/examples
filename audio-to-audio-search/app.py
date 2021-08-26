@@ -114,11 +114,6 @@ def cli(
         segmenter
     ]
 
-    encoder = {
-        'clip': 'jinahub+docker://AudioCLIPEncoder',
-        'vgg': 'jinahub+docker://VGGishAudioEncoder',
-    }[encoder]
-
     flow = (
         Flow()
         .add(
@@ -126,7 +121,18 @@ def cli(
             uses_metas={'workspace': str(workspace)},
             uses_with=segmenter_uses_with,
         )
-        .add(uses=Wav2MelCrafter)
+    )
+
+    if encoder == 'vgg':
+        flow = flow.add(uses=Wav2MelCrafter)
+
+    encoder = {
+        'clip': 'jinahub+docker://AudioCLIPEncoder',
+        'vgg': 'jinahub+docker://VGGishAudioEncoder',
+    }[encoder]
+
+    flow = (
+        flow
         .add(uses=encoder, uses_with={'default_traversal_paths': ['c']})
         # Since matched chunks may come from the same top level query doc,
         # we set default_top_k to top_k * 2 so that we have sufficient information to

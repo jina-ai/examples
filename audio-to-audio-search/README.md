@@ -1,6 +1,6 @@
 
 
-# Find Similar Audio Cuts
+# Find Similar Audio Clips
 
 This example checks if the query audio clip is part of the indexed audio tracks.
 
