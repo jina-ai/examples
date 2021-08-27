@@ -1,6 +1,7 @@
 import os
 from typing import Tuple, Dict, Optional
 
+import torch
 import numpy as np
 import librosa as lr
 import torchaudio
@@ -40,6 +41,24 @@ class Wav2MelCrafter(Executor):
                 if mel_data.size > 0:
                     result_chunk.append(chunk)
             doc.chunks = result_chunk
+
+
+class AudioCLIPCrafter(Executor):
+    TARGET_SAMPLE_RATE = 44000
+
+    @requests
+    def craft(self, docs: Optional[DocumentArray], **kwargs):
+        if not docs: return
+        for doc in docs:
+            for chunk in doc.chunks:
+
+                resample = torchaudio.transforms.Resample(
+                    orig_freq=chunk.tags['sample_rate'],
+                    new_freq=self.TARGET_SAMPLE_RATE
+                )
+
+                chunk.blob = resample(torch.Tensor(chunk.blob)).cpu().numpy()
+                chunk.tags['sample_rate'] = self.TARGET_SAMPLE_RATE
 
 
 class TimeSegmenter(Executor):

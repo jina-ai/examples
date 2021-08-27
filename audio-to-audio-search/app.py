@@ -8,7 +8,7 @@ from typing import Optional
 import click
 from jina import DocumentArray, Document, Flow
 
-from executors import TimeSegmenter, Wav2MelCrafter, DebugExecutor
+from executors import TimeSegmenter, Wav2MelCrafter, DebugExecutor, AudioCLIPCrafter
 from helper import report_results, write_html, create_query_audios, create_docs, logger
 
 
@@ -125,6 +125,8 @@ def cli(
 
     if encoder == 'vgg':
         flow = flow.add(uses=Wav2MelCrafter)
+    else:
+        flow = flow.add(uses=AudioCLIPCrafter)
 
     encoder = {
         'clip': 'jinahub+docker://AudioCLIPEncoder',
