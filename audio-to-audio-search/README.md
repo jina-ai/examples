@@ -4,7 +4,7 @@
 
 This example checks if the query audio clip is part of the indexed audio tracks.
 
-![Demo](.github/demo.jpg)
+![Demo](.github/demo.png)
 
 ## Prerequisites
 
