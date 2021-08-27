@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 @pytest.mark.parametrize('segmenter', ['vad', 'time'])
-@pytest.mark.parametrize('encoder', ['vgg'])
+@pytest.mark.parametrize('encoder', ['vgg', 'clip'])
 def test_exec(tmp_path, segmenter, encoder):
     assert os.getcwd().endswith(
         'audio-to-audio-search'

@@ -43,24 +43,6 @@ class Wav2MelCrafter(Executor):
             doc.chunks = result_chunk
 
 
-class AudioCLIPCrafter(Executor):
-    TARGET_SAMPLE_RATE = 44000
-
-    @requests
-    def craft(self, docs: Optional[DocumentArray], **kwargs):
-        if not docs: return
-        for doc in docs:
-            for chunk in doc.chunks:
-
-                resample = torchaudio.transforms.Resample(
-                    orig_freq=chunk.tags['sample_rate'],
-                    new_freq=self.TARGET_SAMPLE_RATE
-                )
-
-                chunk.blob = resample(torch.Tensor(chunk.blob)).cpu().numpy()
-                chunk.tags['sample_rate'] = self.TARGET_SAMPLE_RATE
-
-
 class TimeSegmenter(Executor):
     def __init__(self, chunk_duration: int = 10, chunk_strip: int = 1, *args, **kwargs):
         super().__init__(*args, **kwargs)

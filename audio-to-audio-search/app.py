@@ -8,7 +8,7 @@ from typing import Optional
 import click
 from jina import DocumentArray, Document, Flow
 
-from executors import TimeSegmenter, Wav2MelCrafter, DebugExecutor, AudioCLIPCrafter
+from executors import TimeSegmenter, Wav2MelCrafter, DebugExecutor
 from helper import report_results, write_html, create_query_audios, create_docs, logger
 
 
@@ -90,7 +90,7 @@ def validate_threshold(
 @click.option(
     '--num_queries',
     '-n',
-    default=20,
+    default=25,
     type=int,
     help='Specify the number of querys to match',
 )
@@ -125,8 +125,6 @@ def cli(
 
     if encoder == 'vgg':
         flow = flow.add(uses=Wav2MelCrafter)
-    else:
-        flow = flow.add(uses=AudioCLIPCrafter)
 
     encoder = {
         'clip': 'jinahub+docker://AudioCLIPEncoder',
