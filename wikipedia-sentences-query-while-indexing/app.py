@@ -19,13 +19,13 @@ logger = JinaLogger('jina')
 
 cur_dir = os.path.dirname(os.path.abspath(__file__))
 
-HOST = 'localhost'  # change this if you are using remote jinad
+HOST = '3.86.211.43'  # change this if you are using remote jinad
 JINAD_PORT = '8000'  # change this if you set a different port
 jinad_client = JinaDClient(host=HOST, port=JINAD_PORT, timeout=10 * 60)
 
 DUMP_PATH = '/workspace/dump'  # the path where to dump
 SHARDS = 3  # change this if you change pods/query_indexer.yml
-DUMP_RELOAD_INTERVAL = 20  # time between dump - rolling update calls
+DUMP_RELOAD_INTERVAL = 60  # time between dump - rolling update calls
 DATA_FILE = 'data/toy.txt'  # change this if you get the full data
 DOCS_PER_ROUND = 5  # nr of documents to index in each round
 DBMS_REST_PORT = '9000'  # REST port of DBMS Flow, defined in flows/dbms.yml
@@ -40,7 +40,7 @@ def query_restful():
 
         query_doc = Document()
         query_doc.text = text
-        response = query_docs([query_doc.dict()])
+        response = query_docs(query_doc)
         for doc in response['data']['docs']:
             matches = doc['matches']
             len_matches = len(matches)
@@ -56,12 +56,14 @@ def query_restful():
 def index_docs(docs: List[Dict], round: int):
     docs_to_send = docs[round * DOCS_PER_ROUND: (round + 1) * DOCS_PER_ROUND]
     logger.info(f'Indexing {len(docs_to_send)} document(s)...')
-    Client(host=HOST, port_expose=DBMS_REST_PORT, protocol='http').post(on='index', inputs=docs_to_send)
+    Client(host=HOST, port=DBMS_REST_PORT, protocol='http').post(
+        on='index', inputs=docs_to_send
+    )
 
 
-def query_docs(docs: List[Dict]):
-    logger.info(f'Searching with {len(docs)} document(s)...')
-    return Client(host=HOST, port_expose=QUERY_REST_PORT, protocol='http').search(
+def query_docs(docs: Document):
+    logger.info(f'Searching document {docs}...')
+    return Client(host=HOST, port=QUERY_REST_PORT, protocol='http').search(
         inputs=docs, return_results=True
     )
 
@@ -77,16 +79,16 @@ def create_flows():
     workspace_id = jinad_client.workspaces.create(
         paths=[os.path.join(cur_dir, 'flows')]
     )
-    logger.info('Creating DBMS Flow:')
+    logger.info('Creating DBMS Flow..')
     dbms_flow_id = jinad_client.flows.create(
         workspace_id=workspace_id, filename='dbms.yml'
     )
-    logger.info(f'Flow ID: {dbms_flow_id}')
+    logger.info(f'Created successfully. Flow ID: {dbms_flow_id}')
     logger.info('Creating Query Flow:')
     query_flow_id = jinad_client.flows.create(
         workspace_id=workspace_id, filename='query.yml'
     )
-    logger.info(f'Flow ID: {query_flow_id}')
+    logger.info(f'Created successfully. Flow ID: {query_flow_id}')
     return dbms_flow_id, query_flow_id, workspace_id
 
 
@@ -111,7 +113,7 @@ def dump_and_roll_update(dbms_flow_id: str, query_flow_id: str):
         jinad_client.flows.update(
             id=query_flow_id,
             kind='rolling_update',
-            pod_name='indexer_query',
+            pod_name='query_indexer',
             dump_path=current_dump_path,
         )
         logger.info(f'rolling update done. sleeping...')
@@ -133,7 +135,7 @@ def cleanup(dbms_flow_id, query_flow_id, workspace_id):
 )
 def main(task: str):
     """main entrypoint for this example"""
-    os.environ.setdefault('JINA_WORKSPACE_MOUNT', 'workspace:/workspace/workspace')
+    # os.environ.setdefault('JINA_WORKSPACE_MOUNT', 'workspace:/workspace/workspace')
     if task == 'flows':
         # start a Index Flow, dump the data from the Index Flow, and load it into the Query Flow.
         try:

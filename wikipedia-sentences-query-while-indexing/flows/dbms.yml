@@ -2,18 +2,14 @@ jtype: Flow
 version: '1'
 with:
   port_expose: 9000
-  protocol: 'http'
+  protocol: http
 pods:
   - name: index_encoder
-    uses: jinahub+docker://FlairTextEncoder    # 'jinahub://TransformerTorchEncoder'
+    uses: jinahub+docker://FlairTextEncoder    # jinahub:docker//TransformerTorchEncoder
     parallel: 1
     timeout_ready: -1
-    # docker_kwargs:                              # required to set following docker_kwargs while creating a Flow on JinaD which uses jinahub+docker
-    #   extra_hosts: host.docker.internal
   - name: indexer
     uses: jinahub+docker://PostgreSQLStorage
     uses_with:
       hostname: host.docker.internal
     timeout_ready: -1
-    # docker_kwargs:                              # required to set following docker_kwargs while creating a Flow on JinaD which uses jinahub+docker
-    #   extra_hosts: host.docker.internal
