@@ -149,6 +149,10 @@ def report_results(responses: List[Response], threshold: Optional[float], top_k:
             result_html.append('</td></tr>\n')
 
     logger.info(table)
+
+    if not pred_list:
+        return [], float('nan')
+
     accuracy = sum(pred_list) / len(pred_list)
     logger.info(f'accuracy: {accuracy}')
     return result_html, accuracy

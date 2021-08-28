@@ -90,7 +90,7 @@ def validate_threshold(
 @click.option(
     '--num_queries',
     '-n',
-    default=20,
+    default=25,
     type=int,
     help='Specify the number of querys to match',
 )

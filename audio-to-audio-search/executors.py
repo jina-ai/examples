@@ -1,6 +1,7 @@
 import os
 from typing import Tuple, Dict, Optional
 
+import torch
 import numpy as np
 import librosa as lr
 import torchaudio
