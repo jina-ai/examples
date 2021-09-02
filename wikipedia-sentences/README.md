@@ -82,7 +82,13 @@ Here, we can also specify the number of documents to index with ```--num_docs```
 
 ### 🔎 Step 4. Query your indexed data
 
-Once indexing is completed, a search prompt will appear in your terminal. See the text below for an example search query and response.
+A search prompt will appear in your terminal after running:
+
+```sh
+python app.py -t query
+```
+
+See the text below for an example search query and response.
 You can also specify the top k search results with ```--top_k``` /  ```-k``` (default is 5)
 
 ```
