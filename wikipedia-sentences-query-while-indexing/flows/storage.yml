@@ -1,0 +1,14 @@
+jtype: Flow                                       # we define the Flow used for storing (CRUD operations)
+version: '1'
+with:
+  protocol: http                                  # we want to use the REST HTTP API
+  port_expose: 9000                               # the port to listen on. This is referenced in `app.py`
+executors:                                        # the components in this Flow
+  - name: storage_encoder                         # the name. This is the Encoder (transforms the text into vectors)
+    uses: jinahub+docker://FlairTextEncoder       # we use a pre-built Executor from Jina Hub
+    timeout_ready: -1                             # disable timing out on startup (downloading image can take some time)
+  - name: storage_indexer                         # the name. This stores the data in an LMDB db
+    uses: jinahub+docker://LMDBStorage            # again, we use a docker image
+    timeout_ready: -1                             # disable startup
+    volumes: $JINAD_WORKSPACE:/jinad_workspace    # workspace where the file will be stored
+

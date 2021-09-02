@@ -13,9 +13,7 @@ logger = JinaLogger('test')
 
 def query_docs(docs: Document):
     logger.info(f'Searching document {docs}...')
-    return Client(host=HOST, port=QUERY_REST_PORT, protocol='http').search(
-        inputs=docs, return_results=True
-    )
+    return Client(host=HOST, port=QUERY_REST_PORT, protocol='http').search(inputs=docs, return_results=True)
 
 
 def test_query_while_indexing():
@@ -25,15 +23,11 @@ def test_query_while_indexing():
         jinad_client = JinaDClient(host=HOST, port=JINAD_PORT)
         assert jinad_client.alive, 'cannot reach jinad'
 
-        dbms_flow_id, query_flow_id, workspace_id = create_flows()
+        storage_flow_id, query_flow_id, workspace_id = create_flows()
         # start rolling update in the background
-        Thread(
-            target=dump_and_roll_update, args=(dbms_flow_id, query_flow_id), daemon=True
-        ).start()
+        Thread(target=dump_and_roll_update, args=(storage_flow_id, query_flow_id), daemon=True).start()
 
-        logger.info(
-            'sleeping for 30 secs to allow 1 round of index, dump & rolling update'
-        )
+        logger.info('sleeping for 30 secs to allow 1 round of index, dump & rolling update')
         time.sleep(30)
         query_doc = Document(text='hello world')
         response = query_docs(query_doc)
@@ -47,4 +41,4 @@ def test_query_while_indexing():
     finally:
         from app import cleanup
 
-        cleanup(dbms_flow_id, query_flow_id, workspace_id)
+        cleanup(storage_flow_id, query_flow_id, workspace_id)

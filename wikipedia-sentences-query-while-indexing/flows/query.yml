@@ -1,15 +1,14 @@
-jtype: Flow
+jtype: Flow                                       # we define the search Flow
 version: '1'
 with:
-  protocol: http
-  port_expose: 9001
-pods:
-  - name: query_encoder
-    uses: jinahub+docker://FlairTextEncoder     # 'jinahub://TransformerTorchEncoder'
-    timeout_ready: -1
-  - name: query_indexer
-    uses: jinahub+docker://FaissLMDBSearcher
-    replicas: 2
-    polling: all
-    timeout_ready: -1
-    volumes: $JINAD_WORKSPACE:/jinad_workspace
+  protocol: http                                  # we use the REST API
+  port_expose: 9001                               # the port the Flow will listen on
+executors:                                        # the list of components in this Flow
+  - name: query_encoder                           # the name of this executor. This one takes the text and transforms it into vectors to be used in searching
+    uses: jinahub+docker://FlairTextEncoder       # we use a pre-built Executor docker image
+    timeout_ready: -1                             # disable timing out. (downloading the image can take some time)
+  - name: query_indexer                           # the name. This is a Compound Executor, formed of a vector searcher and a key-value db
+    uses: jinahub+docker://FaissLMDBSearcher      # again, the docker image
+    replicas: 2                                   # we want to replicate this executor, for better performance. This creates two identical copies. Requests are passed to either one
+    timeout_ready: -1                             # disable timing out. (downloading the image can take some time)
+    volumes: $JINAD_WORKSPACE:/jinad_workspace    # we need a workspace where the LMDB db file will be stored

@@ -30,7 +30,7 @@ This is an example of using [Jina](http://www.jina.ai) to support both querying 
 ## What is querying while indexing?
 
 Querying while indexing means you are able to still query your data while new data is simultaneously being inserted (or updated, or deleted).
-Jina achieves this with its the dump-reload feature.
+Jina achieves this with its dump-reload feature.
 
 ## Configuration changes
 
@@ -115,6 +115,13 @@ This will prompt you for a query, send the query to the Query Flow, and then sho
 
 Since the Flows uses `http` protocol, you can query the REST API with whatever `Client` provided within jina or use `cURL`, `Postman` or [custom Swagger UI provided with jina](https://docs.jina.ai/fundamentals/practice-your-learning/#query-via-swaggerui) etc.
 
+#### Cleanup
+
+JinaD creates several containers during this process. In order to remove all the containers do the following after you are done using the example:
+
+`docker stop $(docker ps -a -q)`
+and
+`docker rm $(docker ps -a -q)`
 
 ## Flow diagrams
 
@@ -122,7 +129,7 @@ Below you can see a graphical representation of the Flow pipeline:
 
 #### Storage Flow
 
-![](.github/images/dbms.svg)
+![](.github/images/storage.svg)
 
 #### Query Flow
 
@@ -140,7 +147,7 @@ Notice the following:
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | 📂 `data/`      | Folder where the data files are stored   |
 | 📂 `flows/`          | Folder to store Flow configuration                                                                               |
-| --- 📃 `dbms.yml`     | YAML file to configure Storage (Index) Flow                                                                             |
+| --- 📃 `storage.yml`     | YAML file to configure Storage (Index) Flow                                                                             |
 | --- 📃 `query.yml`     | YAML file to configure Querying Flow                                                                             |
 | 🐍 `app.py`      | Code file for the example   |
 
