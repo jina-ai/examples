@@ -6,7 +6,7 @@
 | Used for indexing | Text data |
 | Used for querying | Text data |
 | Dataset used | [Wikipedia dataset from kaggle](https://www.kaggle.com/mikeortman/wikipedia-sentences) |
-| Model used | [distilbert-base-cased](https://huggingface.co/distilbert-base-cased) |
+| Model used | [flair-text](https://github.com/flairNLP/flair) |
 
 This is an example of using [Jina](http://www.jina.ai) to support both querying and indexing simultaneously in our [Wikipedia sentence search example](https://github.com/jina-ai/examples/tree/master/wikipedia-sentences).
 
@@ -31,19 +31,18 @@ This is an example of using [Jina](http://www.jina.ai) to support both querying 
 
 Querying while indexing means you are able to still query your data while new data is simultaneously being inserted (or updated, or deleted).
 Jina achieves this with its the dump-reload feature.
-For more in-depth technical information about how Jina achieves this, refer to [the docs](https://docs.jina.ai/chapters/dump-reload/)
 
 ## Configuration changes
 
 This feature requires you to split the Flow, one for Indexing (and Updates, Deletes) and one for Querying, and have them running at the same time.
 Also, you will need to replace the indexers in Flows.
-The Index Flow (also referred to as the DBMS Flow) will require a [Storage Indexer](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/storage), while the Query Flow will require a [Vector Searcher](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/searcher).
+The Index Flow (also referred to as the Storage Flow) will require a [Storage Indexer](https://github.com/jina-ai/executors/tree/main/jinahub/indexers/storage), while the Query Flow requires a [Compound Searcher](https://github.com/jina-ai/executors/tree/main/jinahub/indexers/searcher).
+
 In our case we use :
 
-- [PostgreSQLStorage](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/storage/PostgreSQLStorage), which leverages the resilience of PostgreSQL as a storage engine
-- [AnnoySearcher](https://github.com/jina-ai/executor-indexers/tree/main/jinahub/indexers/searcher/AnnoySearcher), which uses the [`annoy`](https://github.com/spotify/annoy) algorithm to provide faster query results
+- [LMDBStorage](https://github.com/jina-ai/executors/tree/main/jinahub/indexers/storage/LMDBStorage), which uses a disk-based key-value storage [LMDB](https://lmdb.readthedocs.io/) as a storage engine.
+- [FaissLMDBSearcher](https://github.com/jina-ai/executors/tree/main/jinahub/indexers/searcher/compound/FaissLMDBSearcher), which uses the [`faiss`](https://github.com/spotify/annoy) algorithm to provide faster query results and LMDB to retrieve the metadata.
 
-You can check the `flows` and `pods` directories for the changes to the files.
 _____
 
 ## 🐍 Build the app with Python
@@ -54,7 +53,9 @@ These instructions explain how to run the example yourself and deploy it with Py
 
 1. Have a working Python 3.7 or 3.8 environment.
 1. We recommend creating a [new Python virtual environment](https://docs.python.org/3/tutorial/venv.html) to have a clean installation of Jina and prevent dependency conflicts.
-1. Have at least 2 GB of free space on your hard drive.
+1. Install [Docker Engine](https://docs.docker.com/engine/install/).
+1. Have at least 5 GB of free space on your hard drive.
+
 
 ### Running the example
 
@@ -64,15 +65,10 @@ Begin by cloning the repo so you can get the required files and datasets. (If yo
 
 ```sh
 git clone https://github.com/jina-ai/examples
-````
-
-And enter the correct folder:
-
-```sh
 cd examples/wikipedia-sentences-query-while-indexing
 ```
 
-In your terminal, you should now be located in you the *wikipedia-sentences-query-while-indexing* folder. Let's install Jina and the other required Python libraries. For further information on installing Jina check out [our documentation](https://docs.jina.ai/chapters/core/setup/).
+Let's install `jina` and the other required libraries. For further information on installing jina check out [our documentation](https://docs.jina.ai/get-started/install/).
 
 ```sh
 pip install -r requirements.txt
@@ -88,75 +84,55 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 
 ### 🏃 Step 3. Running the Flows
 
-1. In a terminal session, start a PostgreSQL database using the below command.
+In this example, we use [JinaD]((https://docs.jina.ai/advanced/daemon/#remote-management-via-jinad)) to serve the two Flows (Index and Query) and listen to incoming requests.
 
-  ```bash
-  docker run -e POSTGRES_PASSWORD=123456  -p 5432:5432/tcp -d postgres:13.2
-  ```
+1. Start `JinaD` server using the below command.
 
-1. In a second terminal, start [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) using the below command.
-
-  ```bash
-  docker run --add-host host.docker.internal:host-gateway \
+   ```bash
+   docker run --add-host host.docker.internal:host-gateway \
            -v /var/run/docker.sock:/var/run/docker.sock \
            -v /tmp/jinad:/tmp/jinad \
            -p 8000:8000 \
            --name jinad \
-           -d jinaai/jina:latest-daemon
-  ```
+           -d jinaai/jina:master-daemon
+   ```
 
-  In this example, we use `JinaD` to serve the two Flows (Index and Query) and listen to incoming requests.
+2. Run `python app.py -t flows`
 
-1. In a third terminal session, run `python app.py -t flows`
+    This will create the two Flows, and then repeatedly do the following (which can also be done in any other REST client), every 10 seconds:
 
-    This will create the two Flows, and then repeatedly do the following (which can also be done in any other REST client), every 2 seconds:
+    1. Index 5 Documents.
+    2. Send a `DUMP` request to the Storage (Index) Flow to dump its data to a specific location.
+    3. Send a `ROLLING_UPDATE` request to the Query Flow to take down its Indexers and start them again, with the new data located at the respective path.
 
-    1. Index 5 Documents
-    2. Send a `DUMP` request to the DBMS (Index) Flow to dump its data to a specific location
-    3. Send a `ROLLING_UPDATE` request to the Query Flow to take down its Indexers and start them again, with the new data located at the respective path
-
-    **Notice** the logs of the operations.
-
-    **Warning**: the data file is limited to 200 documents. Once that is exhausted, the process will terminate. If you want to use the entire dataset, run `bash get_data.sh` and then modify the `DATA_FILE` constant to point to that file.
+    **Warning**: If you want to use the entire wikipedia dataset, run `bash get_data.sh` and then modify the `DATA_FILE` constant to point to that file.
 
 ### 🔎 Step 4: Query your data
 
-Finally, in a third terminal, run `python app.py -t client`
+Finally, in a second terminal, run `python app.py -t client`
 
 This will prompt you for a query, send the query to the Query Flow, and then show you the results.
 
-**Notice** how the number of total matches grows as step **2** from above gets repeated.
+Since the Flows uses `http` protocol, you can query the REST API with whatever `Client` provided within jina or use `cURL`, `Postman` or [custom Swagger UI provided with jina](https://docs.jina.ai/fundamentals/practice-your-learning/#query-via-swaggerui) etc.
 
-Alternatively, you can query the REST API with whatever client you are comfortable with, `cURL`, `Postman` etc.
-The query format is as follows:
-
-```sh
-curl -X POST -d '{"data": [{"text":"hello world"}]}' http://0.0.0.0:9001/search
-```
-
-Optionally, if you have [`jq`](https://stedolan.github.io/jq/), you can just get the text of the matches of the query:
-
-```sh
-curl -X POST -d '{"data": [{"text":"hello world"}]}' http://0.0.0.0:9001/search | jq -r '.search.docs[] | .matches[] | .text'
-```
 
 ## Flow diagrams
 
 Below you can see a graphical representation of the Flow pipeline:
 
-#### DBMS Flow
+#### Storage Flow
 
-![](.github/images/DBMS.png)
+![](.github/images/dbms.svg)
 
 #### Query Flow
 
-![](.github/images/QUERY.png)
+![](.github/images/query.svg)
 
 Notice the following:
 
 - the encoder has the same configuration
 - the Query Flow uses replicas. One replica continues to serve requests while the other is being reloaded.
-- the Indexer in the Query Flow is actually made up of two Indexers: one for vectors, one for Document metadata. On the DBMS Flow, this data is stored into one DBMS Indexer.
+- the Indexer in the Query Flow is actually made up of two Indexers: one for vectors, one for Document metadata. On the Storage Flow, this data is stored into one Storage Indexer.
 
 ## 🔮 Overview of the files
 
@@ -164,18 +140,9 @@ Notice the following:
 | -------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | 📂 `data/`      | Folder where the data files are stored   |
 | 📂 `flows/`          | Folder to store Flow configuration                                                                               |
-| --- 📃 `dbms.yml`     | YAML file to configure DBMS (Index) Flow                                                                             |
+| --- 📃 `dbms.yml`     | YAML file to configure Storage (Index) Flow                                                                             |
 | --- 📃 `query.yml`     | YAML file to configure Querying Flow                                                                             |
-| 📂 `pods/`           | Folder to store Pod configuration                                                                                |
-| --- 📃 `encoder.yml`   | YAML file to configure the TransformerTorchEncoder to encode wiki sentences                                                                               | |
-| --- 📃 `query_indexer.yml`   | YAML file to configure the Query Indexer                                                                               |
 | 🐍 `app.py`      | Code file for the example   |
-
-
-## Troubleshooting
-
-1. When running `jinad` from a virtual environment, make sure it points to the same installation as `jina`.
-2. On some Mac machines, you may have to disable "Use gRPC FUSE for file sharing" in docker desktop.
 
 _________
 
