@@ -29,6 +29,14 @@ for example_dir in ${changedExamples[@]}; do
       source .venv/bin/activate
       pip install pytest pytest-mock
       pip install -r tests/requirements.txt
+      if [[ $example_dir == "wikipedia-sentences-query-while-indexing" ]]; then
+        docker run --add-host host.docker.internal:host-gateway \
+                  -v /var/run/docker.sock:/var/run/docker.sock \
+                  -v /tmp/jinad:/tmp/jinad \
+                  -p 8000:8000 \
+                  --name jinad \
+                  -d jinaai/jina:master-daemon
+      fi
       pytest -s -v tests/
       local_exit_code=$?
       deactivate

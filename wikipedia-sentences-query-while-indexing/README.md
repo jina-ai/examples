@@ -91,7 +91,7 @@ If you want to use the entire dataset, run `bash get_data.sh` and then modify th
 1. In a terminal session, start a PostgreSQL database using the below command.
 
   ```bash
-  docker run -e POSTGRES_PASSWORD=123456  -p 127.0.0.1:5432:5432/tcp postgres:13.2
+  docker run -e POSTGRES_PASSWORD=123456  -p 5432:5432/tcp -d postgres:13.2
   ```
 
 1. In a second terminal, start [JinaD](https://github.com/jina-ai/jina/blob/master/.github/2.0/cookbooks/Daemon.md) using the below command.

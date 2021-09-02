@@ -8,8 +8,8 @@ pods:
     uses: jinahub+docker://FlairTextEncoder     # 'jinahub://TransformerTorchEncoder'
     timeout_ready: -1
   - name: query_indexer
-    uses: jinahub+docker://AnnoySearcher
+    uses: jinahub+docker://FaissLMDBSearcher
     replicas: 2
-    parallel: 1
     polling: all
-    timeout_ready: '-1'
+    timeout_ready: -1
+    volumes: $JINAD_WORKSPACE:/jinad_workspace
