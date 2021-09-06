@@ -94,6 +94,14 @@ Want to add your own example? Please check our [guidelines](example-guidelines.m
       <h4><a href="https://github.com/alexcg1/jina-app-store-example">App Store Search</a></h4>
       Use Transformers to search through a rich app store dataset with a responsive front-end
     </td>
+  </tr><tr>
+    <td>
+      <h1>📄</h1>
+    </td>
+    <td>
+      <h4><a href="https://github.com/nikosNalmpantis/jina-star-wars-qa">Star Wars Question Answering System</a></h4>
+      Generate answers based on star wars descriptions from wookieepedia.
+    </td>
   </tr>
 </table>
 
