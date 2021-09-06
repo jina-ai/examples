@@ -1,52 +1,44 @@
-import os
-import sys
 import time
-from typing import List, Dict
+from threading import Thread
 
-import requests
-from jina import Document
-from jina.logging import JinaLogger
+from jina import Document, __default_host__, Client
+from daemon.clients import JinaDClient
+from jina.logging.logger import JinaLogger
 
+HOST = __default_host__
+JINAD_PORT = 8000
+QUERY_REST_PORT = 9001
 logger = JinaLogger('test')
 
 
-def _query_docs(docs: List[Dict]):
-    logger.info(f'Searching with {len(docs)} documents...')
-    return _send_rest_request('9001', 'search', 'post', docs)
-
-
-def _send_rest_request(port_expose: str, endpoint: str, method: str, data: List[dict], timeout: int = 13):
-    json = {'data': data}
-    url = f'http://localhost:{port_expose}/{endpoint}'
-    r = getattr(requests, method)(url, json=json, timeout=timeout)
-
-    if r.status_code != 200:
-        raise Exception(f'api request failed, url: {url}, status: {r.status_code}, content: {r.content} data: {data}')
-    return r.json()
+def query_docs(docs: Document):
+    logger.info(f'Searching document {docs}...')
+    return Client(host=HOST, port=QUERY_REST_PORT, protocol='http').search(inputs=docs, return_results=True)
 
 
 def test_query_while_indexing():
     try:
-        logger.info('starting jinad...')
-        os.system('nohup jinad > jinad.log 2> jinaderr.log &')
-        time.sleep(5)
-        logger.info('starting app.py...')
-        os.system(f'nohup {sys.executable} -u app.py -t flows > flow.log 2> flowerr.log &')
-        time.sleep(20)
-        logger.info('rolling update done in process')
-        # add query testing
-        query_doc = Document()
-        query_doc.text = 'hello world'
-        response = _query_docs([query_doc.dict()])
-        matches = response['search']['docs'][0].get('matches')
+        from app import create_flows, dump_and_roll_update
+
+        jinad_client = JinaDClient(host=HOST, port=JINAD_PORT)
+        assert jinad_client.alive, 'cannot reach jinad'
+
+        storage_flow_id, query_flow_id, workspace_id = create_flows()
+        # start rolling update in the background
+        Thread(target=dump_and_roll_update, args=(storage_flow_id, query_flow_id), daemon=True).start()
+
+        logger.info('sleeping for 30 secs to allow 1 round of index, dump & rolling update')
+        time.sleep(30)
+        query_doc = Document(text='hello world')
+        response = query_docs(query_doc)
+        matches = response[0].data.docs[0].matches
         logger.info(f'got {len(matches)} matches')
         assert matches
 
     except (Exception, KeyboardInterrupt):
         raise
+
     finally:
-        logger.warning('entering finally...')
-        os.system('pkill jinad')
-        os.system(f'pkill {sys.executable}')
-        logger.warning('following is output from .log files:')
-        os.system(f'cat *.log')
+        from app import cleanup
+
+        cleanup(storage_flow_id, query_flow_id, workspace_id)
