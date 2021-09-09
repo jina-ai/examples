@@ -15,7 +15,7 @@ These examples showcase Jina in action and provide sample code for you to work f
 We suggest you read the following to get an overview of what Jina is and how it works:
 
 - [What is neural search?](https://github.com/jina-ai/jina/blob/master/.github/2.0/neural-search.md)
-- [Get started](https://github.com/jina-ai/jina/#get-started) - especially the cookbooks for Document, Executor and Flow
+- [Get started](https://github.com/jina-ai/jina/#build-your-first-jina-app) - especially the cookbooks for Document, Executor and Flow
 
 ## 🐣 Simple Examples
 
