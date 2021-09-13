@@ -40,9 +40,11 @@ Then, to search the documents, do:
 python app.py search
 ```
 
-This will generate a set of query audio clips on the fly in `data/mp3/query` (or, if you are using
+This will randomly generate a set of query audio clips on the fly in `data/mp3/query` (or, if you are using
 custom data path, in `<custom_data_path>/query`) by extracting snippets from a set of randomly sampled
-of index audio clips. The program then matches each query doc with the most similar index docs.
+of index audio clips.  The program then matches each query doc with the most similar index docs.
+
+*Note, though query data is generated automatically,  index data is not and user must supply their own data to index.*
 
 The `-s` option allows user to specify which segmenter to use. `vad` uses Jinahub's VADSpeechSegmenter, and
 `time` uses TimeSegmenter.
