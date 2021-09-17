@@ -1,2 +1,2 @@
-git+https://github.com/jina-ai/jina.git@v2.0.23#egg=jina[daemon]
+git+https://github.com/jina-ai/jina.git@v2.1.0#egg=jina[daemon]
 click==7.1.2
