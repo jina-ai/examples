@@ -36,7 +36,8 @@ for example_dir in ${changedExamples[@]}; do
                   -v /tmp/jinad:/tmp/jinad \
                   -p 8000:8000 \
                   --name jinad \
-                  -d jinaai/jina:master-daemon
+                  -d jinaai/jina:2.1.0-daemon
+        sleep 5
       fi
       pytest -s -v tests/
       local_exit_code=$?
