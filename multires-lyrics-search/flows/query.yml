@@ -16,7 +16,7 @@ executors:
       device: 'cpu'
       default_traversal_paths: ['c']
   - name: indexer                                             # Compare the search sentence embeddings to the stored sentence embeddings from the indexing
-    uses: 'jinahub://SimpleIndexer'                           # Then, return the closest matches for every sentence
+    uses: 'jinahub://SimpleIndexer/old'                           # Then, return the closest matches for every sentence
     uses_metas:
       workspace: $JINA_WORKSPACE
     uses_with:
