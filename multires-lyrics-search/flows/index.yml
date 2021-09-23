@@ -6,7 +6,7 @@ executors:                                                    # Now, define all 
   - name: segmenter                                           # The first executor splits the input text into sentences which are stored as chunks in the original documents
     uses: 'jinahub+docker://Sentencizer'                      # The type of the executor is Sentencizer, we download it from the hub as a docker container
   - name: encoder                                             # Then, compute the embeddings of the sentences in this executor
-    uses: 'jinahub+docker://TransformerTorchEncoder'          # We use a TransformerTorchEncoder from the hub
+    uses: 'jinahub+docker://TransformerTorchEncoder/v0.1'          # We use a TransformerTorchEncoder from the hub
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'  # Mount the huggingface cache into the docker container
     uses_with:                                                # Override some parameters for the executor
       pooling_strategy: 'cls'                                 # This is the pooling strategy that is used by the encoder

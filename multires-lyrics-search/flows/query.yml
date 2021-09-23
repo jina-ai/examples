@@ -7,7 +7,7 @@ executors:
   - name: segmenter                                           # First, split the search text into sentences again
     uses: 'jinahub+docker://Sentencizer'
   - name: encoder                                             # Encode the search sentences into embeddings
-    uses: 'jinahub+docker://TransformerTorchEncoder'
+    uses: 'jinahub+docker://TransformerTorchEncoder/v0.1'
     volumes: '~/.cache/huggingface:/root/.cache/huggingface'
     uses_with:
       pooling_strategy: 'cls'

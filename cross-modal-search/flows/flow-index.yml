@@ -11,13 +11,13 @@ pods:                                             # Now, we define the pods that
     read_only: true                               # Executor does not modify files
     needs: gateway                                # Executor is after the gateway, this means at the start of the flow
   - name: image_encoder                           # After the images are read, compute their embedding in the encoder
-    uses: 'jinahub+docker://CLIPImageEncoder'     # The type of the executor - here, we use a hub executor from the jinahub in the form of a docker container
+    uses: 'jinahub+docker://CLIPImageEncoder/v0.1'     # The type of the executor - here, we use a hub executor from the jinahub in the form of a docker container
     volumes: $HOME/.cache/huggingface:/root/.cache/huggingface  # Mount a volume into the executor
     timeout_ready: 600000                         # Set a timeout for the executor
     read_only: true                               # Executor does not modify files
     needs: image_loader                           # This executor is located after the image loader in the flow
   - name: image_indexer                           # Executor that stores image embeddings
-    uses: 'jinahub://SimpleIndexer'               # Hub Executor - We use a SimpleIndexer here
+    uses: 'jinahub://SimpleIndexer/old'               # Hub Executor - We use a SimpleIndexer here
     uses_with:                                    # Define arguments for the SimpleIndexer
       index_file_name: 'image_index'              # Folder path for this executor
     needs: image_encoder                          # This executor is after the image encoder in the flow
@@ -26,13 +26,13 @@ pods:                                             # Now, we define the pods that
     py_modules: 'flows/executors.py'              # File where the TextFilter is implemented
     needs: gateway                                # Start after the gateway, so at the beginning of the flow - this creates a second path in the flow
   - name: text_encoder                            # Create the next executor that computes embeddings for the text documents
-    uses: 'jinahub+docker://CLIPTextEncoder'      # Use a hub executor in docker
+    uses: 'jinahub+docker://CLIPTextEncoder/v0.1'      # Use a hub executor in docker
     volumes: $HOME/.cache/huggingface:/root/.cache/huggingface  # Mount the models directory
     timeout_ready: 600000                         # Set timeout
     read_only: true                               # Executor does not modify files
     needs: text_filter                            # Run this executor after the image filter
   - name: text_indexer                            # Finally, store the indexed text documents with embeddings on disk
-    uses: 'jinahub://SimpleIndexer'               # Use SimpleIndexer from hub in docker again
+    uses: 'jinahub://SimpleIndexer/old'               # Use SimpleIndexer from hub in docker again
     uses_with:                                    # Define parameters for the text indexer
       index_file_name: 'text_index'               # Folder name in the workspace
     needs: text_encoder                           # Start after the text encoder executor is finished
