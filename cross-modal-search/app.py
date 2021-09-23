@@ -32,9 +32,7 @@ def index_restful():
         flow.block()
 
 
-def check_query_result(results, img_uri):
-    text_doc = Document(results[0])
-    image_doc = Document(results[1])
+def check_query_result(text_doc, image_doc, img_uri):
     # Image doc matches are text:
     print(f'Searching with image {img_uri}. Matches:')
     if image_doc.matches:
@@ -45,7 +43,7 @@ def check_query_result(results, img_uri):
              )
 
     # Text doc matches are images
-    print(f'Searching with text "{text_doc.text}". Matches:')
+    print(f'\nSearching with text "{text_doc.text}". Matches:')
     if text_doc.matches:
         f, axarr = plt.subplots(1, len(text_doc.matches))
 
@@ -82,8 +80,7 @@ def query(query_image, query_text):
         result_image = flow.post(on='/search', inputs=image_doc,
                                  return_results=True)
         print(f'Request duration: {time.time() - start}')
-        check_query_result([result_text[0].data.docs[0], result_image[0].data.docs[
-            0]], img_uri)
+        check_query_result(result_text[0].docs[0], result_image[0].docs[0], img_uri)
 
 
 
