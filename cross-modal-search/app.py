@@ -7,6 +7,7 @@ import sys
 import click
 from jina import Flow, Document, DocumentArray
 import logging
+import matplotlib.pyplot as plt
 
 from dataset import input_index_data
 
@@ -29,25 +30,32 @@ def index_restful():
         flow.block()
 
 
-def check_query_result(results):
-    text_doc = Document(results[0])
-    image_doc = Document(results[1])
-    print('Result documents:')
-    for _doc in [image_doc, text_doc]:
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+def check_query_result(text_doc, image_doc, img_uri):
     # Image doc matches are text:
-    print('Closest matches for the search image:')
+    print(f'Searching with image {img_uri}. Matches:')
     if image_doc.matches:
         for m in image_doc.matches:
-            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+            print(
+                f'\t+- {m.id[:10]},\
+                score: {m.scores["cosine"].value},\
+                text: {m.text}, modality: {m.modality},\
+                uri: {m.uri[:20]}'
+             )
+    
     # Text doc matches are images
-    print('Closest matches for the search text:')
+    print(f'Searching with text "{text_doc.text}". Matches:')
     if text_doc.matches:
-        for m in text_doc.matches:
-            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
-            import matplotlib.pyplot as plt
-            plt.imshow(m.blob)
-            plt.show()
+        f, axarr = plt.subplots(1, len(text_doc.matches))
+
+        for i, m in enumerate(text_doc.matches):
+            print(f'\t- score: {m.scores["cosine"].value}, modality: {m.modality}, '
+                  f'blob: {len(m.blob)}')
+            axarr[i].title.set_text(f'score={m.scores["cosine"].value:.3f}')
+            axarr[i].imshow(m.blob)
+            axarr[i].axes.xaxis.set_visible(False)
+            axarr[i].axes.yaxis.set_visible(False)
+        plt.suptitle(f"Best matches for '{text_doc.text}'")
+        plt.show()
 
 
 def index(data_set, num_docs, request_size):
@@ -62,9 +70,10 @@ def index(data_set, num_docs, request_size):
 def query():
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
+        img_uri = 'toy-data/images/1000268201_693b08cb0e.jpg'
         text_doc = Document(text='a black dog and a spotted dog are fighting',
                             modality='text')
-        image_doc = Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
+        image_doc = Document(uri=img_uri,
                              modality='image')
         import time
         start = time.time()
@@ -73,7 +82,11 @@ def query():
         result_image = flow.post(on='/search', inputs=image_doc,
                                  return_results=True)
         print(f'Request duration: {time.time() - start}')
-        check_query_result([result_text[0].data.docs[0], result_image[0].data.docs[0]])
+        check_query_result(
+            result_text[0].data.docs[0], 
+            result_image[0].data.docs[0],
+            img_uri
+        )
 
 
 def query_restful():

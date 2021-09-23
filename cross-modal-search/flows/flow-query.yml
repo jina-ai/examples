@@ -17,7 +17,7 @@ pods:
     read_only: true
     needs: loader
   - name: text_indexer                            # Now, we use the text indexer in the image path - This is how we achieve the cross-modality here
-    uses: 'jinahub://SimpleIndexer'               # The text indexer has indexed all text documents and stored them on disk.
+    uses: 'jinahub://SimpleIndexer/old'           # The text indexer has indexed all text documents and stored them on disk.
     uses_with:                                    # Then we return the closest matches as results
      index_file_name: 'text_index'
     needs: image_encoder
@@ -33,7 +33,7 @@ pods:
     read_only: true
     needs: text_filter
   - name: image_indexer                           # Now, we use the image indexer in the text path - this is again how we get cross-modality
-    uses: 'jinahub://SimpleIndexer'               # The image indexer has indexed all images and their embeddings
+    uses: 'jinahub://SimpleIndexer/old'           # The image indexer has indexed all images and their embeddings
     uses_with:
       index_file_name: 'image_index'
     read_only: true
