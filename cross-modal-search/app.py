@@ -13,6 +13,8 @@ from dataset import input_index_data
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 10000))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_QUERY_IMAGE = 'toy-data/images/1000268201_693b08cb0e.jpg'
+DEFAULT_QUERY_TEXT = 'a black dog and a spotted dog are fighting'
 
 
 def config():
@@ -38,21 +40,17 @@ def check_query_result(results, img_uri):
     if image_doc.matches:
         for m in image_doc.matches:
             print(
-                f'\t+- {m.id[:10]},\
-                score: {m.scores["cosine"].value},\
-                text: {m.text}, modality: {m.modality},\
-                uri: {m.uri[:20]}'
+                f'\t-- text: "{m.text}" '
+                f'score: {m.scores["cosine"].value:.4f},'
              )
-    
+
     # Text doc matches are images
     print(f'Searching with text "{text_doc.text}". Matches:')
     if text_doc.matches:
         f, axarr = plt.subplots(1, len(text_doc.matches))
 
         for i, m in enumerate(text_doc.matches):
-            print(f'\t- score: {m.scores["cosine"].value}, modality: {m.modality}, '
-                  f'blob: {len(m.blob)}')
-            axarr[i].title.set_text(f'score={m.scores["cosine"].value:.3f}')
+            axarr[i].title.set_text(f'score={m.scores["cosine"].value:.4f}')
             axarr[i].imshow(m.blob)
             axarr[i].axes.xaxis.set_visible(False)
             axarr[i].axes.yaxis.set_visible(False)
@@ -69,11 +67,11 @@ def index(data_set, num_docs, request_size):
                   show_progress=True)
 
 
-def query():
+def query(query_image, query_text):
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
-        img_uri = 'toy-data/images/1000268201_693b08cb0e.jpg'
-        text_doc = Document(text='a black dog and a spotted dog are fighting',
+        img_uri = query_image
+        text_doc = Document(text=query_text,
                             modality='text')
         image_doc = Document(uri=img_uri,
                              modality='image')
@@ -102,7 +100,9 @@ def query_restful():
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
-def main(task, num_docs, request_size, data_set):
+@click.option('--query-image', '-i', type=str, default=DEFAULT_QUERY_IMAGE)
+@click.option('--query-text', '-i', type=str, default=DEFAULT_QUERY_TEXT)
+def main(task, num_docs, request_size, data_set, query_image, query_text):
     config()
     workspace = os.environ['JINA_WORKSPACE']
     logger = logging.getLogger('cross-modal-search')
@@ -126,7 +126,7 @@ def main(task, num_docs, request_size, data_set):
     elif task == 'index_restful':
         index_restful()
     elif task == 'query':
-        query()
+        query(query_image, query_text)
     elif task == 'query_restful':
         query_restful()
 
