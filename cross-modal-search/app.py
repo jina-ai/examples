@@ -7,11 +7,14 @@ import sys
 import click
 from jina import Flow, Document, DocumentArray
 import logging
+import matplotlib.pyplot as plt
 
 from dataset import input_index_data
 
 MAX_DOCS = int(os.environ.get("JINA_MAX_DOCS", 10000))
 cur_dir = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_QUERY_IMAGE = 'toy-data/images/1000268201_693b08cb0e.jpg'
+DEFAULT_QUERY_TEXT = 'a black dog and a spotted dog are fighting'
 
 
 def config():
@@ -29,25 +32,28 @@ def index_restful():
         flow.block()
 
 
-def check_query_result(results):
-    text_doc = Document(results[0])
-    image_doc = Document(results[1])
-    print('Result documents:')
-    for _doc in [image_doc, text_doc]:
-        print(f'{_doc.id[:10]}, buffer: {len(_doc.buffer)}, embed: {_doc.embedding.shape}, uri: {_doc.uri[:20]}, chunks: {len(_doc.chunks)}, matches: {len(_doc.matches)}')
+def check_query_result(text_doc, image_doc, img_uri):
     # Image doc matches are text:
-    print('Closest matches for the search image:')
+    print(f'Searching with image {img_uri}. Matches:')
     if image_doc.matches:
         for m in image_doc.matches:
-            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, text: {m.text}, modality: {m.modality}, uri: {m.uri[:20]}')
+            print(
+                f'\t-- text: "{m.text}" '
+                f'score: {m.scores["cosine"].value:.4f},'
+             )
+
     # Text doc matches are images
-    print('Closest matches for the search text:')
+    print(f'\nSearching with text "{text_doc.text}". Matches:')
     if text_doc.matches:
-        for m in text_doc.matches:
-            print(f'\t+- {m.id[:10]}, score: {m.scores["cosine"].value}, modality: {m.modality}, uri: {m.uri[:20]}, blob: {len(m.blob)}')
-            import matplotlib.pyplot as plt
-            plt.imshow(m.blob)
-            plt.show()
+        f, axarr = plt.subplots(1, len(text_doc.matches))
+
+        for i, m in enumerate(text_doc.matches):
+            axarr[i].title.set_text(f'score={m.scores["cosine"].value:.4f}')
+            axarr[i].imshow(m.blob)
+            axarr[i].axes.xaxis.set_visible(False)
+            axarr[i].axes.yaxis.set_visible(False)
+        plt.suptitle(f"Best matches for '{text_doc.text}'")
+        plt.show()
 
 
 def index(data_set, num_docs, request_size):
@@ -59,12 +65,13 @@ def index(data_set, num_docs, request_size):
                   show_progress=True)
 
 
-def query():
+def query(query_image, query_text):
     flow = Flow().load_config('flows/flow-query.yml')
     with flow:
-        text_doc = Document(text='a black dog and a spotted dog are fighting',
+        img_uri = query_image
+        text_doc = Document(text=query_text,
                             modality='text')
-        image_doc = Document(uri='toy-data/images/1000268201_693b08cb0e.jpg',
+        image_doc = Document(uri=img_uri,
                              modality='image')
         import time
         start = time.time()
@@ -73,7 +80,8 @@ def query():
         result_image = flow.post(on='/search', inputs=image_doc,
                                  return_results=True)
         print(f'Request duration: {time.time() - start}')
-        check_query_result([result_text[0].data.docs[0], result_image[0].data.docs[0]])
+        check_query_result(result_text[0].docs[0], result_image[0].docs[0], img_uri)
+
 
 
 def query_restful():
@@ -89,7 +97,9 @@ def query_restful():
 @click.option("--num_docs", "-n", default=MAX_DOCS)
 @click.option('--request_size', '-s', default=16)
 @click.option('--data_set', '-d', type=click.Choice(['f30k', 'f8k', 'toy-data'], case_sensitive=False), default='toy-data')
-def main(task, num_docs, request_size, data_set):
+@click.option('--query-image', '-i', type=str, default=DEFAULT_QUERY_IMAGE)
+@click.option('--query-text', '-i', type=str, default=DEFAULT_QUERY_TEXT)
+def main(task, num_docs, request_size, data_set, query_image, query_text):
     config()
     workspace = os.environ['JINA_WORKSPACE']
     logger = logging.getLogger('cross-modal-search')
@@ -113,7 +123,7 @@ def main(task, num_docs, request_size, data_set):
     elif task == 'index_restful':
         index_restful()
     elif task == 'query':
-        query()
+        query(query_image, query_text)
     elif task == 'query_restful':
         query_restful()
 
