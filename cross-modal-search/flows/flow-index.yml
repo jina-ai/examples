@@ -17,7 +17,7 @@ pods:                                             # Now, we define the pods that
     read_only: true                               # Executor does not modify files
     needs: image_loader                           # This executor is located after the image loader in the flow
   - name: image_indexer                           # Executor that stores image embeddings
-    uses: 'jinahub://SimpleIndexer/old'               # Hub Executor - We use a SimpleIndexer here
+    uses: 'jinahub://SimpleIndexer/old'           # Hub Executor - We use a SimpleIndexer here
     uses_with:                                    # Define arguments for the SimpleIndexer
       index_file_name: 'image_index'              # Folder path for this executor
     needs: image_encoder                          # This executor is after the image encoder in the flow
@@ -32,7 +32,7 @@ pods:                                             # Now, we define the pods that
     read_only: true                               # Executor does not modify files
     needs: text_filter                            # Run this executor after the image filter
   - name: text_indexer                            # Finally, store the indexed text documents with embeddings on disk
-    uses: 'jinahub://SimpleIndexer/old'               # Use SimpleIndexer from hub in docker again
+    uses: 'jinahub://SimpleIndexer/old'           # Use SimpleIndexer from hub in docker again
     uses_with:                                    # Define parameters for the text indexer
       index_file_name: 'text_index'               # Folder name in the workspace
     needs: text_encoder                           # Start after the text encoder executor is finished

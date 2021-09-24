@@ -85,12 +85,35 @@ In this example, we show two of the most common ones.
 In a production environment, you would only choose one which suits your use case best. 
 
 #### Test query
-Let us begin by running a small test query. This test query contains the sentence:
-`a black dog and a spotted dog are fighting`. The system then searches for images that match
-the caption and plots the closest images.
+
+Let us begin by running a small test query. 
+This test query actually contains both an image and a text document.
+The text is the sentence: `a black dog and a spotted dog are fighting`.
+The image is the image `toy-data/images/1000268201_693b08cb0e.jpg`
+The system then searches with both the image and the text, in a cross-modal manner.
 
 ```sh
 python app.py -t query
+```
+
+The text results are printed in the terminal.
+
+![](visualizations/text_results.png)
+
+The image results will be shown in a `matplotlib` figure.
+
+![](visualizations/image_results.png)
+
+You can pass your own with 
+
+```sh
+python app.py -t query --query-image PATH_TO_YOUR_IMAGE
+```
+
+or
+
+```sh
+python app.py -t query --query-text "your text"
 ```
 
 #### Restful API
