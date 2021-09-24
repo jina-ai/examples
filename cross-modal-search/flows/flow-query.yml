@@ -11,7 +11,7 @@ pods:
     read_only: true
     needs: [gateway]
   - name: image_encoder                           # Now, encode the images and compute the embeddings
-    uses: 'jinahub+docker://CLIPImageEncoder'
+    uses: 'jinahub+docker://CLIPImageEncoder/v0.1'
     volumes: $HOME/.cache/huggingface:/root/.cache/huggingface
     timeout_ready: 600000
     read_only: true
@@ -27,7 +27,7 @@ pods:
     py_modules: 'flows/executors.py'
     needs: [gateway]
   - name: text_encoder                            # Compute the embedding of the search text
-    uses: 'jinahub+docker://CLIPTextEncoder'
+    uses: 'jinahub+docker://CLIPTextEncoder/v0.1'
     volumes: $HOME/.cache/huggingface:/root/.cache/huggingface
     timeout_ready: 600000
     read_only: true
