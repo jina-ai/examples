@@ -117,6 +117,13 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
             document_img.buffer = image
             document_img.modality = 'image'
             document_img.mime_type = 'image/jpeg'
+            document_img.tags["uri"] = "foo"
+
+            # Hacky code below to get uri so can associate image *uri* with text captions
+            document_img.convert_image_buffer_to_blob()
+            document_img.convert_image_blob_to_uri(width=100, height=100) # Screw it, putting in random numbers. Will compute them if it works
+            document_img.buffer = image
+            # Hackiness ends for now
             
             document_caption = Document(id=hashed)
             
@@ -124,6 +131,10 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
             document_caption.modality = 'text'
             document_caption.mime_type = 'text/plain'
             document_caption.tags['id'] = caption
+
+            # Hackniess starts again
+            document_caption.tags['uri'] = document_img.uri
+            # </hack>
 
             yield document_img
             yield document_caption
