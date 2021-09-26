@@ -21,6 +21,7 @@ pods:
     uses_with:                                    # Then we return the closest matches as results
      index_file_name: 'text_index'
     needs: image_encoder
+    force: True
     read_only: true
   - name: text_filter                             # Here, the text path starts
     uses: TextFilter
@@ -36,6 +37,7 @@ pods:
     uses: 'jinahub://SimpleIndexer/old'           # The image indexer has indexed all images and their embeddings
     uses_with:
       index_file_name: 'image_index'
+    force: True
     read_only: true
     needs: text_encoder
   - name: join_all                                # Wait for both paths to finish and join the results
