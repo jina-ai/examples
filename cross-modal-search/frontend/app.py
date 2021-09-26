@@ -26,7 +26,7 @@ def search_by_text(query: str, endpoint: str, top_k: int) -> dict:
 
     return matches
 
-query = st.text_input("", value="Search query")
+query = st.text_input("", value="Animals having fun")
 button = st.button("Go go go")
 
 if button:
@@ -34,7 +34,10 @@ if button:
     # st.json(matches)
     
     for match in matches:
+        caption = match["tags"]["caption"]
         uri = match["tags"]["uri"]
-        st.write(uri)
+        st.markdown(f"#### {caption}")
         st.markdown(f"<img src='{uri}'>", unsafe_allow_html=True)
+        # st.json(match["tags"])
+        # st.write(uri)
         # st.json(match)
