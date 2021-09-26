@@ -137,6 +137,7 @@ def input_index_data(num_docs=None, batch_size=8, dataset_type='f30k'):
 
             # Hackniess starts again
             document_caption.tags['uri'] = document_img.uri
+            document_img.tags["caption"] = caption
             # </hack>
 
             yield document_img
