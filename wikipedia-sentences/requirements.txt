@@ -1,3 +1,3 @@
 click==8.0.1
-jina[standard]==2.0.18
+jina[standard]==2.1.10
 git+git://github.com/jina-ai/jina-commons@v0.0.3
