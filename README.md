@@ -1,3 +1,13 @@
+
+# [PLEASE CHECK OUR DOC WEBSITE FOR MORE COMPREHENSIVE EXAMPLES.](https://docs.jina.ai)
+
+![image](https://user-images.githubusercontent.com/2041322/139639975-bb140208-20ad-4d10-a6b2-b5aa85466ed0.png)
+
+
+
+
+
+
 # Examples for Jina
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
