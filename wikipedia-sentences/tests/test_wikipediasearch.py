@@ -16,9 +16,9 @@ def config(tmpdir):
 def test_wikipedia_sentences(tmpdir):
     config(tmpdir)
     runner = CliRunner()
-    result = runner.invoke(main, ['-t', 'index'])
+    result = runner.invoke(main, ['-t', 'index', '--num_docs', 10])
     assert "done in" in result.stdout
     assert result.stderr_bytes is None
-    result = runner.invoke(main, ['-t', 'query'])
+    result = runner.invoke(main, ['-t', 'query', '--num_docs', 10])
     print(result.stdout)
     assert result.stderr_bytes is None
